@@ -1,13 +1,14 @@
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { RouteComponentProps, useHistory, useLocation, useParams } from "react-router-dom";
 import useRouter from "use-react-router";
 import { FAIL, SUCCESS } from "../actions";
 import { moviesApi, tvApi } from "../api";
-import { useDetailDispatch } from "../contexts/DetailContext";
+import { fail, success } from "../reducers/DetailReducer";
 
 export const useDetail = () => {
     const { match: { params: { id } }, location: { pathname }, history: { push } } = useRouter<any>();
-    const dispatch = useDetailDispatch();
+    const dispatch = useDispatch();
     const isMovie = pathname.includes("/movie/");
 
     async function getDetail() {
@@ -25,9 +26,9 @@ export const useDetail = () => {
                 ({ data: results } = await tvApi.showDetail(parsedId));
             }
             console.log(results);
-            dispatch({ type: SUCCESS, payload: results });
+            dispatch(success({ results }));
         } catch {
-            dispatch({ type: FAIL });
+            dispatch(fail());
         }
     }
 

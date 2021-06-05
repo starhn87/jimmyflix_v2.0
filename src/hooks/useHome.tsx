@@ -12,7 +12,6 @@ export const useHome = () => {
             const { data: { results: upcoming } } = await moviesApi.upcoming();
             const { data: { results: popular } } = await moviesApi.popular();
             dispatch(success({ nowPlaying, upcoming, popular }));
-            throw new Error();
         } catch {
             dispatch(fail());
         }

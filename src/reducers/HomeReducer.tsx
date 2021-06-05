@@ -8,15 +8,6 @@ export interface HomeState {
     loading: boolean
 }
 
-export interface HomeAction {
-    type: string,
-    payload?: {
-        nowPlaying: [],
-        upcoming: [],
-        popular: [],
-    }
-}
-
 export const homeInitialState: HomeState = {
     nowPlaying: null,
     upcoming: null,
@@ -33,9 +24,9 @@ const home = createSlice({
             console.log(action.payload);
             return {
                 ...state,
-                nowPlaying: action.payload ? action.payload.nowPlaying : null,
-                upcoming: action.payload ? action.payload.upcoming : null,
-                popular: action.payload ? action.payload.popular : null,
+                nowPlaying: action.payload.nowPlaying,
+                upcoming: action.payload.upcoming,
+                popular: action.payload.popular,
                 loading: false
             }
         },

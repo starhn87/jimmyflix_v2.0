@@ -1,3 +1,4 @@
+import { createSlice } from "@reduxjs/toolkit"
 import { FAIL, SUCCESS } from "../actions"
 
 export interface TVState {
@@ -8,15 +9,6 @@ export interface TVState {
     loading: boolean
 }
 
-export interface TVAction {
-    type: string,
-    payload?: {
-        topRated: [],
-        airingToday: [],
-        popular: []
-    }
-}
-
 export const tvInitialState: TVState = {
     topRated: null,
     popular: null,
@@ -25,27 +17,24 @@ export const tvInitialState: TVState = {
     loading: true
 }
 
-const tvReducer = (state: TVState, action: TVAction): TVState => {
-    switch (action.type) {
-        case SUCCESS:
-            return {
-                ...state,
-                topRated: action.payload ? action.payload.topRated : null,
-                airingToday: action.payload ? action.payload.airingToday : null,
-                popular: action.payload ? action.payload.popular : null,
-                loading: false
-            }
-
-        case FAIL:
-            return {
-                ...state,
-                error: "Can't find TV information.",
-                loading: false
-            }
-
-        default:
-            throw new Error("Unhandled TV Action.");
+const tv = createSlice({
+    name: 'tvReducer',
+    initialState: tvInitialState,
+    reducers: {
+        success: (state, action) => ({
+            ...state,
+            topRated: action.payload.topRated,
+            airingToday: action.payload.airingToday,
+            popular: action.payload.popular,
+            loading: false
+        }),
+        fail: (state) => ({
+            ...state,
+            error: "Can't find TV information.",
+            loading: false
+        })
     }
-}
+})
 
-export default tvReducer;
+export const { success, fail } = tv.actions;
+export default tv.reducer;

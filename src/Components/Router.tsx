@@ -4,8 +4,6 @@ import Home from "../Routes/Home";
 import TV from "../Routes/TV";
 import Search from "../Routes/Search";
 import Detail from "../Routes/Detail";
-import DetailProvider from "../contexts/DetailContext";
-import TVProvider from "../contexts/TVContext";
 import SearchProvider from "../contexts/SearchContext";
 
 export default () => (
@@ -15,9 +13,7 @@ export default () => (
                 <Home />
             </Route>
             <Route path="/tv">
-                <TVProvider>
-                    <TV />
-                </TVProvider>
+                <TV />
             </Route>
             <Route path="/search">
                 <SearchProvider>
@@ -25,9 +21,7 @@ export default () => (
                 </SearchProvider>
             </Route>
             <Route path={["/movie/:id", "/show/:id"]}>
-                <DetailProvider>
-                    <Detail />
-                </DetailProvider>
+                <Detail />
             </Route>
             <Route path="*">
                 <Redirect to="/" />

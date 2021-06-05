@@ -7,9 +7,13 @@ import Header from "../Components/Header";
 import { useSelector } from "react-redux";
 import { HomeState } from "../reducers/HomeReducer";
 
+interface Props {
+    home: HomeState
+}
+
 function Home() {
     useHome();
-    const loading = useSelector((state: HomeState) => state.loading);
+    const loading = useSelector((state: Props) => state.home.loading);
 
     return <>
         <Helmet>

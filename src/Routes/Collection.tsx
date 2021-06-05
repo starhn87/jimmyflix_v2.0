@@ -4,8 +4,6 @@ import { useCollection } from "../hooks/useCollection";
 import Section from "../Components/Section";
 import styled from "styled-components";
 import { Link, Route } from "react-router-dom";
-import DetailProvider from "../contexts/DetailContext";
-import Detail from "./Detail";
 
 const Container = styled.div`
     width: 70%;

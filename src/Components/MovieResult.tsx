@@ -23,15 +23,8 @@ interface Props {
 }
 
 function MovieResult() {
-    const { nowPlaying, upcoming, popular, error } = useSelector((state: Props) => (
-        {
-            nowPlaying: state.home.nowPlaying,
-            upcoming: state.home.upcoming,
-            popular: state.home.popular,
-            error: state.home.error
-        }
-    ), shallowEqual);
-    console.log(nowPlaying);
+    const { nowPlaying, upcoming, popular, error } = useSelector((state: Props) => ({ ...state.home }), shallowEqual);
+    console.log(error);
 
     return (
         <Container>

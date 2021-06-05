@@ -1,9 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { useTVState } from "../contexts/TVContext";
 import Message from "./Message";
 import Poster from "./Poster";
 import Section from "./Section";
+import { TVProps } from "../Routes/TV";
 
 const Container = styled.div`
     padding: 20px;
@@ -23,7 +24,7 @@ function TVResult() {
         popular,
         airingToday,
         error
-    } = useTVState();
+    } = useSelector((state: TVProps) => ({ ...state.tv }));
 
     return (
         <Container>

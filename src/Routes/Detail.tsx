@@ -4,12 +4,17 @@ import Loader from "../Components/Loader";
 import Message from "../Components/Message";
 import { useDetail } from "../hooks/useDetail";
 import Info from "../Components/Info";
-import { useDetailState } from "../contexts/DetailContext";
 import Header from "../Components/Header";
+import { useSelector } from "react-redux";
+import { DetailState } from "../reducers/DetailReducer";
+
+export interface DetailProps {
+    detail: DetailState
+}
 
 function Detail() {
     useDetail();
-    const { loading, error } = useDetailState();
+    const { loading, error } = useSelector((state: DetailProps) => ({ ...state.detail }));
 
     return loading ? (
         <>

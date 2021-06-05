@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { FAIL, SUCCESS } from "../actions";
+import { useDispatch } from "react-redux";
 import { tvApi } from "../api";
-import { useTVDispatch } from "../contexts/TVContext";
+import { fail, success } from "../reducers/TVReducer";
 
 
 export const useTV = (): void => {
-    const dispatch = useTVDispatch();
+    const dispatch = useDispatch();
 
     async function getTV() {
         try {
@@ -13,9 +13,9 @@ export const useTV = (): void => {
             const { data: { results: popular } } = await tvApi.popular();
             const { data: { results: airingToday } } = await tvApi.airingToday();
             console.log(topRated, airingToday, popular);
-            dispatch({ type: SUCCESS, payload: { topRated, popular, airingToday } });
+            dispatch(success({ topRated, popular, airingToday }));
         } catch {
-            dispatch({ type: FAIL });
+            dispatch(fail());
         }
     }
 

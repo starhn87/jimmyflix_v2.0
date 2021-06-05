@@ -1,12 +1,13 @@
 import React from "react";
 import Helmet from "react-helmet";
+import { useSelector } from "react-redux";
 import { Link, Route } from "react-router-dom";
 import styled from "styled-components";
 import useRouter from "use-react-router";
 import imdb from "../assets/images/imdb.png";
 import defaultImg from "../assets/images/noPosterSmall.png";
-import { useDetailState } from "../contexts/DetailContext";
 import Collection from "../Routes/Collection";
+import { DetailProps } from "../Routes/Detail";
 import Section from "./Section";
 
 const Container = styled.div`
@@ -157,7 +158,8 @@ const Box = styled.div`
 `;
 
 function Info() {
-    const { result } = useDetailState();
+    const result = useSelector((state: DetailProps) => (state.detail.result));
+    console.log(result);
     const { match: { url }, location: { pathname } } = useRouter();
 
     return (
