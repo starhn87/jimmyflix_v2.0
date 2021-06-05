@@ -1,4 +1,4 @@
-# Nomflix
+# Jimmyflix-redux
 
 Learning React and ES6 by building a Movie Discovery App using React Presenter Pattern.
 

@@ -1,19 +1,20 @@
 import { useEffect } from "react";
-import { FAIL, SUCCESS } from "../actions";
+import { useDispatch } from "react-redux";
 import { moviesApi } from "../api";
-import { useHomeDispatch } from "../contexts/HomeContext";
+import { fail, success } from "../reducers/HomeReducer";
 
-export const useHome = (): void => {
-    const dispatch = useHomeDispatch();
+export const useHome = () => {
+    const dispatch = useDispatch();
 
     async function getHome() {
         try {
             const { data: { results: nowPlaying } } = await moviesApi.nowPlaying();
             const { data: { results: upcoming } } = await moviesApi.upcoming();
             const { data: { results: popular } } = await moviesApi.popular();
-            dispatch({ type: SUCCESS, payload: { nowPlaying, upcoming, popular } });
+            dispatch(success({ nowPlaying, upcoming, popular }));
+            throw new Error();
         } catch {
-            dispatch({ type: FAIL });
+            dispatch(fail());
         }
     }
 
@@ -22,4 +23,5 @@ export const useHome = (): void => {
         getHome();
     }, []);
 }
+
 

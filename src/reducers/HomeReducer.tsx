@@ -1,4 +1,4 @@
-import { FAIL, SUCCESS } from "../actions"
+import { createSlice } from "@reduxjs/toolkit"
 
 export interface HomeState {
     nowPlaying: [] | null,
@@ -25,9 +25,12 @@ export const homeInitialState: HomeState = {
     loading: true
 }
 
-const homeReducer = (state: HomeState, action: HomeAction): HomeState => {
-    switch (action.type) {
-        case SUCCESS:
+const home = createSlice({
+    name: 'homeReducer',
+    initialState: homeInitialState,
+    reducers: {
+        success: (state, action) => {
+            console.log(action.payload);
             return {
                 ...state,
                 nowPlaying: action.payload ? action.payload.nowPlaying : null,
@@ -35,17 +38,20 @@ const homeReducer = (state: HomeState, action: HomeAction): HomeState => {
                 popular: action.payload ? action.payload.popular : null,
                 loading: false
             }
-
-        case FAIL:
+        },
+        fail: (state) => {
             return {
                 ...state,
-                error: "Can't find Home information.",
+                error: "Can't find Home Information.",
                 loading: false
             }
-
-        default:
-            throw new Error("Unhandled Home Action.");
+        }
     }
-}
+})
 
-export default homeReducer;
+export const { success, fail } = home.actions;
+export default home.reducer;
+
+
+
+

@@ -2,13 +2,14 @@ import React from "react";
 import Loader from "../Components/Loader";
 import Helmet from "react-helmet";
 import { useHome } from "../hooks/useHome";
-import { useHomeState } from "../contexts/HomeContext";
 import MovieResult from "../Components/MovieResult";
 import Header from "../Components/Header";
+import { useSelector } from "react-redux";
+import { HomeState } from "../reducers/HomeReducer";
 
 function Home() {
     useHome();
-    const { loading } = useHomeState();
+    const loading = useSelector((state: HomeState) => state.loading);
 
     return <>
         <Helmet>
