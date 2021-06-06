@@ -5,7 +5,7 @@ import Helmet from "react-helmet";
 import { useSearch } from "../hooks/useSearch";
 import SearchResult from "../Components/SearchResult";
 import Header from "../Components/Header";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { SearchState } from "../reducers/SearchReducer";
 
 const Container = styled.div`
@@ -29,7 +29,7 @@ export interface SearchProps {
 
 function Search() {
     const { searchTerm, updateTerm, handleSubmit } = useSearch();
-    const loading = useSelector((state: SearchProps) => state.search.loading);
+    const loading = useSelector((state: SearchProps) => state.search.loading, shallowEqual);
 
     return <Container>
         <Helmet>

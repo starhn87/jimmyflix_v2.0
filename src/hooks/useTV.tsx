@@ -4,10 +4,10 @@ import { tvApi } from "../api";
 import { fail, reset, success } from "../reducers/TVReducer";
 
 
-export const useTV = (): void => {
+export function useTV(): void {
     const dispatch = useDispatch();
 
-    async function getTV() {
+    const getTV = async () => {
         try {
             const { data: { results: topRated } } = await tvApi.topRated();
             const { data: { results: popular } } = await tvApi.popular();

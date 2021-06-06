@@ -3,10 +3,10 @@ import { useDispatch } from "react-redux";
 import { moviesApi } from "../api";
 import { fail, success, reset } from "../reducers/HomeReducer";
 
-export const useHome = () => {
+export function useHome(): void {
     const dispatch = useDispatch();
 
-    async function getHome() {
+    const getHome = async () => {
         try {
             const { data: { results: nowPlaying } } = await moviesApi.nowPlaying();
             const { data: { results: upcoming } } = await moviesApi.upcoming();

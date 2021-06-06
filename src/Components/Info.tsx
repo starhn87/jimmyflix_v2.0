@@ -1,6 +1,6 @@
 import React from "react";
 import Helmet from "react-helmet";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { Link, Route } from "react-router-dom";
 import styled from "styled-components";
 import useRouter from "use-react-router";
@@ -158,7 +158,7 @@ const Box = styled.div`
 `;
 
 function Info() {
-    const result = useSelector((state: DetailProps) => (state.detail.result));
+    const result = useSelector((state: DetailProps) => (state.detail.result), shallowEqual);
     const { match: { url }, location: { pathname } } = useRouter();
 
     return (

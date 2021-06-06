@@ -1,11 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { moviesApi, tvApi } from "../api";
 import { fail, success, loading, term } from "../reducers/SearchReducer";
 import { SearchProps } from "../Routes/Search";
 
+interface Props {
+    searchTerm: string,
+    updateTerm: (event: React.ChangeEvent<HTMLInputElement>) => void,
+    handleSubmit: (event: React.FormEvent) => void
+}
 
-export const useSearch = () => {
+export function useSearch(): Props {
     const searchTerm = useSelector((state: SearchProps) => state.search.searchTerm);
     const dispatch = useDispatch();
 
@@ -17,20 +22,22 @@ export const useSearch = () => {
         }
     }
 
-    function updateTerm(event: React.ChangeEvent<HTMLInputElement>) {
+    const updateTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { target: { value } } = event;
         dispatch(term(value));
     }
 
-    const searchByTerm = useCallback(async () => {
+    const searchByTerm = async () => {
         try {
+            console.log(searchTerm);
+            console.log("hi");
             const { data: { results: movieResults } } = await moviesApi.search(searchTerm);
             const { data: { results: tvResults } } = await tvApi.search(searchTerm);
             dispatch(success({ movieResults, tvResults }));
         } catch {
             dispatch(fail());
         }
-    }, [searchTerm]);
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);

@@ -7,15 +7,16 @@ interface ICollection {
     name: string
 }
 
-interface UseCollection {
-    (id: number): { collection?: ICollection[], error?: string }
+interface Props {
+    collection?: ICollection[],
+    error?: string
 }
 
-export const useCollection: UseCollection = (id: number) => {
+export function useCollection(id: number): Props {
     const [collection, setCollection] = useState<ICollection[]>();
     const [error, setError] = useState<string>();
 
-    async function getCollection() {
+    const getCollection = async () => {
         try {
             const { data: { parts } } = await collections(id);
             setCollection(parts);

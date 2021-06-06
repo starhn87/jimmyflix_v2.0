@@ -4,12 +4,12 @@ import useRouter from "use-react-router";
 import { moviesApi, tvApi } from "../api";
 import { fail, success, reset } from "../reducers/DetailReducer";
 
-export const useDetail = () => {
+export function useDetail(): void {
     const { match: { params: { id } }, location: { pathname }, history: { push } } = useRouter<any>();
     const dispatch = useDispatch();
     const isMovie = pathname.includes("/movie/");
 
-    async function getDetail() {
+    const getDetail = async () => {
         const parsedId = parseInt(id);
 
         if (isNaN(parsedId)) {
