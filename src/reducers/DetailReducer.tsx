@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { FAIL, SUCCESS } from "../actions";
 
 export interface DetailState {
     result: {
@@ -41,7 +40,7 @@ const detail = createSlice({
     initialState: detailInitialState,
     reducers: {
         success: (state, action) => ({
-            ...state,
+            error: null,
             result: action.payload.results,
             loading: false
         }),
@@ -49,11 +48,12 @@ const detail = createSlice({
             result: null,
             error: "Can't find Detail information.",
             loading: false
-        })
+        }),
+        reset: () => detailInitialState
     }
 })
 
-export const { success, fail } = detail.actions;
+export const { success, fail, reset } = detail.actions;
 
 export default detail.reducer;
 

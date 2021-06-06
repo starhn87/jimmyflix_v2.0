@@ -1,13 +1,14 @@
 import React from "react";
-import { useSearchState } from "../contexts/SearchContext";
 import Message from "./Message";
 import Poster from "./Poster";
 import Section from "./Section";
 import { Movie } from "./MovieResult";
 import { Show } from "./TVResult";
+import { shallowEqual, useSelector } from "react-redux";
+import { SearchProps } from "../Routes/Search";
 
 function SearchResult() {
-    const { movieResults, tvResults, error } = useSearchState();
+    const { movieResults, tvResults, error } = useSelector((state: SearchProps) => ({ ...state.search }), shallowEqual);
 
     return (
         <>

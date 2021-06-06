@@ -5,7 +5,7 @@ import Message from "../Components/Message";
 import { useDetail } from "../hooks/useDetail";
 import Info from "../Components/Info";
 import Header from "../Components/Header";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { DetailState } from "../reducers/DetailReducer";
 
 export interface DetailProps {
@@ -14,7 +14,7 @@ export interface DetailProps {
 
 function Detail() {
     useDetail();
-    const { loading, error } = useSelector((state: DetailProps) => ({ ...state.detail }));
+    const { loading, error } = useSelector((state: DetailProps) => ({ ...state.detail }), shallowEqual);
 
     return loading ? (
         <>

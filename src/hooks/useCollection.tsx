@@ -18,7 +18,6 @@ export const useCollection: UseCollection = (id: number) => {
     async function getCollection() {
         try {
             const { data: { parts } } = await collections(id);
-            console.log(parts);
             setCollection(parts);
         } catch {
             setError("Can't find collections information.");

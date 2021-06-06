@@ -159,7 +159,6 @@ const Box = styled.div`
 
 function Info() {
     const result = useSelector((state: DetailProps) => (state.detail.result));
-    console.log(result);
     const { match: { url }, location: { pathname } } = useRouter();
 
     return (

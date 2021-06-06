@@ -1,50 +1,48 @@
-import { FAIL, LOADING, SUCCESS } from "../actions";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface SearchState {
     movieResults: [] | null,
     tvResults: [] | null,
     error: string | null,
-    loading: boolean | null
-}
-
-export interface SearchAction {
-    type: string,
-    payload?: {
-        movieResults: [],
-        tvResults: []
-    }
+    loading: boolean | null,
+    searchTerm: string
 }
 
 export const searchInitialState: SearchState = {
     movieResults: null,
     tvResults: null,
     error: null,
-    loading: null
+    loading: null,
+    searchTerm: ""
 };
 
-const searchReducer = (state: SearchState, action: SearchAction): SearchState => {
-    switch (action.type) {
-        case SUCCESS:
-            return {
-                ...state,
-                movieResults: action.payload ? action.payload.movieResults : null,
-                tvResults: action.payload ? action.payload.tvResults : null,
-                loading: false
-            }
-        case FAIL:
-            return {
-                ...state,
-                error: "Can't find Search results.",
-                loading: false
-            }
-        case LOADING:
-            return {
-                ...state,
-                loading: true
-            }
-        default:
-            throw new Error("Unhandled Search Action.");
-    }
-}
 
-export default searchReducer;
+export const search = createSlice({
+    name: 'searchReducer',
+    initialState: searchInitialState,
+    reducers: {
+        success: (state, action) => ({
+            ...state,
+            movieResults: action.payload.movieResults,
+            tvResults: action.payload.tvResults,
+            loading: false
+        }),
+        fail: (state) => ({
+            ...state,
+            error: "Can't find Search results.",
+            loading: false
+        }),
+        loading: (state) => ({
+            ...state,
+            loading: true
+        }),
+        term: (state, action) => ({
+            ...state,
+            searchTerm: action.payload
+        })
+    }
+})
+
+export const { success, fail, loading, term } = search.actions;
+
+export default search.reducer;

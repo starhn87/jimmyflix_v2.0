@@ -3,9 +3,10 @@ import styled from "styled-components";
 import Loader from "../Components/Loader";
 import Helmet from "react-helmet";
 import { useSearch } from "../hooks/useSearch";
-import { useSearchFunctions, useSearchState, useSearchTerm } from "../contexts/SearchContext";
 import SearchResult from "../Components/SearchResult";
 import Header from "../Components/Header";
+import { useSelector } from "react-redux";
+import { SearchState } from "../reducers/SearchReducer";
 
 const Container = styled.div`
     padding: 0 20px;
@@ -22,11 +23,13 @@ const Input = styled.input`
     font-size: 28px;
 `;
 
+export interface SearchProps {
+    search: SearchState
+}
+
 function Search() {
-    useSearch();
-    const { loading } = useSearchState();
-    const { handleSubmit, updateTerm } = useSearchFunctions();
-    const searchTerm = useSearchTerm();
+    const { searchTerm, updateTerm, handleSubmit } = useSearch();
+    const loading = useSelector((state: SearchProps) => state.search.loading);
 
     return <Container>
         <Helmet>

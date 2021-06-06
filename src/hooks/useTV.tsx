@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { tvApi } from "../api";
-import { fail, success } from "../reducers/TVReducer";
+import { fail, reset, success } from "../reducers/TVReducer";
 
 
 export const useTV = (): void => {
@@ -22,6 +22,10 @@ export const useTV = (): void => {
     useEffect(() => {
         window.scrollTo(0, 0);
         getTV();
+
+        return () => {
+            dispatch(reset());
+        }
     }, []);
 }
 

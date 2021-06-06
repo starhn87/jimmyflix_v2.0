@@ -21,7 +21,6 @@ const home = createSlice({
     initialState: homeInitialState,
     reducers: {
         success: (state, action) => {
-            console.log(action.payload);
             return {
                 ...state,
                 nowPlaying: action.payload.nowPlaying,
@@ -36,11 +35,12 @@ const home = createSlice({
                 error: "Can't find Home Information.",
                 loading: false
             }
-        }
+        },
+        reset: () => homeInitialState
     }
 })
 
-export const { success, fail } = home.actions;
+export const { success, fail, reset } = home.actions;
 export default home.reducer;
 
 

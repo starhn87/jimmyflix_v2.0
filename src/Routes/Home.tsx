@@ -4,7 +4,7 @@ import Helmet from "react-helmet";
 import { useHome } from "../hooks/useHome";
 import MovieResult from "../Components/MovieResult";
 import Header from "../Components/Header";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { HomeState } from "../reducers/HomeReducer";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 function Home() {
     useHome();
-    const loading = useSelector((state: Props) => state.home.loading);
+    const loading = useSelector((state: Props) => state.home.loading, shallowEqual);
 
     return <>
         <Helmet>

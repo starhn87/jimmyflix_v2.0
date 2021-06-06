@@ -167,5 +167,9 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "@types/redux-logger": "^3.0.8",
+    "redux-logger": "^3.0.6"
   }
 }

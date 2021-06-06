@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { moviesApi } from "../api";
-import { fail, success } from "../reducers/HomeReducer";
+import { fail, success, reset } from "../reducers/HomeReducer";
 
 export const useHome = () => {
     const dispatch = useDispatch();
@@ -20,6 +20,10 @@ export const useHome = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         getHome();
+
+        return () => {
+            dispatch(reset());
+        }
     }, []);
 }
 

@@ -32,9 +32,10 @@ const tv = createSlice({
             ...state,
             error: "Can't find TV information.",
             loading: false
-        })
+        }),
+        reset: () => tvInitialState
     }
 })
 
-export const { success, fail } = tv.actions;
+export const { success, fail, reset } = tv.actions;
 export default tv.reducer;
