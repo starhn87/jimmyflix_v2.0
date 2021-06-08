@@ -29,8 +29,6 @@ export function useSearch(): Props {
 
     const searchByTerm = async () => {
         try {
-            console.log(searchTerm);
-            console.log("hi");
             const { data: { results: movieResults } } = await moviesApi.search(searchTerm);
             const { data: { results: tvResults } } = await tvApi.search(searchTerm);
             dispatch(success({ movieResults, tvResults }));

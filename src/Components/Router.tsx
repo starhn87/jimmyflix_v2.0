@@ -5,24 +5,29 @@ import TV from "../Routes/TV";
 import Search from "../Routes/Search";
 import Detail from "../Routes/Detail";
 
-export default () => (
-    <Router>
-        <Switch>
-            <Route path="/" exact>
-                <Home />
-            </Route>
-            <Route path="/tv">
-                <TV />
-            </Route>
-            <Route path="/search">
-                <Search />
-            </Route>
-            <Route path={["/movie/:id", "/show/:id"]}>
-                <Detail />
-            </Route>
-            <Route path="*">
-                <Redirect to="/" />
-            </Route>
-        </Switch>
-    </Router>
-)
+function BasicRouter() {
+    return (
+        <Router>
+            <Switch>
+                <Route path="/" exact>
+                    <Home />
+                </Route>
+                <Route path="/tv" exact>
+                    <TV />
+                </Route>
+                <Route path="/search">
+                    <Search />
+                </Route>
+                <Route path={["/movie/:id", "/tv/:id"]}>
+                    <Detail />
+                </Route>
+                <Route path="*">
+                    <Redirect to="/" />
+                </Route>
+            </Switch>
+        </Router>
+
+    )
+}
+
+export default BasicRouter;

@@ -10,9 +10,14 @@ const Container = styled.div`
     justify-content: center;
 `;
 
-export default () =>
-    <Container>
-        <span role="img" aria-label="Loading">
-            ⏰
-        </span>
-    </Container>
+function Loader() {
+    return (
+        <Container>
+            <span role="img" aria-label="Loading">
+                ⏰
+            </span>
+        </Container>
+    )
+}
+
+export default Loader;

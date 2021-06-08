@@ -3,7 +3,7 @@ import Message from "../Components/Message";
 import { useCollection } from "../hooks/useCollection";
 import Section from "../Components/Section";
 import styled from "styled-components";
-import { Link, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
     width: 70%;

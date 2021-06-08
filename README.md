@@ -1,10 +1,10 @@
 # Jimmyflix-redux
 
-Learning React and ES6 by building a Movie Discovery App using React Presenter Pattern.
+Learning React and ES6 by building a Movie Discovery App using React Hooks and Redux.
 
 ## Screens
 
-- [x] Home
+- [x] Home (Movie)
 - [x] TV Shows
 - [x] Search
 - [x] Detail
@@ -19,6 +19,7 @@ Learning React and ES6 by building a Movie Discovery App using React Presenter P
 - [x] TV Show Detail
 - [x] Movie  Detail
 - [x] Search (Movie, TV)
+- [x] Collection (Movie)
 
 ## Code Challenges
 
@@ -28,11 +29,13 @@ Learning React and ES6 by building a Movie Discovery App using React Presenter P
 - [x] /collections Route
 - [x] On TV Show, show seasons
 - [x] Use Context API
-- [x] introduce Typescript
-- [x] apply optimization (useMemo)
-- [ ] make jimmyflix redux ver.
-- [ ] introduce webpack, babel
-- [ ] introduce es-lint
+- [x] Introduce Typescript
+- [x] Apply optimization (useMemo)
+- [x] Make jimmyflix redux ver.
+- [ ] Add Genre arranged Videos
+- [ ] Order
+- [ ] Introduce es-lint
+- [ ] Introduce webpack, babel
 
 ## Preview:
 

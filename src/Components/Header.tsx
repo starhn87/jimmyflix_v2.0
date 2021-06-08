@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Link, RouteComponentProps, useLocation, useParams, useRouteMatch, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useRouter from "use-react-router";
 
@@ -45,7 +45,7 @@ const Header = () => {
 				<Item current={pathname === "/" || pathname.includes("/movie")}>
 					<SLink to="/">Movies</SLink>
 				</Item>
-				<Item current={pathname === "/tv" || pathname.includes("/show")}>
+				<Item current={pathname === "/tv" || pathname.includes("/tv")}>
 					<SLink to="/tv">TV</SLink>
 				</Item>
 				<Item current={pathname.includes("/search")}>

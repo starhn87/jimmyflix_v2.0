@@ -57,7 +57,7 @@ interface Props {
 }
 
 const Poster: React.FunctionComponent<Props> = ({ id, imageUrl, title, rating, year, isMovie = false }) => (
-    <Link to={isMovie ? `/movie/${id}` : `/show/${id}`}>
+    <Link to={isMovie ? `/movie/${id}` : `/tv/${id}`}>
         <Container>
             <ImageContainer>
                 <Image bgUrl={imageUrl ? `https://image.tmdb.org/t/p/w300${imageUrl}` : defaultImg} />
