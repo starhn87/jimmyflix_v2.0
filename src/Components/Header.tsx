@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useRouter from "use-react-router";
+import { customMedia } from "./GlobalStyles";
 
 const Head = styled.header`
 	color: white;
@@ -16,10 +17,18 @@ const Head = styled.header`
 	background-color: rgba(20, 20, 20, 0.8);
 	z-index: 10;
 	box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
+
+	${customMedia.lessThan('mobile')`
+		position: absolute;
+	`}
 `;
 
 const List = styled.ul`
     display: flex;
+	
+	${customMedia.lessThan('mobile')`
+    	display: contents;
+	`}
 `;
 
 const Item = styled.li < { current: boolean }> `
@@ -27,6 +36,9 @@ const Item = styled.li < { current: boolean }> `
 	text-align: center;
 	border-bottom: 5px solid ${props => (props.current ? "#EEC425" : "transparent")};
 	transition: border-bottom .5s ease-in-out;
+	${customMedia.lessThan('mobile')`
+		width: 100%;
+	`}
 `;
 
 const SLink = styled(Link)`

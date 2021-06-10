@@ -4,9 +4,14 @@ import { useCollection } from "../hooks/useCollection";
 import Section from "../Components/Section";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { customMedia } from "../Components/GlobalStyles";
 
 const Container = styled.div`
     width: 70%;
+    
+    ${customMedia.lessThan('mobile')`
+        width: 100%;
+    `}
 `;
 
 const Item = styled.img`

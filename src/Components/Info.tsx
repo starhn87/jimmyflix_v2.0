@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Helmet from "react-helmet";
 import { shallowEqual, useSelector } from "react-redux";
 import { Link, Route } from "react-router-dom";
@@ -8,14 +8,8 @@ import imdb from "../assets/images/imdb.png";
 import defaultImg from "../assets/images/noPosterSmall.png";
 import Collection from "../Routes/Collection";
 import { DetailProps } from "../Routes/Detail";
+import { customMedia } from "./GlobalStyles";
 import Section from "./Section";
-import { generateMedia } from "styled-media-query";
-
-export const customMedia = generateMedia({
-    desktop: '78em',
-    tablet: '60em',
-    mobile: '46em'
-})
 
 const Container = styled.div`
     position: relative;
@@ -25,7 +19,6 @@ const Container = styled.div`
 
     ${customMedia.lessThan('mobile')`
         padding: 0;
-        height: ;
     `}
 `;
 
@@ -113,7 +106,7 @@ const Overview = styled.p`
     
     ${customMedia.lessThan('mobile')`
         width: 100%;
-        padding: 1%;
+        padding: 0 5% 0 0;
     `}
 `;
 
@@ -188,6 +181,7 @@ const Iframe = styled.iframe`
         width: 100%;
         padding: 1%;
         height: 300px;
+        margin-top: 0;
     `}
 `;
 

@@ -7,7 +7,7 @@ import SearchResult from "../Components/SearchResult";
 import Header from "../Components/Header";
 import { shallowEqual, useSelector } from "react-redux";
 import { SearchState } from "../reducers/SearchReducer";
-import { customMedia } from "../Components/Info";
+import { customMedia } from "../Components/GlobalStyles";
 
 const Container = styled.div`
     padding: 0 20px;
