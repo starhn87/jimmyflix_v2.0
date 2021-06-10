@@ -7,6 +7,7 @@ import SearchResult from "../Components/SearchResult";
 import Header from "../Components/Header";
 import { shallowEqual, useSelector } from "react-redux";
 import { SearchState } from "../reducers/SearchReducer";
+import { customMedia } from "../Components/Info";
 
 const Container = styled.div`
     padding: 0 20px;
@@ -20,6 +21,10 @@ const Input = styled.input`
     all: unset;
     width: 100%;
     font-size: 28px;
+
+    ${customMedia.lessThan('mobile')`
+        font-size: 18px;
+    `}
 `;
 
 export interface SearchProps {

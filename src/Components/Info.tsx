@@ -25,6 +25,7 @@ const Container = styled.div`
 
     ${customMedia.lessThan('mobile')`
         padding: 0;
+        height: ;
     `}
 `;
 
@@ -65,23 +66,37 @@ const Cover = styled.div<{ bgImage: string }>`
 
     ${customMedia.lessThan('mobile')`
         width: 100%;
-        height: 60%;
+        height: 50%;
     `}
 `;
 
 const Data = styled.div`
     width: 70%;
     margin-left: 15px;
+
+    ${customMedia.lessThan('mobile')`
+        width: 100%;
+    `}
 `;
 
 const Title = styled.h3`
     float: left;
     font-size: 32px;
+    
+    ${customMedia.lessThan('mobile')`
+        float: unset;
+        padding: 3% 1%;
+    `}
 `;
 
 const ItemContainer = styled.div`
     margin: 20px 0;
     padding-top: 15px;
+
+    ${customMedia.lessThan('mobile')`
+        margin: 0;
+        padding: 0 1% 3%;
+    `}
 `;
 
 const Item = styled.span``;
@@ -95,6 +110,11 @@ const Overview = styled.p`
     line-height: 1.5;
     font-size: 12px;
     opacity: 0.7;
+    
+    ${customMedia.lessThan('mobile')`
+        width: 100%;
+        padding: 1%;
+    `}
 `;
 
 const ILink = styled.a`
@@ -124,6 +144,11 @@ const Tab = styled.div`
     background-color: rgba(20, 20, 20, 0.8);
     z-index: 10;
     box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
+
+    ${customMedia.lessThan('mobile')`
+        width: 100%;
+        padding: 1%;
+    `}
 `;
 
 const List = styled.ul`
@@ -158,6 +183,12 @@ const Iframe = styled.iframe`
     &: last-child {
         margin-bottom: 30px;
     }
+
+    ${customMedia.lessThan('mobile')`
+        width: 100%;
+        padding: 1%;
+        height: 300px;
+    `}
 `;
 
 const Logo = styled.img<{ logo: string }>`
