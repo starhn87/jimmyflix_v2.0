@@ -12,7 +12,6 @@ export function useTV(): void {
             const { data: { results: topRated } } = await tvApi.topRated();
             const { data: { results: popular } } = await tvApi.popular();
             const { data: { results: airingToday } } = await tvApi.airingToday();
-            console.log(topRated, airingToday, popular);
             dispatch(success({ topRated, popular, airingToday }));
         } catch {
             dispatch(fail());

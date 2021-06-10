@@ -10,7 +10,6 @@ import { SearchState } from "../reducers/SearchReducer";
 
 const Container = styled.div`
     padding: 0 20px;
-
 `;
 
 const Form = styled.form`

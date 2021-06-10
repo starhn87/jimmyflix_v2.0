@@ -9,12 +9,23 @@ import defaultImg from "../assets/images/noPosterSmall.png";
 import Collection from "../Routes/Collection";
 import { DetailProps } from "../Routes/Detail";
 import Section from "./Section";
+import { generateMedia } from "styled-media-query";
+
+export const customMedia = generateMedia({
+    desktop: '78em',
+    tablet: '60em',
+    mobile: '46em'
+})
 
 const Container = styled.div`
     position: relative;
     padding: 50px;
     width: 100%;
     height: calc(100vh - 50px);
+
+    ${customMedia.lessThan('mobile')`
+        padding: 0;
+    `}
 `;
 
 const Backdrop = styled.div < { bgImage: string }> `
@@ -37,6 +48,11 @@ const Content = styled.div`
     width: 100%;
     height: 100%;
     z-index: 1;
+
+    ${customMedia.lessThan('mobile')`
+        display: block;
+        
+    `}
 `;
 
 const Cover = styled.div<{ bgImage: string }>`
@@ -46,6 +62,11 @@ const Cover = styled.div<{ bgImage: string }>`
     background-position: center center;
     background-size: cover;
     border-radius: 5px;
+
+    ${customMedia.lessThan('mobile')`
+        width: 100%;
+        height: 60%;
+    `}
 `;
 
 const Data = styled.div`
@@ -214,7 +235,7 @@ function Info() {
                             </Tab>
                             <Route path={`${url}`} exact render={() =>
                                 !result.video && result.videos.results && result.videos.results.length > 0 &&
-                                result.videos.results.map((video: { key: number }) => {
+                                result.videos.results.filter((video, index) => index === 0).map((video: { key: number }) => {
                                     return <Iframe
                                         key={video.key}
                                         src={`https://www.youtube.com/embed/${video.key}`}

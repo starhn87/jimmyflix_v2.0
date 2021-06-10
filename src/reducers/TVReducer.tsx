@@ -1,5 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { FAIL, SUCCESS } from "../actions"
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface TVState {
     topRated: [] | null,

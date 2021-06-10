@@ -32,8 +32,7 @@ Learning React and ES6 by building a Movie Discovery App using React Hooks and R
 - [x] Introduce Typescript
 - [x] Apply optimization (useMemo)
 - [x] Make jimmyflix redux ver.
-- [ ] Add Genre arranged Videos
-- [ ] Order
+- [ ] Responsive Web design
 - [ ] Introduce es-lint
 - [ ] Introduce webpack, babel
 
