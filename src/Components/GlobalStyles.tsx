@@ -24,6 +24,10 @@ const globalStyles = createGlobalStyle`
         color: white;
         padding-top: 50px;
     }
+
+    #root {
+        overflow-x: hidden;
+    }
 `;
 
 export default globalStyles;

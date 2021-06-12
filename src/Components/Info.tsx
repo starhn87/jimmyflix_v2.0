@@ -34,6 +34,10 @@ const Backdrop = styled.div < { bgImage: string }> `
     filter: blur(3px);
     opacity: 0.5;
     z-index: 0;
+
+    ${customMedia.lessThan('mobile')`
+        display: none;
+    `}
 `;
 
 const Content = styled.div`
@@ -59,7 +63,7 @@ const Cover = styled.div<{ bgImage: string }>`
 
     ${customMedia.lessThan('mobile')`
         width: 100%;
-        height: 50%;
+        height: 150%;
     `}
 `;
 
@@ -69,6 +73,7 @@ const Data = styled.div`
 
     ${customMedia.lessThan('mobile')`
         width: 100%;
+        margin-left: 2.5%;
     `}
 `;
 
@@ -84,7 +89,7 @@ const Title = styled.h3`
 
 const ItemContainer = styled.div`
     margin: 20px 0;
-    padding-top: 15px;
+    padding-top: 25px;
 
     ${customMedia.lessThan('mobile')`
         margin: 0;
@@ -105,8 +110,7 @@ const Overview = styled.p`
     opacity: 0.7;
     
     ${customMedia.lessThan('mobile')`
-        width: 100%;
-        padding: 0 5% 0 0;
+        width: 95%;
     `}
 `;
 
@@ -139,13 +143,13 @@ const Tab = styled.div`
     box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
 
     ${customMedia.lessThan('mobile')`
-        width: 100%;
+        width: 95%;
         padding: 1%;
     `}
 `;
 
 const List = styled.ul`
-    display: flex;
+    display: contents;
     width: 100%;
 `;
 
@@ -178,9 +182,9 @@ const Iframe = styled.iframe`
     }
 
     ${customMedia.lessThan('mobile')`
-        width: 100%;
-        padding: 1%;
-        height: 300px;
+        width: 95%;
+        padding: 5px 0;
+        height: 400px;
         margin-top: 0;
     `}
 `;
