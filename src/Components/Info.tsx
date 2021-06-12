@@ -63,7 +63,7 @@ const Cover = styled.div<{ bgImage: string }>`
 
     ${customMedia.lessThan('mobile')`
         width: 100%;
-        height: 150%;
+        height: 80%;
     `}
 `;
 
@@ -205,6 +205,11 @@ const Season = styled.img`
 
 const Box = styled.div`
     width: 70%;
+    margin-bottom: 30px;
+
+    ${customMedia.lessThan('mobile')`
+        width: 100%;
+    `}
 `;
 
 function Info() {
