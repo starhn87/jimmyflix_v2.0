@@ -14,13 +14,9 @@ const Head = styled.header`
 	display: flex;
 	align-items: center;
 	padding: 0 10px;
-	background-color: rgba(20, 20, 20, 0.8);
+	background-color: rgb(20, 20, 20);
 	z-index: 10;
 	box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
-
-	${customMedia.lessThan('mobile')`
-		position: absolute;
-	`}
 `;
 
 const List = styled.ul`
