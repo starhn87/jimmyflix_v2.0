@@ -16,6 +16,7 @@ const Container = styled.div`
     padding: 50px;
     width: 100%;
     height: calc(100vh - 50px);
+    overflow-y: auto;
 
     ${customMedia.lessThan('mobile')`
         padding: 0;
@@ -235,7 +236,7 @@ function Info() {
                                 <Divider>•</Divider>
                                 <Item>
                                     {result.runtime ? result.runtime : result.episode_runtime} min
-                            </Item>
+                                </Item>
                                 <Divider>•</Divider>
                                 <Item>
                                     {result.genres && result.genres.map((genre: { name: string }, index: number) => index === result.genres.length - 1 ? genre.name : `${genre.name} / `)}

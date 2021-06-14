@@ -26,7 +26,7 @@ const globalStyles = createGlobalStyle`
     }
 
     #root {
-        overflow-x: hidden;
+        overflow: hidden;
     }
 `;
 

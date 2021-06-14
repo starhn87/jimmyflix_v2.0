@@ -14,11 +14,13 @@ export function useSearch(): Props {
     const searchTerm = useSelector((state: SearchProps) => state.search.searchTerm);
     const dispatch = useDispatch();
 
-    function handleSubmit(event: React.FormEvent) {
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        dispatch(loading());
-        if (searchTerm !== "") {
+        if (searchTerm.trim() !== "") {
+            dispatch(loading());
             searchByTerm();
+        } else {
+            alert("Input what you wannt to know!");
         }
     }
 

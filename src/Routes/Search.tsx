@@ -20,10 +20,10 @@ const Form = styled.form`
 const Input = styled.input`
     all: unset;
     width: 100%;
-    font-size: 28px;
+    font-size: 30px;
 
     ${customMedia.lessThan('mobile')`
-        font-size: 18px;
+        font-size: 24px;
     `}
 `;
 

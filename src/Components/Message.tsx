@@ -1,15 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { customMedia } from "./GlobalStyles";
 
 const Container = styled.div`
     display: flex;
     width: 100vw;
+    height: 10vh;
     justify-content: center;
 `;
 
 const Text = styled.span<{ color: string }>`
+    font-size: 28px;
     color: ${props => props.color};
+
+    ${customMedia.lessThan('mobile')`
+        font-size: 22px;
+    `}
 `;
 
 interface Props {

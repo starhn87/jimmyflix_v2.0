@@ -41,7 +41,7 @@ const SLink = styled(Link)`
 	justify-content: center;
 `;
 
-const Header = () => {
+function Header() {
 	const { match: { url }, location: { pathname } } = useRouter();
 
 	return useMemo(() => (
