@@ -19,6 +19,7 @@ const globalStyles = createGlobalStyle`
         box-sizing: border-box;
     }
     body {
+        font-family: NanumGothic;
         font-size: 12px;
         background-color: rgba(20, 20, 20, 1);
         color: white;
