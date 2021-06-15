@@ -39,10 +39,11 @@ export const search = createSlice({
         term: (state, action) => ({
             ...state,
             searchTerm: action.payload
-        })
+        }),
+        reset: () => searchInitialState
     }
 })
 
-export const { success, fail, loading, term } = search.actions;
+export const { success, fail, loading, term, reset } = search.actions;
 
 export default search.reducer;

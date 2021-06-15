@@ -16,6 +16,7 @@ const Container = styled.div`
     padding: 50px;
     width: 100%;
     height: calc(100vh - 50px);
+    overflow-x: hidden;
     overflow-y: auto;
 
     ${customMedia.lessThan('mobile')`
@@ -157,11 +158,8 @@ const List = styled.ul`
 const Li = styled.li<{ current: boolean }>`
 	width: 100%;
 	text-align: center;
-	border-bottom: 5px solid ${props => (props.current ? "#EEC425" : "transparent")};
+	border-bottom: 5px solid ${props => (props.current ? "#b1ddf9" : "transparent")};
 	transition: border-bottom .5s ease-in-out;
-    :not(:last-child) {
-        margin-right: 20%;
-    }
 `;
 
 const SLink = styled(Link)`

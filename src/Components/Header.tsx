@@ -24,13 +24,14 @@ const List = styled.ul`
 `;
 
 const Item = styled.li < { current: boolean }> `
-	width: 50px;
-	font-size: 14px;
+	width: 70px;
+	font-size: 16px;
 	text-align: center;
-	border-bottom: 5px solid ${props => (props.current ? "#EEC425" : "transparent")};
+	border-bottom: 5px solid ${props => (props.current ? "#4d96fb" : "transparent")};
 	transition: border-bottom .5s ease-in-out;
 	${customMedia.lessThan('mobile')`
 		width: 100%;
+		font-size: 15px;
 	`}
 `;
 
