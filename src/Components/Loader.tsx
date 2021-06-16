@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import spinner from "../assets/images/Spinner.gif";
+import { customMedia } from "./GlobalStyles";
 
 const Container = styled.div`
     display: flex;
@@ -10,12 +12,20 @@ const Container = styled.div`
     justify-content: center;
 `;
 
+const Spinner = styled.img`
+    width: 80px;
+    height: 80px;
+
+    ${customMedia.lessThan('mobile')`
+        width: 60px;
+        height: 60px;
+    `}
+`;
+
 function Loader() {
     return (
         <Container>
-            <span role="img" aria-label="Loading">
-                ⏰
-            </span>
+            <Spinner src={spinner} />
         </Container>
     )
 }
