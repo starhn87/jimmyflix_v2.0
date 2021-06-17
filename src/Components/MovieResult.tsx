@@ -13,7 +13,7 @@ const Container = styled.div`
 export interface Movie {
     id: number,
     poster_path: string,
-    original_title: string,
+    title: string,
     vote_average: number,
     release_date: string
 }
@@ -34,7 +34,7 @@ function MovieResult() {
                             key={movie.id}
                             id={movie.id}
                             imageUrl={movie.poster_path}
-                            title={movie.original_title}
+                            title={movie.title}
                             rating={movie.vote_average}
                             year={movie.release_date && movie.release_date.substring(0, 4)}
                             isMovie={true}
@@ -48,7 +48,7 @@ function MovieResult() {
                             key={movie.id}
                             id={movie.id}
                             imageUrl={movie.poster_path}
-                            title={movie.original_title}
+                            title={movie.title}
                             rating={movie.vote_average}
                             year={movie.release_date && movie.release_date.substring(0, 4)}
                             isMovie={true}
@@ -62,7 +62,7 @@ function MovieResult() {
                             key={movie.id}
                             id={movie.id}
                             imageUrl={movie.poster_path}
-                            title={movie.original_title}
+                            title={movie.title}
                             rating={movie.vote_average}
                             year={movie.release_date && movie.release_date.substring(0, 4)}
                             isMovie={true}

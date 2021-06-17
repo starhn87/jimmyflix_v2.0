@@ -13,7 +13,7 @@ const Container = styled.div`
 export interface Show {
     id: number,
     poster_path: string,
-    original_name: string,
+    name: string,
     vote_average: number,
     first_air_date: string
 }
@@ -35,7 +35,7 @@ function TVResult() {
                             key={show.id}
                             id={show.id}
                             imageUrl={show.poster_path}
-                            title={show.original_name}
+                            title={show.name}
                             rating={show.vote_average}
                             year={show.first_air_date && show.first_air_date.substring(0, 4)}
                         />
@@ -49,7 +49,7 @@ function TVResult() {
                             key={show.id}
                             id={show.id}
                             imageUrl={show.poster_path}
-                            title={show.original_name}
+                            title={show.name}
                             rating={show.vote_average}
                             year={show.first_air_date && show.first_air_date.substring(0, 4)}
                         />
@@ -63,7 +63,7 @@ function TVResult() {
                             key={show.id}
                             id={show.id}
                             imageUrl={show.poster_path}
-                            title={show.original_name}
+                            title={show.name}
                             rating={show.vote_average}
                             year={show.first_air_date && show.first_air_date.substring(0, 4)}
                         />

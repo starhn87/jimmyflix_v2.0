@@ -4,8 +4,8 @@ export interface DetailState {
     result: {
         imdb_id: number,
         backdrop_path: string,
-        original_title: string,
-        original_name: string,
+        title: string,
+        name: string,
         poster_path: string,
         release_date: string,
         first_air_date: string,

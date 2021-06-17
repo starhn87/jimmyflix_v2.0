@@ -223,13 +223,13 @@ function Info() {
             {result &&
                 <Container>
                     <Helmet>
-                        <title>{result.original_title ? result.original_title : result.original_name} | Jimmyflix</title>
+                        <title>{result.title ? result.title : result.name} | Jimmyflix</title>
                     </Helmet>
                     <Backdrop bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`} />
                     <Content>
                         <Cover bgImage={result.poster_path ? `https://image.tmdb.org/t/p/original${result.poster_path}` : defaultImg} />
                         <Data>
-                            <Title>{result.original_title ? result.original_title : result.original_name}</Title>
+                            <Title>{result.title ? result.title : result.name}</Title>
                             <ItemContainer>
                                 <Item>
                                     {result.release_date ? result.release_date.substring(0, 4) : result.first_air_date.substring(0, 4)}
