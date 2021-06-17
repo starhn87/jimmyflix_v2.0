@@ -10,14 +10,14 @@ const Container = styled.div`
 `;
 
 const Title = styled.span`
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
 `;
 
 const Grid = styled.div`
     margin-top: 25px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 125px);
+    grid-template-columns: repeat(auto-fill, 150px);
     grid-gap: 25px;
 
     ${customMedia.lessThan('mobile')`

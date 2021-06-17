@@ -13,7 +13,7 @@ function SearchResult() {
     return (
         <>
             {movieResults && movieResults.length > 0 && (
-                <Section title="Movie Results">
+                <Section title="Movies">
                     {movieResults.map((movie: Movie) =>
                         <Poster
                             key={movie.id}
@@ -29,7 +29,7 @@ function SearchResult() {
                 </Section>
             )}
             {tvResults && tvResults.length > 0 && (
-                <Section title="TV Shows Results">
+                <Section title="TV Shows">
                     {tvResults.map((show: Show) =>
                         <Poster
                             key={show.id}
