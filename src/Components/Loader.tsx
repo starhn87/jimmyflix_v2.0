@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import spinner from "../assets/images/Spinner.gif";
-import { customMedia } from "./GlobalStyles";
 
 const Container = styled.div`
     display: flex;
@@ -13,13 +12,8 @@ const Container = styled.div`
 `;
 
 const Spinner = styled.img`
-    width: 80px;
-    height: 80px;
-
-    ${customMedia.lessThan('mobile')`
-        width: 60px;
-        height: 60px;
-    `}
+    width: 50px;
+    height: 50px;
 `;
 
 function Loader() {

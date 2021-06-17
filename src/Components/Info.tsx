@@ -29,7 +29,7 @@ const Backdrop = styled.div < { bgImage: string }> `
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 120%;
     background-image: url(${props => props.bgImage});
     background-position: center center;
     background-size: cover;
@@ -56,8 +56,8 @@ const Content = styled.div`
 `;
 
 const Cover = styled.div<{ bgImage: string }>`
-    width: 30%;
-    height: 100%;
+    width: 50%;
+    height: 120%;
     background-image: url(${props => props.bgImage});
     background-position: center center;
     background-size: cover;
@@ -82,18 +82,22 @@ const Data = styled.div`
 const Title = styled.h3`
     float: left;
     font-size: 32px;
+    margin-bottom: 5px;
     
     ${customMedia.lessThan('mobile')`
         float: unset;
         padding: 3% 1%;
+        width: 98%;
     `}
 `;
 
 const ItemContainer = styled.div`
     margin: 20px 0;
     padding-top: 25px;
+    line-height: 20px;
 
     ${customMedia.lessThan('mobile')`
+        width: 95%;
         margin: 0;
         padding: 0 1% 3%;
     `}
@@ -106,7 +110,6 @@ const Divider = styled.span`
 `;
 
 const Overview = styled.p`
-    width: 70%;
     line-height: 1.5;
     font-size: 12px;
     opacity: 0.7;
@@ -120,6 +123,7 @@ const ILink = styled.a`
     margin-left: 20px;
     width: 100px;
     height: 10px;
+    vertical-align: middle;
     &:hover {
         text-decoration: underline;
     }
@@ -134,7 +138,6 @@ const Img = styled.img`
 const Tab = styled.div`
     margin-top: 20px;
     color: white;
-    width: 70%;
     height: 50px;
     display: flex;
     align-items: center;
@@ -170,9 +173,9 @@ const SLink = styled(Link)`
 `;
 
 const Iframe = styled.iframe`
-    margin-top: 30px;
-    width: 70%;
-    height: 60%;
+    margin-top: 7px;
+    width: 100%;
+    height: 80%;
     &: first-child {
         margin-top: 5px;
     }
