@@ -187,7 +187,6 @@ const Iframe = styled.iframe`
         width: 95%;
         padding: 5px 0;
         height: 400px;
-        margin-top: 0;
     `}
 `;
 
@@ -207,6 +206,7 @@ const Season = styled.img`
 
 const Box = styled.div`
     width: 70%;
+    margin-top: 20px;
     margin-bottom: 30px;
 
     ${customMedia.lessThan('mobile')`

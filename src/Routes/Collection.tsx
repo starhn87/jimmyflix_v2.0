@@ -9,6 +9,7 @@ import { customMedia } from "../Components/GlobalStyles";
 const Container = styled.div`
     width: 70%;
     margin-bottom: 30px;
+    margin-top: 20px;
     
     ${customMedia.lessThan('mobile')`
         width: 100%;
