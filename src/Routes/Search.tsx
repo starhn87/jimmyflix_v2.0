@@ -18,11 +18,17 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-    all: unset;
-    width: 100%;
+    padding-left: 10px;
+    width: 500px;
+    height: 50px;
+    border-radius: 5px;
     font-size: 30px;
+    &:focus {
+        outline: none;
+    }
 
     ${customMedia.lessThan('mobile')`
+        width: 90%;
         font-size: 24px;
     `}
 `;
@@ -41,7 +47,7 @@ function Search() {
         </Helmet>
         <Header />
         <Form onSubmit={handleSubmit}>
-            <Input placeholder="Search Movies or TV Shows..." value={searchTerm} onChange={updateTerm}>
+            <Input value={searchTerm} onChange={updateTerm}>
             </Input>
         </Form>
 
