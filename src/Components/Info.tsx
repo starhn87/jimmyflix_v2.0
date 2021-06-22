@@ -249,21 +249,21 @@ function Info() {
                             <Overview>{result.overview}</Overview>
                             <Tab>
                                 <List>
-                                    <Li current={pathname === `${url}`}>
+                                    <Li current={pathname === `${url}`} onClick={() => window.history.replaceState(null, '', url)}>
                                         <SLink to={`${url}`}>Trailer</SLink>
                                     </Li>
-                                    <Li current={pathname.includes("/production")}>
+                                    <Li current={pathname.includes("/production")} onClick={() => window.history.replaceState(null, '', url)}>
                                         <SLink to={`${url}/production`}>Production</SLink>
                                     </Li>
                                     {
                                         result.belongs_to_collection &&
-                                        <Li current={pathname.includes("/collection")}>
+                                        <Li current={pathname.includes("/collection")} onClick={() => window.history.replaceState(null, '', url)}>
                                             <SLink to={`${url}/collection`}>Collection</SLink>
                                         </Li>
                                     }
                                     {
                                         result.seasons && result.seasons.length > 0 &&
-                                        <Li current={pathname.includes("/season")}>
+                                        <Li current={pathname.includes("/season")} onClick={() => window.history.replaceState(null, '', url)}>
                                             <SLink to={`${url}/season`}>Season</SLink>
                                         </Li>
                                     }
