@@ -11,10 +11,8 @@ export function useDetail(): void {
 
     const controlHistory = () => {
         window.onpopstate = (event: any) => {
-            const { target: { location: { pathname } } } = event;
-            if (url === pathname) {
-                window.history.back();
-            }
+            const { state: { stack } } = event;
+            window.history.go(stack * (-1));
         }
     }
 

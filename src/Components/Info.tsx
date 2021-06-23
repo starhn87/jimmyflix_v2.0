@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { shallowEqual, useSelector } from "react-redux";
 import { Link, Route } from "react-router-dom";
@@ -217,6 +217,11 @@ const Box = styled.div`
 function Info() {
     const result = useSelector((state: DetailProps) => (state.detail.result), shallowEqual);
     const { match: { url }, location: { pathname } } = useRouter();
+    const [stack, setStack] = useState<number>(1);
+    const onClick = () => {
+        setStack((s: number) => s + 1);
+        window.history.replaceState({ stack }, '', pathname);
+    };
 
     return (
         <>
@@ -249,22 +254,22 @@ function Info() {
                             <Overview>{result.overview}</Overview>
                             <Tab>
                                 <List>
-                                    <Li current={pathname === `${url}`} onClick={() => window.history.replaceState(null, '', url)}>
-                                        <SLink to={`${url}`}>Trailer</SLink>
+                                    <Li current={pathname === `${url}`}>
+                                        <SLink to={`${url}`} onClick={onClick}>Trailer</SLink>
                                     </Li>
-                                    <Li current={pathname.includes("/production")} onClick={() => window.history.replaceState(null, '', url)}>
-                                        <SLink to={`${url}/production`}>Production</SLink>
+                                    <Li current={pathname.includes("/production")}>
+                                        <SLink to={`${url}/production`} onClick={onClick}>Production</SLink>
                                     </Li>
                                     {
                                         result.belongs_to_collection &&
-                                        <Li current={pathname.includes("/collection")} onClick={() => window.history.replaceState(null, '', url)}>
-                                            <SLink to={`${url}/collection`}>Collection</SLink>
+                                        <Li current={pathname.includes("/collection")}>
+                                            <SLink to={`${url}/collection`} onClick={onClick}>Collection</SLink>
                                         </Li>
                                     }
                                     {
                                         result.seasons && result.seasons.length > 0 &&
-                                        <Li current={pathname.includes("/season")} onClick={() => window.history.replaceState(null, '', url)}>
-                                            <SLink to={`${url}/season`}>Season</SLink>
+                                        <Li current={pathname.includes("/season")}>
+                                            <SLink to={`${url}/season`} onClick={onClick}>Season</SLink>
                                         </Li>
                                     }
                                 </List>
