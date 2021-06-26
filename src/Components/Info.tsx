@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import Helmet from "react-helmet";
-import { shallowEqual, useSelector } from "react-redux";
-import { Link, Route } from "react-router-dom";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import useRouter from "use-react-router";
 import imdb from "../assets/images/imdb.png";
 import defaultImg from "../assets/images/noPosterSmall.png";
 import Collection from "../Routes/Collection";
 import { DetailProps } from "../Routes/Detail";
 import { customMedia } from "./GlobalStyles";
 import Section from "./Section";
+import { tab } from "../reducers/DetailReducer";
 
 const Container = styled.div`
     position: relative;
@@ -158,18 +157,19 @@ const List = styled.ul`
     width: 100%;
 `;
 
-const Li = styled.li<{ current: boolean }>`
+const Li = styled.li`
 	width: 100%;
 	text-align: center;
-	border-bottom: 3px solid ${props => (props.current ? "#b1ddf9" : "transparent")};
-	transition: border-bottom .5s ease-in-out;
-`;
-
-const SLink = styled(Link)`
-	height: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    &.active {
+        border-bottom: 3px solid #b1ddf9;
+        transition: border-bottom .2s ease-in-out;
+    }
 `;
 
 const Iframe = styled.iframe`
@@ -215,13 +215,16 @@ const Box = styled.div`
 `;
 
 function Info() {
-    const result = useSelector((state: DetailProps) => (state.detail.result), shallowEqual);
-    const { match: { url }, location: { pathname } } = useRouter();
-    const [stack, setStack] = useState<number>(1);
-    const onClick = () => {
-        setStack((s: number) => s + 1);
-        window.history.replaceState({ stack }, '', pathname);
-    };
+    const { result, tabName } = useSelector((state: DetailProps) => ({ ...state.detail }), shallowEqual);
+    const dispatch = useDispatch();
+
+    const onEvent: any = (event: any) => {
+        (document.querySelector(".active") as HTMLLIElement).classList.remove('active');
+
+        const clickedLi = event.target;
+        dispatch(tab(clickedLi.innerText));
+        clickedLi.classList.add('active');
+    }
 
     return (
         <>
@@ -253,29 +256,29 @@ function Info() {
                             </ItemContainer>
                             <Overview>{result.overview}</Overview>
                             <Tab>
-                                <List>
-                                    <Li current={pathname === `${url}`}>
-                                        <SLink to={`${url}`} onClick={onClick}>Trailer</SLink>
+                                <List onClick={onEvent}>
+                                    <Li className='active'>
+                                        Trailer
                                     </Li>
-                                    <Li current={pathname.includes("/production")}>
-                                        <SLink to={`${url}/production`} onClick={onClick}>Production</SLink>
+                                    <Li>
+                                        Production
                                     </Li>
                                     {
                                         result.belongs_to_collection &&
-                                        <Li current={pathname.includes("/collection")}>
-                                            <SLink to={`${url}/collection`} onClick={onClick}>Collection</SLink>
+                                        <Li>
+                                            Collection
                                         </Li>
                                     }
                                     {
                                         result.seasons && result.seasons.length > 0 &&
-                                        <Li current={pathname.includes("/season")}>
-                                            <SLink to={`${url}/season`} onClick={onClick}>Season</SLink>
+                                        <Li>
+                                            Season
                                         </Li>
                                     }
                                 </List>
                             </Tab>
-                            <Route path={`${url}`} exact render={() =>
-                                !result.video && result.videos.results && result.videos.results.length > 0 &&
+                            {
+                                tabName === 'Trailer' && !result.video && result.videos.results && result.videos.results.length > 0 &&
                                 result.videos.results.filter((video, index) => index === 0).map((video: { key: number }) => {
                                     return <Iframe
                                         key={video.key}
@@ -287,8 +290,9 @@ function Info() {
                                     </Iframe>
                                 }
                                 )
-                            } />
-                            <Route path={`${url}/production`} exact render={() => (
+                            }
+                            {
+                                tabName === 'Production' &&
                                 <Box>
                                     {result.production_companies && result.production_companies.length > 0 && <Section title="Production Company">
                                         {result.production_companies.map((company: { id: number, logo_path: string, name: string }) => {
@@ -301,11 +305,14 @@ function Info() {
                                         )}
                                     </Section>}
                                 </Box>
-                            )
-                            } />
-                            <Route path={`${url}/collection`} exact render={() => <Collection id={result.belongs_to_collection.id} />} />
+                            }
+                            {
+                                tabName === 'Collection' && result.belongs_to_collection &&
+                                <Collection id={result.belongs_to_collection.id} />
+                            }
 
-                            <Route path={`${url}/season`} exact render={() => (
+                            {
+                                tabName === 'Season' && result.seasons && result.seasons.length > 0 &&
                                 <Box>
                                     <Section>
                                         {result.seasons.map((season: { poster_path: string, name: string }, index: number) => (
@@ -313,8 +320,7 @@ function Info() {
                                         ))}
                                     </Section>
                                 </Box>
-                            )}
-                            />
+                            }
                         </Data>
                     </Content>
                 </Container>

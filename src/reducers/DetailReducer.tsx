@@ -26,13 +26,15 @@ export interface DetailState {
 
     } | null,
     error: string | null,
-    loading: boolean
+    loading: boolean,
+    tabName: string
 }
 
 export const detailInitialState: DetailState = {
     result: null,
     error: null,
-    loading: true
+    loading: true,
+    tabName: 'Trailer'
 };
 
 const detail = createSlice({
@@ -40,20 +42,26 @@ const detail = createSlice({
     initialState: detailInitialState,
     reducers: {
         success: (state, action) => ({
+            ...state,
             error: null,
             result: action.payload.results,
             loading: false
         }),
-        fail: () => ({
+        fail: (state) => ({
+            ...state,
             result: null,
             error: "Can't find Detail information.",
             loading: false
         }),
-        reset: () => detailInitialState
+        reset: () => detailInitialState,
+        tab: (state, action) => ({
+            ...state,
+            tabName: action.payload
+        })
     }
 })
 
-export const { success, fail, reset } = detail.actions;
+export const { success, fail, reset, tab } = detail.actions;
 
 export default detail.reducer;
 

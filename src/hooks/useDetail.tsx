@@ -1,20 +1,15 @@
-import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import useRouter from "use-react-router";
 import { moviesApi, tvApi } from "../api";
-import { fail, success, reset } from "../reducers/DetailReducer";
+import { fail, success, reset, tab } from "../reducers/DetailReducer";
+import { DetailProps } from "../Routes/Detail";
 
 export function useDetail(): void {
-    const { match: { params: { id }, url }, location: { pathname }, history: { push } } = useRouter<any>();
+    const { match: { params: { id } }, location: { pathname }, history: { push } } = useRouter<any>();
     const dispatch = useDispatch();
     const isMovie = pathname.includes("/movie/");
-
-    const controlHistory = () => {
-        window.onpopstate = (event: any) => {
-            const { state: { stack } } = event;
-            window.history.go(stack * (-1));
-        }
-    }
+    const tabName = useSelector((state: DetailProps) => (state.detail.tabName), shallowEqual);
 
     const getDetail = async () => {
         const parsedId = parseInt(id);
@@ -37,13 +32,14 @@ export function useDetail(): void {
     }
 
     useEffect(() => {
+    }, [tabName]);
+
+    useEffect(() => {
         window.scrollTo(0, 0);
         getDetail();
-        controlHistory();
 
         return () => {
             dispatch(reset());
-            window.onpopstate = () => { };
         };
     }, [id]);
 }
