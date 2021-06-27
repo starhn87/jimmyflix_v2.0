@@ -19,6 +19,7 @@ export function useCollection(id: number): Props {
     const getCollection = async () => {
         try {
             const { data: { parts } } = await collections(id);
+            console.log(parts);
             setCollection(parts);
         } catch {
             setError("Can't find collections information.");
