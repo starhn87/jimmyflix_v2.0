@@ -5,6 +5,7 @@ import Section from "../Components/Section";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { customMedia } from "../Components/GlobalStyles";
+import Poster from "../Components/Poster";
 
 const Container = styled.div`
     margin-bottom: 30px;
@@ -32,9 +33,15 @@ const Collection = ({ id }: Props) => {
             <Section>
                 {collection && collection.length > 0 &&
                     (collection.map((c, index) => (
-                        <Link to={`/movie/${c.id}`}>
-                            <Item key={index} src={`https://image.tmdb.org/t/p/original${c.poster_path}`} alt={c.name} />
-                        </Link>
+                        <Poster
+                            key={c.id}
+                            id={c.id}
+                            imageUrl={c.poster_path}
+                            title={c.title}
+                            rating={c.vote_average}
+                            year={''}
+                            isMovie={true}
+                        />
                     )
                     ))
                 }

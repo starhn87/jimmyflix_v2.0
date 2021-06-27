@@ -4,6 +4,9 @@ import { collections } from "../api";
 interface ICollection {
     id: number,
     poster_path: string,
+    imageUrl: string,
+    title: string,
+    vote_average: number,
     name: string
 }
 
@@ -19,7 +22,6 @@ export function useCollection(id: number): Props {
     const getCollection = async () => {
         try {
             const { data: { parts } } = await collections(id);
-            console.log(parts);
             setCollection(parts);
         } catch {
             setError("Can't find collections information.");
