@@ -9,7 +9,6 @@ import { DetailProps } from "../Routes/Detail";
 import { customMedia } from "./GlobalStyles";
 import Section from "./Section";
 import { tab } from "../reducers/DetailReducer";
-import { getFlag } from "../api";
 
 const Container = styled.div`
     position: relative;
@@ -169,7 +168,7 @@ const Li = styled.li`
     font-size: 14px;
     &.active {
         border-bottom: 3px solid #b1ddf9;
-        transition: border-bottom .2s ease-in-out;
+        transition: border-bottom .2s;
     }
 `;
 
@@ -195,16 +194,22 @@ const Product = styled.div`
     display: flex;
     align-items: center;
     height: 220px;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.7);
     margin-bottom: 8px;
+    
+    ${customMedia.lessThan('mobile')`
+        background-color: rgba(255, 255, 255, 0.9);
+    `}
 `;
 
-const Logo = styled.img<{ logo: string }>`
+const Logo = styled.img<{ exist: string | null }>`
     width: 100%;
-    padding: 10px;
-    color: white;
+    color: darkslategray;
+    word-break: break-word;
     font-weigth: 500;
     font-size: 18px;
+
+    padding: ${props => props.exist === null ? "10px" : 0};
 `;
 
 const Flag = styled.img`
@@ -216,11 +221,7 @@ const Flag = styled.img`
 const Name = styled.span`
     margin-bottom: 20px;
     justify-content: center;
-    font-size: 13px;
-`;
-
-const Season = styled.img`
-    width: 100%;
+    font-size: 14px;
 `;
 
 const Box = styled.div`
@@ -309,21 +310,21 @@ function Info() {
                             {
                                 tabName === 'Production' &&
                                 <Box>
-                                    {result.production_companies && result.production_companies.length > 0 && <Section title="Production Company">
+                                    {result.production_companies && result.production_companies.length > 0 && <Section title="Production Companies">
                                         {result.production_companies.map((company: { id: number, logo_path: string, name: string }, index: number) =>
-                                            <div>
+                                            <div key={company.id}>
                                                 <Product>
-                                                    <Logo key={company.id} logo={company.logo_path} src={`https://image.tmdb.org/t/p/original${company.logo_path}`} alt={`${company.name}`} />
+                                                    <Logo exist={null} src={`https://image.tmdb.org/t/p/original${company.logo_path}`} alt={`${company.name}`} />
                                                 </Product>
-                                                <Name key={index}>{company.name.length > 20 ? `${company.name.substring(0, 20)}...` : company.name}</Name>
+                                                <Name>{company.name.length > 17 ? `${company.name.substring(0, 17)}...` : company.name}</Name>
                                             </div>
                                         )}
                                     </Section>}
-                                    {result.production_countries && result.production_countries.length > 0 && <Section title="Production Country">
+                                    {result.production_countries && result.production_countries.length > 0 && <Section title="Production Countries">
                                         {result.production_countries.map((country: { name: string, iso_3166_1: string }, index: number) =>
-                                            <div>
+                                            <div key={index}>
                                                 <Flag src={`https://flagcdn.com/w160/${country.iso_3166_1.toLowerCase()}.png`} />
-                                                <Name key={index}>{country.name.length > 20 ? `${country.name.substring(0, 20)}...` : country.name}</Name>
+                                                <Name >{country.name.length > 17 ? `${country.name.substring(0, 17)}...` : country.name}</Name>
                                             </div>
                                         )}
                                     </Section>}
@@ -341,7 +342,7 @@ function Info() {
                                         {result.seasons.map((season: { poster_path: string, name: string }, index: number) => (
                                             <div key={index}>
                                                 <Product>
-                                                    <Season src={`https://image.tmdb.org/t/p/original${season.poster_path}`} alt={season.name} />
+                                                    <Logo exist={season.poster_path} src={`https://image.tmdb.org/t/p/original${season.poster_path}`} alt={season.name} />
                                                 </Product>
                                                 <Name>{season.name.length > 20 ? `${season.name.substring(0, 20)}...` : season.name}</Name>
                                             </div>

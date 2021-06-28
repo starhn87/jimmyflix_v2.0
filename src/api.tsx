@@ -46,8 +46,3 @@ export const tvApi = {
         })
 }
 
-const flagApi = axios.create({
-    baseURL: 'https://flagcdn.com/w160/'
-})
-
-export const getFlag = (code: string) => flagApi.get(`${code}.png`);

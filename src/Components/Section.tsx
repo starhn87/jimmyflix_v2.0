@@ -15,15 +15,10 @@ const Title = styled.span`
 `;
 
 const Grid = styled.div`
-    margin-top: 25px;
+    margin-top: 30px;
     display: grid;
     grid-template-columns: repeat(auto-fill, 150px);
-    justify-content: center;
     grid-gap: 25px;
-
-    ${customMedia.lessThan('mobile')`
-        margin-top: 15px;
-    `}
 `;
 
 interface Props {
