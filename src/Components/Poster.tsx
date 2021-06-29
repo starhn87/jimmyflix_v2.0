@@ -4,6 +4,7 @@ import styled from "styled-components";
 import defaultImg from "../assets/images/noPosterSmall.png";
 
 const Container = styled.div`
+    width: 95%;
     font-size: 12px;
 `;
 

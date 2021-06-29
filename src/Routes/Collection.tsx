@@ -30,7 +30,7 @@ const Collection = ({ id }: Props) => {
         <Message color="#e74c3c" text={error}></Message>
     ) : (
         <Container>
-            <Section>
+            <Section slide={false}>
                 {collection && collection.length > 0 &&
                     (collection.map((c, index) => (
                         <Poster

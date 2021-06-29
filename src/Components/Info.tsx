@@ -310,7 +310,7 @@ function Info() {
                             {
                                 tabName === 'Production' &&
                                 <Box>
-                                    {result.production_companies && result.production_companies.length > 0 && <Section title="Production Companies">
+                                    {result.production_companies && result.production_companies.length > 0 && <Section slide={false} title="Production Companies">
                                         {result.production_companies.map((company: { id: number, logo_path: string, name: string }, index: number) =>
                                             <div key={company.id}>
                                                 <Product>
@@ -320,7 +320,7 @@ function Info() {
                                             </div>
                                         )}
                                     </Section>}
-                                    {result.production_countries && result.production_countries.length > 0 && <Section title="Production Countries">
+                                    {result.production_countries && result.production_countries.length > 0 && <Section slide={false} title="Production Countries">
                                         {result.production_countries.map((country: { name: string, iso_3166_1: string }, index: number) =>
                                             <div key={index}>
                                                 <Flag src={`https://flagcdn.com/w160/${country.iso_3166_1.toLowerCase()}.png`} />
@@ -338,7 +338,7 @@ function Info() {
                             {
                                 tabName === 'Season' && result.seasons && result.seasons.length > 0 &&
                                 <Box>
-                                    <Section>
+                                    <Section slide={false}>
                                         {result.seasons.map((season: { poster_path: string, name: string }, index: number) => (
                                             <div key={index}>
                                                 <Product>

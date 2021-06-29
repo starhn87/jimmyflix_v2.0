@@ -29,7 +29,7 @@ function TVResult() {
     return (
         <Container>
             {topRated && topRated.length > 0 && (
-                <Section title="Top Rated Shows">
+                <Section slide={true} title="Top Rated Shows">
                     {topRated.map((show: Show) => (
                         <Poster
                             key={show.id}
@@ -43,7 +43,7 @@ function TVResult() {
                 </Section>
             )}
             {popular && popular.length > 0 && (
-                <Section title="Popular Shows">
+                <Section slide={true} title="Popular Shows">
                     {popular.map((show: Show) => (
                         <Poster
                             key={show.id}
@@ -57,7 +57,7 @@ function TVResult() {
                 </Section>
             )}
             {airingToday && airingToday.length > 0 && (
-                <Section title="Airing Today Shows">
+                <Section slide={true} title="Airing Today Shows">
                     {airingToday.map((show: Show) => (
                         <Poster
                             key={show.id}

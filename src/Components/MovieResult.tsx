@@ -28,7 +28,7 @@ function MovieResult() {
     return (
         <Container>
             {nowPlaying && nowPlaying.length > 0 && (
-                <Section title="Now Playing">
+                <Section slide={true} title="Now Playing">
                     {nowPlaying.map((movie: Movie) => (
                         <Poster
                             key={movie.id}
@@ -42,7 +42,7 @@ function MovieResult() {
                 </Section>
             )}
             {upcoming && upcoming.length > 0 && (
-                <Section title="Upcoming Movies">
+                <Section slide={true} title="Upcoming Movies">
                     {upcoming.map((movie: Movie) => (
                         <Poster
                             key={movie.id}
@@ -56,7 +56,7 @@ function MovieResult() {
                 </Section>
             )}
             {popular && popular.length > 0 && (
-                <Section title="Popular Movies">
+                <Section slide={true} title="Popular Movies">
                     {popular.map((movie: Movie) => (
                         <Poster
                             key={movie.id}

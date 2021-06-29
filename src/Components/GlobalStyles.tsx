@@ -1,6 +1,8 @@
 import { createGlobalStyle } from "styled-components";
 import { generateMedia } from "styled-media-query";
 import reset from "styled-reset";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 export const customMedia = generateMedia({
     desktop: '78em',
