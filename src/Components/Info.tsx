@@ -130,7 +130,7 @@ const Overview = styled.p`
 const ILink = styled.a`
     width: 100px;
     height: 10px;
-    vertical-align: text-top;
+    vertical-align: super;
     &:hover {
         text-decoration: underline;
     }
