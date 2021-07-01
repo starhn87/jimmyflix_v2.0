@@ -10,7 +10,7 @@ export interface DetailState {
         release_date: string,
         first_air_date: string,
         runtime?: number,
-        episode_runtime: number,
+        episode_run_time: string,
         genres: [],
         overview: string,
         belongs_to_collection: {
@@ -23,7 +23,7 @@ export interface DetailState {
         },
         production_companies: [],
         production_countries: [],
-
+        vote_average: number
     } | null,
     error: string | null,
     loading: boolean,

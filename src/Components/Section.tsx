@@ -69,6 +69,13 @@ const Section: React.FunctionComponent<Props> = ({ slide, title, children }) => 
                     slidesToShow: 2,
                     slidesToScroll: 2
                 }
+            },
+            {
+                breakpoint: 320,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
             }
         ]
     };

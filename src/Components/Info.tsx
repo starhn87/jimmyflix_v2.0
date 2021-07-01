@@ -79,20 +79,29 @@ const Data = styled.div`
 `;
 
 const Title = styled.h3`
-    float: left;
     font-size: 32px;
     margin-bottom: 5px;
     
     ${customMedia.lessThan('mobile')`
         float: unset;
         padding: 3% 1%;
-        width: 98%;
+        width: 95%;
+    `}
+`;
+
+const Text = styled.span`
+    margin-right: 20px;
+`;
+
+const Rating = styled.span`
+    display: inline-flex;
+    
+    ${customMedia.lessThan('mobile')`
     `}
 `;
 
 const ItemContainer = styled.div`
-    margin: 20px 0;
-    padding-top: 25px;
+    margin: 15px 0;
     line-height: 20px;
 
     ${customMedia.lessThan('mobile')`
@@ -119,10 +128,9 @@ const Overview = styled.p`
 `;
 
 const ILink = styled.a`
-    margin-left: 20px;
     width: 100px;
     height: 10px;
-    vertical-align: middle;
+    vertical-align: text-top;
     &:hover {
         text-decoration: underline;
     }
@@ -253,22 +261,29 @@ function Info() {
                     <Content>
                         <Cover bgImage={result.poster_path ? `https://image.tmdb.org/t/p/original${result.poster_path}` : defaultImg} />
                         <Data>
-                            <Title>{result.title ? result.title : result.name}</Title>
+                            <Title>
+                                <Text>{result.title ? result.title : result.name}</Text>
+                                <ILink target="_blank" href={`https://www.imdb.com/title/${result.imdb_id}`}>
+                                    <Img src={imdb}></Img>
+                                </ILink>
+                            </Title>
                             <ItemContainer>
+                                <Rating>
+                                    <span role="img" aria-label="rating">⭐</span>
+                                    &nbsp;
+                                    {result.vote_average}/10
+                                </Rating>
+                                <Divider>•</Divider>
                                 <Item>
                                     {result.release_date ? result.release_date.substring(0, 4) : result.first_air_date.substring(0, 4)}
                                 </Item>
-                                <Divider>•</Divider>
-                                <Item>
-                                    {result.runtime ? result.runtime : result.episode_runtime} min
-                                </Item>
+                                {result.runtime ? <><Divider>•</Divider><Item>{result.runtime} min</Item></> : (
+                                    result.episode_run_time.length > 0 ? <><Divider>•</Divider><Item>{result.episode_run_time} min</Item></> : <></>
+                                )}
                                 <Divider>•</Divider>
                                 <Item>
                                     {result.genres && result.genres.map((genre: { name: string }, index: number) => index === result.genres.length - 1 ? genre.name : `${genre.name} / `)}
                                 </Item>
-                                <ILink target="_blank" href={`https://www.imdb.com/title/${result.imdb_id}`}>
-                                    <Img src={imdb}></Img>
-                                </ILink>
                             </ItemContainer>
                             <Overview>{result.overview}</Overview>
                             <Tab>
