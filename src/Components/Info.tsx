@@ -1,6 +1,6 @@
 import React from "react";
 import Helmet from "react-helmet";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { createStoreHook, shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import imdb from "../assets/images/imdb.png";
 import defaultImg from "../assets/images/noPosterSmall.png";
@@ -226,8 +226,8 @@ const Flag = styled.img`
     margin-bottom: 8px;
 `;
 
-const Name = styled.span`
-    margin-bottom: 20px;
+const Name = styled.p`
+    margin-bottom: 10px;
     justify-content: center;
     font-size: 14px;
 `;
@@ -239,8 +239,9 @@ const Box = styled.div`
 `;
 
 function Info() {
-    const { result, tabName } = useSelector((state: DetailProps) => ({ ...state.detail }), shallowEqual);
+    const { result, cast, tabName } = useSelector((state: DetailProps) => ({ ...state.detail }), shallowEqual);
     const dispatch = useDispatch();
+    console.log(cast);
 
     const onEvent: any = (event: any) => {
         (document.querySelector(".active") as HTMLLIElement).classList.remove('active');
@@ -291,13 +292,10 @@ function Info() {
                                     <Li className='active'>
                                         Trailer
                                     </Li>
-                                    <Li>
-                                        Production
-                                    </Li>
                                     {
                                         result.belongs_to_collection &&
                                         <Li>
-                                            Collection
+                                            Sequels
                                         </Li>
                                     }
                                     {
@@ -306,6 +304,15 @@ function Info() {
                                             Season
                                         </Li>
                                     }
+                                    {
+                                        cast && cast.length > 0 &&
+                                        <Li>
+                                            Credits
+                                        </Li>
+                                    }
+                                    <Li>
+                                        Production
+                                    </Li>
                                 </List>
                             </Tab>
                             {
@@ -321,6 +328,42 @@ function Info() {
                                     </Iframe>
                                 }
                                 )
+                            }
+                            {
+                                tabName === 'Sequels' && result.belongs_to_collection &&
+                                <Collection id={result.belongs_to_collection.id} />
+                            }
+
+                            {
+                                tabName === 'Season' && result.seasons && result.seasons.length > 0 &&
+                                <Box>
+                                    <Section slide={false}>
+                                        {result.seasons.map((season: { poster_path: string, name: string }, index: number) => (
+                                            <div key={index}>
+                                                <Product>
+                                                    <Logo exist={season.poster_path} src={`https://image.tmdb.org/t/p/original${season.poster_path}`} alt={season.name} />
+                                                </Product>
+                                                <Name>{season.name.length > 20 ? `${season.name.substring(0, 20)}...` : season.name}</Name>
+                                            </div>
+                                        ))}
+                                    </Section>
+                                </Box>
+                            }
+                            {
+                                tabName === 'Credits' && cast && cast.length > 0 &&
+                                <Box>
+                                    <Section slide={false}>
+                                        {cast.map((profile: { profile_path: string, original_name: string, character: string }, index: number) => (
+                                            <div key={index}>
+                                                <Product>
+                                                    <Logo exist={profile.profile_path} src={`https://image.tmdb.org/t/p/original${profile.profile_path}`} alt={profile.original_name} />
+                                                </Product>
+                                                <Name>{profile.character}</Name>
+                                                <Name>({profile.original_name})</Name>
+                                            </div>
+                                        ))}
+                                    </Section>
+                                </Box>
                             }
                             {
                                 tabName === 'Production' &&
@@ -343,26 +386,6 @@ function Info() {
                                             </div>
                                         )}
                                     </Section>}
-                                </Box>
-                            }
-                            {
-                                tabName === 'Collection' && result.belongs_to_collection &&
-                                <Collection id={result.belongs_to_collection.id} />
-                            }
-
-                            {
-                                tabName === 'Season' && result.seasons && result.seasons.length > 0 &&
-                                <Box>
-                                    <Section slide={false}>
-                                        {result.seasons.map((season: { poster_path: string, name: string }, index: number) => (
-                                            <div key={index}>
-                                                <Product>
-                                                    <Logo exist={season.poster_path} src={`https://image.tmdb.org/t/p/original${season.poster_path}`} alt={season.name} />
-                                                </Product>
-                                                <Name>{season.name.length > 20 ? `${season.name.substring(0, 20)}...` : season.name}</Name>
-                                            </div>
-                                        ))}
-                                    </Section>
                                 </Box>
                             }
                         </Data>

@@ -13,7 +13,7 @@ export interface DetailProps {
 }
 
 function Detail() {
-    let tabName = useDetail();
+    useDetail();
     const { loading, error } = useSelector((state: DetailProps) => ({ ...state.detail }), shallowEqual);
 
     return loading ? (

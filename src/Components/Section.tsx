@@ -23,7 +23,7 @@ const Grid = styled.div`
 `;
 
 const Wrapper = styled.div`
-    margin: 50px auto; 
+    margin: 40px auto; 
     width: 95%;
 `;
 

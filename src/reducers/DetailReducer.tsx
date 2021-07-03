@@ -25,6 +25,7 @@ export interface DetailState {
         production_countries: [],
         vote_average: number
     } | null,
+    cast: [] | null,
     error: string | null,
     loading: boolean,
     tabName: string
@@ -32,6 +33,7 @@ export interface DetailState {
 
 export const detailInitialState: DetailState = {
     result: null,
+    cast: null,
     error: null,
     loading: true,
     tabName: 'Trailer'
@@ -45,11 +47,13 @@ const detail = createSlice({
             ...state,
             error: null,
             result: action.payload.results,
+            cast: action.payload.casts,
             loading: false
         }),
         fail: (state) => ({
             ...state,
             result: null,
+            cast: null,
             error: "Can't find Detail information.",
             loading: false
         }),

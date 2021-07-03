@@ -19,13 +19,16 @@ export function useDetail(): void {
         }
 
         let results;
+        let casts;
         try {
             if (isMovie) {
                 ({ data: results } = await moviesApi.movieDetail(parsedId));
+                ({ data: { cast: casts } } = await moviesApi.cast(parsedId));
             } else {
                 ({ data: results } = await tvApi.showDetail(parsedId));
+                ({ data: { cast: casts } } = await tvApi.cast(parsedId));
             }
-            dispatch(success({ results }));
+            dispatch(success({ results, casts }));
         } catch {
             dispatch(fail());
         }
