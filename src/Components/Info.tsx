@@ -203,17 +203,12 @@ const Product = styled.div`
     display: flex;
     align-items: center;
     height: 220px;
-    background-color: rgba(255, 255, 255, 0.7);
     margin-bottom: 8px;
-    
-    ${customMedia.lessThan('mobile')`
-        background-color: rgba(255, 255, 255, 0.9);
-    `}
+    background-color: #F7F7F7;
 `;
 
 const Logo = styled.img`
     width: 100%;
-    color: darkslategray;
     word-break: break-word;
     font-weigth: 500;
     font-size: 18px;
