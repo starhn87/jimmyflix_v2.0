@@ -3,8 +3,6 @@ import Message from "../Components/Message";
 import { useCollection } from "../hooks/useCollection";
 import Section from "../Components/Section";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { customMedia } from "../Components/GlobalStyles";
 import Poster from "../Components/Poster";
 
 const Container = styled.div`
@@ -32,7 +30,7 @@ const Collection = ({ id }: Props) => {
         <Container>
             <Section slide={false}>
                 {collection && collection.length > 0 &&
-                    (collection.map((c, index) => (
+                    (collection.filter(movie => movie.release_date !== '').map((c, index) => (
                         <Poster
                             key={c.id}
                             id={c.id}

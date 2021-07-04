@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import defaultImg from "../assets/images/noPosterSmall.png";
+import defaultPosterImg from "../assets/images/noPosterSmall.png";
 
 const Container = styled.div`
     width: 95%;
@@ -63,7 +63,7 @@ const Poster: React.FunctionComponent<Props> = ({ id, imageUrl, title, rating, y
     <Link to={isMovie ? `/movie/${id}` : `/tv/${id}`}>
         <Container>
             <ImageContainer>
-                <Image bgUrl={imageUrl ? `https://image.tmdb.org/t/p/w300${imageUrl}` : defaultImg} />
+                <Image bgUrl={imageUrl ? `https://image.tmdb.org/t/p/w300${imageUrl}` : defaultPosterImg} />
                 <Rating>
                     <span role="img" aria-label="rating">⭐</span>
                     {" "}

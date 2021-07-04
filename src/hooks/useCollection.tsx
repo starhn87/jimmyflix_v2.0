@@ -7,7 +7,8 @@ interface ICollection {
     imageUrl: string,
     title: string,
     vote_average: number,
-    name: string
+    name: string,
+    release_date: string
 }
 
 interface Props {
@@ -22,6 +23,7 @@ export function useCollection(id: number): Props {
     const getCollection = async () => {
         try {
             const { data: { parts } } = await collections(id);
+            console.log(parts);
             setCollection(parts);
         } catch {
             setError("Can't find collections information.");

@@ -1,9 +1,10 @@
 import React from "react";
 import Helmet from "react-helmet";
-import { createStoreHook, shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import imdb from "../assets/images/imdb.png";
-import defaultImg from "../assets/images/noPosterSmall.png";
+import defaultPosterImg from "../assets/images/noPosterSmall.png";
+import defaultPersonImg from "../assets/images/noPersonSmall.png";
 import Collection from "../Routes/Collection";
 import { DetailProps } from "../Routes/Detail";
 import { customMedia } from "./GlobalStyles";
@@ -210,14 +211,12 @@ const Product = styled.div`
     `}
 `;
 
-const Logo = styled.img<{ exist: string | null }>`
+const Logo = styled.img`
     width: 100%;
     color: darkslategray;
     word-break: break-word;
     font-weigth: 500;
     font-size: 18px;
-
-    padding: ${props => props.exist === null ? "10px" : 0};
 `;
 
 const Flag = styled.img`
@@ -260,7 +259,7 @@ function Info() {
                     </Helmet>
                     <Backdrop bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`} />
                     <Content>
-                        <Cover bgImage={result.poster_path ? `https://image.tmdb.org/t/p/original${result.poster_path}` : defaultImg} />
+                        <Cover bgImage={result.poster_path ? `https://image.tmdb.org/t/p/original${result.poster_path}` : defaultPosterImg} />
                         <Data>
                             <Title>
                                 <Text>{result.title ? result.title : result.name}</Text>
@@ -341,7 +340,7 @@ function Info() {
                                         {result.seasons.map((season: { poster_path: string, name: string }, index: number) => (
                                             <div key={index}>
                                                 <Product>
-                                                    <Logo exist={season.poster_path} src={`https://image.tmdb.org/t/p/original${season.poster_path}`} alt={season.name} />
+                                                    <Logo src={season.poster_path ? `https://image.tmdb.org/t/p/original${season.poster_path}` : defaultPosterImg} alt={season.name} />
                                                 </Product>
                                                 <Name>{season.name.length > 20 ? `${season.name.substring(0, 20)}...` : season.name}</Name>
                                             </div>
@@ -356,7 +355,7 @@ function Info() {
                                         {cast.map((profile: { profile_path: string, original_name: string, character: string }, index: number) => (
                                             <div key={index}>
                                                 <Product>
-                                                    <Logo exist={profile.profile_path} src={`https://image.tmdb.org/t/p/original${profile.profile_path}`} alt={profile.original_name} />
+                                                    <Logo src={profile.profile_path ? `https://image.tmdb.org/t/p/original${profile.profile_path}` : defaultPersonImg} alt={profile.original_name} />
                                                 </Product>
                                                 <Name>{profile.character}</Name>
                                                 <Name>({profile.original_name})</Name>
@@ -372,7 +371,7 @@ function Info() {
                                         {result.production_companies.map((company: { id: number, logo_path: string, name: string }, index: number) =>
                                             <div key={company.id}>
                                                 <Product>
-                                                    <Logo exist={null} src={`https://image.tmdb.org/t/p/original${company.logo_path}`} alt={`${company.name}`} />
+                                                    <Logo src={`https://image.tmdb.org/t/p/original${company.logo_path}`} alt={`${company.name}`} />
                                                 </Product>
                                                 <Name>{company.name.length > 17 ? `${company.name.substring(0, 17)}...` : company.name}</Name>
                                             </div>
