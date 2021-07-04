@@ -207,11 +207,12 @@ const Product = styled.div`
     background-color: #F7F7F7;
 `;
 
-const Logo = styled.img`
+const Logo = styled.img<{ company?: boolean }>`
     width: 100%;
     word-break: break-word;
     font-weigth: 500;
     font-size: 18px;
+    padding: ${props => props.company ? '5px' : 0};
 `;
 
 const Flag = styled.img`
@@ -366,7 +367,7 @@ function Info() {
                                         {result.production_companies.map((company: { id: number, logo_path: string, name: string }, index: number) =>
                                             <div key={company.id}>
                                                 <Product>
-                                                    <Logo src={`https://image.tmdb.org/t/p/original${company.logo_path}`} alt={`${company.name}`} />
+                                                    <Logo company={true} src={`https://image.tmdb.org/t/p/original${company.logo_path}`} alt={`${company.name}`} />
                                                 </Product>
                                                 <Name>{company.name.length > 17 ? `${company.name.substring(0, 17)}...` : company.name}</Name>
                                             </div>
