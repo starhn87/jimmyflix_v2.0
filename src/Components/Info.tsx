@@ -5,6 +5,7 @@ import styled from "styled-components";
 import imdb from "../assets/images/imdb.png";
 import defaultPosterImg from "../assets/images/noPosterSmall.png";
 import defaultPersonImg from "../assets/images/noPersonSmall.png";
+import defaultProductionImg from "../assets/images/noProductionSmall.png";
 import Collection from "../Routes/Collection";
 import { DetailProps } from "../Routes/Detail";
 import { customMedia } from "./GlobalStyles";
@@ -207,12 +208,9 @@ const Product = styled.div`
     background-color: #F7F7F7;
 `;
 
-const Logo = styled.img<{ company?: boolean }>`
+const Logo = styled.img<{ logo?: string }>`
     width: 100%;
-    word-break: break-word;
-    font-weigth: 500;
-    font-size: 18px;
-    padding: ${props => props.company ? '5px' : 0};
+    padding: ${props => props.logo ? '5px' : 0};
 `;
 
 const Flag = styled.img`
@@ -236,7 +234,6 @@ const Box = styled.div`
 function Info() {
     const { result, cast, tabName } = useSelector((state: DetailProps) => ({ ...state.detail }), shallowEqual);
     const dispatch = useDispatch();
-    console.log(cast);
 
     const onEvent: any = (event: any) => {
         (document.querySelector(".active") as HTMLLIElement).classList.remove('active');
@@ -367,7 +364,7 @@ function Info() {
                                         {result.production_companies.map((company: { id: number, logo_path: string, name: string }, index: number) =>
                                             <div key={company.id}>
                                                 <Product>
-                                                    <Logo company={true} src={`https://image.tmdb.org/t/p/original${company.logo_path}`} alt={`${company.name}`} />
+                                                    <Logo logo={company.logo_path} src={company.logo_path ? `https://image.tmdb.org/t/p/original${company.logo_path}` : defaultProductionImg} alt={`${company.name}`} />
                                                 </Product>
                                                 <Name>{company.name.length > 17 ? `${company.name.substring(0, 17)}...` : company.name}</Name>
                                             </div>
