@@ -5,12 +5,12 @@ import { customMedia } from "./GlobalStyles";
 
 const Container = styled.div`
     display: flex;
-    width: 100vw;
     height: 10vh;
     justify-content: center;
 `;
 
 const Text = styled.span<{ color: string }>`
+    padding-top: 50px;
     font-size: 28px;
     color: ${props => props.color};
 

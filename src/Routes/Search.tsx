@@ -14,7 +14,7 @@ const Container = styled.div`
 `;
 
 const Form = styled.form`
-    margin: 15px 0 50px;
+    margin: 15px 0 30px;
 `;
 
 const Input = styled.input`

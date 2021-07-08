@@ -11,6 +11,7 @@ import { DetailProps } from "../Routes/Detail";
 import { customMedia } from "./GlobalStyles";
 import Section from "./Section";
 import { tab } from "../reducers/DetailReducer";
+import Message from "./Message";
 
 const Container = styled.div`
     position: relative;
@@ -308,7 +309,7 @@ function Info() {
                                 </List>
                             </Tab>
                             {
-                                tabName === 'Trailer' && !result.video && result.videos.results && result.videos.results.length > 0 &&
+                                tabName === 'Trailer' && result.videos.results && result.videos.results.length > 0 &&
                                 result.videos.results.filter((video, index) => index === 0).map((video: { key: number }) => {
                                     return <Iframe
                                         key={video.key}
@@ -318,8 +319,11 @@ function Info() {
                                         allowFullScreen
                                         title="Embedded youtube official trailer">
                                     </Iframe>
-                                }
-                                )
+                                })
+                            }
+                            {
+                                tabName === 'Trailer' && (!result.videos.results || result.videos.results.length == 0) &&
+                                <Message color="#eee" text={"No Trailer Found"} />
                             }
                             {
                                 tabName === 'Sequels' && result.belongs_to_collection &&
