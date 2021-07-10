@@ -267,17 +267,30 @@ function Info() {
                                     &nbsp;
                                     {result.vote_average}/10
                                 </Rating>
-                                <Divider>•</Divider>
-                                <Item>
-                                    {result.release_date ? result.release_date.substring(0, 4) : result.first_air_date.substring(0, 4)}
-                                </Item>
-                                {result.runtime ? <><Divider>•</Divider><Item>{result.runtime} min</Item></> : (
-                                    result.episode_run_time.length > 0 ? <><Divider>•</Divider><Item>{result.episode_run_time} min</Item></> : <></>
-                                )}
-                                <Divider>•</Divider>
-                                <Item>
-                                    {result.genres && result.genres.map((genre: { name: string }, index: number) => index === result.genres.length - 1 ? genre.name : `${genre.name} / `)}
-                                </Item>
+                                {
+                                    (result.release_date || result.first_air_date) &&
+                                    <>
+                                        <Divider>•</Divider>
+                                        <Item>
+                                            {result.release_date ? result.release_date.substring(0, 4) : result.first_air_date.substring(0, 4)}
+                                        </Item>
+                                    </>
+                                }
+                                {
+                                    result.runtime ? <><Divider>•</Divider><Item>{result.runtime} min</Item></> : <></>
+                                }
+                                {
+                                    result.episode_run_time && result.episode_run_time.length > 0 ? <><Divider>•</Divider><Item>{result.episode_run_time[0]} min</Item></> : <></>
+                                }
+                                {
+                                    result.genres &&
+                                    <>
+                                        <Divider>•</Divider>
+                                        <Item>
+                                            {result.genres.map((genre: { name: string }, index: number) => index === result.genres.length - 1 ? genre.name : `${genre.name} / `)}
+                                        </Item>
+                                    </>
+                                }
                             </ItemContainer>
                             <Overview>{result.overview}</Overview>
                             <Tab>

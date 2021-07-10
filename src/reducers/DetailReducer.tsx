@@ -10,7 +10,7 @@ export interface DetailState {
         release_date: string,
         first_air_date: string,
         runtime?: number,
-        episode_run_time: string,
+        episode_run_time: number[],
         genres: [],
         overview: string,
         belongs_to_collection: {
