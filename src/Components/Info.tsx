@@ -211,6 +211,7 @@ const Product = styled.div`
 
 const Logo = styled.img<{ logo?: string }>`
     width: 100%;
+    max-height: 220px;
     padding: ${props => props.logo ? '5px' : 0};
 `;
 
