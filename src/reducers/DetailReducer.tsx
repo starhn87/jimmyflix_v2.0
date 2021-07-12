@@ -47,7 +47,7 @@ const detail = createSlice({
             ...state,
             error: null,
             result: action.payload.results,
-            cast: action.payload.casts,
+            cast: null,
             loading: false
         }),
         fail: (state) => ({
@@ -61,11 +61,15 @@ const detail = createSlice({
         tab: (state, action) => ({
             ...state,
             tabName: action.payload
+        }),
+        cast: (state, action) => ({
+            ...state,
+            cast: action.payload.casts
         })
     }
 })
 
-export const { success, fail, reset, tab } = detail.actions;
+export const { success, fail, reset, tab, cast } = detail.actions;
 
 export default detail.reducer;
 

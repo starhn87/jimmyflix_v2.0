@@ -299,6 +299,12 @@ function Info() {
                                     <Li className='active'>
                                         Trailer
                                     </Li>
+                                    <Li>
+                                        Credits
+                                    </Li>
+                                    <Li>
+                                        Production
+                                    </Li>
                                     {
                                         result.belongs_to_collection &&
                                         <Li>
@@ -311,15 +317,6 @@ function Info() {
                                             Season
                                         </Li>
                                     }
-                                    {
-                                        cast && cast.length > 0 &&
-                                        <Li>
-                                            Credits
-                                        </Li>
-                                    }
-                                    <Li>
-                                        Production
-                                    </Li>
                                 </List>
                             </Tab>
                             {
