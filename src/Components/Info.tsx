@@ -340,7 +340,6 @@ function Info() {
                                 tabName === 'Sequels' && result.belongs_to_collection &&
                                 <Collection id={result.belongs_to_collection.id} />
                             }
-
                             {
                                 tabName === 'Season' && result.seasons && result.seasons.length > 0 &&
                                 <Box>
@@ -373,7 +372,11 @@ function Info() {
                                 </Box>
                             }
                             {
-                                tabName === 'Production' &&
+                                tabName === 'Credits' && (!cast || cast.length === 0) &&
+                                <Message color="#eee" text={"No Credits Found"} />
+                            }
+                            {
+                                tabName === 'Production' && !((!result.production_companies || result.production_companies.length === 0) && (!result.production_countries || result.production_countries.length === 0)) &&
                                 <Box>
                                     {result.production_companies && result.production_companies.length > 0 && <Section slide={false} title="Production Companies">
                                         {result.production_companies.map((company: { id: number, logo_path: string, name: string }, index: number) =>
@@ -394,6 +397,10 @@ function Info() {
                                         )}
                                     </Section>}
                                 </Box>
+                            }
+                            {
+                                tabName === 'Production' && ((!result.production_companies || result.production_companies.length === 0) && (!result.production_countries || result.production_countries.length === 0)) &&
+                                <Message color="#eee" text={"No Production Found"} />
                             }
                         </Data>
                     </Content>
