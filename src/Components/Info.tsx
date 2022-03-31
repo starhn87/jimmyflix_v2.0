@@ -1,5 +1,5 @@
 import React from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { shallowEqual } from 'react-redux'
 import styled from 'styled-components'
 import imdb from '../assets/images/imdb.png'
 import defaultPosterImg from '../assets/images/noPosterSmall.png'
@@ -12,6 +12,7 @@ import Section from './Section'
 import { tab } from '../reducers/DetailReducer'
 import Message from './Message'
 import Helmet from './Helmet'
+import { useAppDispatch, useAppSelector } from '../store'
 
 const Container = styled.div`
   position: relative;
@@ -234,11 +235,11 @@ const Box = styled.div`
 `
 
 function Info() {
-  const { result, cast, tabName } = useSelector(
+  const { result, cast, tabName } = useAppSelector(
     (state: DetailProps) => ({ ...state.detail }),
     shallowEqual,
   )
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const onEvent: any = (event: any) => {
     ;(document.querySelector('.active') as HTMLLIElement).classList.remove(
