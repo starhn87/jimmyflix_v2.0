@@ -382,15 +382,6 @@ function Info() {
                                     ? `https://image.tmdb.org/t/p/original${season.poster_path}`
                                     : defaultPosterImg
                                 }
-                                {
-                                    result.genres &&
-                                    <>
-                                        <Divider>•</Divider>
-                                        <Item>
-                                            {result.genres.map((genre: { name: string }, index: number) => index === result.genres.length - 1 ? genre.name : `${genre.name} / `)}
-                                        </Item>
-                                    </>
-                                }
                                 alt={season.name}
                               />
                             </Product>

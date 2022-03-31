@@ -39,10 +39,6 @@ export function useDetail(): void {
     if (isNaN(parsedId)) {
       navigator('/')
     }
-<<<<<<< Updated upstream
-=======
-  }, [tabName, getCast])
->>>>>>> Stashed changes
 
     let casts
     try {

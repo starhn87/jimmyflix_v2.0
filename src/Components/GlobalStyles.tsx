@@ -1,13 +1,13 @@
-import { createGlobalStyle } from "styled-components";
-import { generateMedia } from "styled-media-query";
-import reset from "styled-reset";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { createGlobalStyle } from 'styled-components'
+import { generateMedia } from 'styled-media-query'
+import reset from 'styled-reset'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 
 export const customMedia = generateMedia({
-    desktop: '78em',
-    tablet: '60em',
-    mobile: '46em'
+  desktop: '78em',
+  tablet: '60em',
+  mobile: '46em',
 })
 
 const globalStyles = createGlobalStyle`
@@ -31,6 +31,6 @@ const globalStyles = createGlobalStyle`
     #root {
         overflow: hidden;
     }
-`;
+`
 
-export default globalStyles;
+export default globalStyles
