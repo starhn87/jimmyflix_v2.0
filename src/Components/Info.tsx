@@ -359,7 +359,7 @@ function Info() {
                   })}
               {tabName === 'Trailer' &&
                 (!result.videos.results ||
-                  result.videos.results.length === 0) && (
+                  result.videos.results.length == 0) && (
                   <Message color="#eee" text={'No Trailer Found'} />
                 )}
               {tabName === 'Sequels' && result.belongs_to_collection && (
