@@ -358,7 +358,7 @@ function Info() {
                   })}
               {tabName === 'Trailer' &&
                 (!result.videos.results ||
-                  result.videos.results.length == 0) && (
+                  result.videos.results.length === 0) && (
                   <Message color="#eee" text={'No Trailer Found'} />
                 )}
               {tabName === 'Sequels' && result.belongs_to_collection && (
@@ -381,6 +381,15 @@ function Info() {
                                   season.poster_path
                                     ? `https://image.tmdb.org/t/p/original${season.poster_path}`
                                     : defaultPosterImg
+                                }
+                                {
+                                    result.genres &&
+                                    <>
+                                        <Divider>•</Divider>
+                                        <Item>
+                                            {result.genres.map((genre: { name: string }, index: number) => index === result.genres.length - 1 ? genre.name : `${genre.name} / `)}
+                                        </Item>
+                                    </>
                                 }
                                 alt={season.name}
                               />
