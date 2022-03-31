@@ -1,17 +1,18 @@
 import { useEffect } from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { shallowEqual } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { moviesApi, tvApi } from '../api'
 import { fail, success, reset, cast } from '../reducers/DetailReducer'
 import { DetailProps } from '../Routes/Detail'
+import { useAppDispatch, useAppSelector } from '../store'
 
 export function useDetail(): void {
   const navigator = useNavigate()
   const { id } = useParams()
   const { pathname } = useLocation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const isMovie = pathname.includes('/movie/')
-  const tabName = useSelector(
+  const tabName = useAppSelector(
     (state: DetailProps) => state.detail.tabName,
     shallowEqual,
   )
