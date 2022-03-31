@@ -44,7 +44,7 @@ const SLink = styled(Link)`
 
 function Header() {
   const { pathname } = useLocation()
-  
+
   return useMemo(
     () => (
       <Head>
