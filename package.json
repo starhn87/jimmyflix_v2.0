@@ -98,6 +98,7 @@
     "deploy": "gh-pages -d build",
     "predeploy": "yarn run build"
   },
+<<<<<<< Updated upstream
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -105,6 +106,8 @@
     ]
   },
   "homepage": "https://thirsty-newton-74e058.netlify.app",
+=======
+>>>>>>> Stashed changes
   "browserslist": {
     "production": [
       ">0.2%",

@@ -234,6 +234,7 @@ const Box = styled.div`
 `;
 
 function Info() {
+<<<<<<< Updated upstream
     const { result, cast, tabName } = useSelector((state: DetailProps) => ({ ...state.detail }), shallowEqual);
     const dispatch = useDispatch();
 
@@ -282,6 +283,155 @@ function Info() {
                                 }
                                 {
                                     result.episode_run_time && result.episode_run_time.length > 0 ? <><Divider>•</Divider><Item>{result.episode_run_time[0]} min</Item></> : <></>
+=======
+  const { result, cast, tabName } = useSelector(
+    (state: DetailProps) => ({ ...state.detail }),
+    shallowEqual,
+  )
+  const dispatch = useDispatch()
+
+  const onEvent: any = (event: any) => {
+    ;(document.querySelector('.active') as HTMLLIElement).classList.remove(
+      'active',
+    )
+
+    const clickedLi = event.target
+    dispatch(tab(clickedLi.innerText))
+    clickedLi.classList.add('active')
+  }
+
+  return (
+    <>
+      {result && (
+        <Container>
+          <Helmet
+            content={`${result.title ? result.title : result.name} | Jimmyflix`}
+          />
+          <Backdrop
+            bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
+          />
+          <Content>
+            <Cover
+              bgImage={
+                result.poster_path
+                  ? `https://image.tmdb.org/t/p/original${result.poster_path}`
+                  : defaultPosterImg
+              }
+            />
+            <Data>
+              <Title>
+                <Text>{result.title ? result.title : result.name}</Text>
+                <ILink
+                  target="_blank"
+                  href={`https://www.imdb.com/title/${result.imdb_id}`}
+                >
+                  <Img src={imdb}></Img>
+                </ILink>
+              </Title>
+              <ItemContainer>
+                <Rating>
+                  <span role="img" aria-label="rating">
+                    ⭐
+                  </span>
+                  &nbsp;
+                  {result.vote_average}/10
+                </Rating>
+                {(result.release_date || result.first_air_date) && (
+                  <>
+                    <Divider>•</Divider>
+                    <Item>
+                      {result.release_date
+                        ? result.release_date.substring(0, 4)
+                        : result.first_air_date.substring(0, 4)}
+                    </Item>
+                  </>
+                )}
+                {result.runtime ? (
+                  <>
+                    <Divider>•</Divider>
+                    <Item>{result.runtime} min</Item>
+                  </>
+                ) : (
+                  <></>
+                )}
+                {result.episode_run_time &&
+                result.episode_run_time.length > 0 ? (
+                  <>
+                    <Divider>•</Divider>
+                    <Item>{result.episode_run_time[0]} min</Item>
+                  </>
+                ) : (
+                  <></>
+                )}
+                {result.genres && (
+                  <>
+                    <Divider>•</Divider>
+                    <Item>
+                      {result.genres.map(
+                        (genre: { name: string }, index: number) =>
+                          index === result.genres.length - 1
+                            ? genre.name
+                            : `${genre.name} / `,
+                      )}
+                    </Item>
+                  </>
+                )}
+              </ItemContainer>
+              <Overview>{result.overview}</Overview>
+              <Tab>
+                <List onClick={onEvent}>
+                  <Li className="active">Trailer</Li>
+                  <Li>Credits</Li>
+                  <Li>Production</Li>
+                  {result.belongs_to_collection && <Li>Sequels</Li>}
+                  {result.seasons && result.seasons.length > 0 && (
+                    <Li>Season</Li>
+                  )}
+                </List>
+              </Tab>
+              {tabName === 'Trailer' &&
+                result.videos.results &&
+                result.videos.results.length > 0 &&
+                result.videos.results
+                  .filter((video, index) => index === 0)
+                  .map((video: { key: number }) => {
+                    return (
+                      <Iframe
+                        key={video.key}
+                        src={`https://www.youtube.com/embed/${video.key}`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        title="Embedded youtube official trailer"
+                      ></Iframe>
+                    )
+                  })}
+              {tabName === 'Trailer' &&
+                (!result.videos.results ||
+                  result.videos.results.length === 0) && (
+                  <Message color="#eee" text={'No Trailer Found'} />
+                )}
+              {tabName === 'Sequels' && result.belongs_to_collection && (
+                <Collection id={result.belongs_to_collection.id} />
+              )}
+              {tabName === 'Season' &&
+                result.seasons &&
+                result.seasons.length > 0 && (
+                  <Box>
+                    <Section slide={false}>
+                      {result.seasons.map(
+                        (
+                          season: { poster_path: string; name: string },
+                          index: number,
+                        ) => (
+                          <div key={index}>
+                            <Product>
+                              <Logo
+                                src={
+                                  season.poster_path
+                                    ? `https://image.tmdb.org/t/p/original${season.poster_path}`
+                                    : defaultPosterImg
+>>>>>>> Stashed changes
                                 }
                                 {
                                     result.genres &&

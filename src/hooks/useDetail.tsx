@@ -48,6 +48,10 @@ export function useDetail(): void {
             dispatch(fail());
         }
     }
+<<<<<<< Updated upstream
+=======
+  }, [tabName, getCast])
+>>>>>>> Stashed changes
 
     useEffect(() => {
         if (tabName === 'Credits') {

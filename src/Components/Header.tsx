@@ -43,7 +43,11 @@ const SLink = styled(Link)`
 `;
 
 function Header() {
+<<<<<<< Updated upstream
 	const { match: { url }, location: { pathname } } = useRouter();
+=======
+  const { pathname } = useLocation()
+>>>>>>> Stashed changes
 
 	return useMemo(() => (
 		<Head>
