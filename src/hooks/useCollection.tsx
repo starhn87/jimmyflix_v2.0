@@ -1,39 +1,38 @@
-import { useEffect, useState } from 'react'
-import { collections } from '../api'
+import { useEffect, useState } from "react";
+import { collections } from "../api";
 
 interface ICollection {
-  id: number
-  poster_path: string
-  imageUrl: string
-  title: string
-  vote_average: number
-  name: string
-  release_date: string
+    id: number,
+    poster_path: string,
+    imageUrl: string,
+    title: string,
+    vote_average: number,
+    name: string,
+    release_date: string
 }
 
 interface Props {
-  collection?: ICollection[]
-  error?: string
+    collection?: ICollection[],
+    error?: string
 }
 
 export function useCollection(id: number): Props {
-  const [collection, setCollection] = useState<ICollection[]>()
-  const [error, setError] = useState<string>()
+    const [collection, setCollection] = useState<ICollection[]>();
+    const [error, setError] = useState<string>();
 
-  const getCollection = async () => {
-    try {
-      const {
-        data: { parts },
-      } = await collections(id)
-      setCollection(parts)
-    } catch {
-      setError("Can't find collections information.")
+    const getCollection = async () => {
+        try {
+            const { data: { parts } } = await collections(id);
+            setCollection(parts);
+        } catch {
+            setError("Can't find collections information.");
+        }
     }
-  }
 
-  useEffect(() => {
-    getCollection()
-  }, [getCollection])
+    useEffect(() => {
+        getCollection();
+    }, []);
 
-  return { collection, error }
+    return { collection, error };
 }
+
