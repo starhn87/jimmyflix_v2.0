@@ -84,40 +84,23 @@
 
 ```
 ├── README.md
-├── config
-│   ├── env.js
-│   ├── getHttpsConfig.js
-│   ├── jest
-│   │   ├── cssTransform.js
-│   │   └── fileTransform.js
-│   ├── modules.js
-│   ├── paths.js
-│   ├── pnpTs.js
-│   ├── webpack.config.js
-│   └── webpackDevServer.config.js
+├── node_modules
 ├── package.json
 ├── public
 │   ├── favicon.ico
-│   ├── index.html
-│   ├── logo192.png
-│   ├── logo512.png
-│   ├── manifest.json
-│   └── robots.txt
-├── scripts
-│   ├── build.js
-│   ├── start.js
-│   └── test.js
+│   └── index.html
 ├── src
 │   ├── Components
 │   │   ├── App.tsx
 │   │   ├── GlobalStyles.tsx
 │   │   ├── Header.tsx
+│   │   ├── Helmet.tsx
 │   │   ├── Info.tsx
+│   │   ├── Layout.tsx
 │   │   ├── Loader.tsx
 │   │   ├── Message.tsx
 │   │   ├── MovieResult.tsx
 │   │   ├── Poster.tsx
-│   │   ├── Router.tsx
 │   │   ├── SearchResult.tsx
 │   │   ├── Section.tsx
 │   │   └── TVResult.tsx
@@ -127,7 +110,6 @@
 │   │   ├── Home.tsx
 │   │   ├── Search.tsx
 │   │   └── TV.tsx
-│   ├── actions.tsx
 │   ├── api.tsx
 │   ├── assets
 │   │   ├── images
