@@ -5,9 +5,10 @@ import Helmet from '../Components/Helmet'
 import { useSearch } from '../hooks/useSearch'
 import SearchResult from '../Components/SearchResult'
 import Header from '../Components/Header'
-import { shallowEqual, useSelector } from 'react-redux'
+import { shallowEqual } from 'react-redux'
 import { SearchState } from '../reducers/SearchReducer'
 import { customMedia } from '../Components/GlobalStyles'
+import { useAppSelector } from '../store'
 
 const Container = styled.div`
   padding: 0 20px;
@@ -39,7 +40,7 @@ export interface SearchProps {
 
 function Search() {
   const { searchTerm, updateTerm, handleSubmit } = useSearch()
-  const loading = useSelector(
+  const loading = useAppSelector(
     (state: SearchProps) => state.search.loading,
     shallowEqual,
   )

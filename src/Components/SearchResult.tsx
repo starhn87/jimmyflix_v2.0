@@ -4,11 +4,12 @@ import Poster from './Poster'
 import Section from './Section'
 import { Movie } from './MovieResult'
 import { Show } from './TVResult'
-import { shallowEqual, useSelector } from 'react-redux'
+import { shallowEqual } from 'react-redux'
 import { SearchProps } from '../Routes/Search'
+import { useAppSelector } from '../store'
 
 function SearchResult() {
-  const { movieResults, tvResults, error } = useSelector(
+  const { movieResults, tvResults, error } = useAppSelector(
     (state: SearchProps) => ({ ...state.search }),
     shallowEqual,
   )

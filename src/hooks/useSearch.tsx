@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { moviesApi, tvApi } from '../api'
 import { fail, success, loading, term } from '../reducers/SearchReducer'
 import { SearchProps } from '../Routes/Search'
+import { useAppDispatch, useAppSelector } from '../store'
 
 interface Props {
   searchTerm: string
@@ -11,10 +11,10 @@ interface Props {
 }
 
 export function useSearch(): Props {
-  const searchTerm = useSelector(
+  const searchTerm = useAppSelector(
     (state: SearchProps) => state.search.searchTerm,
   )
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
