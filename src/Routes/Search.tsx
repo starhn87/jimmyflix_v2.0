@@ -96,7 +96,7 @@ const SearchBox = styled.article`
     animation: asc 1s;
 	`}
 
-  ${customMedia.lessThan('desktop')`
+  ${customMedia.between('mobile', 'desktop')`
     transition: 1s;
     animation: desc 1s;
 	`}
