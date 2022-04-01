@@ -26,7 +26,7 @@ export default function SearchBar() {
           value={editingValue}
           onChange={(e) => setEditingValue(e.target.value)}
           type="text"
-          placeholder="닉네임 검색"
+          placeholder="영화 / TV쇼 검색"
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           spellCheck={false}
