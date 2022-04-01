@@ -5,42 +5,29 @@ import { SearchProps } from '../Routes/Search'
 import { useAppDispatch, useAppSelector } from '../store'
 
 interface Props {
-  searchTerm: string
-  updateTerm: (event: React.ChangeEvent<HTMLInputElement>) => void
-  handleSubmit: (event: React.FormEvent) => void
+  handleSubmit: (value: string) => void
 }
 
 export function useSearch(): Props {
-  const searchTerm = useAppSelector(
-    (state: SearchProps) => state.search.searchTerm,
-  )
   const dispatch = useAppDispatch()
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-    if (searchTerm.trim() !== '') {
+  const handleSubmit = (value: string) => {
+    if (value.trim() !== '') {
       dispatch(loading())
-      searchByTerm()
+      searchByTerm(value)
     } else {
       alert('Input what you wannt to know!')
     }
   }
 
-  const updateTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = event
-    dispatch(term(value))
-  }
-
-  const searchByTerm = async () => {
+  const searchByTerm = async (value: string) => {
     try {
       const {
         data: { results: movieResults },
-      } = await moviesApi.search(searchTerm)
+      } = await moviesApi.search(value)
       const {
         data: { results: tvResults },
-      } = await tvApi.search(searchTerm)
+      } = await tvApi.search(value)
       dispatch(success({ movieResults, tvResults }))
     } catch {
       dispatch(fail())
@@ -51,5 +38,5 @@ export function useSearch(): Props {
     window.scrollTo(0, 0)
   }, [])
 
-  return { searchTerm, updateTerm, handleSubmit }
+  return { handleSubmit }
 }

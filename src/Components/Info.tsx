@@ -8,7 +8,7 @@ import defaultProductionImg from '../assets/images/noProductionSmall.png'
 import Collection from '../Routes/Collection'
 import { DetailProps } from '../Routes/Detail'
 import { customMedia } from './GlobalStyles'
-import Section from './Section'
+import Section, { Grid } from './Section'
 import { tab } from '../reducers/DetailReducer'
 import Message from './Message'
 import Helmet from './Helmet'
@@ -180,12 +180,12 @@ const Li = styled.li`
   font-size: 14px;
   &.active {
     border-bottom: 3px solid #b1ddf9;
-    transition: border-bottom 0.2s;
+    transition: border-bottom 0.1s;
   }
 `
 
 const Iframe = styled.iframe`
-  margin-top: 7px;
+  margin-top: 15px;
   width: 100%;
   height: 80%;
   &:first-child {
@@ -229,9 +229,15 @@ const Name = styled.p`
 `
 
 const Box = styled.div`
+  overflow: auto;
   width: 100%;
+  height: 520px;
   margin-top: 20px;
   margin-bottom: 30px;
+`
+
+const Wrapper = styled(Grid)`
+  margin-top: 0;
 `
 
 function Info() {
@@ -369,7 +375,7 @@ function Info() {
                 result.seasons &&
                 result.seasons.length > 0 && (
                   <Box>
-                    <Section slide={false}>
+                    <Wrapper>
                       {result.seasons.map(
                         (
                           season: { poster_path: string; name: string },
@@ -394,12 +400,12 @@ function Info() {
                           </div>
                         ),
                       )}
-                    </Section>
+                    </Wrapper>
                   </Box>
                 )}
               {tabName === 'Credits' && cast && cast.length > 0 && (
                 <Box>
-                  <Section slide={false}>
+                  <Wrapper>
                     {cast.map(
                       (
                         profile: {
@@ -425,7 +431,7 @@ function Info() {
                         </div>
                       ),
                     )}
-                  </Section>
+                  </Wrapper>
                 </Box>
               )}
               {tabName === 'Credits' && (!cast || cast.length === 0) && (
