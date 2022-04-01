@@ -14,7 +14,7 @@ const Title = styled.span`
   font-weight: 600;
 `
 
-const Grid = styled.div`
+export const Grid = styled.div`
   margin-top: 30px;
   display: grid;
   grid-template-columns: repeat(auto-fill, 150px);
