@@ -32,19 +32,25 @@
 
 1. 홈 페이지
 
-<img src="https://user-images.githubusercontent.com/36434219/160313130-6d51ce5e-bbb8-43ee-ae51-e9c15232a21e.png" alt="홈 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/161191063-7a618804-30d6-48cd-8491-361f29225c04.png" alt="홈 페이지" width="700px" height="400px">
 
 <br>
 
 2. TV 페이지
 
-<img src="https://user-images.githubusercontent.com/36434219/160313207-5ea948c1-e4ce-4d70-acca-e02f9426b7c9.png" alt="전적 검색 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/161191121-88500cf5-f642-4e5b-9c56-b591f08de512.png" alt="전적 검색 페이지" width="700px" height="400px">
 
 <br>
 
-3. 검색 페이지
+3-1. 검색 페이지 (초기)
 
-<img src="https://user-images.githubusercontent.com/36434219/160313281-7d297650-6e8f-4b81-90d9-bd6c7e5679ad.png" alt="트랙 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/161191283-31733ca2-a4e1-4675-a72d-0e5601d375f7.png" alt="트랙 페이지" width="700px" height="400px">
+
+<br>
+
+3-2. 검색 페이지 (검색 후)
+
+<img src="https://user-images.githubusercontent.com/36434219/161191384-b70b9aad-2d11-4c15-b9ab-e99fe05c96b3.png" alt="트랙 페이지" width="700px" height="400px">
 
 <br>
 
@@ -101,6 +107,7 @@
 │   │   ├── Message.tsx
 │   │   ├── MovieResult.tsx
 │   │   ├── Poster.tsx
+│   │   ├── SearchBar.tsx
 │   │   ├── SearchResult.tsx
 │   │   ├── Section.tsx
 │   │   └── TVResult.tsx

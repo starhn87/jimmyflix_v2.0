@@ -14,26 +14,6 @@ const Container = styled.div`
   padding: 0 20px;
 `
 
-const Form = styled.form`
-  margin: 15px 0 30px;
-`
-
-const Input = styled.input`
-  padding-left: 10px;
-  width: 500px;
-  height: 50px;
-  border-radius: 5px;
-  font-size: 30px;
-  &:focus {
-    outline: none;
-  }
-
-  ${customMedia.lessThan('mobile')`
-        width: 90%;
-        font-size: 24px;
-    `}
-`
-
 const SearchBar = styled.input`
   position: absolute;
   display: block;
@@ -155,7 +135,7 @@ function Search() {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setValue(e.target.value)
               }
-              placeholder="영화 / TV쇼 입력"
+              placeholder="영화 / TV쇼 검색"
             />
             <Button type="submit">
               <MdOutlineMovie />
