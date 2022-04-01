@@ -69,10 +69,10 @@ const SearchBox = styled.article`
   box-sizing: border-box;
   border-radius: 33.5px;
   border: 4px solid #fff;
-  animation: desc 1s;
 
   @media (min-width: 1630px) {
     width: 670px;
+    transition: 1s;
     animation: asc 1s;
   }
 
@@ -93,6 +93,11 @@ const SearchBox = styled.article`
       width: 500px;
     }
   }
+
+  ${customMedia.greaterThan('mobile')`
+    transition: 1s;
+    animation: desc 1s;
+	`}
 
   ${customMedia.lessThan('mobile')`
     width: 80%;
@@ -116,7 +121,6 @@ function Search() {
     e.preventDefault()
     handleSubmit(value)
   }
-  console.log(loading)
 
   return (
     <Container>

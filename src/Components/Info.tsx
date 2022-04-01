@@ -231,7 +231,7 @@ const Name = styled.p`
 const Box = styled.div`
   overflow: auto;
   width: 100%;
-  height: 520px;
+  height: 785px;
   margin-top: 20px;
   margin-bottom: 30px;
 `

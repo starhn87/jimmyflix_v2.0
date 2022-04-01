@@ -56,7 +56,7 @@
 
 4. 상세 페이지
 
-<img src="https://user-images.githubusercontent.com/36434219/160313431-57b194a4-80bf-4b97-94f5-618e06d11667.png" alt="트랙 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/161204142-c348e215-5df8-41fd-b79a-8f722717819c.png" alt="트랙 페이지" width="700px" height="400px">
 
 <br>
 <br>
