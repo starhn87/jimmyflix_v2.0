@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { customMedia } from './GlobalStyles'
 import SearchBar from './SearchBar'
@@ -60,6 +60,10 @@ const LogoWrapper = styled.div`
   ${customMedia.lessThan('mobile')`
     display: none;
 	`}
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const Logo = styled.div`
@@ -77,6 +81,7 @@ const SearchBarWrapper = styled.div`
 function Header() {
   const { pathname } = useLocation()
   const dispatch = useAppDispatch()
+  const navigator = useNavigate()
 
   const onClick = () => {
     if (pathname === '/search') {
@@ -86,7 +91,7 @@ function Header() {
 
   return (
     <Head>
-      <LogoWrapper>
+      <LogoWrapper onClick={() => navigator('/')}>
         <MdOutlineMovie fontSize={35} />
         <Logo>Jimmyflix</Logo>
       </LogoWrapper>
