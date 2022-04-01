@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react'
+import React, { memo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { customMedia } from './GlobalStyles'
 import SearchBar from './SearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
+import { useAppDispatch } from '../store'
+import { reset } from '../reducers/SearchReducer'
 
 const Head = styled.header`
   color: white;
@@ -74,32 +76,36 @@ const SearchBarWrapper = styled.div`
 
 function Header() {
   const { pathname } = useLocation()
+  const dispatch = useAppDispatch()
 
-  return useMemo(
-    () => (
-      <Head>
-        <LogoWrapper>
-          <MdOutlineMovie fontSize={35} />
-          <Logo>Jimmyflix</Logo>
-        </LogoWrapper>
-        <List>
-          <Item current={pathname === '/' || pathname.includes('/movie')}>
-            <SLink to="/">Movies</SLink>
-          </Item>
-          <Item current={pathname === '/tv' || pathname.includes('/tv')}>
-            <SLink to="/tv">TV</SLink>
-          </Item>
-          <Item current={pathname.includes('/search')}>
-            <SLink to="/search">Search</SLink>
-          </Item>
-        </List>
-        <SearchBarWrapper>
-          <SearchBar />
-        </SearchBarWrapper>
-      </Head>
-    ),
-    [pathname],
+  const onClick = () => {
+    if (pathname === '/search') {
+      dispatch(reset())
+    }
+  }
+
+  return (
+    <Head>
+      <LogoWrapper>
+        <MdOutlineMovie fontSize={35} />
+        <Logo>Jimmyflix</Logo>
+      </LogoWrapper>
+      <List>
+        <Item current={pathname === '/' || pathname.includes('/movie')}>
+          <SLink to="/">Movies</SLink>
+        </Item>
+        <Item current={pathname === '/tv' || pathname.includes('/tv')}>
+          <SLink to="/tv">TV</SLink>
+        </Item>
+        <Item current={pathname.includes('/search')} onClick={() => onClick()}>
+          <SLink to="/search">Search</SLink>
+        </Item>
+      </List>
+      <SearchBarWrapper>
+        <SearchBar />
+      </SearchBarWrapper>
+    </Head>
   )
 }
 
-export default Header
+export default memo(Header)
