@@ -22,14 +22,10 @@ function Detail() {
   return loading ? (
     <>
       <Helmet content="Loading | Jimmyflix" />
-      <Header />
       <Loader />
     </>
   ) : (
-    <>
-      <Header />
-      {error ? <Message color="#e74c3c" text={error}></Message> : <Info />}
-    </>
+    <>{error ? <Message color="#e74c3c" text={error}></Message> : <Info />}</>
   )
 }
 

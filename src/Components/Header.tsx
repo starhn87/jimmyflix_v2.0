@@ -2,6 +2,8 @@ import React, { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { customMedia } from './GlobalStyles'
+import SearchBar from './SearchBar'
+import { MdOutlineMovie } from 'react-icons/md'
 
 const Head = styled.header`
   color: white;
@@ -10,8 +12,10 @@ const Head = styled.header`
   left: 0;
   width: 100%;
   height: 50px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
+  justify-items: center;
   padding: 0 10px;
   background-color: rgb(20, 20, 20);
   z-index: 10;
@@ -19,7 +23,11 @@ const Head = styled.header`
 `
 
 const List = styled.ul`
-  display: contents;
+  display: flex;
+
+  ${customMedia.lessThan('mobile')`
+    display: contents;
+	`}
 `
 
 const Item = styled.li<{ current: boolean }>`
@@ -29,6 +37,7 @@ const Item = styled.li<{ current: boolean }>`
   border-bottom: 5px solid
     ${(props) => (props.current ? '#4d96fb' : 'transparent')};
   transition: border-bottom 0.5s ease-in-out;
+
   ${customMedia.lessThan('mobile')`
 		width: 100%;
 		font-size: 15px;
@@ -42,12 +51,37 @@ const SLink = styled(Link)`
   justify-content: center;
 `
 
+const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  ${customMedia.lessThan('mobile')`
+    display: none;
+	`}
+`
+
+const Logo = styled.div`
+  margin-left: 10px;
+  font-family: monospace;
+  font-size: 20px;
+`
+
+const SearchBarWrapper = styled.div`
+  ${customMedia.lessThan('mobile')`
+    display: none;
+	`}
+`
+
 function Header() {
   const { pathname } = useLocation()
 
   return useMemo(
     () => (
       <Head>
+        <LogoWrapper>
+          <MdOutlineMovie fontSize={35} />
+          <Logo>Jimmyflix</Logo>
+        </LogoWrapper>
         <List>
           <Item current={pathname === '/' || pathname.includes('/movie')}>
             <SLink to="/">Movies</SLink>
@@ -59,6 +93,9 @@ function Header() {
             <SLink to="/search">Search</SLink>
           </Item>
         </List>
+        <SearchBarWrapper>
+          <SearchBar />
+        </SearchBarWrapper>
       </Head>
     ),
     [pathname],

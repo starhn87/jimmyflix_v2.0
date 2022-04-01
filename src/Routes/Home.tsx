@@ -22,7 +22,6 @@ function Home() {
   return (
     <>
       <Helmet content="Movies | Jimmyflix" />
-      <Header />
       {loading ? <Loader /> : <MovieResult />}
     </>
   )
