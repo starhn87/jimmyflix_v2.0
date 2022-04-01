@@ -70,12 +70,22 @@ const SearchBox = styled.article`
   border-radius: 33.5px;
   border: 4px solid #fff;
 
-  @media (min-width: 1630px) {
+  ${customMedia.greaterThan('desktop')`
     width: 670px;
     transition: 1s;
     animation: asc 1s;
-  }
+	`}
 
+  ${customMedia.lessThan('desktop')`
+    transition: 1s;
+    animation: desc 1s;
+	`}
+
+  ${customMedia.lessThan('mobile')`
+    width: 80%;
+    font-size: 15px;
+	`}
+  
   @keyframes asc {
     from {
       width: 500px;
@@ -93,16 +103,6 @@ const SearchBox = styled.article`
       width: 500px;
     }
   }
-
-  ${customMedia.greaterThan('mobile')`
-    transition: 1s;
-    animation: desc 1s;
-	`}
-
-  ${customMedia.lessThan('mobile')`
-    width: 80%;
-    font-size: 15px;
-	`}
 `
 
 export interface SearchProps {

@@ -5,9 +5,8 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
 export const customMedia = generateMedia({
-  desktop: '78em',
-  tablet: '60em',
-  mobile: '46em',
+  desktop: '1630px',
+  mobile: '768px',
 })
 
 const globalStyles = createGlobalStyle`
