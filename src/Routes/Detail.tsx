@@ -3,8 +3,7 @@ import Helmet from '../Components/Helmet'
 import Loader from '../Components/Loader'
 import Message from '../Components/Message'
 import { useDetail } from '../hooks/useDetail'
-import Info from '../Components/Info'
-import Header from '../Components/Header'
+import DetailInfo from '../Components/detail'
 import { shallowEqual, useSelector } from 'react-redux'
 import { DetailState } from '../reducers/DetailReducer'
 
@@ -25,7 +24,13 @@ function Detail() {
       <Loader />
     </>
   ) : (
-    <>{error ? <Message color="#e74c3c" text={error}></Message> : <Info />}</>
+    <>
+      {error ? (
+        <Message color="#e74c3c" text={error}></Message>
+      ) : (
+        <DetailInfo />
+      )}
+    </>
   )
 }
 

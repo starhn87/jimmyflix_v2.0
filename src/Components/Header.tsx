@@ -33,7 +33,7 @@ const List = styled.ul`
 `
 
 const Item = styled.li<{ current: boolean }>`
-  width: 70px;
+  width: 100px;
   font-size: 16px;
   text-align: center;
   border-bottom: 5px solid
@@ -47,7 +47,7 @@ const Item = styled.li<{ current: boolean }>`
 `
 
 const SLink = styled(Link)`
-  height: 50px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;

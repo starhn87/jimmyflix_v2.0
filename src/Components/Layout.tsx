@@ -11,9 +11,3 @@ export default function Layout() {
     </>
   )
 }
-
-const Wrapper = styled.div`
-  width: 100%;
-  min-height: calc(100vh - 110px);
-  padding-top: 7rem;
-`

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Loader from '../Components/Loader'
 import Helmet from '../Components/Helmet'
@@ -12,26 +12,6 @@ import { MdOutlineMovie } from 'react-icons/md'
 
 const Container = styled.div`
   padding: 0 20px;
-`
-
-const Form = styled.form`
-  margin: 15px 0 30px;
-`
-
-const Input = styled.input`
-  padding-left: 10px;
-  width: 500px;
-  height: 50px;
-  border-radius: 5px;
-  font-size: 30px;
-  &:focus {
-    outline: none;
-  }
-
-  ${customMedia.lessThan('mobile')`
-        width: 90%;
-        font-size: 24px;
-    `}
 `
 
 const SearchBar = styled.input`
@@ -141,6 +121,10 @@ function Search() {
     e.preventDefault()
     handleSubmit(value)
   }
+
+  useEffect(() => {
+    setValue('')
+  }, [loading])
 
   return (
     <Container>
