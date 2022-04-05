@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Logo, Name, Product, Wrapper } from '.'
+import { Box, Logo, Name, Product, Wrapper } from '../../Routes/Detail'
 import defaultPosterImg from '../../assets/images/noPosterSmall.png'
 
 interface SeasonProps {

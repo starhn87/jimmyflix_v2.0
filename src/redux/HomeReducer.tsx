@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+<<<<<<< Updated upstream:src/redux/HomeReducer.tsx
 
 export interface HomeState {
   nowPlaying: [] | null
@@ -7,6 +8,9 @@ export interface HomeState {
   error: string | null
   loading: boolean
 }
+=======
+import { HomeState } from '../../interface'
+>>>>>>> Stashed changes:src/redux/reducers/HomeReducer.tsx
 
 export const homeInitialState: HomeState = {
   nowPlaying: null,

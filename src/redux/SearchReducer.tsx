@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+<<<<<<< Updated upstream:src/redux/SearchReducer.tsx
 
 export interface SearchState {
   movieResults: [] | null
@@ -7,6 +8,9 @@ export interface SearchState {
   loading: boolean | null
   searchTerm: string
 }
+=======
+import { SearchState } from '../../interface'
+>>>>>>> Stashed changes:src/redux/reducers/SearchReducer.tsx
 
 export const searchInitialState: SearchState = {
   movieResults: null,

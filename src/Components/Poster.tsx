@@ -3,6 +3,50 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import defaultPosterImg from '../assets/images/noPosterSmall.png'
 
+interface Props {
+  id: number
+  imageUrl: string
+  title: string
+  rating: number
+  year: string
+  isMovie?: boolean
+}
+
+const Poster: React.FunctionComponent<Props> = ({
+  id,
+  imageUrl,
+  title,
+  rating,
+  year,
+  isMovie = false,
+}) => (
+  <Link to={isMovie ? `/movie/${id}` : `/tv/${id}`}>
+    <Container>
+      <ImageContainer>
+        <Image
+          bgUrl={
+            imageUrl
+              ? `https://image.tmdb.org/t/p/w300${imageUrl}`
+              : defaultPosterImg
+          }
+        />
+        <Rating>
+          <span role="img" aria-label="rating">
+            ⭐
+          </span>{' '}
+          {rating}/10
+        </Rating>
+      </ImageContainer>
+      <Title>
+        {title.length > 15 ? `${title.substring(0, 15)}...` : title}
+      </Title>
+      <Year>{year}</Year>
+    </Container>
+  </Link>
+)
+
+export default Poster
+
 const Container = styled.div`
   width: 95%;
   font-size: 12px;
@@ -49,47 +93,3 @@ const Year = styled.span`
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
 `
-
-interface Props {
-  id: number
-  imageUrl: string
-  title: string
-  rating: number
-  year: string
-  isMovie?: boolean
-}
-
-const Poster: React.FunctionComponent<Props> = ({
-  id,
-  imageUrl,
-  title,
-  rating,
-  year,
-  isMovie = false,
-}) => (
-  <Link to={isMovie ? `/movie/${id}` : `/tv/${id}`}>
-    <Container>
-      <ImageContainer>
-        <Image
-          bgUrl={
-            imageUrl
-              ? `https://image.tmdb.org/t/p/w300${imageUrl}`
-              : defaultPosterImg
-          }
-        />
-        <Rating>
-          <span role="img" aria-label="rating">
-            ⭐
-          </span>{' '}
-          {rating}/10
-        </Rating>
-      </ImageContainer>
-      <Title>
-        {title.length > 15 ? `${title.substring(0, 15)}...` : title}
-      </Title>
-      <Year>{year}</Year>
-    </Container>
-  </Link>
-)
-
-export default Poster

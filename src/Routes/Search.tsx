@@ -1,18 +1,98 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Helmet from '../Components/Helmet'
+<<<<<<< Updated upstream
 import SearchResult from '../Components/SearchResult'
 import { shallowEqual } from 'react-redux'
 import { SearchState, loading, success } from '../redux/SearchReducer'
+=======
+import { success } from '../redux/reducers/SearchReducer'
+>>>>>>> Stashed changes
 import { customMedia } from '../Components/GlobalStyles'
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import { MdOutlineMovie } from 'react-icons/md'
 import Loading from '../Components/Loading'
+<<<<<<< Updated upstream
 import { moviesApi, tvApi } from '../api'
+=======
+import { Container } from './Home'
+import { SearchState } from '../interface'
+>>>>>>> Stashed changes
 
-const Container = styled.div`
-  padding: 0 20px;
-`
+export interface SearchProps {
+  search: SearchState
+}
+
+function Search() {
+  const { isSearched } = useAppSelector((state) => state.search)
+  const dispatch = useAppDispatch()
+  const [value, setValue] = useState('')
+
+  const handleSubmit = (value: string) => {
+    if (value.trim() !== '') {
+      searchByTerm(value)
+    } else {
+      alert('Input what you want to know!')
+    }
+  }
+
+  const searchByTerm = async (value: string) => {
+    try {
+      const {
+        data: { results: movieResults },
+      } = await moviesApi.search(value)
+      const {
+        data: { results: tvResults },
+      } = await tvApi.search(value)
+      dispatch(success({ movieResults, tvResults }))
+    } catch {
+      dispatch(fail())
+    }
+  }
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    handleSubmit(value)
+    setValue('')
+  }
+
+  const SearchComponent = lazyMinLoadTime(
+    () => import('../Components/SearchResult'),
+    1000,
+  )
+
+  return (
+    <Container>
+      <Helmet content="Search | Jimmyflix" />
+      {isSearched ? (
+        <Suspense fallback={<Loading />}>
+          <SearchComponent />
+        </Suspense>
+      ) : (
+        <SearchBox>
+          <form onSubmit={onSubmit}>
+            <SearchBar
+              value={value}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setValue(e.target.value)
+              }
+              placeholder="영화 / TV쇼 검색"
+            />
+            <Button type="submit">
+              <MdOutlineMovie />
+            </Button>
+          </form>
+        </SearchBox>
+      )}
+    </Container>
+  )
+}
+
+export default Search
 
 const SearchBar = styled.input`
   position: absolute;
@@ -104,6 +184,7 @@ const SearchBox = styled.article`
     }
   }
 `
+<<<<<<< Updated upstream
 
 export interface SearchProps {
   search: SearchState
@@ -183,3 +264,5 @@ function Search() {
 }
 
 export default Search
+=======
+>>>>>>> Stashed changes

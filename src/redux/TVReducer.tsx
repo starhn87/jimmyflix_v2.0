@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+<<<<<<< Updated upstream:src/redux/TVReducer.tsx
 
 export interface TVState {
   topRated: [] | null
@@ -7,6 +8,9 @@ export interface TVState {
   error: string | null
   loading: boolean
 }
+=======
+import { TVState } from '../../interface'
+>>>>>>> Stashed changes:src/redux/reducers/TVReducer.tsx
 
 export const tvInitialState: TVState = {
   topRated: null,
