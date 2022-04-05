@@ -4,11 +4,7 @@ import { MdSearch } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import { moviesApi, tvApi } from '../api'
 import { useAppDispatch } from '../redux/store'
-<<<<<<< HEAD
-import { fail, success } from '../redux/SearchReducer'
-=======
 import { fail, success } from '../redux/reducers/SearchReducer'
->>>>>>> dev
 
 export default function SearchBar() {
   const [editingValue, setEditingValue] = useState('')

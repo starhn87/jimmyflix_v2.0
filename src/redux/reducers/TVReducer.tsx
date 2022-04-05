@@ -1,15 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-<<<<<<< HEAD:src/redux/TVReducer.tsx
-import { TVState } from '../interface'
-=======
-
-export interface TVState {
-  topRated: [] | null
-  popular: [] | null
-  airingToday: [] | null
-  error: string | null
-}
->>>>>>> dev:src/redux/reducers/TVReducer.tsx
+import { TVState } from '../../interface'
 
 export const tvInitialState: TVState = {
   topRated: null,

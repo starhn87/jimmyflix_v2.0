@@ -1,15 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-<<<<<<< HEAD:src/redux/HomeReducer.tsx
-import { HomeState } from '../interface'
-=======
-
-export interface HomeState {
-  nowPlaying: [] | null
-  upcoming: [] | null
-  popular: [] | null
-  error: string | null
-}
->>>>>>> dev:src/redux/reducers/HomeReducer.tsx
+import { HomeState } from '../../interface'
 
 export const homeInitialState: HomeState = {
   nowPlaying: null,
