@@ -1,19 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-
-export interface HomeState {
-  nowPlaying: [] | null
-  upcoming: [] | null
-  popular: [] | null
-  error: string | null
-  loading: boolean
-}
+import { HomeState } from '../../interface'
 
 export const homeInitialState: HomeState = {
   nowPlaying: null,
   upcoming: null,
   popular: null,
   error: null,
-  loading: true,
 }
 
 const home = createSlice({
@@ -26,14 +18,12 @@ const home = createSlice({
         nowPlaying: action.payload.nowPlaying,
         upcoming: action.payload.upcoming,
         popular: action.payload.popular,
-        loading: false,
       }
     },
     fail: (state) => {
       return {
         ...state,
         error: "Can't find Home Information.",
-        loading: false,
       }
     },
     reset: () => homeInitialState,

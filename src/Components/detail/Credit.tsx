@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Logo, Name, Product, Wrapper } from '.'
+import { Box, Logo, Name, Product, Wrapper } from '../../Routes/Detail'
 import defaultPersonImg from '../../assets/images/noPersonSmall.png'
 import Message from '../Message'
 

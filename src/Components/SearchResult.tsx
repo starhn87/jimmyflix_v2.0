@@ -2,11 +2,11 @@ import React from 'react'
 import Message from './Message'
 import Poster from './Poster'
 import Section from './Section'
-import { Movie } from './MovieResult'
-import { Show } from './TVResult'
 import { shallowEqual } from 'react-redux'
 import { SearchProps } from '../Routes/Search'
-import { useAppSelector } from '../store'
+import { useAppSelector } from '../redux/store'
+import { Show } from '../Routes/TV'
+import { Movie } from '../interface'
 
 function SearchResult() {
   const { movieResults, tvResults, error } = useAppSelector(

@@ -1,41 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-
-export interface DetailState {
-  result: {
-    imdb_id: number
-    backdrop_path: string
-    title: string
-    name: string
-    poster_path: string
-    release_date: string
-    first_air_date: string
-    runtime?: number
-    episode_run_time: number[]
-    genres: []
-    overview: string
-    belongs_to_collection: {
-      id: number
-    }
-    seasons: []
-    video: boolean
-    videos: {
-      results: []
-    }
-    production_companies: []
-    production_countries: []
-    vote_average: number
-  } | null
-  cast: [] | null
-  error: string | null
-  loading: boolean
-  tabName: string
-}
+import { DetailState } from '../../interface'
 
 export const detailInitialState: DetailState = {
   result: null,
-  cast: null,
+  casts: null,
   error: null,
-  loading: true,
   tabName: 'Trailer',
 }
 
@@ -47,15 +16,13 @@ const detail = createSlice({
       ...state,
       error: null,
       result: action.payload.results,
-      cast: null,
-      loading: false,
+      casts: null,
     }),
     fail: (state) => ({
       ...state,
       result: null,
-      cast: null,
+      casts: null,
       error: "Can't find Detail information.",
-      loading: false,
     }),
     reset: () => detailInitialState,
     tab: (state, action) => ({
@@ -64,7 +31,7 @@ const detail = createSlice({
     }),
     cast: (state, action) => ({
       ...state,
-      cast: action.payload.casts,
+      casts: action.payload.casts,
     }),
   },
 })

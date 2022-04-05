@@ -1,22 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Message from '../Components/Message'
-import { useCollection } from '../hooks/useCollection'
 import Section from '../Components/Section'
 import styled from 'styled-components'
 import Poster from '../Components/Poster'
-
-const Container = styled.div`
-  margin-bottom: 30px;
-  margin-top: 20px;
-`
+import { collections } from '../api'
+import { ICollection } from '../interface'
 
 interface Props {
   id: number
 }
 
 const Collection = ({ id }: Props) => {
-  const { collection, error } = useCollection(id)
-  console.log(collection)
+  const [collection, setCollection] = useState<ICollection[]>()
+  const [error, setError] = useState<string>()
+
+  const getCollection = async () => {
+    try {
+      const {
+        data: { parts },
+      } = await collections(id)
+      setCollection(parts)
+    } catch {
+      setError("Can't find collections information.")
+    }
+  }
+
+  useEffect(() => {
+    getCollection()
+  }, [])
 
   return error ? (
     <Message color="#e74c3c" text={error}></Message>
@@ -44,3 +55,8 @@ const Collection = ({ id }: Props) => {
 }
 
 export default Collection
+
+const Container = styled.div`
+  margin-bottom: 30px;
+  margin-top: 20px;
+`

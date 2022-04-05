@@ -2,30 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import Slider from 'react-slick'
 
-const Container = styled.div`
-  margin-top: 10px;
-  :not(:last-child) {
-    margin-bottom: 50px;
-  }
-`
-
-const Title = styled.span`
-  font-size: 20px;
-  font-weight: 600;
-`
-
-export const Grid = styled.div`
-  margin-top: 30px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 150px);
-  grid-gap: 25px;
-`
-
-const Wrapper = styled.div`
-  margin: 40px auto;
-  width: 95%;
-`
-
 interface Props {
   slide: boolean
   title?: string
@@ -97,3 +73,27 @@ const Section: React.FunctionComponent<Props> = ({
 }
 
 export default Section
+
+const Container = styled.div`
+  margin-top: 10px;
+  :not(:last-child) {
+    margin-bottom: 50px;
+  }
+`
+
+const Title = styled.span`
+  font-size: 20px;
+  font-weight: 600;
+`
+
+export const Grid = styled.div`
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 150px);
+  grid-gap: 25px;
+`
+
+const Wrapper = styled.div`
+  margin: 40px auto;
+  width: 95%;
+`
