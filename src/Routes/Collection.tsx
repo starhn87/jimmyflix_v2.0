@@ -10,16 +10,13 @@ const Container = styled.div`
   margin-top: 20px;
 `
 
-const Item = styled.img`
-  width: 100%;
-`
-
 interface Props {
   id: number
 }
 
 const Collection = ({ id }: Props) => {
   const { collection, error } = useCollection(id)
+  console.log(collection)
 
   return error ? (
     <Message color="#e74c3c" text={error}></Message>

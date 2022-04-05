@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { shallowEqual } from 'react-redux'
 import styled from 'styled-components'
 import imdb from '../../assets/images/imdb.png'
@@ -194,13 +194,11 @@ function Detail() {
                 overview={result.overview}
               />
               <Tabs
+                selected={tabName}
                 collections={!!result.belongs_to_collection}
                 seasons={!!result.seasons}
               />
               {tabName === 'Trailer' && <Trailer videos={result.videos} />}
-              {tabName === 'Sequels' && result.belongs_to_collection && (
-                <Collection id={result.belongs_to_collection.id} />
-              )}
               {tabName === 'Season' && <Season seasons={result.seasons} />}
               {tabName === 'Credits' && <Credit cast={cast} />}
               {tabName === 'Production' && (
@@ -208,6 +206,9 @@ function Detail() {
                   production_companies={result.production_companies}
                   production_countries={result.production_countries}
                 />
+              )}
+              {tabName === 'Collection' && result.belongs_to_collection && (
+                <Collection id={result.belongs_to_collection.id} />
               )}
             </Data>
           </Content>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 import { customMedia } from '../GlobalStyles'
 
@@ -12,7 +12,7 @@ interface InfoProps {
   runtime?: number
 }
 
-export default function Info({
+export default memo(function Info({
   vote_average,
   release_date,
   first_air_date,
@@ -67,7 +67,7 @@ export default function Info({
       <Overview>{overview}</Overview>
     </>
   )
-}
+})
 
 const Rating = styled.span`
   display: inline-flex;

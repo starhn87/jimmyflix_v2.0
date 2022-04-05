@@ -1,11 +1,11 @@
 import React from 'react'
 import Helmet from '../Components/Helmet'
-import Loader from '../Components/Loader'
 import Message from '../Components/Message'
 import { useDetail } from '../hooks/useDetail'
 import DetailInfo from '../Components/detail'
 import { shallowEqual, useSelector } from 'react-redux'
 import { DetailState } from '../reducers/DetailReducer'
+import Loading from '../Components/Loading'
 
 export interface DetailProps {
   detail: DetailState
@@ -21,7 +21,7 @@ function Detail() {
   return loading ? (
     <>
       <Helmet content="Loading | Jimmyflix" />
-      <Loader />
+      <Loading />
     </>
   ) : (
     <>
