@@ -1,21 +1,47 @@
-import React, { ChangeEvent, FormEvent, useRef, useState } from 'react'
+import React, { FormEvent, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { MdSearch } from 'react-icons/md'
-import { useSearch } from '../hooks/useSearch'
 import { useNavigate } from 'react-router-dom'
+import { moviesApi, tvApi } from '../api'
+import { useAppDispatch } from '../redux/store'
+import { fail, loading, success } from '../redux/SearchReducer'
 
 export default function SearchBar() {
-  const { handleSubmit } = useSearch()
   const [editingValue, setEditingValue] = useState('')
   const [focused, setFocused] = useState(false)
   const searchRef = useRef<HTMLInputElement | null>(null)
   const navigator = useNavigate()
+  const dispatch = useAppDispatch()
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     searchRef.current?.blur()
     navigator('/search')
     handleSubmit(editingValue)
+    setEditingValue('')
+  }
+
+  const handleSubmit = (value: string) => {
+    if (value.trim() !== '') {
+      dispatch(loading())
+      searchByTerm(value)
+    } else {
+      alert('Input what you wannt to know!')
+    }
+  }
+
+  const searchByTerm = async (value: string) => {
+    try {
+      const {
+        data: { results: movieResults },
+      } = await moviesApi.search(value)
+      const {
+        data: { results: tvResults },
+      } = await tvApi.search(value)
+      dispatch(success({ movieResults, tvResults }))
+    } catch {
+      dispatch(fail())
+    }
   }
 
   return (

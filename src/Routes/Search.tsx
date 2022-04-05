@@ -1,14 +1,14 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Helmet from '../Components/Helmet'
-import { useSearch } from '../hooks/useSearch'
 import SearchResult from '../Components/SearchResult'
 import { shallowEqual } from 'react-redux'
-import { SearchState } from '../reducers/SearchReducer'
+import { SearchState, loading, success } from '../redux/SearchReducer'
 import { customMedia } from '../Components/GlobalStyles'
-import { useAppSelector } from '../store'
+import { useAppDispatch, useAppSelector } from '../redux/store'
 import { MdOutlineMovie } from 'react-icons/md'
 import Loading from '../Components/Loading'
+import { moviesApi, tvApi } from '../api'
 
 const Container = styled.div`
   padding: 0 20px;
@@ -110,12 +110,39 @@ export interface SearchProps {
 }
 
 function Search() {
-  const loading = useAppSelector(
+  const loadingState = useAppSelector(
     (state: SearchProps) => state.search.loading,
     shallowEqual,
   )
+  const dispatch = useAppDispatch()
   const [value, setValue] = useState('')
-  const { handleSubmit } = useSearch()
+
+  const handleSubmit = (value: string) => {
+    if (value.trim() !== '') {
+      dispatch(loading())
+      searchByTerm(value)
+    } else {
+      alert('Input what you wannt to know!')
+    }
+  }
+
+  const searchByTerm = async (value: string) => {
+    try {
+      const {
+        data: { results: movieResults },
+      } = await moviesApi.search(value)
+      const {
+        data: { results: tvResults },
+      } = await tvApi.search(value)
+      dispatch(success({ movieResults, tvResults }))
+    } catch {
+      dispatch(fail())
+    }
+  }
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -124,13 +151,13 @@ function Search() {
 
   useEffect(() => {
     setValue('')
-  }, [loading])
+  }, [loadingState])
 
   return (
     <Container>
       <Helmet content="Search | Jimmyflix" />
-      {loading !== null ? (
-        loading ? (
+      {loadingState !== null ? (
+        loadingState ? (
           <Loading />
         ) : (
           <SearchResult />
