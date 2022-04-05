@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { tab } from '../../reducers/DetailReducer'
 import { useAppDispatch } from '../../store'
 import { customMedia } from '../GlobalStyles'
+import { tab } from '../../reducers/DetailReducer'
 
 const Tab = styled.div`
   margin-top: 20px;
@@ -43,14 +43,14 @@ const Li = styled.li`
 `
 
 interface TabsProps {
+  selected: string
   collections: boolean
   seasons: boolean
 }
 
-export default function Tabs({ collections, seasons }: TabsProps) {
-  const dispatch = useAppDispatch()
-  const [selected, setSelected] = useState('Trailer')
+export default function Tabs({ selected, collections, seasons }: TabsProps) {
   const [menus, setMenu] = useState(['Trailer', 'Credits', 'Production'])
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const menu = [...menus]
@@ -66,18 +66,13 @@ export default function Tabs({ collections, seasons }: TabsProps) {
     setMenu(menu)
   }, [])
 
-  const onClick = (menu: string) => {
-    dispatch(tab(menu))
-    setSelected(menu)
-  }
-
   return (
     <Tab>
       <List>
         {menus.map((menu) => (
           <Li
             className={`${selected === menu ? 'active' : ''}`}
-            onClick={() => onClick(menu)}
+            onClick={() => dispatch(tab(menu))}
           >
             {menu}
           </Li>

@@ -1,5 +1,4 @@
 import React from 'react'
-import Loader from '../Components/Loader'
 import Helmet from '../Components/Helmet'
 import { useTV } from '../hooks/useTV'
 import TVResult from '../Components/TVResult'
@@ -7,6 +6,7 @@ import Header from '../Components/Header'
 import { shallowEqual } from 'react-redux'
 import { TVState } from '../reducers/TVReducer'
 import { useAppSelector } from '../store'
+import Loading from '../Components/Loading'
 
 export interface TVProps {
   tv: TVState
@@ -23,7 +23,7 @@ export function TV() {
     <>
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
-      {loading ? <Loader /> : <TVResult />}
+      {loading ? <Loading /> : <TVResult />}
     </>
   )
 }
