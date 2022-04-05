@@ -1,12 +1,11 @@
 import React from 'react'
-import Loader from '../Components/Loader'
 import Helmet from '../Components/Helmet'
 import { useHome } from '../hooks/useHome'
 import MovieResult from '../Components/MovieResult'
-import Header from '../Components/Header'
 import { shallowEqual } from 'react-redux'
 import { HomeState } from '../reducers/HomeReducer'
 import { useAppSelector } from '../store'
+import Loading from '../Components/Loading'
 
 interface Props {
   home: HomeState
@@ -22,7 +21,7 @@ function Home() {
   return (
     <>
       <Helmet content="Movies | Jimmyflix" />
-      {loading ? <Loader /> : <MovieResult />}
+      {loading ? <Loading /> : <MovieResult />}
     </>
   )
 }

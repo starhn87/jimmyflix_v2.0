@@ -1,6 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Loader from '../Components/Loader'
 import Helmet from '../Components/Helmet'
 import { useSearch } from '../hooks/useSearch'
 import SearchResult from '../Components/SearchResult'
@@ -9,6 +8,7 @@ import { SearchState } from '../reducers/SearchReducer'
 import { customMedia } from '../Components/GlobalStyles'
 import { useAppSelector } from '../store'
 import { MdOutlineMovie } from 'react-icons/md'
+import Loading from '../Components/Loading'
 
 const Container = styled.div`
   padding: 0 20px;
@@ -131,7 +131,7 @@ function Search() {
       <Helmet content="Search | Jimmyflix" />
       {loading !== null ? (
         loading ? (
-          <Loader />
+          <Loading />
         ) : (
           <SearchResult />
         )
