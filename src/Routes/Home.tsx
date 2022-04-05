@@ -1,21 +1,11 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
 import MovieResult from '../Components/MovieResult'
-import { shallowEqual, useDispatch } from 'react-redux'
-import { HomeState, reset, success } from '../redux/HomeReducer'
-import { useAppSelector } from '../redux/store'
-import Loading from '../Components/Loading'
+import { useDispatch } from 'react-redux'
+import { reset, success } from '../redux/reducers/HomeReducer'
 import { moviesApi } from '../api'
 
-interface Props {
-  home: HomeState
-}
-
 function Home() {
-  const loading = useAppSelector(
-    (state: Props) => state.home.loading,
-    shallowEqual,
-  )
   const dispatch = useDispatch()
 
   const getHome = async () => {
@@ -38,16 +28,12 @@ function Home() {
   useEffect(() => {
     window.scrollTo(0, 0)
     getHome()
-
-    return () => {
-      dispatch(reset())
-    }
   }, [])
 
   return (
     <>
       <Helmet content="Movies | Jimmyflix" />
-      {loading ? <Loading /> : <MovieResult />}
+      <MovieResult />
     </>
   )
 }

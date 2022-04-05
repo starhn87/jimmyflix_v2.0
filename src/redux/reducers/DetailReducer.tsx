@@ -27,7 +27,6 @@ export interface DetailState {
   } | null
   cast: [] | null
   error: string | null
-  loading: boolean
   tabName: string
 }
 
@@ -35,7 +34,6 @@ export const detailInitialState: DetailState = {
   result: null,
   cast: null,
   error: null,
-  loading: true,
   tabName: 'Trailer',
 }
 
@@ -48,14 +46,12 @@ const detail = createSlice({
       error: null,
       result: action.payload.results,
       cast: null,
-      loading: false,
     }),
     fail: (state) => ({
       ...state,
       result: null,
       cast: null,
       error: "Can't find Detail information.",
-      loading: false,
     }),
     reset: () => detailInitialState,
     tab: (state, action) => ({

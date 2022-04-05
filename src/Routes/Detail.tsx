@@ -3,8 +3,12 @@ import Helmet from '../Components/Helmet'
 import Message from '../Components/Message'
 import DetailInfo from '../Components/detail'
 import { shallowEqual, useSelector } from 'react-redux'
-import { cast, DetailState, reset, success } from '../redux/DetailReducer'
-import Loading from '../Components/Loading'
+import {
+  cast,
+  DetailState,
+  reset,
+  success,
+} from '../redux/reducers/DetailReducer'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import { moviesApi, tvApi } from '../api'
@@ -23,7 +27,7 @@ function Detail() {
     (state: DetailProps) => state.detail.tabName,
     shallowEqual,
   )
-  const { loading, error } = useSelector(
+  const { error } = useSelector(
     (state: DetailProps) => ({ ...state.detail }),
     shallowEqual,
   )
@@ -84,12 +88,7 @@ function Detail() {
     }
   }, [id])
 
-  return loading ? (
-    <>
-      <Helmet content="Loading | Jimmyflix" />
-      <Loading />
-    </>
-  ) : (
+  return (
     <>
       {error ? (
         <>

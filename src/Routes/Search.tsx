@@ -1,14 +1,19 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import React, {
+  ChangeEvent,
+  FormEvent,
+  Suspense,
+  useEffect,
+  useState,
+} from 'react'
 import styled from 'styled-components'
 import Helmet from '../Components/Helmet'
-import SearchResult from '../Components/SearchResult'
-import { shallowEqual } from 'react-redux'
-import { SearchState, loading, success } from '../redux/SearchReducer'
+import { SearchState, success } from '../redux/reducers/SearchReducer'
 import { customMedia } from '../Components/GlobalStyles'
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import { MdOutlineMovie } from 'react-icons/md'
-import Loading from '../Components/Loading'
 import { moviesApi, tvApi } from '../api'
+import { lazyMinLoadTime } from '../util'
+import Loading from '../Components/Loading'
 
 const Container = styled.div`
   padding: 0 20px;
@@ -110,19 +115,15 @@ export interface SearchProps {
 }
 
 function Search() {
-  const loadingState = useAppSelector(
-    (state: SearchProps) => state.search.loading,
-    shallowEqual,
-  )
+  const { isSearched } = useAppSelector((state) => state.search)
   const dispatch = useAppDispatch()
   const [value, setValue] = useState('')
 
   const handleSubmit = (value: string) => {
     if (value.trim() !== '') {
-      dispatch(loading())
       searchByTerm(value)
     } else {
-      alert('Input what you wannt to know!')
+      alert('Input what you want to know!')
     }
   }
 
@@ -147,21 +148,21 @@ function Search() {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     handleSubmit(value)
+    setValue('')
   }
 
-  useEffect(() => {
-    setValue('')
-  }, [loadingState])
+  const SearchComponent = lazyMinLoadTime(
+    () => import('../Components/SearchResult'),
+    1000,
+  )
 
   return (
     <Container>
       <Helmet content="Search | Jimmyflix" />
-      {loadingState !== null ? (
-        loadingState ? (
-          <Loading />
-        ) : (
-          <SearchResult />
-        )
+      {isSearched ? (
+        <Suspense fallback={<Loading />}>
+          <SearchComponent />
+        </Suspense>
       ) : (
         <SearchBox>
           <form onSubmit={onSubmit}>
