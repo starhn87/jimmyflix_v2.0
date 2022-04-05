@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { HomeState } from '../reducers/HomeReducer'
+import { HomeState } from '../redux/HomeReducer'
 import Message from './Message'
 import Poster from './Poster'
 import Section from './Section'

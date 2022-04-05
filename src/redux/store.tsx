@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import DetailReducer from './reducers/DetailReducer'
-import HomeReducer from './reducers/HomeReducer'
-import SearchReducer from './reducers/SearchReducer'
-import TVReducer from './reducers/TVReducer'
+import DetailReducer from './DetailReducer'
+import HomeReducer from './HomeReducer'
+import SearchReducer from './SearchReducer'
+import TVReducer from './TVReducer'
 import { createLogger } from 'redux-logger'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 

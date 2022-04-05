@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useAppDispatch } from '../../store'
+import { useAppDispatch } from '../../redux/store'
 import { customMedia } from '../GlobalStyles'
-import { tab } from '../../reducers/DetailReducer'
+import { tab } from '../../redux/DetailReducer'
 
 const Tab = styled.div`
   margin-top: 20px;

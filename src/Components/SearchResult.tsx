@@ -6,7 +6,7 @@ import { Movie } from './MovieResult'
 import { Show } from './TVResult'
 import { shallowEqual } from 'react-redux'
 import { SearchProps } from '../Routes/Search'
-import { useAppSelector } from '../store'
+import { useAppSelector } from '../redux/store'
 
 function SearchResult() {
   const { movieResults, tvResults, error } = useAppSelector(

@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import { customMedia } from './GlobalStyles'
 import SearchBar from './SearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
-import { useAppDispatch } from '../store'
-import { reset } from '../reducers/SearchReducer'
+import { useAppDispatch } from '../redux/store'
+import { reset } from '../redux/SearchReducer'
 
 const Head = styled.header`
   color: white;
