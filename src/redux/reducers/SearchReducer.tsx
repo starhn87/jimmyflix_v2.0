@@ -1,5 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
+<<<<<<< HEAD:src/redux/SearchReducer.tsx
 import { SearchState } from '../interface'
+=======
+
+export interface SearchState {
+  movieResults: [] | null
+  tvResults: [] | null
+  error: string | null
+  isSearched: boolean
+}
+>>>>>>> dev:src/redux/reducers/SearchReducer.tsx
 
 export const searchInitialState: SearchState = {
   movieResults: null,

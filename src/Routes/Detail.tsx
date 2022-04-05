@@ -1,8 +1,19 @@
 import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
 import Message from '../Components/Message'
+<<<<<<< HEAD
 import { shallowEqual } from 'react-redux'
 import { cast, reset, success } from '../redux/DetailReducer'
+=======
+import DetailInfo from '../Components/detail'
+import { shallowEqual, useSelector } from 'react-redux'
+import {
+  cast,
+  DetailState,
+  reset,
+  success,
+} from '../redux/reducers/DetailReducer'
+>>>>>>> dev
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import { moviesApi, tvApi } from '../api'
@@ -166,7 +177,15 @@ function Detail() {
   const { pathname } = useLocation()
   const dispatch = useAppDispatch()
   const isMovie = pathname.includes('/movie/')
+<<<<<<< HEAD
   const { result, casts, tabName, error } = useAppSelector(
+=======
+  const tabName = useAppSelector(
+    (state: DetailProps) => state.detail.tabName,
+    shallowEqual,
+  )
+  const { error } = useSelector(
+>>>>>>> dev
     (state: DetailProps) => ({ ...state.detail }),
     shallowEqual,
   )

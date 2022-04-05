@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
 import Header from '../Components/Header'
+<<<<<<< HEAD
 import { success } from '../redux/TVReducer'
 import { useAppDispatch, useAppSelector } from '../redux/store'
+=======
+import { reset, success, TVState } from '../redux/reducers/TVReducer'
+import { useAppDispatch } from '../redux/store'
+>>>>>>> dev
 import { tvApi } from '../api'
 import { Container } from './Home'
 import Section from '../Components/Section'
@@ -23,9 +28,12 @@ export interface Show {
 }
 
 export function TV() {
+<<<<<<< HEAD
   const { topRated, popular, airingToday, error } = useAppSelector(
     (state: TVProps) => ({ ...state.tv }),
   )
+=======
+>>>>>>> dev
   const dispatch = useAppDispatch()
 
   const getTV = async () => {
@@ -54,6 +62,7 @@ export function TV() {
     <>
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
+<<<<<<< HEAD
       <Container>
         {topRated && topRated.length > 0 && (
           <Section slide={true} title="Top Rated Shows">
@@ -105,6 +114,9 @@ export function TV() {
         )}
         {error && <Message color="#e74c3c" text={error} />}
       </Container>
+=======
+      <TVResult />
+>>>>>>> dev
     </>
   )
 }

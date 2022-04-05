@@ -1,7 +1,13 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
+<<<<<<< HEAD
 import { shallowEqual, useDispatch } from 'react-redux'
 import { success } from '../redux/HomeReducer'
+=======
+import MovieResult from '../Components/MovieResult'
+import { useDispatch } from 'react-redux'
+import { reset, success } from '../redux/reducers/HomeReducer'
+>>>>>>> dev
 import { moviesApi } from '../api'
 import { useAppSelector } from '../redux/store'
 import styled from 'styled-components'
@@ -14,15 +20,14 @@ interface HomeProps {
   home: HomeState
 }
 
-interface Props {
-  home: HomeState
-}
-
 function Home() {
+<<<<<<< HEAD
   const { nowPlaying, upcoming, popular, error } = useAppSelector(
     (state: HomeProps) => ({ ...state.home }),
     shallowEqual,
   )
+=======
+>>>>>>> dev
   const dispatch = useDispatch()
 
   const getHome = async () => {
@@ -50,6 +55,7 @@ function Home() {
   return (
     <>
       <Helmet content="Movies | Jimmyflix" />
+<<<<<<< HEAD
       <Container>
         {nowPlaying && nowPlaying.length > 0 && (
           <Section slide={true} title="Now Playing">
@@ -98,6 +104,9 @@ function Home() {
         )}
         {error && <Message color="#e74c3c" text={error} />}
       </Container>
+=======
+      <MovieResult />
+>>>>>>> dev
     </>
   )
 }
