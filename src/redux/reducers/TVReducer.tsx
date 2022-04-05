@@ -5,7 +5,6 @@ export interface TVState {
   popular: [] | null
   airingToday: [] | null
   error: string | null
-  loading: boolean
 }
 
 export const tvInitialState: TVState = {
@@ -13,7 +12,6 @@ export const tvInitialState: TVState = {
   popular: null,
   airingToday: null,
   error: null,
-  loading: true,
 }
 
 const tv = createSlice({
@@ -25,12 +23,10 @@ const tv = createSlice({
       topRated: action.payload.topRated,
       airingToday: action.payload.airingToday,
       popular: action.payload.popular,
-      loading: false,
     }),
     fail: (state) => ({
       ...state,
       error: "Can't find TV information.",
-      loading: false,
     }),
     reset: () => tvInitialState,
   },

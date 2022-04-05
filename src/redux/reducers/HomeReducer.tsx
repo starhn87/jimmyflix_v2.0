@@ -5,7 +5,6 @@ export interface HomeState {
   upcoming: [] | null
   popular: [] | null
   error: string | null
-  loading: boolean
 }
 
 export const homeInitialState: HomeState = {
@@ -13,7 +12,6 @@ export const homeInitialState: HomeState = {
   upcoming: null,
   popular: null,
   error: null,
-  loading: true,
 }
 
 const home = createSlice({
@@ -26,14 +24,12 @@ const home = createSlice({
         nowPlaying: action.payload.nowPlaying,
         upcoming: action.payload.upcoming,
         popular: action.payload.popular,
-        loading: false,
       }
     },
     fail: (state) => {
       return {
         ...state,
         error: "Can't find Home Information.",
-        loading: false,
       }
     },
     reset: () => homeInitialState,

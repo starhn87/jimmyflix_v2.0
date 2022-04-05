@@ -5,7 +5,7 @@ import { customMedia } from './GlobalStyles'
 import SearchBar from './SearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
 import { useAppDispatch } from '../redux/store'
-import { reset } from '../redux/SearchReducer'
+import { reset } from '../redux/reducers/SearchReducer'
 
 const Head = styled.header`
   color: white;

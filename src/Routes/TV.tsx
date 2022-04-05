@@ -2,10 +2,8 @@ import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
 import TVResult from '../Components/TVResult'
 import Header from '../Components/Header'
-import { shallowEqual } from 'react-redux'
-import { reset, success, TVState } from '../redux/TVReducer'
-import { useAppDispatch, useAppSelector } from '../redux/store'
-import Loading from '../Components/Loading'
+import { reset, success, TVState } from '../redux/reducers/TVReducer'
+import { useAppDispatch } from '../redux/store'
 import { tvApi } from '../api'
 
 export interface TVProps {
@@ -13,10 +11,6 @@ export interface TVProps {
 }
 
 export function TV() {
-  const loading = useAppSelector(
-    (state: TVProps) => state.tv.loading,
-    shallowEqual,
-  )
   const dispatch = useAppDispatch()
 
   const getTV = async () => {
@@ -39,17 +33,13 @@ export function TV() {
   useEffect(() => {
     window.scrollTo(0, 0)
     getTV()
-
-    return () => {
-      dispatch(reset())
-    }
   }, [])
 
   return (
     <>
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
-      {loading ? <Loading /> : <TVResult />}
+      <TVResult />
     </>
   )
 }
