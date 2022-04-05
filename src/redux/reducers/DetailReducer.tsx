@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+<<<<<<< HEAD:src/redux/DetailReducer.tsx
+import { DetailState } from '../interface'
+=======
 
 export interface DetailState {
   result: {
@@ -29,10 +32,11 @@ export interface DetailState {
   error: string | null
   tabName: string
 }
+>>>>>>> dev:src/redux/reducers/DetailReducer.tsx
 
 export const detailInitialState: DetailState = {
   result: null,
-  cast: null,
+  casts: null,
   error: null,
   tabName: 'Trailer',
 }
@@ -45,12 +49,16 @@ const detail = createSlice({
       ...state,
       error: null,
       result: action.payload.results,
+<<<<<<< HEAD:src/redux/DetailReducer.tsx
+      casts: null,
+=======
       cast: null,
+>>>>>>> dev:src/redux/reducers/DetailReducer.tsx
     }),
     fail: (state) => ({
       ...state,
       result: null,
-      cast: null,
+      casts: null,
       error: "Can't find Detail information.",
     }),
     reset: () => detailInitialState,
@@ -60,7 +68,7 @@ const detail = createSlice({
     }),
     cast: (state, action) => ({
       ...state,
-      cast: action.payload.casts,
+      casts: action.payload.casts,
     }),
   },
 })

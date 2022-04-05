@@ -7,6 +7,43 @@ import { MdOutlineMovie } from 'react-icons/md'
 import { useAppDispatch } from '../redux/store'
 import { reset } from '../redux/reducers/SearchReducer'
 
+function Header() {
+  const { pathname } = useLocation()
+  const dispatch = useAppDispatch()
+  const navigator = useNavigate()
+
+  const onClick = () => {
+    if (pathname === '/search') {
+      dispatch(reset())
+    }
+  }
+
+  return (
+    <Head>
+      <LogoWrapper onClick={() => navigator('/')}>
+        <MdOutlineMovie fontSize={35} />
+        <Logo>Jimmyflix</Logo>
+      </LogoWrapper>
+      <List>
+        <Item current={pathname === '/' || pathname.includes('/movie')}>
+          <SLink to="/">Movies</SLink>
+        </Item>
+        <Item current={pathname === '/tv' || pathname.includes('/tv')}>
+          <SLink to="/tv">TV</SLink>
+        </Item>
+        <Item current={pathname.includes('/search')} onClick={() => onClick()}>
+          <SLink to="/search">Search</SLink>
+        </Item>
+      </List>
+      <SearchBarWrapper>
+        <SearchBar />
+      </SearchBarWrapper>
+    </Head>
+  )
+}
+
+export default memo(Header)
+
 const Head = styled.header`
   color: white;
   position: fixed;
@@ -77,40 +114,3 @@ const SearchBarWrapper = styled.div`
     display: none;
 	`}
 `
-
-function Header() {
-  const { pathname } = useLocation()
-  const dispatch = useAppDispatch()
-  const navigator = useNavigate()
-
-  const onClick = () => {
-    if (pathname === '/search') {
-      dispatch(reset())
-    }
-  }
-
-  return (
-    <Head>
-      <LogoWrapper onClick={() => navigator('/')}>
-        <MdOutlineMovie fontSize={35} />
-        <Logo>Jimmyflix</Logo>
-      </LogoWrapper>
-      <List>
-        <Item current={pathname === '/' || pathname.includes('/movie')}>
-          <SLink to="/">Movies</SLink>
-        </Item>
-        <Item current={pathname === '/tv' || pathname.includes('/tv')}>
-          <SLink to="/tv">TV</SLink>
-        </Item>
-        <Item current={pathname.includes('/search')} onClick={() => onClick()}>
-          <SLink to="/search">Search</SLink>
-        </Item>
-      </List>
-      <SearchBarWrapper>
-        <SearchBar />
-      </SearchBarWrapper>
-    </Head>
-  )
-}
-
-export default memo(Header)

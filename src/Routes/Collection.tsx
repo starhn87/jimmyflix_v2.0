@@ -4,24 +4,10 @@ import Section from '../Components/Section'
 import styled from 'styled-components'
 import Poster from '../Components/Poster'
 import { collections } from '../api'
-
-const Container = styled.div`
-  margin-bottom: 30px;
-  margin-top: 20px;
-`
+import { ICollection } from '../interface'
 
 interface Props {
   id: number
-}
-
-interface ICollection {
-  id: number
-  poster_path: string
-  imageUrl: string
-  title: string
-  vote_average: number
-  name: string
-  release_date: string
 }
 
 const Collection = ({ id }: Props) => {
@@ -69,3 +55,8 @@ const Collection = ({ id }: Props) => {
 }
 
 export default Collection
+
+const Container = styled.div`
+  margin-bottom: 30px;
+  margin-top: 20px;
+`

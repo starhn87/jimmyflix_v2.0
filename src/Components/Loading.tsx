@@ -8,6 +8,8 @@ const Loading = () => (
   </Ring>
 )
 
+export default Loading
+
 const Ring = styled.div`
   position: fixed;
   width: 12rem;
@@ -80,5 +82,3 @@ const Ring = styled.div`
     }
   }
 `
-
-export default Loading
