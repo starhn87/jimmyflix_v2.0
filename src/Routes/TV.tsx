@@ -1,15 +1,8 @@
 import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
 import Header from '../Components/Header'
-<<<<<<< Updated upstream
-import { shallowEqual } from 'react-redux'
-import { reset, success, TVState } from '../redux/TVReducer'
+import { success } from '../redux/TVReducer'
 import { useAppDispatch, useAppSelector } from '../redux/store'
-import Loading from '../Components/Loading'
-=======
-import { success } from '../redux/reducers/TVReducer'
-import { useAppDispatch, useAppSelector } from '../redux/store'
->>>>>>> Stashed changes
 import { tvApi } from '../api'
 import { Container } from './Home'
 import Section from '../Components/Section'
@@ -30,14 +23,8 @@ export interface Show {
 }
 
 export function TV() {
-<<<<<<< Updated upstream
-  const loading = useAppSelector(
-    (state: TVProps) => state.tv.loading,
-    shallowEqual,
-=======
   const { topRated, popular, airingToday, error } = useAppSelector(
     (state: TVProps) => ({ ...state.tv }),
->>>>>>> Stashed changes
   )
   const dispatch = useAppDispatch()
 
@@ -61,19 +48,12 @@ export function TV() {
   useEffect(() => {
     window.scrollTo(0, 0)
     getTV()
-
-    return () => {
-      dispatch(reset())
-    }
   }, [])
 
   return (
     <>
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
-<<<<<<< Updated upstream
-      {loading ? <Loading /> : <TVResult />}
-=======
       <Container>
         {topRated && topRated.length > 0 && (
           <Section slide={true} title="Top Rated Shows">
@@ -125,7 +105,6 @@ export function TV() {
         )}
         {error && <Message color="#e74c3c" text={error} />}
       </Container>
->>>>>>> Stashed changes
     </>
   )
 }

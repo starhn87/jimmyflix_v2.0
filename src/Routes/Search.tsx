@@ -1,23 +1,21 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import React, {
+  ChangeEvent,
+  FormEvent,
+  Suspense,
+  useEffect,
+  useState,
+} from 'react'
 import styled from 'styled-components'
 import Helmet from '../Components/Helmet'
-<<<<<<< Updated upstream
-import SearchResult from '../Components/SearchResult'
-import { shallowEqual } from 'react-redux'
-import { SearchState, loading, success } from '../redux/SearchReducer'
-=======
-import { success } from '../redux/reducers/SearchReducer'
->>>>>>> Stashed changes
+import { success } from '../redux/SearchReducer'
 import { customMedia } from '../Components/GlobalStyles'
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import { MdOutlineMovie } from 'react-icons/md'
 import Loading from '../Components/Loading'
-<<<<<<< Updated upstream
-import { moviesApi, tvApi } from '../api'
-=======
 import { Container } from './Home'
 import { SearchState } from '../interface'
->>>>>>> Stashed changes
+import { lazyMinLoadTime } from '../util'
+import { moviesApi, tvApi } from '../api'
 
 export interface SearchProps {
   search: SearchState
@@ -184,85 +182,3 @@ const SearchBox = styled.article`
     }
   }
 `
-<<<<<<< Updated upstream
-
-export interface SearchProps {
-  search: SearchState
-}
-
-function Search() {
-  const loadingState = useAppSelector(
-    (state: SearchProps) => state.search.loading,
-    shallowEqual,
-  )
-  const dispatch = useAppDispatch()
-  const [value, setValue] = useState('')
-
-  const handleSubmit = (value: string) => {
-    if (value.trim() !== '') {
-      dispatch(loading())
-      searchByTerm(value)
-    } else {
-      alert('Input what you wannt to know!')
-    }
-  }
-
-  const searchByTerm = async (value: string) => {
-    try {
-      const {
-        data: { results: movieResults },
-      } = await moviesApi.search(value)
-      const {
-        data: { results: tvResults },
-      } = await tvApi.search(value)
-      dispatch(success({ movieResults, tvResults }))
-    } catch {
-      dispatch(fail())
-    }
-  }
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
-
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    handleSubmit(value)
-  }
-
-  useEffect(() => {
-    setValue('')
-  }, [loadingState])
-
-  return (
-    <Container>
-      <Helmet content="Search | Jimmyflix" />
-      {loadingState !== null ? (
-        loadingState ? (
-          <Loading />
-        ) : (
-          <SearchResult />
-        )
-      ) : (
-        <SearchBox>
-          <form onSubmit={onSubmit}>
-            <SearchBar
-              value={value}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setValue(e.target.value)
-              }
-              placeholder="영화 / TV쇼 검색"
-            />
-            <Button type="submit">
-              <MdOutlineMovie />
-            </Button>
-          </form>
-        </SearchBox>
-      )}
-    </Container>
-  )
-}
-
-export default Search
-=======
->>>>>>> Stashed changes

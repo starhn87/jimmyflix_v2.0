@@ -1,23 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-<<<<<<< Updated upstream:src/redux/SearchReducer.tsx
-
-export interface SearchState {
-  movieResults: [] | null
-  tvResults: [] | null
-  error: string | null
-  loading: boolean | null
-  searchTerm: string
-}
-=======
-import { SearchState } from '../../interface'
->>>>>>> Stashed changes:src/redux/reducers/SearchReducer.tsx
+import { SearchState } from '../interface'
 
 export const searchInitialState: SearchState = {
   movieResults: null,
   tvResults: null,
   error: null,
-  loading: null,
-  searchTerm: '',
+  isSearched: false,
 }
 
 export const search = createSlice({
@@ -28,25 +16,17 @@ export const search = createSlice({
       ...state,
       movieResults: action.payload.movieResults,
       tvResults: action.payload.tvResults,
-      loading: false,
+      isSearched: true,
     }),
     fail: (state) => ({
       ...state,
       error: "Can't find Search results.",
-      loading: false,
-    }),
-    loading: (state) => ({
-      ...state,
-      loading: true,
-    }),
-    term: (state, action) => ({
-      ...state,
-      searchTerm: action.payload,
+      isSearched: true,
     }),
     reset: () => searchInitialState,
   },
 })
 
-export const { success, fail, loading, term, reset } = search.actions
+export const { success, fail, reset } = search.actions
 
 export default search.reducer

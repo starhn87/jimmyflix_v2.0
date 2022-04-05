@@ -1,15 +1,7 @@
 import React, { Suspense, useEffect } from 'react'
 import Helmet from '../Components/Helmet'
-<<<<<<< Updated upstream
-import MovieResult from '../Components/MovieResult'
 import { shallowEqual, useDispatch } from 'react-redux'
-import { HomeState, reset, success } from '../redux/HomeReducer'
-import { useAppSelector } from '../redux/store'
-import Loading from '../Components/Loading'
-=======
-import { shallowEqual, useDispatch } from 'react-redux'
-import { success } from '../redux/reducers/HomeReducer'
->>>>>>> Stashed changes
+import { success } from '../redux/HomeReducer'
 import { moviesApi } from '../api'
 import { useAppSelector } from '../redux/store'
 import styled from 'styled-components'
@@ -27,13 +19,8 @@ interface Props {
 }
 
 function Home() {
-<<<<<<< Updated upstream
-  const loading = useAppSelector(
-    (state: Props) => state.home.loading,
-=======
   const { nowPlaying, upcoming, popular, error } = useAppSelector(
     (state: HomeProps) => ({ ...state.home }),
->>>>>>> Stashed changes
     shallowEqual,
   )
   const dispatch = useDispatch()
@@ -58,18 +45,11 @@ function Home() {
   useEffect(() => {
     window.scrollTo(0, 0)
     getHome()
-
-    return () => {
-      dispatch(reset())
-    }
   }, [])
 
   return (
     <>
       <Helmet content="Movies | Jimmyflix" />
-<<<<<<< Updated upstream
-      {loading ? <Loading /> : <MovieResult />}
-=======
       <Container>
         {nowPlaying && nowPlaying.length > 0 && (
           <Section slide={true} title="Now Playing">
@@ -118,7 +98,6 @@ function Home() {
         )}
         {error && <Message color="#e74c3c" text={error} />}
       </Container>
->>>>>>> Stashed changes
     </>
   )
 }

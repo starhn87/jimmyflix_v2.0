@@ -2,50 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useAppDispatch } from '../../redux/store'
 import { customMedia } from '../GlobalStyles'
-<<<<<<< Updated upstream
 import { tab } from '../../redux/DetailReducer'
-
-const Tab = styled.div`
-  margin-top: 20px;
-  color: white;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  vertical-align: center;
-  padding: 0 10px;
-  background-color: rgba(20, 20, 20, 0.8);
-  z-index: 10;
-  box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
-
-  ${customMedia.lessThan('mobile')`
-        width: 95%;
-        padding: 1%;
-    `}
-`
-
-const List = styled.ul`
-  display: contents;
-  width: 100%;
-`
-
-const Li = styled.li`
-  width: 100%;
-  text-align: center;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 14px;
-  &.active {
-    border-bottom: 3px solid #b1ddf9;
-    transition: border-bottom 0.1s;
-  }
-`
-
-=======
-import { tab } from '../../redux/reducers/DetailReducer'
->>>>>>> Stashed changes
 interface TabsProps {
   selected: string
   collections: boolean
