@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Loader from '../Components/Loader'
 import Helmet from '../Components/Helmet'
@@ -121,6 +121,10 @@ function Search() {
     e.preventDefault()
     handleSubmit(value)
   }
+
+  useEffect(() => {
+    setValue('')
+  }, [loading])
 
   return (
     <Container>
