@@ -1,8 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import DetailReducer from './reducers/DetailReducer'
-import HomeReducer from './reducers/HomeReducer'
-import SearchReducer from './reducers/SearchReducer'
-import TVReducer from './reducers/TVReducer'
+import SearchReducer from './SearchReducer'
 import { createLogger } from 'redux-logger'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
@@ -12,9 +9,6 @@ const logMiddleware = createLogger({
 
 const store = configureStore({
   reducer: {
-    home: HomeReducer,
-    tv: TVReducer,
-    detail: DetailReducer,
     search: SearchReducer,
   },
   middleware: (getDefaultMiddleware) =>

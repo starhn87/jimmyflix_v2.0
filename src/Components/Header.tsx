@@ -2,10 +2,10 @@ import React, { memo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { customMedia } from './GlobalStyles'
-import SearchBar from './SearchBar'
+import SearchBar from './HeaderSearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
 import { useAppDispatch } from '../redux/store'
-import { reset } from '../redux/reducers/SearchReducer'
+import { reset } from '../redux/SearchReducer'
 
 function Header() {
   const { pathname } = useLocation()

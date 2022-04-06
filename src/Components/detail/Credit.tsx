@@ -2,18 +2,34 @@ import React from 'react'
 import { Box, Logo, Name, Product, Wrapper } from '../../Routes/Detail'
 import defaultPersonImg from '../../assets/images/noPersonSmall.png'
 import Message from '../Message'
+import { useQuery } from 'react-query'
+import { moviesApi, tvApi } from '../../api'
+import Loading from '../Loading'
 
 interface CreditProps {
-  cast: [] | null
+  isMovie: boolean
+  parsedId: number
 }
 
-export default function Credit({ cast }: CreditProps) {
+export default function Credit({ isMovie, parsedId }: CreditProps) {
+  const { data } = useQuery(['credit', parsedId], () => {
+    if (isMovie) {
+      return moviesApi.cast(parsedId)
+    } else {
+      return tvApi.cast(parsedId)
+    }
+  })
+
+  if (!data) {
+    return <Loading />
+  }
+
   return (
     <>
-      {cast && cast.length > 0 && (
+      {data && data.length > 0 && (
         <Box>
           <Wrapper>
-            {cast.map(
+            {data.map(
               (
                 profile: {
                   profile_path: string
@@ -41,7 +57,7 @@ export default function Credit({ cast }: CreditProps) {
           </Wrapper>
         </Box>
       )}
-      {(!cast || cast.length === 0) && (
+      {(!data || data.length === 0) && (
         <Message color="#eee" text={'No Credits Found'} />
       )}
     </>
