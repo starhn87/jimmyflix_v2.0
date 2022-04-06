@@ -6,11 +6,11 @@ import Poster from '../Components/Poster'
 import { collections } from '../api'
 import { ICollection } from '../interface'
 
-interface Props {
+interface CollectionProps {
   id: number
 }
 
-const Collection = ({ id }: Props) => {
+const Collection = ({ id }: CollectionProps) => {
   const [collection, setCollection] = useState<ICollection[]>()
   const [error, setError] = useState<string>()
 
