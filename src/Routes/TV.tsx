@@ -1,61 +1,49 @@
 import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
 import Header from '../Components/Header'
-import { success } from '../redux/reducers/TVReducer'
-import { useAppDispatch, useAppSelector } from '../redux/store'
 import { tvApi } from '../api'
 import { Container } from './Home'
 import Section from '../Components/Section'
 import Poster from '../Components/Poster'
 import Message from '../Components/Message'
-import { TVState } from '../interface'
-
-export interface TVProps {
-  tv: TVState
-}
-
-export interface Show {
-  id: number
-  poster_path: string
-  name: string
-  vote_average: number
-  first_air_date: string
-}
+import { useQueries } from 'react-query'
+import Loading from '../Components/Loading'
+import { Show } from '../interface'
 
 export function TV() {
-  const { topRated, popular, airingToday, error } = useAppSelector(
-    (state: TVProps) => ({ ...state.tv }),
-  )
-  const dispatch = useAppDispatch()
-
-  const getTV = async () => {
-    try {
-      const {
-        data: { results: topRated },
-      } = await tvApi.topRated()
-      const {
-        data: { results: popular },
-      } = await tvApi.popular()
-      const {
-        data: { results: airingToday },
-      } = await tvApi.airingToday()
-      dispatch(success({ topRated, popular, airingToday }))
-    } catch {
-      dispatch(fail())
-    }
-  }
+  const [
+    { data: topRated, isError: error1 },
+    { data: popular, isError: error2 },
+    { data: airingToday, isError: error3 },
+  ] = useQueries([
+    {
+      queryKey: ['topRated'],
+      queryFn: () => tvApi.topRated(),
+    },
+    {
+      queryKey: ['popularTV'],
+      queryFn: () => tvApi.popular(),
+    },
+    {
+      queryKey: ['airingToday'],
+      queryFn: () => tvApi.airingToday(),
+    },
+  ])
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    getTV()
   }, [])
+
+  if (!topRated || !popular || !airingToday) {
+    return <Loading />
+  }
 
   return (
     <>
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
       <Container>
-        {topRated && topRated.length > 0 && (
+        {topRated.length > 0 && (
           <Section slide={true} title="Top Rated Shows">
             {topRated.map((show: Show) => (
               <Poster
@@ -71,7 +59,7 @@ export function TV() {
             ))}
           </Section>
         )}
-        {popular && popular.length > 0 && (
+        {popular.length > 0 && (
           <Section slide={true} title="Popular Shows">
             {popular.map((show: Show) => (
               <Poster
@@ -87,7 +75,7 @@ export function TV() {
             ))}
           </Section>
         )}
-        {airingToday && airingToday.length > 0 && (
+        {airingToday.length > 0 && (
           <Section slide={true} title="Airing Today Shows">
             {airingToday.map((show: Show) => (
               <Poster
@@ -103,7 +91,9 @@ export function TV() {
             ))}
           </Section>
         )}
-        {error && <Message color="#e74c3c" text={error} />}
+        {error1 && <Message color="#e74c3c" text={'Error in top rated.'} />}
+        {error2 && <Message color="#e74c3c" text={'Error in popular.'} />}
+        {error3 && <Message color="#e74c3c" text={'Error in airing today.'} />}
       </Container>
     </>
   )

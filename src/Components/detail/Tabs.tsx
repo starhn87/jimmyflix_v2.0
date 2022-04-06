@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useAppDispatch } from '../../redux/store'
 import { customMedia } from '../GlobalStyles'
-import { tab } from '../../redux/reducers/DetailReducer'
 interface TabsProps {
   selected: string
   collections: boolean
   seasons: boolean
+  onClick: Dispatch<SetStateAction<string>>
 }
 
-export default function Tabs({ selected, collections, seasons }: TabsProps) {
+export default function Tabs({
+  selected,
+  collections,
+  seasons,
+  onClick,
+}: TabsProps) {
   const [menus, setMenu] = useState(['Trailer', 'Credits', 'Production'])
-  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const menu = [...menus]
@@ -32,8 +35,9 @@ export default function Tabs({ selected, collections, seasons }: TabsProps) {
       <List>
         {menus.map((menu) => (
           <Li
+            key={menu}
             className={`${selected === menu ? 'active' : ''}`}
-            onClick={() => dispatch(tab(menu))}
+            onClick={() => onClick(menu)}
           >
             {menu}
           </Li>

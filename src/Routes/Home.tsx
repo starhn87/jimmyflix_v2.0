@@ -1,53 +1,47 @@
 import React, { useEffect } from 'react'
 import Helmet from '../Components/Helmet'
-import { shallowEqual, useDispatch } from 'react-redux'
-import { success } from '../redux/reducers/HomeReducer'
 import { moviesApi } from '../api'
-import { useAppSelector } from '../redux/store'
 import styled from 'styled-components'
 import Section from '../Components/Section'
 import Poster from '../Components/Poster'
 import Message from '../Components/Message'
-import { HomeState, Movie } from '../interface'
-
-interface HomeProps {
-  home: HomeState
-}
+import { Movie } from '../interface'
+import { useQueries } from 'react-query'
+import Loading from '../Components/Loading'
 
 function Home() {
-  const { nowPlaying, upcoming, popular, error } = useAppSelector(
-    (state: HomeProps) => ({ ...state.home }),
-    shallowEqual,
-  )
-  const dispatch = useDispatch()
-
-  const getHome = async () => {
-    try {
-      const {
-        data: { results: nowPlaying },
-      } = await moviesApi.nowPlaying()
-      const {
-        data: { results: upcoming },
-      } = await moviesApi.upcoming()
-      const {
-        data: { results: popular },
-      } = await moviesApi.popular()
-      dispatch(success({ nowPlaying, upcoming, popular }))
-    } catch {
-      dispatch(fail())
-    }
-  }
+  const [
+    { data: nowPlaying, isError: error1 },
+    { data: upcoming, isError: error2 },
+    { data: popular, isError: error3 },
+  ] = useQueries([
+    {
+      queryKey: ['nowPlaying'],
+      queryFn: () => moviesApi.nowPlaying(),
+    },
+    {
+      queryKey: ['upcoming'],
+      queryFn: () => moviesApi.upcoming(),
+    },
+    {
+      queryKey: ['popularMovie'],
+      queryFn: () => moviesApi.popular(),
+    },
+  ])
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    getHome()
   }, [])
+
+  if (!nowPlaying || !upcoming || !popular) {
+    return <Loading />
+  }
 
   return (
     <>
       <Helmet content="Movies | Jimmyflix" />
       <Container>
-        {nowPlaying && nowPlaying.length > 0 && (
+        {nowPlaying.length > 0 && (
           <Section slide={true} title="Now Playing">
             {nowPlaying.map((movie: Movie) => (
               <Poster
@@ -62,7 +56,7 @@ function Home() {
             ))}
           </Section>
         )}
-        {upcoming && upcoming.length > 0 && (
+        {upcoming.length > 0 && (
           <Section slide={true} title="Upcoming Movies">
             {upcoming.map((movie: Movie) => (
               <Poster
@@ -77,7 +71,7 @@ function Home() {
             ))}
           </Section>
         )}
-        {popular && popular.length > 0 && (
+        {popular.length > 0 && (
           <Section slide={true} title="Popular Movies">
             {popular.map((movie: Movie) => (
               <Poster
@@ -92,7 +86,9 @@ function Home() {
             ))}
           </Section>
         )}
-        {error && <Message color="#e74c3c" text={error} />}
+        {error1 && <Message color="#e74c3c" text={'Error in now playing.'} />}
+        {error2 && <Message color="#e74c3c" text={'Error in upcoming.'} />}
+        {error3 && <Message color="#e74c3c" text={'Error in popular'} />}
       </Container>
     </>
   )
