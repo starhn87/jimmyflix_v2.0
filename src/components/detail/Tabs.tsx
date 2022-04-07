@@ -55,7 +55,7 @@ export default function Tabs({
 const Tab = styled.div`
   margin-top: 20px;
   color: white;
-  height: 50px;
+  height: 48px;
   display: flex;
   align-items: center;
   vertical-align: center;

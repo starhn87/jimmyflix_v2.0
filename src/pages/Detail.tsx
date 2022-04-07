@@ -181,8 +181,13 @@ const Cover = styled.div<{ bgImage: string }>`
 `
 
 const Data = styled.div`
+  overflow-y: auto;
   width: 70%;
   margin-left: 15px;
+
+  ${customMedia.greaterThan('mobile')`
+    height: 120%;
+  `}
 
   ${customMedia.lessThan('mobile')`
     width: 100%;
@@ -248,10 +253,12 @@ export const Name = styled.p`
 `
 
 export const Box = styled.div`
-  overflow: auto;
   width: 100%;
   margin-top: 20px;
-  padding-bottom: 30px;
+
+  ${customMedia.lessThan('mobile')`
+    padding-bottom: 30px;
+  `}
 `
 
 export const Wrapper = styled(Grid)`

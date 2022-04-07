@@ -7,6 +7,7 @@ import { collections } from '../../api'
 import { ICollection, TabType } from '../../interface'
 import { useQuery } from 'react-query'
 import Loading from '../common/Loading'
+import { Box } from '../../pages/Detail'
 
 interface CollectionProps {
   id: number
@@ -25,7 +26,7 @@ const Collection = ({ id, onClick }: CollectionProps) => {
   return isError ? (
     <Message color="#e74c3c" text={'Error in collection.'}></Message>
   ) : (
-    <Container>
+    <Box>
       <Section slide={false}>
         {data &&
           data.length > 0 &&
@@ -44,13 +45,8 @@ const Collection = ({ id, onClick }: CollectionProps) => {
               />
             ))}
       </Section>
-    </Container>
+    </Box>
   )
 }
 
 export default Collection
-
-const Container = styled.div`
-  margin-bottom: 30px;
-  margin-top: 20px;
-`

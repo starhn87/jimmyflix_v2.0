@@ -35,16 +35,11 @@ const Iframe = styled.iframe`
   margin-top: 15px;
   width: 100%;
   height: 80%;
-  &:first-child {
-    margin-top: 5px;
-  }
-  &:last-child {
-    margin-bottom: 30px;
-  }
 
   ${customMedia.lessThan('mobile')`
-        width: 95%;
-        padding: 5px 0;
-        height: 400px;
-    `}
+    width: 95%;
+    height: 400px;
+    margin-bottom: 30px;
+    padding: 5px 0;
+  `}
 `
