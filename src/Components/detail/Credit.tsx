@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Logo, Name, Product, Wrapper } from '../../routes/Detail'
+import { Box, Logo, Name, Product, Wrapper } from '../../pages/Detail'
 import defaultPersonImg from '../../assets/images/noPersonSmall.png'
 import Message from '../common/Message'
 import { useQuery } from 'react-query'

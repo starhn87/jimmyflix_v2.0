@@ -102,45 +102,45 @@
 │   └── index.html
 ├── src
 │   ├── App.tsx
-│   ├── Components
-│   │   ├── GlobalStyles.tsx
-│   │   ├── Header.tsx
-│   │   ├── HeaderSearchBar.tsx
-│   │   ├── Helmet.tsx
-│   │   ├── Loading.tsx
-│   │   ├── Message.tsx
-│   │   ├── Poster.tsx
-│   │   ├── SearchBar.tsx
-│   │   ├── Section.tsx
-│   │   └── detail
-│   │       ├── Credit.tsx
-│   │       ├── Info.tsx
-│   │       ├── Production.tsx
-│   │       ├── Season.tsx
-│   │       ├── Tabs.tsx
-│   │       └── Trailer.tsx
-│   ├── Routes
-│   │   ├── Collection.tsx
-│   │   ├── Detail.tsx
-│   │   ├── Home.tsx
-│   │   ├── Search.tsx
-│   │   └── TV.tsx
+│   ├── GlobalStyles.ts
 │   ├── api.ts
 │   ├── assets
 │   │   ├── images
-│   │   │   ├── Spinner.gif
 │   │   │   ├── imdb.png
 │   │   │   ├── noPersonSmall.png
 │   │   │   ├── noPosterSmall.png
 │   │   │   └── noProductionSmall.png
 │   │   └── styles
 │   │       └── styled.d.ts
+│   ├── components
+│   │   ├── HeaderSearchBar.tsx
+│   │   ├── SearchBar.tsx
+│   │   ├── common
+│   │   │   ├── Header.tsx
+│   │   │   ├── Helmet.tsx
+│   │   │   ├── Loading.tsx
+│   │   │   ├── Message.tsx
+│   │   │   ├── Poster.tsx
+│   │   │   └── Section.tsx
+│   │   └── detail
+│   │       ├── Collection.tsx
+│   │       ├── Credit.tsx
+│   │       ├── Info.tsx
+│   │       ├── Production.tsx
+│   │       ├── Season.tsx
+│   │       ├── Tabs.tsx
+│   │       └── Trailer.tsx
 │   ├── index.tsx
 │   ├── interface.d.ts
+│   ├── pages
+│   │   ├── Detail.tsx
+│   │   ├── Home.tsx
+│   │   ├── Search.tsx
+│   │   └── TV.tsx
 │   ├── react-app-env.d.ts
 │   ├── redux
-│   │   ├── SearchReducer.tsx
-│   │   └── store.tsx
+│   │   ├── searchReducer.ts
+│   │   └── store.ts
 │   └── util.ts
 ├── tsconfig.json
 └── yarn.lock
