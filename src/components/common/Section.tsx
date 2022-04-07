@@ -58,12 +58,13 @@ const Section = ({ slide, title, children }: SectionProps) => {
   return (
     <Container>
       {title && <Title>{title}</Title>}
-      {slide && (
+      {slide ? (
         <Wrapper>
           <Slider {...settings}>{children}</Slider>
         </Wrapper>
+      ) : (
+        <Grid>{children}</Grid>
       )}
-      {!slide && <Grid>{children}</Grid>}
     </Container>
   )
 }
@@ -83,13 +84,13 @@ const Title = styled.span`
 `
 
 export const Grid = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(auto-fill, 150px);
   grid-gap: 25px;
 `
 
 const Wrapper = styled.div`
-  margin: 40px auto;
+  margin: 35px auto;
   width: 95%;
 `
