@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import Helmet from '../components/common/Helmet'
 import { moviesApi } from '../api'
 import styled from 'styled-components'
 import Section from '../components/common/Section'
@@ -8,6 +7,7 @@ import Message from '../components/common/Message'
 import { IMovie } from '../interface'
 import { useQueries } from 'react-query'
 import Loading from '../components/common/Loading'
+import HelmetWrapper from '../components/common/Helmet'
 
 function Home() {
   const [
@@ -43,7 +43,7 @@ function Home() {
 
   return (
     <>
-      <Helmet content="Movies | Jimmyflix" />
+      <HelmetWrapper content="Movies | Jimmyflix" />
       <Container>
         {nowPlaying.length > 0 && (
           <Section slide={true} title="Now Playing">
