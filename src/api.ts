@@ -8,8 +8,6 @@ const api = axios.create({
   },
 })
 
-export const collections = (id: number) => api.get(`collection/${id}`)
-
 export const moviesApi = {
   nowPlaying: async () =>
     await api.get('movie/now_playing').then((res) => res.data.results),
@@ -33,7 +31,6 @@ export const moviesApi = {
     }
 
     if (term.trim() === '') {
-      alert('Input what you want to search!')
       return null
     }
 
@@ -46,6 +43,9 @@ export const moviesApi = {
       .then((res) => res.data.results)
   },
 }
+
+export const collections = async (id: number) =>
+  await api.get(`collection/${id}`).then((res) => res.data.parts)
 
 export const tvApi = {
   topRated: async () =>
@@ -70,7 +70,6 @@ export const tvApi = {
     }
 
     if (term.trim() === '') {
-      alert('Input what you want to search!')
       return null
     }
 

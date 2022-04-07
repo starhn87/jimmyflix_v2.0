@@ -1,8 +1,8 @@
 import React from 'react'
-import { Box, Flag, Logo, Name, Product } from '../../Routes/Detail'
+import { Box, Flag, Logo, Name, Product } from '../../routes/Detail'
 import defaultProductionImg from '../../assets/images/noProductionSmall.png'
-import Message from '../Message'
-import Section from '../Section'
+import Message from '../common/Message'
+import Section from '../common/Section'
 
 interface ProductionProps {
   production_companies: []

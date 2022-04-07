@@ -1,11 +1,11 @@
 import React from 'react'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 
-interface IHelmet {
+interface HelmetProps {
   content: string
 }
 
-export default function HelmetWrapper({ content }: IHelmet) {
+export default function HelmetWrapper({ content }: HelmetProps) {
   return (
     <HelmetProvider>
       <Helmet>

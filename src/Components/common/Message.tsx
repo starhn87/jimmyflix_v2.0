@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { customMedia } from './GlobalStyles'
+import { customMedia } from '../../GlobalStyles'
 
-interface Props {
+interface MessageProps {
   text?: string
   color: string
 }
 
-const Message: React.FunctionComponent<Props> = ({ text, color }) => (
+const Message = ({ text, color }: MessageProps) => (
   <Container>
     <Text color={color}>{text}</Text>
   </Container>

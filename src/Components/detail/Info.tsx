@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import styled from 'styled-components'
-import { customMedia } from '../GlobalStyles'
+import { customMedia } from '../../GlobalStyles'
 
 interface InfoProps {
   vote_average: number

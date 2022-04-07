@@ -1,11 +1,11 @@
 import React from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import GlobalStyles from './Components/GlobalStyles'
-import Header from './Components/Header'
-import Search from './Routes/Search'
-import Home from './Routes/Home'
-import TV from './Routes/TV'
-import Detail from './Routes/Detail'
+import GlobalStyles from './GlobalStyles'
+import Header from './components/common/Header'
+import Search from './routes/Search'
+import Home from './routes/Home'
+import TV from './routes/TV'
+import Detail from './routes/Detail'
 
 function App() {
   return (

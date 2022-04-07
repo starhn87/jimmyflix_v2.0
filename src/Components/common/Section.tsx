@@ -2,17 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import Slider from 'react-slick'
 
-interface Props {
+interface SectionProps {
   slide: boolean
   title?: string
   children: React.ReactNode
 }
 
-const Section: React.FunctionComponent<Props> = ({
-  slide,
-  title,
-  children,
-}) => {
+const Section = ({ slide, title, children }: SectionProps) => {
   const settings = {
     dots: false,
     infinite: true,

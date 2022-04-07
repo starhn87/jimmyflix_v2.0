@@ -73,17 +73,21 @@
 - 직접 추가하거나 개선한 부분
   - 구현 내용 & 방법
     - 타입스크립트를 적용하여 타입 검사를 컴파일 시점에서 할 수 있도록 하였습니다.
-    - 함수형 컴포넌트와 React Hooks를 적용하여 코드를 경량화하였습니다.
-    - 상세 페이지에서 예고편, 등장 인물, 시퀄 탭을 추가하여 더 다양한 정보를 볼 수 있도록 하였습니다.
+    - 함수 컴포넌트와 React Hooks를 적용하여 Container, Presenter 패턴을 없애고 코드를 경량화하였습니다.
+    - 리액트 쿼리를 적용하여 캐싱을 통해 API 호출을 최적화하였습니다.
+    - 캐싱으로 인해 필요 없어진 전역 상태를 없애고 코드를 경량화하였습니다.
+    - 상세 페이지에서 크레딧, 컬렉션, 시즌 탭 등을 추가하여 더 다양한 정보를 볼 수 있도록 하였습니다.
     - react-slick을 사용하여 무한 슬라이드를 구현하였습니다.
     - 반응형 디자인을 도입하였습니다. (데스크탑, 모바일)
-    - 검색 페이지 초기 화면 및 헤더를 변경하였습니다. (로고, 서치바 추가)
-    - 렌더링 최적화를 하였습니다. (memo 적용)
+    - 검색 페이지 초기 화면 및 헤더 디자인을 변경하였습니다. (로고, 서치바 추가)
+    - 로딩 바를 보여주어 비동기 작업 중임을 사용자에게 알렸습니다.
+    - 렌더링 최적화를 하였습니다.
     - 상세 페이지에 IMDB 링크를 삽입하여 추가적으로 정보가 필요할 시 링크를 타고 넘어갈 수 있도록 하였습니다.
   - 구현하면서 어려웠던 점
     - 타입스크립트로 타입을 최대한 좁은 범위로 지정해주는 부분에서 시행착오를 겪었습니다.
-    - 클래스형 컴포넌트를 함수형 컴포넌트와 hook으로 바꾸는 데에서 어떻게 어떤 부분이 변경되었나 이해하고 적용하는데 시행착오를 겪었습니다.
+    - 클래스 컴포넌트를 함수 컴포넌트와 hook으로 바꾸는 데에서 어떻게 어떤 부분이 변경되었나 이해하고 적용하는데 시행착오를 겪었습니다.
     - 모바일 웹을 위한 반응형 디자인을 저만의 스타일로 구현하는 것에서 시간이 소요되었습니다.
+    - 리액트 쿼리를 적용하여 기존에 axios로 호출하던 부분에 캐싱을 적용하고 중복되는 전역 상태를 정리하는 데에 시행착오를 겪었습니다.
 
 <br>
 
@@ -97,28 +101,31 @@
 │   ├── favicon.ico
 │   └── index.html
 ├── src
+│   ├── App.tsx
 │   ├── Components
-│   │   ├── App.tsx
 │   │   ├── GlobalStyles.tsx
 │   │   ├── Header.tsx
+│   │   ├── HeaderSearchBar.tsx
 │   │   ├── Helmet.tsx
-│   │   ├── Info.tsx
-│   │   ├── Layout.tsx
-│   │   ├── Loader.tsx
+│   │   ├── Loading.tsx
 │   │   ├── Message.tsx
-│   │   ├── MovieResult.tsx
 │   │   ├── Poster.tsx
 │   │   ├── SearchBar.tsx
-│   │   ├── SearchResult.tsx
 │   │   ├── Section.tsx
-│   │   └── TVResult.tsx
+│   │   └── detail
+│   │       ├── Credit.tsx
+│   │       ├── Info.tsx
+│   │       ├── Production.tsx
+│   │       ├── Season.tsx
+│   │       ├── Tabs.tsx
+│   │       └── Trailer.tsx
 │   ├── Routes
 │   │   ├── Collection.tsx
 │   │   ├── Detail.tsx
 │   │   ├── Home.tsx
 │   │   ├── Search.tsx
 │   │   └── TV.tsx
-│   ├── api.tsx
+│   ├── api.ts
 │   ├── assets
 │   │   ├── images
 │   │   │   ├── Spinner.gif
@@ -128,20 +135,13 @@
 │   │   │   └── noProductionSmall.png
 │   │   └── styles
 │   │       └── styled.d.ts
-│   ├── hooks
-│   │   ├── useCollection.tsx
-│   │   ├── useDetail.tsx
-│   │   ├── useHome.tsx
-│   │   ├── useSearch.tsx
-│   │   └── useTV.tsx
 │   ├── index.tsx
+│   ├── interface.d.ts
 │   ├── react-app-env.d.ts
-│   ├── reducers
-│   │   ├── DetailReducer.tsx
-│   │   ├── HomeReducer.tsx
+│   ├── redux
 │   │   ├── SearchReducer.tsx
-│   │   └── TVReducer.tsx
-│   └── store.tsx
+│   │   └── store.tsx
+│   └── util.ts
 ├── tsconfig.json
 └── yarn.lock
 ```
@@ -155,6 +155,7 @@ front-end
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)
 ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
