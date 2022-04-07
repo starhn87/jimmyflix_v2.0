@@ -2,10 +2,10 @@ import React from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import GlobalStyles from './GlobalStyles'
 import Header from './components/common/Header'
-import Search from './routes/Search'
-import Home from './routes/Home'
-import TV from './routes/TV'
-import Detail from './routes/Detail'
+import Search from './pages/Search'
+import Home from './pages/Home'
+import TV from './pages/TV'
+import Detail from './pages/Detail'
 
 function App() {
   return (

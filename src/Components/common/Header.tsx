@@ -5,7 +5,7 @@ import { customMedia } from '../../GlobalStyles'
 import SearchBar from '../HeaderSearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
 import { useAppDispatch } from '../../redux/store'
-import { reset } from '../../redux/SearchReducer'
+import { reset } from '../../redux/slice'
 
 function Header() {
   const { pathname } = useLocation()

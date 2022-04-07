@@ -6,11 +6,11 @@ import { Container } from './Home'
 import { IMovie, IShow } from '../interface'
 import { moviesApi, tvApi } from '../api'
 import { useQueries } from 'react-query'
+import SearchBar from '../components/SearchBar'
+import { searched } from '../redux/slice'
 import Section from '../components/common/Section'
 import Poster from '../components/common/Poster'
 import Message from '../components/common/Message'
-import SearchBar from '../components/SearchBar'
-import { searched } from '../redux/SearchReducer'
 
 function Search() {
   const { isSearched, value } = useAppSelector((state) => state.search)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Flag, Logo, Name, Product } from '../../routes/Detail'
+import { Box, Flag, Logo, Name, Product } from '../../pages/Detail'
 import defaultProductionImg from '../../assets/images/noProductionSmall.png'
 import Message from '../common/Message'
 import Section from '../common/Section'
