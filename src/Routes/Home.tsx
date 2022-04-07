@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react'
-import Helmet from '../Components/Helmet'
+import Helmet from '../components/common/Helmet'
 import { moviesApi } from '../api'
 import styled from 'styled-components'
-import Section from '../Components/Section'
-import Poster from '../Components/Poster'
-import Message from '../Components/Message'
-import { Movie } from '../interface'
+import Section from '../components/common/Section'
+import Poster from '../components/common/Poster'
+import Message from '../components/common/Message'
+import { IMovie } from '../interface'
 import { useQueries } from 'react-query'
-import Loading from '../Components/Loading'
+import Loading from '../components/common/Loading'
 
 function Home() {
   const [
-    { data: nowPlaying, isError: error1 },
-    { data: upcoming, isError: error2 },
-    { data: popular, isError: error3 },
+    {
+      data: nowPlaying,
+      isFetched: isNowPlayingFetched,
+      isError: isNowPlayingError,
+    },
+    { data: upcoming, isFetched: isUpcomingFetched, isError: isUpcomingError },
+    { data: popular, isFetched: isPopularFetched, isError: isPopularError },
   ] = useQueries([
     {
       queryKey: ['nowPlaying'],
@@ -33,7 +37,7 @@ function Home() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (!nowPlaying || !upcoming || !popular) {
+  if (!isNowPlayingFetched || !isUpcomingFetched || !isPopularFetched) {
     return <Loading />
   }
 
@@ -43,7 +47,7 @@ function Home() {
       <Container>
         {nowPlaying.length > 0 && (
           <Section slide={true} title="Now Playing">
-            {nowPlaying.map((movie: Movie) => (
+            {nowPlaying.map((movie: IMovie) => (
               <Poster
                 key={movie.id}
                 id={movie.id}
@@ -58,7 +62,7 @@ function Home() {
         )}
         {upcoming.length > 0 && (
           <Section slide={true} title="Upcoming Movies">
-            {upcoming.map((movie: Movie) => (
+            {upcoming.map((movie: IMovie) => (
               <Poster
                 key={movie.id}
                 id={movie.id}
@@ -73,7 +77,7 @@ function Home() {
         )}
         {popular.length > 0 && (
           <Section slide={true} title="Popular Movies">
-            {popular.map((movie: Movie) => (
+            {popular.map((movie: IMovie) => (
               <Poster
                 key={movie.id}
                 id={movie.id}
@@ -86,9 +90,15 @@ function Home() {
             ))}
           </Section>
         )}
-        {error1 && <Message color="#e74c3c" text={'Error in now playing.'} />}
-        {error2 && <Message color="#e74c3c" text={'Error in upcoming.'} />}
-        {error3 && <Message color="#e74c3c" text={'Error in popular'} />}
+        {isNowPlayingError && (
+          <Message color="#e74c3c" text={'Error in now playing.'} />
+        )}
+        {isUpcomingError && (
+          <Message color="#e74c3c" text={'Error in upcoming.'} />
+        )}
+        {isPopularError && (
+          <Message color="#e74c3c" text={'Error in popular'} />
+        )}
       </Container>
     </>
   )

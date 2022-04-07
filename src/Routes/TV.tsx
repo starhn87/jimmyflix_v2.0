@@ -1,20 +1,24 @@
 import React, { useEffect } from 'react'
-import Helmet from '../Components/Helmet'
-import Header from '../Components/Header'
+import Helmet from '../components/common/Helmet'
+import Header from '../components/common/Header'
 import { tvApi } from '../api'
 import { Container } from './Home'
-import Section from '../Components/Section'
-import Poster from '../Components/Poster'
-import Message from '../Components/Message'
+import Section from '../components/common/Section'
+import Poster from '../components/common/Poster'
+import Message from '../components/common/Message'
 import { useQueries } from 'react-query'
-import Loading from '../Components/Loading'
-import { Show } from '../interface'
+import Loading from '../components/common/Loading'
+import { IShow } from '../interface'
 
 export function TV() {
   const [
-    { data: topRated, isError: error1 },
-    { data: popular, isError: error2 },
-    { data: airingToday, isError: error3 },
+    { data: topRated, isFetched: isTopRatedFetched, isError: isTopRatedError },
+    { data: popular, isFetched: isPopularFetched, isError: isPopularError },
+    {
+      data: airingToday,
+      isFetched: isAiringTodayFetched,
+      isError: isAiringTodayError,
+    },
   ] = useQueries([
     {
       queryKey: ['topRated'],
@@ -34,7 +38,7 @@ export function TV() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (!topRated || !popular || !airingToday) {
+  if (!isTopRatedFetched || !isPopularFetched || !isAiringTodayFetched) {
     return <Loading />
   }
 
@@ -45,7 +49,7 @@ export function TV() {
       <Container>
         {topRated.length > 0 && (
           <Section slide={true} title="Top Rated Shows">
-            {topRated.map((show: Show) => (
+            {topRated.map((show: IShow) => (
               <Poster
                 key={show.id}
                 id={show.id}
@@ -61,7 +65,7 @@ export function TV() {
         )}
         {popular.length > 0 && (
           <Section slide={true} title="Popular Shows">
-            {popular.map((show: Show) => (
+            {popular.map((show: IShow) => (
               <Poster
                 key={show.id}
                 id={show.id}
@@ -77,7 +81,7 @@ export function TV() {
         )}
         {airingToday.length > 0 && (
           <Section slide={true} title="Airing Today Shows">
-            {airingToday.map((show: Show) => (
+            {airingToday.map((show: IShow) => (
               <Poster
                 key={show.id}
                 id={show.id}
@@ -91,9 +95,15 @@ export function TV() {
             ))}
           </Section>
         )}
-        {error1 && <Message color="#e74c3c" text={'Error in top rated.'} />}
-        {error2 && <Message color="#e74c3c" text={'Error in popular.'} />}
-        {error3 && <Message color="#e74c3c" text={'Error in airing today.'} />}
+        {isTopRatedError && (
+          <Message color="#e74c3c" text={'Error in top rated.'} />
+        )}
+        {isPopularError && (
+          <Message color="#e74c3c" text={'Error in popular.'} />
+        )}
+        {isAiringTodayError && (
+          <Message color="#e74c3c" text={'Error in airing today.'} />
+        )}
       </Container>
     </>
   )

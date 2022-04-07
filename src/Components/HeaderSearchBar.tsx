@@ -14,10 +14,16 @@ export default function SearchBar() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setEditingValue('')
+
+    if (editingValue.trim() === '') {
+      alert('Input what you want to search!')
+      return
+    }
+
     searchRef.current?.blur()
     navigator('/search')
     dispatch(searched(editingValue))
-    setEditingValue('')
   }
 
   return (
@@ -28,7 +34,7 @@ export default function SearchBar() {
           value={editingValue}
           onChange={(e) => setEditingValue(e.target.value)}
           type="text"
-          placeholder="영화 / TV쇼 검색"
+          placeholder="Movie / TV Show Search"
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           spellCheck={false}

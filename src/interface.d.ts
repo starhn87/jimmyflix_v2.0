@@ -1,4 +1,4 @@
-export interface Movie {
+export interface IMovie {
   id: number
   poster_path: string
   title: string
@@ -6,7 +6,7 @@ export interface Movie {
   release_date: string
 }
 
-export interface Show {
+export interface IShow {
   id: number
   poster_path: string
   name: string
@@ -14,7 +14,7 @@ export interface Show {
   first_air_date: string
 }
 
-export interface SearchState {
+export interface ISearchState {
   isSearched: boolean
   value: string
 }
@@ -28,3 +28,10 @@ export interface ICollection {
   name: string
   release_date: string
 }
+
+export type TabType =
+  | 'Trailer'
+  | 'Season'
+  | 'Credits'
+  | 'Production'
+  | 'Collection'

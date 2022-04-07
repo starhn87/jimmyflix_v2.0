@@ -1,11 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { customMedia } from '../GlobalStyles'
+import { TabType } from '../../interface'
+import { customMedia } from '../../GlobalStyles'
 interface TabsProps {
   selected: string
   collections: boolean
   seasons: boolean
-  onClick: Dispatch<SetStateAction<string>>
+  onClick: Dispatch<SetStateAction<TabType>>
 }
 
 export default function Tabs({
@@ -14,7 +15,11 @@ export default function Tabs({
   seasons,
   onClick,
 }: TabsProps) {
-  const [menus, setMenu] = useState(['Trailer', 'Credits', 'Production'])
+  const [menus, setMenu] = useState<TabType[]>([
+    'Trailer',
+    'Credits',
+    'Production',
+  ])
 
   useEffect(() => {
     const menu = [...menus]
@@ -33,7 +38,7 @@ export default function Tabs({
   return (
     <Tab>
       <List>
-        {menus.map((menu) => (
+        {menus.map((menu: TabType) => (
           <Li
             key={menu}
             className={`${selected === menu ? 'active' : ''}`}
