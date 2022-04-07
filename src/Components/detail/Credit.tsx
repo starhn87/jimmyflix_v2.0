@@ -1,10 +1,10 @@
 import React from 'react'
-import { Box, Logo, Name, Product, Wrapper } from '../../Routes/Detail'
+import { Box, Logo, Name, Product, Wrapper } from '../../routes/Detail'
 import defaultPersonImg from '../../assets/images/noPersonSmall.png'
-import Message from '../Message'
+import Message from '../common/Message'
 import { useQuery } from 'react-query'
 import { moviesApi, tvApi } from '../../api'
-import Loading from '../Loading'
+import Loading from '../common/Loading'
 
 interface CreditProps {
   isMovie: boolean

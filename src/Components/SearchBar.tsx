@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import styled from 'styled-components'
-import { customMedia } from './GlobalStyles'
+import { customMedia } from '../GlobalStyles'
 import { MdOutlineMovie } from 'react-icons/md'
 
 interface SearchBarProps {
@@ -12,8 +12,14 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    onSubmit(editingValue)
     setEditingValue('')
+
+    if (editingValue.trim() === '') {
+      alert('Input what you want to search!')
+      return
+    }
+
+    onSubmit(editingValue)
   }
 
   return (
@@ -24,7 +30,7 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setEditingValue(e.target.value)
           }
-          placeholder="영화 / TV쇼 검색"
+          placeholder="Movie / TV Show Search"
         />
         <Button type="submit">
           <MdOutlineMovie />

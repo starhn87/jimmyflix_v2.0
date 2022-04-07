@@ -1,39 +1,54 @@
 import React, { useEffect, useState } from 'react'
-import Helmet from '../Components/Helmet'
-import Message from '../Components/Message'
+import Helmet from '../components/common/Helmet'
+import Message from '../components/common/Message'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useAppDispatch } from '../redux/store'
 import { moviesApi, tvApi } from '../api'
 import styled from 'styled-components'
-import { Grid } from '../Components/Section'
-import { customMedia } from '../Components/GlobalStyles'
+import { Grid } from '../components/common/Section'
+import { customMedia } from '../GlobalStyles'
 import defaultPosterImg from '../assets/images/noPosterSmall.png'
 import imdb from '../assets/images/imdb.png'
-import Info from '../Components/detail/Info'
-import Tabs from '../Components/detail/Tabs'
-import Trailer from '../Components/detail/Trailer'
-import Season from '../Components/detail/Season'
-import Credit from '../Components/detail/Credit'
-import Production from '../Components/detail/Production'
-import Collection from './Collection'
+import Info from '../components/detail/Info'
+import Tabs from '../components/detail/Tabs'
+import Trailer from '../components/detail/Trailer'
+import Season from '../components/detail/Season'
+import Credit from '../components/detail/Credit'
+import Production from '../components/detail/Production'
+import Collection from '../components/detail/Collection'
 import { useQuery } from 'react-query'
-import Loading from '../Components/Loading'
+import Loading from '../components/common/Loading'
+import { TabType } from '../interface'
 
 function Detail() {
   const navigator = useNavigate()
   const { id } = useParams()
   const { pathname } = useLocation()
-  const dispatch = useAppDispatch()
   const isMovie = pathname.includes('/movie/')
-  const [tabName, setTabName] = useState('Trailer')
   const parsedId = Number(id)
-  const { data: result, isError } = useQuery(['detail', id], () => {
+  const [tabName, setTabName] = useState<TabType>('Trailer')
+  const { data, isFetched, isError } = useQuery(['detail', id], () => {
     if (isMovie) {
       return moviesApi.movieDetail(parsedId)
     } else {
       return tvApi.showDetail(parsedId)
     }
   })
+  const tabContent = data
+    ? {
+        Trailer: <Trailer videos={data.videos} />,
+        Season: <Season seasons={data.seasons} />,
+        Credits: <Credit parsedId={parsedId} isMovie={isMovie} />,
+        Production: (
+          <Production
+            production_companies={data.production_companies}
+            production_countries={data.production_countries}
+          />
+        ),
+        Collection: data.belongs_to_collection && (
+          <Collection id={data.belongs_to_collection.id} onClick={setTabName} />
+        ),
+      }
+    : {}
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -43,7 +58,7 @@ function Detail() {
     }
   }, [id])
 
-  if (!result) {
+  if (!isFetched) {
     return <Loading />
   }
 
@@ -56,59 +71,46 @@ function Detail() {
         </>
       ) : (
         <>
-          {result && (
+          {data && (
             <Container>
-              <Helmet content={`${result.title ?? result.name} | Jimmyflix`} />
+              <Helmet content={`${data.title ?? data.name} | Jimmyflix`} />
               <Backdrop
-                bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
+                bgImage={`https://image.tmdb.org/t/p/original${data.backdrop_path}`}
               />
               <Content>
                 <Cover
                   bgImage={
-                    result.poster_path
-                      ? `https://image.tmdb.org/t/p/original${result.poster_path}`
+                    data.poster_path
+                      ? `https://image.tmdb.org/t/p/original${data.poster_path}`
                       : defaultPosterImg
                   }
                 />
                 <Data>
                   <Title>
-                    <Text>{result.title ?? result.name}</Text>
+                    <Text>{data.title ?? data.name}</Text>
                     <ILink
                       target="_blank"
-                      href={`https://www.imdb.com/title/${result.imdb_id}`}
+                      href={`https://www.imdb.com/title/${data.imdb_id}`}
                     >
                       <Img src={imdb}></Img>
                     </ILink>
                   </Title>
                   <Info
-                    vote_average={result.vote_average}
-                    release_date={result.release_date}
-                    first_air_date={result.first_air_date}
-                    runtime={result.runtime}
-                    episode_run_time={result.episode_run_time}
-                    genres={result.genres}
-                    overview={result.overview}
+                    vote_average={data.vote_average}
+                    release_date={data.release_date}
+                    first_air_date={data.first_air_date}
+                    runtime={data.runtime}
+                    episode_run_time={data.episode_run_time}
+                    genres={data.genres}
+                    overview={data.overview}
                   />
                   <Tabs
                     selected={tabName}
-                    collections={!!result.belongs_to_collection}
-                    seasons={!!result.seasons}
+                    collections={!!data.belongs_to_collection}
+                    seasons={!!data.seasons}
                     onClick={setTabName}
                   />
-                  {tabName === 'Trailer' && <Trailer videos={result.videos} />}
-                  {tabName === 'Season' && <Season seasons={result.seasons} />}
-                  {tabName === 'Credits' && (
-                    <Credit parsedId={parsedId} isMovie={isMovie} />
-                  )}
-                  {tabName === 'Production' && (
-                    <Production
-                      production_companies={result.production_companies}
-                      production_countries={result.production_countries}
-                    />
-                  )}
-                  {tabName === 'Collection' && result.belongs_to_collection && (
-                    <Collection id={result.belongs_to_collection.id} />
-                  )}
+                  {tabContent[tabName]}
                 </Data>
               </Content>
             </Container>
@@ -248,9 +250,8 @@ export const Name = styled.p`
 export const Box = styled.div`
   overflow: auto;
   width: 100%;
-  height: 785px;
   margin-top: 20px;
-  margin-bottom: 30px;
+  padding-bottom: 30px;
 `
 
 export const Wrapper = styled(Grid)`

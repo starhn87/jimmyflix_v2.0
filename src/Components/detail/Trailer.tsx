@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { customMedia } from '../GlobalStyles'
-import Message from '../Message'
+import { customMedia } from '../../GlobalStyles'
+import Message from '../common/Message'
 
 interface TrailerProps {
   videos: {

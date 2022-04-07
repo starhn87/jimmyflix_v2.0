@@ -1,27 +1,23 @@
-import React, { Suspense, useEffect, useRef } from 'react'
-import Helmet from '../Components/Helmet'
+import React, { useEffect } from 'react'
+import Helmet from '../components/common/Helmet'
 import { useAppDispatch, useAppSelector } from '../redux/store'
-import Loading from '../Components/Loading'
+import Loading from '../components/common/Loading'
 import { Container } from './Home'
-import { Movie, SearchState, Show } from '../interface'
+import { IMovie, IShow } from '../interface'
 import { moviesApi, tvApi } from '../api'
 import { useQueries } from 'react-query'
-import Section from '../Components/Section'
-import Poster from '../Components/Poster'
-import Message from '../Components/Message'
-import SearchBar from '../Components/SearchBar'
+import Section from '../components/common/Section'
+import Poster from '../components/common/Poster'
+import Message from '../components/common/Message'
+import SearchBar from '../components/SearchBar'
 import { searched } from '../redux/SearchReducer'
-
-export interface SearchProps {
-  search: SearchState
-}
 
 function Search() {
   const { isSearched, value } = useAppSelector((state) => state.search)
   const dispatch = useAppDispatch()
   const [
-    { data: movieResults, isError: error1 },
-    { data: tvResults, isError: error2 },
+    { data: movies, isFetched: isMoviesFetched, isError: isMoviesError },
+    { data: tvs, isFetched: isTvFetched, isError: isTvError },
   ] = useQueries([
     {
       queryKey: ['movieSearch', value],
@@ -41,7 +37,7 @@ function Search() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (value !== '' && (!movieResults || !tvResults)) {
+  if (value !== '' && (!isMoviesFetched || !isTvFetched)) {
     return <Loading />
   }
 
@@ -50,9 +46,9 @@ function Search() {
       <Helmet content="Search | Jimmyflix" />
       {isSearched ? (
         <>
-          {movieResults && movieResults.length > 0 && (
+          {movies && movies.length > 0 && (
             <Section slide={false} title="Movies">
-              {movieResults.map((movie: Movie) => (
+              {movies.map((movie: IMovie) => (
                 <Poster
                   key={movie.id}
                   id={movie.id}
@@ -67,9 +63,9 @@ function Search() {
               ))}
             </Section>
           )}
-          {tvResults && tvResults.length > 0 && (
+          {tvs && tvs.length > 0 && (
             <Section slide={false} title="TV Shows">
-              {tvResults.map((show: Show) => (
+              {tvs.map((show: IShow) => (
                 <Poster
                   key={show.id}
                   id={show.id}
@@ -83,18 +79,15 @@ function Search() {
               ))}
             </Section>
           )}
-          {error1 && (
+          {isMoviesError && (
             <Message color="#e74c3c" text={'Error in movie searching.'} />
           )}
-          {error2 && (
+          {isTvError && (
             <Message color="#e74c3c" text={'Error in tv show searching.'} />
           )}
-          {tvResults &&
-            movieResults &&
-            tvResults.length === 0 &&
-            movieResults.length === 0 && (
-              <Message text="Nothing found" color="grey" />
-            )}
+          {tvs && movies && tvs.length === 0 && movies.length === 0 && (
+            <Message text="Nothing found" color="grey" />
+          )}
         </>
       ) : (
         <SearchBar onSubmit={onSubmit} />

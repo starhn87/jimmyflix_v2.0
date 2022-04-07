@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { SearchState } from '../interface'
+import { ISearchState } from '../interface'
 
-export const searchInitialState: SearchState = {
+export const searchInitialState: ISearchState = {
   isSearched: false,
   value: '',
 }

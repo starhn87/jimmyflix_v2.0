@@ -1,26 +1,31 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import defaultPosterImg from '../assets/images/noPosterSmall.png'
+import defaultPosterImg from '../../assets/images/noPosterSmall.png'
 
-interface Props {
+interface PosterProps {
   id: number
   imageUrl: string
   title: string
   rating: number
   year: string
   isMovie?: boolean
+  onClick?: () => void
 }
 
-const Poster: React.FunctionComponent<Props> = ({
+const Poster = ({
   id,
   imageUrl,
   title,
   rating,
   year,
   isMovie = false,
-}) => (
-  <Link to={isMovie ? `/movie/${id}` : `/tv/${id}`}>
+  onClick,
+}: PosterProps) => (
+  <Link
+    to={isMovie ? `/movie/${id}` : `/tv/${id}`}
+    onClick={onClick ?? undefined}
+  >
     <Container>
       <ImageContainer>
         <Image
