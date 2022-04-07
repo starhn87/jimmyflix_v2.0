@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import Helmet from '../component/common/Helmet'
-import Message from '../component/common/Message'
+import Helmet from '../components/common/Helmet'
+import Message from '../components/common/Message'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { moviesApi, tvApi } from '../api'
 import styled from 'styled-components'
-import { Grid } from '../component/common/Section'
+import { Grid } from '../components/common/Section'
 import { customMedia } from '../GlobalStyles'
-import defaultPosterImg from '../assets/images/noPosterSmall.png'
+import DefaultPoster from '../assets/images/noPosterSmall.png'
 import imdb from '../assets/images/imdb.png'
-import Info from '../component/detail/Info'
-import Tabs from '../component/detail/Tabs'
-import Trailer from '../component/detail/Trailer'
-import Season from '../component/detail/Season'
-import Credit from '../component/detail/Credit'
-import Production from '../component/detail/Production'
-import Collection from '../component/detail/Collection'
+import Info from '../components/detail/Info'
+import Tabs from '../components/detail/Tabs'
+import Trailer from '../components/detail/Trailer'
+import Season from '../components/detail/Season'
+import Credit from '../components/detail/Credit'
+import Production from '../components/detail/Production'
+import Collection from '../components/detail/Collection'
 import { useQuery } from 'react-query'
-import Loading from '../component/common/Loading'
+import Loading from '../components/common/Loading'
 import { TabType } from '../interface'
 
 function Detail() {
@@ -82,7 +82,7 @@ function Detail() {
                   bgImage={
                     data.poster_path
                       ? `https://image.tmdb.org/t/p/original${data.poster_path}`
-                      : defaultPosterImg
+                      : DefaultPoster
                   }
                 />
                 <Data>

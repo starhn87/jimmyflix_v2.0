@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import defaultPosterImg from '../../assets/images/noPosterSmall.png'
+import DefaultPoster from '../../assets/images/noPosterSmall.png'
 
 interface PosterProps {
   id: number
@@ -32,7 +32,7 @@ const Poster = ({
           bgUrl={
             imageUrl
               ? `https://image.tmdb.org/t/p/w300${imageUrl}`
-              : defaultPosterImg
+              : DefaultPoster
           }
         />
         <Rating>
