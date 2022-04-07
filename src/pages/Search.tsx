@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
-import Helmet from '../component/common/Helmet'
+import Helmet from '../components/common/Helmet'
 import { useAppDispatch, useAppSelector } from '../redux/store'
-import Loading from '../component/common/Loading'
+import Loading from '../components/common/Loading'
 import { Container } from './Home'
 import { IMovie, IShow } from '../interface'
 import { moviesApi, tvApi } from '../api'
 import { useQueries } from 'react-query'
-import SearchBar from '../component/SearchBar'
+import SearchBar from '../components/SearchBar'
 import { searched } from '../redux/slice'
-import Section from '../component/common/Section'
-import Poster from '../component/common/Poster'
-import Message from '../component/common/Message'
+import Section from '../components/common/Section'
+import Poster from '../components/common/Poster'
+import Message from '../components/common/Message'
 
 function Search() {
   const { isSearched, value } = useAppSelector((state) => state.search)

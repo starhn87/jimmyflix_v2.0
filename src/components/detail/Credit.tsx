@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Logo, Name, Product, Wrapper } from '../../pages/Detail'
-import defaultPersonImg from '../../assets/images/noPersonSmall.png'
+import DefaultPerson from '../../assets/images/noPersonSmall.png'
 import Message from '../common/Message'
 import { useQuery } from 'react-query'
 import { moviesApi, tvApi } from '../../api'
@@ -44,7 +44,7 @@ export default function Credit({ isMovie, parsedId }: CreditProps) {
                       src={
                         profile.profile_path
                           ? `https://image.tmdb.org/t/p/original${profile.profile_path}`
-                          : defaultPersonImg
+                          : DefaultPerson
                       }
                       alt={profile.original_name}
                     />

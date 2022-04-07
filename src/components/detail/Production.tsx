@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flag, Logo, Name, Product } from '../../pages/Detail'
-import defaultProductionImg from '../../assets/images/noProductionSmall.png'
+import DefaultProduction from '../../assets/images/noProductionSmall.png'
 import Message from '../common/Message'
 import Section from '../common/Section'
 
@@ -38,7 +38,7 @@ export default function Production({
                         src={
                           company.logo_path
                             ? `https://image.tmdb.org/t/p/original${company.logo_path}`
-                            : defaultProductionImg
+                            : DefaultProduction
                         }
                         alt={`${company.name}`}
                       />
