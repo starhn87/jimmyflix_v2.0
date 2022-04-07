@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { moviesApi } from '../api'
 import styled from 'styled-components'
-import Section from '../components/common/Section'
-import Poster from '../components/common/Poster'
-import Message from '../components/common/Message'
+import Section from '../component/common/Section'
+import Poster from '../component/common/Poster'
+import Message from '../component/common/Message'
 import { IMovie } from '../interface'
 import { useQueries } from 'react-query'
-import Loading from '../components/common/Loading'
-import HelmetWrapper from '../components/common/Helmet'
+import Loading from '../component/common/Loading'
+import HelmetWrapper from '../component/common/Helmet'
 
 function Home() {
   const [
