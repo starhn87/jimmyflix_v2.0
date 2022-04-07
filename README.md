@@ -139,7 +139,7 @@
 │   │   └── TV.tsx
 │   ├── react-app-env.d.ts
 │   ├── redux
-│   │   ├── searchReducer.ts
+│   │   ├── slice.ts
 │   │   └── store.ts
 │   └── util.ts
 ├── tsconfig.json

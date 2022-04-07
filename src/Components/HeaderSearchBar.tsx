@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { MdSearch } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../redux/store'
-import { searched } from '../redux/searchReducer'
+import { searched } from '../redux/slice'
 
 export default function SearchBar() {
   const [editingValue, setEditingValue] = useState('')

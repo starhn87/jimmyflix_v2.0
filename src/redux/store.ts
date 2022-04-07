@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import searchReducer from './searchReducer'
+import Slice from './slice'
 import { createLogger } from 'redux-logger'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
@@ -9,7 +9,7 @@ const logMiddleware = createLogger({
 
 const store = configureStore({
   reducer: {
-    search: searchReducer,
+    search: Slice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(logMiddleware),
