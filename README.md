@@ -138,10 +138,9 @@
 │   │   ├── Search.tsx
 │   │   └── TV.tsx
 │   ├── react-app-env.d.ts
-│   ├── redux
-│   │   ├── slice.ts
-│   │   └── store.ts
-│   └── util.ts
+│   └── redux
+│       ├── slice.ts
+│       └── store.ts
 ├── tsconfig.json
 └── yarn.lock
 ```
