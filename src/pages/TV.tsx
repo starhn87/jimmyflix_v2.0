@@ -47,7 +47,7 @@ export function TV() {
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
       <Container>
-        {topRated.length > 0 && (
+        {topRated && topRated.length > 0 && (
           <Section slide={true} title="Top Rated Shows">
             {topRated.map((show: IShow) => (
               <Poster
@@ -63,7 +63,7 @@ export function TV() {
             ))}
           </Section>
         )}
-        {popular.length > 0 && (
+        {popular && popular.length > 0 && (
           <Section slide={true} title="Popular Shows">
             {popular.map((show: IShow) => (
               <Poster
@@ -79,7 +79,7 @@ export function TV() {
             ))}
           </Section>
         )}
-        {airingToday.length > 0 && (
+        {airingToday && airingToday.length > 0 && (
           <Section slide={true} title="Airing Today Shows">
             {airingToday.map((show: IShow) => (
               <Poster

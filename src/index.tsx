@@ -1,20 +1,22 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './api'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import Loading from './components/common/Loading'
 
 const container = document.getElementById('root')
 const root = ReactDOM.createRoot(container!)
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 10 * 60 * 1000, // 10분
+      staleTime: 60 * 1000, // 1분
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
+      suspense: true,
     },
   },
 })
@@ -22,7 +24,7 @@ const queryClient = new QueryClient({
 root.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <App />
+      <App />,
     </Provider>
   </QueryClientProvider>,
 )

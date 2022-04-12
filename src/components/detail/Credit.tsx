@@ -4,7 +4,6 @@ import DefaultPerson from '../../assets/images/noPersonSmall.png'
 import Message from '../common/Message'
 import { useQuery } from 'react-query'
 import { moviesApi, tvApi } from '../../api'
-import Loading from '../common/Loading'
 
 interface CreditProps {
   isMovie: boolean
@@ -12,17 +11,13 @@ interface CreditProps {
 }
 
 export default function Credit({ isMovie, parsedId }: CreditProps) {
-  const { data } = useQuery(['credit', parsedId], () => {
+  const { data, isError } = useQuery(['credit', parsedId], () => {
     if (isMovie) {
       return moviesApi.cast(parsedId)
     } else {
       return tvApi.cast(parsedId)
     }
   })
-
-  if (!data) {
-    return <Loading />
-  }
 
   return (
     <>
@@ -57,9 +52,10 @@ export default function Credit({ isMovie, parsedId }: CreditProps) {
           </Wrapper>
         </Box>
       )}
-      {(!data || data.length === 0) && (
+      {(!isError || data.length === 0) && (
         <Message color="#eee" text={'No Credits Found'} />
       )}
+      {isError && <Message color="#e74c3c" text={'Error in credits.'} />}
     </>
   )
 }
