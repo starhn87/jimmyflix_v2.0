@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import Helmet from '../components/common/Helmet'
 import Message from '../components/common/Message'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -16,8 +16,8 @@ import Credit from '../components/detail/Credit'
 import Production from '../components/detail/Production'
 import Collection from '../components/detail/Collection'
 import { useQuery } from 'react-query'
-import Loading from '../components/common/Loading'
 import { TabType } from '../interface'
+import Loading from '../components/common/Loading'
 
 function Detail() {
   const navigator = useNavigate()
@@ -26,7 +26,7 @@ function Detail() {
   const isMovie = pathname.includes('/movie/')
   const parsedId = Number(id)
   const [tabName, setTabName] = useState<TabType>('Trailer')
-  const { data, isFetched, isError } = useQuery(['detail', id], () => {
+  const { data, isError } = useQuery(['detail', id], () => {
     if (isMovie) {
       return moviesApi.movieDetail(parsedId)
     } else {
@@ -37,7 +37,11 @@ function Detail() {
     ? {
         Trailer: <Trailer videos={data.videos} />,
         Season: <Season seasons={data.seasons} />,
-        Credits: <Credit parsedId={parsedId} isMovie={isMovie} />,
+        Credits: (
+          <Suspense fallback={<Loading />}>
+            <Credit parsedId={parsedId} isMovie={isMovie} />
+          </Suspense>
+        ),
         Production: (
           <Production
             production_companies={data.production_companies}
@@ -45,7 +49,12 @@ function Detail() {
           />
         ),
         Collection: data.belongs_to_collection && (
-          <Collection id={data.belongs_to_collection.id} onClick={setTabName} />
+          <Suspense fallback={<Loading />}>
+            <Collection
+              id={data.belongs_to_collection.id}
+              onClick={setTabName}
+            />
+          </Suspense>
         ),
       }
     : {}
@@ -57,10 +66,6 @@ function Detail() {
       navigator('/')
     }
   }, [id])
-
-  if (!isFetched) {
-    return <Loading />
-  }
 
   return (
     <>
