@@ -45,7 +45,7 @@ function Home() {
     <>
       <HelmetWrapper content="Movies | Jimmyflix" />
       <Container>
-        {nowPlaying.length > 0 && (
+        {nowPlaying && nowPlaying.length > 0 && (
           <Section slide={true} title="Now Playing">
             {nowPlaying.map((movie: IMovie) => (
               <Poster
@@ -60,7 +60,7 @@ function Home() {
             ))}
           </Section>
         )}
-        {upcoming.length > 0 && (
+        {upcoming && upcoming.length > 0 && (
           <Section slide={true} title="Upcoming Movies">
             {upcoming.map((movie: IMovie) => (
               <Poster
@@ -75,7 +75,7 @@ function Home() {
             ))}
           </Section>
         )}
-        {popular.length > 0 && (
+        {popular && popular.length > 0 && (
           <Section slide={true} title="Popular Movies">
             {popular.map((movie: IMovie) => (
               <Poster
