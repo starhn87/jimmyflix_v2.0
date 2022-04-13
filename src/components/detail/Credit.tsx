@@ -4,6 +4,7 @@ import DefaultPerson from '../../assets/images/noPersonSmall.png'
 import Message from '../common/Message'
 import { useQuery } from 'react-query'
 import { moviesApi, tvApi } from '../../api'
+import { IProfile } from '../../interface'
 
 interface CreditProps {
   isMovie: boolean
@@ -24,31 +25,22 @@ export default function Credit({ isMovie, parsedId }: CreditProps) {
       {data && data.length > 0 && (
         <Box>
           <Wrapper>
-            {data.map(
-              (
-                profile: {
-                  profile_path: string
-                  original_name: string
-                  character: string
-                },
-                index: number,
-              ) => (
-                <div key={index}>
-                  <Product>
-                    <Logo
-                      src={
-                        profile.profile_path
-                          ? `https://image.tmdb.org/t/p/original${profile.profile_path}`
-                          : DefaultPerson
-                      }
-                      alt={profile.original_name}
-                    />
-                  </Product>
-                  <Name>{profile.character}</Name>
-                  <Name>({profile.original_name})</Name>
-                </div>
-              ),
-            )}
+            {data.map((profile: IProfile) => (
+              <div key={profile.id}>
+                <Product>
+                  <Logo
+                    src={
+                      profile.profile_path
+                        ? `https://image.tmdb.org/t/p/original${profile.profile_path}`
+                        : DefaultPerson
+                    }
+                    alt={profile.original_name}
+                  />
+                </Product>
+                <Name>{profile.character}</Name>
+                <Name>({profile.original_name})</Name>
+              </div>
+            ))}
           </Wrapper>
         </Box>
       )}

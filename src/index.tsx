@@ -5,7 +5,6 @@ import './api'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import Loading from './components/common/Loading'
 
 const container = document.getElementById('root')
 const root = ReactDOM.createRoot(container!)
@@ -24,7 +23,7 @@ const queryClient = new QueryClient({
 root.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <App />,
+      <App />
     </Provider>
   </QueryClientProvider>,
 )

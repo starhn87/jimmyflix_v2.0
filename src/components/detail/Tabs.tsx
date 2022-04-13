@@ -22,17 +22,17 @@ export default function Tabs({
   ])
 
   useEffect(() => {
-    const menu = [...menus]
+    const newMenus = [...menus]
 
     if (collections) {
-      menu.push('Collection')
+      newMenus.push('Collection')
     }
 
     if (seasons) {
-      menu.push('Season')
+      newMenus.push('Season')
     }
 
-    setMenu(menu)
+    setMenu(newMenus)
   }, [])
 
   return (

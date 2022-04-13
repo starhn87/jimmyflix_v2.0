@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useId } from 'react'
 import { Box, Flag, Logo, Name, Product } from '../../pages/Detail'
 import DefaultProduction from '../../assets/images/noProductionSmall.png'
 import Message from '../common/Message'
 import Section from '../common/Section'
+import { ICompany, ICountry } from '../../interface'
 
 interface ProductionProps {
   production_companies: []
@@ -22,56 +23,42 @@ export default function Production({
         <Box>
           {production_companies && production_companies.length > 0 && (
             <Section slide={false} title="Production Companies">
-              {production_companies.map(
-                (
-                  company: {
-                    id: number
-                    logo_path: string
-                    name: string
-                  },
-                  index: number,
-                ) => (
-                  <div key={company.id}>
-                    <Product>
-                      <Logo
-                        logo={company.logo_path}
-                        src={
-                          company.logo_path
-                            ? `https://image.tmdb.org/t/p/original${company.logo_path}`
-                            : DefaultProduction
-                        }
-                        alt={`${company.name}`}
-                      />
-                    </Product>
-                    <Name>
-                      {company.name.length > 17
-                        ? `${company.name.substring(0, 17)}...`
-                        : company.name}
-                    </Name>
-                  </div>
-                ),
-              )}
+              {production_companies.map((company: ICompany) => (
+                <div key={company.id}>
+                  <Product>
+                    <Logo
+                      logo={company.logo_path}
+                      src={
+                        company.logo_path
+                          ? `https://image.tmdb.org/t/p/original${company.logo_path}`
+                          : DefaultProduction
+                      }
+                      alt={`${company.name}`}
+                    />
+                  </Product>
+                  <Name>
+                    {company.name.length > 17
+                      ? `${company.name.substring(0, 17)}...`
+                      : company.name}
+                  </Name>
+                </div>
+              ))}
             </Section>
           )}
           {production_countries && production_countries.length > 0 && (
             <Section slide={false} title="Production Countries">
-              {production_countries.map(
-                (
-                  country: { name: string; iso_3166_1: string },
-                  index: number,
-                ) => (
-                  <div key={index}>
-                    <Flag
-                      src={`https://flagcdn.com/w160/${country.iso_3166_1.toLowerCase()}.png`}
-                    />
-                    <Name>
-                      {country.name.length > 17
-                        ? `${country.name.substring(0, 17)}...`
-                        : country.name}
-                    </Name>
-                  </div>
-                ),
-              )}
+              {production_countries.map((country: ICountry) => (
+                <div key={useId()}>
+                  <Flag
+                    src={`https://flagcdn.com/w160/${country.iso_3166_1.toLowerCase()}.png`}
+                  />
+                  <Name>
+                    {country.name.length > 17
+                      ? `${country.name.substring(0, 17)}...`
+                      : country.name}
+                  </Name>
+                </div>
+              ))}
             </Section>
           )}
         </Box>
