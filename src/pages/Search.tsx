@@ -46,7 +46,7 @@ function Search() {
       <Helmet content="Search | Jimmyflix" />
       {isSearched ? (
         <>
-          {movies && movies.length > 0 && (
+          {movies?.length > 0 && (
             <Section slide={false} title="Movies">
               {movies.map((movie: IMovie) => (
                 <Poster
@@ -63,7 +63,7 @@ function Search() {
               ))}
             </Section>
           )}
-          {tvs && tvs.length > 0 && (
+          {tvs?.length > 0 && (
             <Section slide={false} title="TV Shows">
               {tvs.map((show: IShow) => (
                 <Poster

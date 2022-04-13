@@ -42,6 +42,30 @@ export interface ICollection {
   release_date: string
 }
 
+export interface IProfile {
+  id: number
+  profile_path: string
+  original_name: string
+  character: string
+}
+
+export interface ICompany {
+  id: number
+  logo_path: string
+  name: string
+}
+
+export interface ICountry {
+  name: string
+  iso_3166_1: string
+}
+
+export interface ISeason {
+  id: number
+  poster_path: string
+  name: string
+}
+
 export type TabType =
   | 'Trailer'
   | 'Season'
