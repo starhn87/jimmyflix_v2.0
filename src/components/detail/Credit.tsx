@@ -22,7 +22,7 @@ export default function Credit({ isMovie, parsedId }: CreditProps) {
 
   return (
     <>
-      {data && data.length > 0 && (
+      {data?.length > 0 && (
         <Box>
           <Wrapper>
             {data.map((profile: IProfile) => (
@@ -44,10 +44,10 @@ export default function Credit({ isMovie, parsedId }: CreditProps) {
           </Wrapper>
         </Box>
       )}
-      {(!isError || data.length === 0) && (
+      {isError && <Message color="#e74c3c" text={'Error in credits.'} />}
+      {!isError && data.length === 0 && (
         <Message color="#eee" text={'No Credits Found'} />
       )}
-      {isError && <Message color="#e74c3c" text={'Error in credits.'} />}
     </>
   )
 }

@@ -6,6 +6,7 @@ import { collections } from '../../api'
 import { ICollection, TabType } from '../../interface'
 import { useQuery } from 'react-query'
 import { Box } from '../../pages/Detail'
+import Infos from '../common/Infos'
 
 interface CollectionProps {
   id: number
@@ -18,26 +19,7 @@ const Collection = ({ id, onClick }: CollectionProps) => {
   return isError ? (
     <Message color="#e74c3c" text={'Error in collection.'}></Message>
   ) : (
-    <Box>
-      <Section slide={false}>
-        {data &&
-          data.length > 0 &&
-          data
-            .filter((collection: ICollection) => collection.release_date !== '')
-            .map((collection: ICollection) => (
-              <Poster
-                key={collection.id}
-                id={collection.id}
-                imageUrl={collection.poster_path}
-                title={collection.title}
-                rating={collection.vote_average}
-                year={''}
-                isMovie={true}
-                onClick={() => onClick('Trailer')}
-              />
-            ))}
-      </Section>
-    </Box>
+    <Infos slider={false} data={data} isError={isError} onClick={onClick} />
   )
 }
 

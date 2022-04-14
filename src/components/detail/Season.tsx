@@ -10,7 +10,7 @@ interface SeasonProps {
 export default function Season({ seasons }: SeasonProps) {
   return (
     <>
-      {seasons && seasons.length > 0 && (
+      {seasons?.length > 0 && (
         <Box>
           <Wrapper>
             {seasons.map((season: ISeason) => (
