@@ -10,16 +10,15 @@ import Infos from '../common/Infos'
 
 interface CollectionProps {
   id: number
-  onClick: Dispatch<SetStateAction<TabType>>
 }
 
-const Collection = ({ id, onClick }: CollectionProps) => {
+const Collection = ({ id }: CollectionProps) => {
   const { data, isError } = useQuery(['collection', id], () => collections(id))
 
   return isError ? (
     <Message color="#e74c3c" text={'Error in collection.'}></Message>
   ) : (
-    <Infos slider={false} data={data} isError={isError} onClick={onClick} />
+    <Infos slider={false} data={data} isError={isError} />
   )
 }
 

@@ -4,21 +4,14 @@ import Message from './Message'
 import Poster from './Poster'
 import Section from './Section'
 
-interface ISlider {
+interface InfosProps {
   slider: boolean
   data: IContent[]
   isError: boolean
   title?: string
-  onClick?: Dispatch<SetStateAction<TabType>>
 }
 
-export default function Infos({
-  slider,
-  data,
-  title,
-  isError,
-  onClick,
-}: ISlider) {
+export default function Infos({ slider, data, title, isError }: InfosProps) {
   return (
     <>
       {data?.length > 0 && (
@@ -36,7 +29,6 @@ export default function Infos({
                   : content.release_date.substring(0, 4)
               }
               isMovie={content.title ? true : false}
-              onClick={() => onClick!('Trailer')}
             />
           ))}
         </Section>

@@ -10,7 +10,6 @@ interface PosterProps {
   rating: number
   year: string
   isMovie?: boolean
-  onClick?: () => void
 }
 
 const Poster = ({
@@ -20,12 +19,8 @@ const Poster = ({
   rating,
   year,
   isMovie = false,
-  onClick,
 }: PosterProps) => (
-  <Link
-    to={isMovie ? `/movie/${id}` : `/tv/${id}`}
-    onClick={onClick ?? undefined}
-  >
+  <Link to={isMovie ? `/movie/${id}` : `/tv/${id}`}>
     <Container>
       <ImageContainer>
         <Image
