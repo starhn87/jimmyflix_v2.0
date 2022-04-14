@@ -33,6 +33,7 @@ function Detail() {
       return tvApi.showDetail(parsedId)
     }
   })
+  console.log(data, id, isError)
   const tabContent = data
     ? {
         Trailer: <Trailer videos={data.videos} />,
