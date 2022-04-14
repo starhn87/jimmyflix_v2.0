@@ -16,12 +16,9 @@ export default function Production({
 }: ProductionProps) {
   return (
     <>
-      {!(
-        (!production_companies || production_companies.length === 0) &&
-        (!production_countries || production_countries.length === 0)
-      ) && (
+      {
         <Box>
-          {production_companies && production_companies.length > 0 && (
+          {production_companies?.length > 0 && (
             <Section slide={false} title="Production Companies">
               {production_companies.map((company: ICompany) => (
                 <div key={company.id}>
@@ -45,7 +42,7 @@ export default function Production({
               ))}
             </Section>
           )}
-          {production_countries && production_countries.length > 0 && (
+          {production_countries?.length > 0 && (
             <Section slide={false} title="Production Countries">
               {production_countries.map((country: ICountry) => (
                 <div key={useId()}>
@@ -62,7 +59,7 @@ export default function Production({
             </Section>
           )}
         </Box>
-      )}
+      }
       {(!production_companies || production_companies.length === 0) &&
         (!production_countries || production_countries.length === 0) && (
           <Message color="#eee" text={'No Production Found'} />

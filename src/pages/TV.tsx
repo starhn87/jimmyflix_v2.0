@@ -3,13 +3,9 @@ import Helmet from '../components/common/Helmet'
 import Header from '../components/common/Header'
 import { tvApi } from '../api'
 import { Container } from './Home'
-import Section from '../components/common/Section'
-import Poster from '../components/common/Poster'
-import Message from '../components/common/Message'
 import { useQueries } from 'react-query'
 import Loading from '../components/common/Loading'
-import { IShow } from '../interface'
-import Slider from '../components/common/Slider'
+import Infos from '../components/common/Infos'
 
 export function TV() {
   const [
@@ -58,22 +54,26 @@ export function TV() {
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
       <Container>
-        <Slider
+        <Infos
+          slider={true}
           data={topRated}
           title={'Top Rated Shows'}
           isError={isTopRatedError}
         />
-        <Slider
+        <Infos
+          slider={true}
           data={popular}
           title={'Popular Shows'}
           isError={isPopularError}
         />
-        <Slider
+        <Infos
+          slider={true}
           data={onTheAir}
           title={'On the Air Shows'}
           isError={isOnTheAirError}
         />
-        <Slider
+        <Infos
+          slider={true}
           data={airingToday}
           title={'Airing Today Shows'}
           isError={isAiringTodayError}

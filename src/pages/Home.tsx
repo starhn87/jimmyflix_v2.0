@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react'
 import { moviesApi } from '../api'
 import styled from 'styled-components'
-import Section from '../components/common/Section'
-import Poster from '../components/common/Poster'
-import Message from '../components/common/Message'
-import { IMovie } from '../interface'
 import { useQueries } from 'react-query'
 import Loading from '../components/common/Loading'
 import HelmetWrapper from '../components/common/Helmet'
-import Slider from '../components/common/Slider'
+import Infos from '../components/common/Infos'
 
 function Home() {
   const [
@@ -56,22 +52,26 @@ function Home() {
     <>
       <HelmetWrapper content="Movies | Jimmyflix" />
       <Container>
-        <Slider
+        <Infos
+          slider={true}
           data={nowPlaying}
           title={'Now Playing Movies'}
           isError={isNowPlayingError}
         />
-        <Slider
+        <Infos
+          slider={true}
           data={topRated}
           title={'Top Rated Movies'}
           isError={isTopRatedError}
         />
-        <Slider
+        <Infos
+          slider={true}
           data={upcoming}
           title={'Upcoming Movies'}
           isError={isUpcomingError}
         />
-        <Slider
+        <Infos
+          slider={true}
           data={popular}
           title={'Popular Movies'}
           isError={isPopularError}
