@@ -47,7 +47,7 @@ export default memo(function Info({
             <Item>{runtime} min</Item>
           </>
         ) : null}
-        {episode_run_time && episode_run_time.length > 0 ? (
+        {episode_run_time?.length > 0 ? (
           <>
             <Divider>•</Divider>
             <Item>{episode_run_time[0]} min</Item>

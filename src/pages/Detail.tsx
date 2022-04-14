@@ -76,50 +76,48 @@ function Detail() {
         </>
       ) : (
         <>
-          {data && (
-            <Container>
-              <Helmet content={`${data.title ?? data.name} | Jimmyflix`} />
-              <Backdrop
-                bgImage={`https://image.tmdb.org/t/p/original${data.backdrop_path}`}
+          <Container>
+            <Helmet content={`${data.title ?? data.name} | Jimmyflix`} />
+            <Backdrop
+              bgImage={`https://image.tmdb.org/t/p/original${data.backdrop_path}`}
+            />
+            <Content>
+              <Cover
+                bgImage={
+                  data.poster_path
+                    ? `https://image.tmdb.org/t/p/original${data.poster_path}`
+                    : DefaultPoster
+                }
               />
-              <Content>
-                <Cover
-                  bgImage={
-                    data.poster_path
-                      ? `https://image.tmdb.org/t/p/original${data.poster_path}`
-                      : DefaultPoster
-                  }
+              <Data>
+                <Title>
+                  <Text>{data.title ?? data.name}</Text>
+                  <ILink
+                    target="_blank"
+                    href={`https://www.imdb.com/title/${data.imdb_id}`}
+                  >
+                    <Img src={imdb}></Img>
+                  </ILink>
+                </Title>
+                <Info
+                  vote_average={data.vote_average}
+                  release_date={data.release_date}
+                  first_air_date={data.first_air_date}
+                  runtime={data.runtime}
+                  episode_run_time={data.episode_run_time}
+                  genres={data.genres}
+                  overview={data.overview}
                 />
-                <Data>
-                  <Title>
-                    <Text>{data.title ?? data.name}</Text>
-                    <ILink
-                      target="_blank"
-                      href={`https://www.imdb.com/title/${data.imdb_id}`}
-                    >
-                      <Img src={imdb}></Img>
-                    </ILink>
-                  </Title>
-                  <Info
-                    vote_average={data.vote_average}
-                    release_date={data.release_date}
-                    first_air_date={data.first_air_date}
-                    runtime={data.runtime}
-                    episode_run_time={data.episode_run_time}
-                    genres={data.genres}
-                    overview={data.overview}
-                  />
-                  <Tabs
-                    selected={tabName}
-                    collections={!!data.belongs_to_collection}
-                    seasons={!!data.seasons}
-                    onClick={setTabName}
-                  />
-                  {tabContent[tabName]}
-                </Data>
-              </Content>
-            </Container>
-          )}
+                <Tabs
+                  selected={tabName}
+                  collections={!!data.belongs_to_collection}
+                  seasons={!!data.seasons}
+                  onClick={setTabName}
+                />
+                {tabContent[tabName]}
+              </Data>
+            </Content>
+          </Container>
         </>
       )}
     </>

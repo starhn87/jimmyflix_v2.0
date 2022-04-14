@@ -27,6 +27,8 @@ export interface IShow {
   first_air_date: string
 }
 
+export interface IContent extends IMovie, IShow {}
+
 export interface ISearchState {
   isSearched: boolean
   value: string

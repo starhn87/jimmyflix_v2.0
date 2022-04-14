@@ -15,6 +15,8 @@ export const moviesApi = {
     await api.get('movie/upcoming').then((res) => res.data.results),
   popular: async () =>
     await api.get('movie/popular').then((res) => res.data.results),
+  topRated: async () =>
+    await api.get('movie/top_rated').then((res) => res.data.results),
   movieDetail: async (id: number) =>
     api
       .get(`movie/${id}`, {
@@ -54,6 +56,8 @@ export const tvApi = {
     await api.get('tv/popular').then((res) => res.data.results),
   airingToday: async () =>
     await api.get('tv/airing_today').then((res) => res.data.results),
+  onTheAir: async () =>
+    await api.get('tv/on_the_air').then((res) => res.data.results),
   showDetail: async (id: number) =>
     api
       .get(`tv/${id}`, {
