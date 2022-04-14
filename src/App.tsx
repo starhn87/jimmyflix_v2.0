@@ -18,10 +18,11 @@ function App() {
           <Routes>
             <Route path="/">
               <Route index element={<Home />} />
-              <Route path="tv" element={<TV />} />
+              <Route path="tv" element={<TV />}>
+                <Route path=":id" element={<Detail />} />
+              </Route>
               <Route path="search" element={<Search />} />
               <Route path="movie/:id" element={<Detail />} />
-              <Route path="tv/:id" element={<Detail />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
