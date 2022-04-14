@@ -44,7 +44,7 @@ export default function Credit({ isMovie, parsedId }: CreditProps) {
           </Wrapper>
         </Box>
       )}
-      {(!isError || data.length === 0) && (
+      {!isError && data.length === 0 && (
         <Message color="#eee" text={'No Credits Found'} />
       )}
       {isError && <Message color="#e74c3c" text={'Error in credits.'} />}

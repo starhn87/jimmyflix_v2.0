@@ -9,6 +9,7 @@ import Message from '../components/common/Message'
 import { useQueries } from 'react-query'
 import Loading from '../components/common/Loading'
 import { IShow } from '../interface'
+import Slider from '../components/common/Slider'
 
 export function TV() {
   const [
@@ -19,18 +20,23 @@ export function TV() {
       isFetched: isAiringTodayFetched,
       isError: isAiringTodayError,
     },
+    { data: onTheAir, isFetched: isOnTheAirFetched, isError: isOnTheAirError },
   ] = useQueries([
     {
-      queryKey: ['topRated'],
+      queryKey: ['topRatedTv'],
       queryFn: () => tvApi.topRated(),
     },
     {
-      queryKey: ['popularTV'],
+      queryKey: ['popularTv'],
       queryFn: () => tvApi.popular(),
     },
     {
       queryKey: ['airingToday'],
       queryFn: () => tvApi.airingToday(),
+    },
+    {
+      queryKey: ['onTheAir'],
+      queryFn: () => tvApi.onTheAir(),
     },
   ])
 
@@ -38,7 +44,12 @@ export function TV() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (!isTopRatedFetched || !isPopularFetched || !isAiringTodayFetched) {
+  if (
+    !isTopRatedFetched ||
+    !isPopularFetched ||
+    !isAiringTodayFetched ||
+    !isOnTheAirFetched
+  ) {
     return <Loading />
   }
 
@@ -47,63 +58,26 @@ export function TV() {
       <Helmet content="TV Shows | Jimmyflix" />
       <Header />
       <Container>
-        {topRated?.length > 0 && (
-          <Section slide={true} title="Top Rated Shows">
-            {topRated.map((show: IShow) => (
-              <Poster
-                key={show.id}
-                id={show.id}
-                imageUrl={show.poster_path}
-                title={show.name}
-                rating={show.vote_average}
-                year={
-                  show.first_air_date && show.first_air_date.substring(0, 4)
-                }
-              />
-            ))}
-          </Section>
-        )}
-        {popular?.length > 0 && (
-          <Section slide={true} title="Popular Shows">
-            {popular.map((show: IShow) => (
-              <Poster
-                key={show.id}
-                id={show.id}
-                imageUrl={show.poster_path}
-                title={show.name}
-                rating={show.vote_average}
-                year={
-                  show.first_air_date && show.first_air_date.substring(0, 4)
-                }
-              />
-            ))}
-          </Section>
-        )}
-        {airingToday?.length > 0 && (
-          <Section slide={true} title="Airing Today Shows">
-            {airingToday.map((show: IShow) => (
-              <Poster
-                key={show.id}
-                id={show.id}
-                imageUrl={show.poster_path}
-                title={show.name}
-                rating={show.vote_average}
-                year={
-                  show.first_air_date && show.first_air_date.substring(0, 4)
-                }
-              />
-            ))}
-          </Section>
-        )}
-        {isTopRatedError && (
-          <Message color="#e74c3c" text={'Error in top rated.'} />
-        )}
-        {isPopularError && (
-          <Message color="#e74c3c" text={'Error in popular.'} />
-        )}
-        {isAiringTodayError && (
-          <Message color="#e74c3c" text={'Error in airing today.'} />
-        )}
+        <Slider
+          data={topRated}
+          title={'Top Rated Shows'}
+          isError={isTopRatedError}
+        />
+        <Slider
+          data={popular}
+          title={'Popular Shows'}
+          isError={isPopularError}
+        />
+        <Slider
+          data={onTheAir}
+          title={'On the Air Shows'}
+          isError={isOnTheAirError}
+        />
+        <Slider
+          data={airingToday}
+          title={'Airing Today Shows'}
+          isError={isAiringTodayError}
+        />
       </Container>
     </>
   )
