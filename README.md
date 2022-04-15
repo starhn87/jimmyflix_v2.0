@@ -13,12 +13,18 @@
 
 - 홈 페이지
   - 현재 상영중인 영화를 확인할 수 있습니다.
+  - 평점이 높은 영화를 확인할 수 있습니다.
   - 상영 예정인 영화를 확인할 수 있습니다.
   - 인기 있는 영화를 확인할 수 있습니다.
 - TV 페이지
   - 평점이 높은 TV 프로그램을 확인할 수 있습니다.
   - 인기 있는 TV 프로그램을 확인할 수 있습니다.
+  - 방송 중인 TV 프로그램을 확인할 수 있습니다.
   - 오늘 방송하는 TV 프로그램을 확인할 수 있습니다.
+- Trending 페이지
+  - Day or Week 기준으로 구분하여 확인할 수 있습니다.
+  - Trendy한 영화를 볼 수 있습니다.
+  - Trendy한 TV 프로그램을 볼 수 있습니다.
 - 검색 페이지
   - 원하는 영화 혹은 TV 프로그램을 같이 검색할 수 있습니다.
 - 상세 페이지
@@ -32,31 +38,37 @@
 
 1. 홈 페이지
 
-<img src="https://user-images.githubusercontent.com/36434219/161191063-7a618804-30d6-48cd-8491-361f29225c04.png" alt="홈 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/163531551-b603e7f4-b1dd-486a-871c-ca5a6e819484.png" alt="홈 페이지" width="700px" height="400px">
 
 <br>
 
 2. TV 페이지
 
-<img src="https://user-images.githubusercontent.com/36434219/161191121-88500cf5-f642-4e5b-9c56-b591f08de512.png" alt="전적 검색 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/163531632-a9e0ebc3-d8a8-4d25-a804-3b4228fa99f4.png" alt="TV 페이지" width="700px" height="400px">
 
 <br>
 
-3-1. 검색 페이지 (초기)
+3. Trending 페이지
 
-<img src="https://user-images.githubusercontent.com/36434219/161191283-31733ca2-a4e1-4675-a72d-0e5601d375f7.png" alt="트랙 페이지" width="700px" height="400px">
-
-<br>
-
-3-2. 검색 페이지 (검색 후)
-
-<img src="https://user-images.githubusercontent.com/36434219/161191384-b70b9aad-2d11-4c15-b9ab-e99fe05c96b3.png" alt="트랙 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/163531731-39dde8e3-8b02-4556-9f69-ff961590557d.png" alt="Trending 페이지" width="700px" height="400px">
 
 <br>
 
-4. 상세 페이지
+4-1. 검색 페이지 (초기)
 
-<img src="https://user-images.githubusercontent.com/36434219/161204142-c348e215-5df8-41fd-b79a-8f722717819c.png" alt="트랙 페이지" width="700px" height="400px">
+<img src="https://user-images.githubusercontent.com/36434219/163531867-204c8bba-3499-4b33-b4fe-c18f8ee65db3.png" alt="검색 페이지" width="700px" height="400px">
+
+<br>
+
+4-2. 검색 페이지 (검색 후)
+
+<img src="https://user-images.githubusercontent.com/36434219/163531998-d790a10c-9d97-436d-ab43-6aad81725c4c.png" alt="검색 결과 페이지" width="700px" height="400px">
+
+<br>
+
+5. 상세 페이지
+
+<img src="https://user-images.githubusercontent.com/36434219/163532220-1ea9bad0-aafc-40db-b04e-3c0443af1134.png" alt="상세 페이지" width="700px" height="400px">
 
 <br>
 <br>
@@ -78,11 +90,11 @@
     - 캐싱으로 인해 필요 없어진 전역 상태를 없애고 코드를 경량화하였습니다.
     - 상세 페이지에서 크레딧, 컬렉션, 시즌 탭 등을 추가하여 더 다양한 정보를 볼 수 있도록 하였습니다.
     - react-slick을 사용하여 무한 슬라이드를 구현하였습니다.
-    - 반응형 디자인을 도입하였습니다. (데스크탑, 모바일)
+    - Trending 페이지를 추가하여 더 다양한 정보를 확인할 수 있도록 하였습니다.
     - 검색 페이지 초기 화면 및 헤더 디자인을 변경하였습니다. (로고, 서치바 추가)
     - 로딩 바를 보여주어 비동기 작업 중임을 사용자에게 알렸습니다.
-    - 렌더링 최적화를 하였습니다.
     - 상세 페이지에 IMDB 링크를 삽입하여 추가적으로 정보가 필요할 시 링크를 타고 넘어갈 수 있도록 하였습니다.
+    - 반응형 디자인을 도입하였습니다. (데스크탑, 모바일)
   - 구현하면서 어려웠던 점
     - 타입스크립트로 타입을 최대한 좁은 범위로 지정해주는 부분에서 시행착오를 겪었습니다.
     - 클래스 컴포넌트를 함수 컴포넌트와 hook으로 바꾸는 데에서 어떻게 어떤 부분이 변경되었나 이해하고 적용하는데 시행착오를 겪었습니다.
@@ -115,9 +127,11 @@
 │   ├── components
 │   │   ├── HeaderSearchBar.tsx
 │   │   ├── SearchBar.tsx
+│   │   ├── TimeTypeSwitch.tsx
 │   │   ├── common
 │   │   │   ├── Header.tsx
 │   │   │   ├── Helmet.tsx
+│   │   │   ├── Infos.tsx
 │   │   │   ├── Loading.tsx
 │   │   │   ├── Message.tsx
 │   │   │   ├── Poster.tsx
@@ -136,7 +150,8 @@
 │   │   ├── Detail.tsx
 │   │   ├── Home.tsx
 │   │   ├── Search.tsx
-│   │   └── TV.tsx
+│   │   ├── TV.tsx
+│   │   └── Trending.tsx
 │   ├── react-app-env.d.ts
 │   └── redux
 │       ├── slice.ts
