@@ -55,13 +55,17 @@ const Head = styled.header`
   width: 100%;
   height: 50px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   justify-items: center;
   padding: 0 10px;
   background-color: rgb(20, 20, 20);
   z-index: 10;
   box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
+
+  ${customMedia.lessThan('mobile')`
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+	`}
 `
 
 const List = styled.ul`
