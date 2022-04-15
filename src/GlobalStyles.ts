@@ -26,7 +26,11 @@ const globalStyles = createGlobalStyle`
         color: white;
         padding-top: 50px;
     }
-
+    button {
+        &:hover {
+            cursor: pointer;
+        }
+    }
     #root {
         overflow: hidden;
     }
