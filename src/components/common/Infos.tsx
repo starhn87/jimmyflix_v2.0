@@ -12,6 +12,7 @@ interface InfosProps {
 }
 
 export default function Infos({ slider, data, title, isError }: InfosProps) {
+  console.log(data)
   return (
     <>
       {data?.length > 0 && (
@@ -26,7 +27,9 @@ export default function Infos({ slider, data, title, isError }: InfosProps) {
               year={
                 content.first_air_date
                   ? content.first_air_date.substring(0, 4)
-                  : content.release_date.substring(0, 4)
+                  : content.release_date
+                  ? content.release_date.substring(0, 4)
+                  : ''
               }
               isMovie={content.title ? true : false}
             />
