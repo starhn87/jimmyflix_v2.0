@@ -7,6 +7,7 @@ import TV from './pages/TV'
 import Detail from './pages/Detail'
 import Header from './components/common/Header'
 import Loading from './components/common/Loading'
+import Trending from './pages/Trending'
 
 function App() {
   return (
@@ -18,10 +19,13 @@ function App() {
           <Routes>
             <Route path="/">
               <Route index element={<Home />} />
-              <Route path="tv" element={<TV />} />
-              <Route path="search" element={<Search />} />
+              <Route path="tv">
+                <Route index element={<TV />} />
+                <Route path=":id" element={<Detail />} />
+              </Route>
+              <Route path="trending" element={<Trending />} />
               <Route path="movie/:id" element={<Detail />} />
-              <Route path="tv/:id" element={<Detail />} />
+              <Route path="search" element={<Search />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

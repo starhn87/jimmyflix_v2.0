@@ -9,7 +9,7 @@ const logMiddleware = createLogger({
 
 const store = configureStore({
   reducer: {
-    search: slice,
+    data: slice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(logMiddleware),

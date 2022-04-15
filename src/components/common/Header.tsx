@@ -31,6 +31,9 @@ function Header() {
         <Item current={pathname === '/tv' || pathname.includes('/tv')}>
           <SLink to="/tv">TV</SLink>
         </Item>
+        <Item current={pathname === '/trending'}>
+          <SLink to="/trending">Trending</SLink>
+        </Item>
         <Item current={pathname.includes('/search')} onClick={() => onClick()}>
           <SLink to="/search">Search</SLink>
         </Item>
@@ -52,7 +55,7 @@ const Head = styled.header`
   width: 100%;
   height: 50px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
   justify-items: center;
   padding: 0 10px;

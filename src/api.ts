@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { TimeType } from './interface'
 
 const api = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
@@ -85,4 +86,13 @@ export const tvApi = {
       })
       .then((res) => res.data.results)
   },
+}
+
+export const trendingApi = {
+  movie: async (timeType: TimeType) =>
+    await api
+      .get(`/trending/movie/${timeType}`)
+      .then((res) => res.data.results),
+  tv: async (timeType: TimeType) =>
+    await api.get(`/trending/tv/${timeType}`).then((res) => res.data.results),
 }
