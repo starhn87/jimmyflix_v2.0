@@ -1,23 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ISearchState } from '../interface'
+import { IState } from '../interface'
 
-export const searchInitialState: ISearchState = {
+export const searchInitialState: IState = {
   isSearched: false,
-  value: '',
+  searchValue: '',
+  timeType: 'Day',
 }
 
 export const search = createSlice({
   name: 'searchReducer',
   initialState: searchInitialState,
   reducers: {
-    searched: (_state, action) => ({
-      value: action.payload,
+    searched: (state, action) => ({
+      ...state,
+      searchValue: action.payload,
       isSearched: true,
+    }),
+    timeType: (state, action) => ({
+      ...state,
+      timeType: action.payload,
     }),
     reset: () => searchInitialState,
   },
 })
 
-export const { searched, reset } = search.actions
+export const { searched, timeType, reset } = search.actions
 
 export default search.reducer

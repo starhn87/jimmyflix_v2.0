@@ -11,19 +11,19 @@ import Message from '../components/common/Message'
 import Infos from '../components/common/Infos'
 
 function Search() {
-  const { isSearched, value } = useAppSelector((state) => state.search)
+  const { isSearched, searchValue } = useAppSelector((state) => state.data)
   const dispatch = useAppDispatch()
   const [
     { data: movies, isFetched: isMoviesFetched, isError: isMoviesError },
     { data: tvs, isFetched: isTvFetched, isError: isTvError },
   ] = useQueries([
     {
-      queryKey: ['movieSearch', value],
-      queryFn: () => moviesApi.search(value, isSearched),
+      queryKey: ['movieSearch', searchValue],
+      queryFn: () => moviesApi.search(searchValue, isSearched),
     },
     {
-      queryKey: ['tvSearch', value],
-      queryFn: () => tvApi.search(value, isSearched),
+      queryKey: ['tvSearch', searchValue],
+      queryFn: () => tvApi.search(searchValue, isSearched),
     },
   ])
 
@@ -35,7 +35,7 @@ function Search() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (value !== '' && (!isMoviesFetched || !isTvFetched)) {
+  if (searchValue !== '' && (!isMoviesFetched || !isTvFetched)) {
     return <Loading />
   }
 

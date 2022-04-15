@@ -29,9 +29,10 @@ export interface IShow {
 
 export interface IContent extends IMovie, IShow {}
 
-export interface ISearchState {
+export interface IState {
   isSearched: boolean
-  value: string
+  searchValue: string
+  timeType: TimeType
 }
 
 export interface ICollection {
@@ -68,9 +69,17 @@ export interface ISeason {
   name: string
 }
 
+export interface IPerson {
+  id: number
+  name: string
+  profile_path: string
+}
+
 export type TabType =
   | 'Trailer'
   | 'Season'
   | 'Credits'
   | 'Production'
   | 'Collection'
+
+export type TimeType = 'Day' | 'Week'
