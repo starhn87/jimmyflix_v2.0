@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { TimeType } from './interface'
+import 'regenerator-runtime/runtime'
 
 const api = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
