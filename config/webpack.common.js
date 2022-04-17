@@ -29,6 +29,11 @@ module.exports = {
       favicon: './public/favicon.ico',
     }),
     new webpack.ProvidePlugin({ React: 'react', process: 'process/browser' }),
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_API_KEY': JSON.stringify(
+        process.env.REACT_APP_API_KEY,
+      ),
+    }),
     // new BundleAnalyzerPlugin(),
   ],
   resolve: {
