@@ -50,10 +50,7 @@ function Detail() {
         ),
         Collection: data.belongs_to_collection && (
           <Suspense fallback={<Loading />}>
-            <Collection
-              id={data.belongs_to_collection.id}
-              onClick={setTabName}
-            />
+            <Collection id={data.belongs_to_collection.id} />
           </Suspense>
         ),
       }
@@ -61,6 +58,7 @@ function Detail() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    setTabName('Trailer')
 
     if (isNaN(parsedId)) {
       navigator('/')

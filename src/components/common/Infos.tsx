@@ -1,24 +1,17 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { IContent, TabType } from '../../interface'
+import React from 'react'
+import { IContent } from '../../interface'
 import Message from './Message'
 import Poster from './Poster'
 import Section from './Section'
 
-interface ISlider {
+interface InfosProps {
   slider: boolean
   data: IContent[]
   isError: boolean
   title?: string
-  onClick?: Dispatch<SetStateAction<TabType>>
 }
 
-export default function Infos({
-  slider,
-  data,
-  title,
-  isError,
-  onClick,
-}: ISlider) {
+export default function Infos({ slider, data, title, isError }: InfosProps) {
   return (
     <>
       {data?.length > 0 && (
@@ -33,10 +26,11 @@ export default function Infos({
               year={
                 content.first_air_date
                   ? content.first_air_date.substring(0, 4)
-                  : content.release_date.substring(0, 4)
+                  : content.release_date
+                  ? content.release_date.substring(0, 4)
+                  : ''
               }
               isMovie={content.title ? true : false}
-              onClick={() => onClick!('Trailer')}
             />
           ))}
         </Section>
