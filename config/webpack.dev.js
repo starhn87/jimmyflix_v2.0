@@ -14,11 +14,6 @@ module.exports = merge(common, {
     liveReload: true,
   },
   output: { filename: '[name].[contenthash].js', publicPath: '/' },
-  plugins: [
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
-  ],
   module: {
     rules: [
       {

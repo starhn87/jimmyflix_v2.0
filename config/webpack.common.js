@@ -28,7 +28,7 @@ module.exports = {
       filename: './index.html',
       favicon: './public/favicon.ico',
     }),
-    new webpack.ProvidePlugin({ React: 'react' }),
+    new webpack.ProvidePlugin({ React: 'react', process: 'process/browser' }),
     // new BundleAnalyzerPlugin(),
   ],
   resolve: {

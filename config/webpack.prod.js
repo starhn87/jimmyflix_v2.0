@@ -27,7 +27,9 @@ module.exports = merge(common, {
     usedExports: true,
     minimize: true,
     minimizer: [
-      new TerserPlugin({ terserOptions: { compress: { drop_console: true } } }),
+      new TerserPlugin({
+        terserOptions: { compress: { drop_console: true } },
+      }),
       new CssMinimizerPlugin(),
     ],
     splitChunks: { chunks: 'all' },
