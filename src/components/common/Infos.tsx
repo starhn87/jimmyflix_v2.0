@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { IContent, TabType } from '../../interface'
+import React from 'react'
+import { IContent } from '../../interface'
 import Message from './Message'
 import Poster from './Poster'
 import Section from './Section'
@@ -12,7 +12,6 @@ interface InfosProps {
 }
 
 export default function Infos({ slider, data, title, isError }: InfosProps) {
-  console.log(data)
   return (
     <>
       {data?.length > 0 && (
