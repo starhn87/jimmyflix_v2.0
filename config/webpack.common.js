@@ -36,11 +36,11 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      filename: './index.html',
-      favicon: './public/favicon.ico',
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: './public/index.html',
+    //   filename: './index.html',
+    //   favicon: './public/favicon.ico',
+    // }),
     new webpack.ProvidePlugin({ React: 'react', process: 'process/browser' }),
     new webpack.DefinePlugin({
       'process.env.REACT_APP_API_KEY': JSON.stringify(
