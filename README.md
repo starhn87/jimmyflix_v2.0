@@ -106,10 +106,6 @@
 
 ```
 ├── README.md
-├── config
-│   ├── webpack.common.js
-│   ├── webpack.dev.js
-│   └── webpack.prod.js
 ├── node_modules
 ├── package.json
 ├── public
