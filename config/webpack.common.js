@@ -12,17 +12,14 @@ module.exports = {
         use: 'babel-loader',
         exclude: /node_modules/,
       },
-      // {
-      //   test: /\.(png|jpe?g|gif)$/i,
-      //   use: [
-      //     {
-      //       loader: 'file-loader',
-      //       options: {
-      //         name: 'assets/images/[name].[ext]',
-      //       },
-      //     },
-      //   ],
-      // },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
     ],
   },
   plugins: [
