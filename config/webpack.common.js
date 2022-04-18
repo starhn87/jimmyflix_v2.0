@@ -4,6 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: `${path.resolve(__dirname, '../src')}/index.tsx`,
+  output: {
+    assetModuleFilename: 'images/[name].[hash][ext]',
+  },
   module: {
     rules: [
       {
@@ -26,10 +29,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg|webp)$/i,
         use: [
           {
-            loader: 'file-loader',
-            options: {
-              name: 'images/[name].[contenthash].[ext]',
-            },
+            type: 'asset/resource',
           },
         ],
       },
@@ -38,6 +38,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
+      filename: './index.html',
       favicon: './public/favicon.ico',
     }),
     new webpack.ProvidePlugin({ React: 'react', process: 'process/browser' }),
