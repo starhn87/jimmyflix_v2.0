@@ -5,7 +5,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   entry: `${path.resolve(__dirname, '../src')}/index.tsx`,
   output: {
+    filename: 'js/[name].[contenthash].js',
+    publicPath: 'dist/',
     assetModuleFilename: 'images/[name].[hash][ext]',
+    clean: true,
   },
   module: {
     rules: [
