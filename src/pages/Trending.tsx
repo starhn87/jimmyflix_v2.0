@@ -34,7 +34,7 @@ function Trending() {
 
   return (
     <>
-      <HelmetWrapper content="Movies | Jimmyflix" />
+      <HelmetWrapper content="Trending | Jimmyflix" />
       <TimeTypeSwitch />
       <Container>
         <Infos

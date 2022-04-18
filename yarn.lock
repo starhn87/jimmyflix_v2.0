@@ -7854,7 +7854,6 @@ __metadata:
     css-loader: ^6.7.1
     css-minimizer-webpack-plugin: ^3.4.1
     eslint-config-react-app: ^7.0.0
-    file-loader: ^6.2.0
     html-loader: ^3.1.0
     html-webpack-plugin: ^5.5.0
     mini-css-extract-plugin: ^2.6.0
@@ -7880,7 +7879,6 @@ __metadata:
     styled-reset: ^4.3.4
     terser-webpack-plugin: ^5.3.1
     typescript: ^4.6.3
-    url-loader: ^4.1.1
     web-vitals: ^2.1.4
     webpack: ^5.72.0
     webpack-bundle-analyzer: ^4.5.0
@@ -12370,23 +12368,6 @@ __metadata:
   dependencies:
     punycode: ^2.1.0
   checksum: 7167432de6817fe8e9e0c9684f1d2de2bb688c94388f7569f7dbdb1587c9f4ca2a77962f134ec90be0cc4d004c939ff0d05acc9f34a0db39a3c797dada262633
-  languageName: node
-  linkType: hard
-
-"url-loader@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "url-loader@npm:4.1.1"
-  dependencies:
-    loader-utils: ^2.0.0
-    mime-types: ^2.1.27
-    schema-utils: ^3.0.0
-  peerDependencies:
-    file-loader: "*"
-    webpack: ^4.0.0 || ^5.0.0
-  peerDependenciesMeta:
-    file-loader:
-      optional: true
-  checksum: c1122a992c6cff70a7e56dfc2b7474534d48eb40b2cc75467cde0c6972e7597faf8e43acb4f45f93c2473645dfd803bcbc20960b57544dd1e4c96e77f72ba6fd
   languageName: node
   linkType: hard
 

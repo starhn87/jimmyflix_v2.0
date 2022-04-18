@@ -12,6 +12,7 @@ module.exports = merge(common, {
     filename: 'js/[name].[contenthash].js',
     path: path.resolve(__dirname, '../dist'),
     publicPath: './',
+    assetModuleFilename: 'images/[hash][ext][query]',
     clean: true,
   },
   module: {
