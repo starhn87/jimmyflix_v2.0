@@ -52,6 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/styled-components", "npm:5.1.25"],\
             ["axios", "npm:0.26.1"],\
             ["babel-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:8.2.4"],\
+            ["copy-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:10.2.4"],\
             ["core-js", "npm:3.22.0"],\
             ["css-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:6.7.1"],\
             ["css-minimizer-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.4.1"],\
@@ -5595,6 +5596,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["array-union", "npm:2.1.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:3.0.1", {\
+          "packageLocation": "./.yarn/cache/array-union-npm-3.0.1-3ee2eb5947-47b29f8825.zip/node_modules/array-union/",\
+          "packageDependencies": [\
+            ["array-union", "npm:3.0.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["array.prototype.flat", [\
@@ -6885,6 +6893,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/cookie-signature-npm-1.0.6-93f325f7f0-f4e1b0a98a.zip/node_modules/cookie-signature/",\
           "packageDependencies": [\
             ["cookie-signature", "npm:1.0.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["copy-webpack-plugin", [\
+        ["npm:10.2.4", {\
+          "packageLocation": "./.yarn/cache/copy-webpack-plugin-npm-10.2.4-c83f04e53e-87f0f4530a.zip/node_modules/copy-webpack-plugin/",\
+          "packageDependencies": [\
+            ["copy-webpack-plugin", "npm:10.2.4"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:10.2.4", {\
+          "packageLocation": "./.yarn/__virtual__/copy-webpack-plugin-virtual-507b250ff9/0/cache/copy-webpack-plugin-npm-10.2.4-c83f04e53e-87f0f4530a.zip/node_modules/copy-webpack-plugin/",\
+          "packageDependencies": [\
+            ["copy-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:10.2.4"],\
+            ["@types/webpack", null],\
+            ["fast-glob", "npm:3.2.11"],\
+            ["glob-parent", "npm:6.0.2"],\
+            ["globby", "npm:12.2.0"],\
+            ["normalize-path", "npm:3.0.0"],\
+            ["schema-utils", "npm:4.0.0"],\
+            ["serialize-javascript", "npm:6.0.0"],\
+            ["webpack", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:5.72.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/webpack",\
+            "webpack"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9670,6 +9706,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["slash", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:12.2.0", {\
+          "packageLocation": "./.yarn/cache/globby-npm-12.2.0-c8a4e97e5f-2539379a7f.zip/node_modules/globby/",\
+          "packageDependencies": [\
+            ["globby", "npm:12.2.0"],\
+            ["array-union", "npm:3.0.1"],\
+            ["dir-glob", "npm:3.0.1"],\
+            ["fast-glob", "npm:3.2.11"],\
+            ["ignore", "npm:5.2.0"],\
+            ["merge2", "npm:1.4.1"],\
+            ["slash", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["graceful-fs", [\
@@ -11295,6 +11344,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/styled-components", "npm:5.1.25"],\
             ["axios", "npm:0.26.1"],\
             ["babel-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:8.2.4"],\
+            ["copy-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:10.2.4"],\
             ["core-js", "npm:3.22.0"],\
             ["css-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:6.7.1"],\
             ["css-minimizer-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.4.1"],\
