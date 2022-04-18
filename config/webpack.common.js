@@ -12,13 +12,23 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader',
+            options: {
+              minimize: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[contenthash].[ext]',
-              publicPath: 'dist/',
+              name: 'images/[name].[contenthash].[ext]',
             },
           },
         ],

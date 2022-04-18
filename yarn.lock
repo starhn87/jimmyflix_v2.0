@@ -6609,6 +6609,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"html-loader@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "html-loader@npm:3.1.0"
+  dependencies:
+    html-minifier-terser: ^6.0.2
+    parse5: ^6.0.1
+  peerDependencies:
+    webpack: ^5.0.0
+  checksum: 4c383d103c10465964924f31eeb2876df941df6515b52a7be517eb01d59ff8f5ae344a3ca428469029c999c73f5ae5dac3431701886ca16617a670a0991bd3a2
+  languageName: node
+  linkType: hard
+
 "html-minifier-terser@npm:^6.0.2":
   version: 6.1.0
   resolution: "html-minifier-terser@npm:6.1.0"
@@ -7843,6 +7855,7 @@ __metadata:
     css-minimizer-webpack-plugin: ^3.4.1
     eslint-config-react-app: ^7.0.0
     file-loader: ^6.2.0
+    html-loader: ^3.1.0
     html-webpack-plugin: ^5.5.0
     mini-css-extract-plugin: ^2.6.0
     process: ^0.11.10
@@ -9135,7 +9148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse5@npm:6.0.1":
+"parse5@npm:6.0.1, parse5@npm:^6.0.1":
   version: 6.0.1
   resolution: "parse5@npm:6.0.1"
   checksum: 7d569a176c5460897f7c8f3377eff640d54132b9be51ae8a8fa4979af940830b2b0c296ce75e5bd8f4041520aadde13170dbdec44889975f906098ea0002f4bd

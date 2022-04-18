@@ -57,6 +57,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["css-minimizer-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.4.1"],\
             ["eslint-config-react-app", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:7.0.0"],\
             ["file-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:6.2.0"],\
+            ["html-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.1.0"],\
             ["html-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:5.5.0"],\
             ["mini-css-extract-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:2.6.0"],\
             ["process", "npm:0.11.10"],\
@@ -9851,6 +9852,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["html-loader", [\
+        ["npm:3.1.0", {\
+          "packageLocation": "./.yarn/cache/html-loader-npm-3.1.0-571eef32e3-4c383d103c.zip/node_modules/html-loader/",\
+          "packageDependencies": [\
+            ["html-loader", "npm:3.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.1.0", {\
+          "packageLocation": "./.yarn/__virtual__/html-loader-virtual-901f185f13/0/cache/html-loader-npm-3.1.0-571eef32e3-4c383d103c.zip/node_modules/html-loader/",\
+          "packageDependencies": [\
+            ["html-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.1.0"],\
+            ["@types/webpack", null],\
+            ["html-minifier-terser", "npm:6.1.0"],\
+            ["parse5", "npm:6.0.1"],\
+            ["webpack", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:5.72.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/webpack",\
+            "webpack"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["html-minifier-terser", [\
         ["npm:6.1.0", {\
           "packageLocation": "./.yarn/cache/html-minifier-terser-npm-6.1.0-49a405eebd-ac52c14006.zip/node_modules/html-minifier-terser/",\
@@ -11300,6 +11325,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["css-minimizer-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.4.1"],\
             ["eslint-config-react-app", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:7.0.0"],\
             ["file-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:6.2.0"],\
+            ["html-loader", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:3.1.0"],\
             ["html-webpack-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:5.5.0"],\
             ["mini-css-extract-plugin", "virtual:580e5081d841945faee13f6ad590d84e6f41de6953cefd2707bd36c66629a2970ec3438fd44faac3ebb3cf205b364a9c803d189c2a1161d2a17fcaa32f562c09#npm:2.6.0"],\
             ["process", "npm:0.11.10"],\
