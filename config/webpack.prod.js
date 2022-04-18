@@ -9,9 +9,9 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'cheap-module-source-map',
   output: {
-    filename: 'js/[name].[contenthash].js',
-    publicPath: 'dist/',
-    assetModuleFilename: 'images/[name].[hash][ext]',
+    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: './',
     clean: true,
   },
   module: {
@@ -22,11 +22,7 @@ module.exports = merge(common, {
       },
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash].css',
-    }),
-  ],
+  plugins: [new MiniCssExtractPlugin()],
   optimization: {
     usedExports: true,
     minimize: true,
