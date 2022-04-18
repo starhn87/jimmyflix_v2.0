@@ -1,7 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = {
   entry: `${path.resolve(__dirname, '../src')}/index.tsx`,
@@ -37,7 +36,6 @@ module.exports = {
         process.env.REACT_APP_API_KEY,
       ),
     }),
-    process.env.NODE_ENV === 'production' ? '' : new BundleAnalyzerPlugin(),
   ],
   resolve: {
     alias: { '@': path.resolve(__dirname, '..src/') },

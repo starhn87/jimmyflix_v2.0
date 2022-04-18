@@ -1,5 +1,6 @@
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = merge(common, {
   mode: 'development',
@@ -13,6 +14,7 @@ module.exports = merge(common, {
     liveReload: true,
   },
   output: { filename: '[name].[contenthash].js', publicPath: '/' },
+  plugins: [new BundleAnalyzerPlugin()],
   module: {
     rules: [
       {
