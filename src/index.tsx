@@ -6,8 +6,6 @@ import { Provider } from 'react-redux'
 import store from './redux/store'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-const container = document.getElementById('root')
-const root = ReactDOM.createRoot(container!)
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -19,11 +17,15 @@ const queryClient = new QueryClient({
     },
   },
 })
+const container = document.getElementById('root')
+const root = ReactDOM.createRoot(container!)
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </QueryClientProvider>,
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </QueryClientProvider>
+  </React.StrictMode>,
 )

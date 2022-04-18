@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { TimeType } from './interface'
+import 'regenerator-runtime/runtime'
 
 const api = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
@@ -19,7 +20,7 @@ export const moviesApi = {
   topRated: async () =>
     await api.get('movie/top_rated').then((res) => res.data.results),
   movieDetail: async (id: number) =>
-    api
+    await api
       .get(`movie/${id}`, {
         params: {
           append_to_response: 'videos',
