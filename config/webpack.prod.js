@@ -8,6 +8,12 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 module.exports = merge(common, {
   mode: 'production',
   devtool: 'cheap-module-source-map',
+  output: {
+    filename: 'js/[name].[contenthash].js',
+    publicPath: 'dist/',
+    assetModuleFilename: 'images/[name].[hash][ext]',
+    clean: true,
+  },
   module: {
     rules: [
       {

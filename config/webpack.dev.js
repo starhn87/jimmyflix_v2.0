@@ -13,6 +13,7 @@ module.exports = merge(common, {
     historyApiFallback: true,
     liveReload: true,
   },
+  output: { filename: '[name].[contenthash].js', publicPath: '/' },
   plugins: [new BundleAnalyzerPlugin()],
   module: {
     rules: [

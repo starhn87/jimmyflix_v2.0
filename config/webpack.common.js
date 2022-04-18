@@ -3,13 +3,7 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: path.resolve(__dirname, '../src'),
-  output: {
-    filename: 'js/[name].[contenthash].js',
-    publicPath: 'dist/',
-    assetModuleFilename: 'images/[name].[hash][ext]',
-    clean: true,
-  },
+  entry: `${path.resolve(__dirname, '../src')}`,
   module: {
     rules: [
       {
