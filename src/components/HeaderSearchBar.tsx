@@ -2,15 +2,16 @@ import React, { FormEvent, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { MdSearch } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../redux/store'
-import { searched } from '../redux/slice'
+import { useSetRecoilState } from 'recoil'
+import { isSearchedState, searchValueState } from '../recoil'
 
 export default function SearchBar() {
   const [editingValue, setEditingValue] = useState('')
   const [focused, setFocused] = useState(false)
   const searchRef = useRef<HTMLInputElement | null>(null)
   const navigator = useNavigate()
-  const dispatch = useAppDispatch()
+  const setSearchValue = useSetRecoilState(searchValueState)
+  const setIsSearched = useSetRecoilState(isSearchedState)
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -23,7 +24,8 @@ export default function SearchBar() {
 
     searchRef.current?.blur()
     navigator('/search')
-    dispatch(searched(editingValue))
+    setSearchValue(editingValue)
+    setIsSearched(true)
   }
 
   return (

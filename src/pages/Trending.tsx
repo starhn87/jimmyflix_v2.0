@@ -5,11 +5,12 @@ import { useQueries } from 'react-query'
 import Loading from '../components/common/Loading'
 import HelmetWrapper from '../components/common/Helmet'
 import Infos from '../components/common/Infos'
-import { useAppSelector } from '../redux/store'
 import TimeTypeSwitch from '../components/TimeTypeSwitch'
+import { useRecoilValue } from 'recoil'
+import { timeTypeState } from '../recoil'
 
 function Trending() {
-  const timeType = useAppSelector((state) => state.data.timeType)
+  const timeType = useRecoilValue(timeTypeState)
   const [
     { data: movies, isFetched: isMoviesFetched, isError: isMoviesError },
     { data: tvs, isFetched: isTvsFetched, isError: isTvError },
@@ -34,7 +35,7 @@ function Trending() {
 
   return (
     <>
-      <HelmetWrapper content="Movies | Jimmyflix" />
+      <HelmetWrapper content="Trending | Jimmyflix" />
       <TimeTypeSwitch />
       <Container>
         <Infos

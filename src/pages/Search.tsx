@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
 import Helmet from '../components/common/Helmet'
-import { useAppDispatch, useAppSelector } from '../redux/store'
 import Loading from '../components/common/Loading'
 import { Container } from './Home'
 import { moviesApi, tvApi } from '../api'
 import { useQueries } from 'react-query'
 import SearchBar from '../components/SearchBar'
-import { searched } from '../redux/slice'
 import Message from '../components/common/Message'
 import Infos from '../components/common/Infos'
+import { useRecoilState } from 'recoil'
+import { isSearchedState, searchValueState } from '../recoil'
 
 function Search() {
-  const { isSearched, searchValue } = useAppSelector((state) => state.data)
-  const dispatch = useAppDispatch()
+  const [isSearched, setIsSearched] = useRecoilState(isSearchedState)
+  const [searchValue, setSearchValue] = useRecoilState(searchValueState)
   const [
     { data: movies, isFetched: isMoviesFetched, isError: isMoviesError },
     { data: tvs, isFetched: isTvFetched, isError: isTvError },
@@ -28,7 +28,8 @@ function Search() {
   ])
 
   const onSubmit = (editingValue: string) => {
-    dispatch(searched(editingValue))
+    setSearchValue(editingValue)
+    setIsSearched(true)
   }
 
   useEffect(() => {

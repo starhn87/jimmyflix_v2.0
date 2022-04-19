@@ -4,17 +4,21 @@ import styled from 'styled-components'
 import { customMedia } from '../../GlobalStyles'
 import SearchBar from '../HeaderSearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
-import { useAppDispatch } from '../../redux/store'
-import { reset } from '../../redux/slice'
+import { useResetRecoilState } from 'recoil'
+import { isSearchedState, searchValueState, timeTypeState } from '../../recoil'
 
 function Header() {
   const { pathname } = useLocation()
-  const dispatch = useAppDispatch()
   const navigator = useNavigate()
+  const resetSearchValue = useResetRecoilState(searchValueState)
+  const resetIsSearched = useResetRecoilState(isSearchedState)
+  const resetTimeType = useResetRecoilState(timeTypeState)
 
   const onClick = () => {
     if (pathname === '/search') {
-      dispatch(reset())
+      resetIsSearched()
+      resetSearchValue()
+      resetTimeType()
     }
   }
 
