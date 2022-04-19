@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { customMedia } from '../GlobalStyles'
 import { TimeType } from '../interface'
-import { timeType } from '../redux/slice'
-import { useAppDispatch, useAppSelector } from '../redux/store'
+import { useRecoilState } from 'recoil'
+import { timeTypeState } from '../recoil'
 
 const TIME_TYPE = [
   {
@@ -17,11 +16,10 @@ const TIME_TYPE = [
 ]
 
 export default function TimeTypeSwitch() {
-  const type = useAppSelector((state) => state.data.timeType)
-  const dispatch = useAppDispatch()
+  const [timeType, setTimeType] = useRecoilState(timeTypeState)
 
   const onClick = (type: TimeType) => {
-    dispatch(timeType(type))
+    setTimeType(type)
   }
 
   return (
@@ -30,7 +28,7 @@ export default function TimeTypeSwitch() {
         {TIME_TYPE.map((time) => (
           <MatchType
             key={time.id}
-            className={`${type === time.name ? 'active' : ''}`}
+            className={`${timeType === time.name ? 'active' : ''}`}
             onClick={() => onClick(time.name as TimeType)}
           >
             <ContentBox>{time.name}</ContentBox>

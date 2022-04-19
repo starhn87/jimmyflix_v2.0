@@ -2,9 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './api'
-import { Provider } from 'react-redux'
-import store from './redux/store'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { RecoilRoot } from 'recoil'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,9 +22,9 @@ const root = ReactDOM.createRoot(container!)
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
+      <RecoilRoot>
         <App />
-      </Provider>
+      </RecoilRoot>
     </QueryClientProvider>
   </React.StrictMode>,
 )
