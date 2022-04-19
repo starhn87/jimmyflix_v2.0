@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import Slider from 'react-slick'
 
 interface SectionProps {
   slide: boolean
   title?: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const Section = ({ slide, title, children }: SectionProps) => {
