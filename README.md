@@ -5,7 +5,7 @@
 
 <br>
 
-[배포링크](https://jimmyflix.netlify.app/){:target="\_blank"}
+[배포링크](https://jimmyflix.netlify.app/)
 
 <br>
 
