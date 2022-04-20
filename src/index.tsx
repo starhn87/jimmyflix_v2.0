@@ -5,6 +5,8 @@ import './api'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { RecoilRoot } from 'recoil'
 
+const container = document.getElementById('root')
+const root = ReactDOM.createRoot(container!)
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -16,8 +18,6 @@ const queryClient = new QueryClient({
     },
   },
 })
-const container = document.getElementById('root')
-const root = ReactDOM.createRoot(container!)
 
 root.render(
   <React.StrictMode>

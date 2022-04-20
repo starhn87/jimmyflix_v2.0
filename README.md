@@ -29,6 +29,8 @@
   - 원하는 영화 혹은 TV 프로그램을 같이 검색할 수 있습니다.
 - 상세 페이지
   - 포스터를 클릭하여 평점, 줄거리, 예고편, 출연 배우, 제작 회사, 시리즈 등을 알 수 있습니다.
+- 404 페이지
+  - 잘못된 경로 접근시 보여주는 페이지이며, 5초 후 자동으로 홈 페이지로 이동하도록 하였습니다.
 
 <br>
 
@@ -71,6 +73,12 @@
 <img src="https://user-images.githubusercontent.com/36434219/163532220-1ea9bad0-aafc-40db-b04e-3c0443af1134.png" alt="상세 페이지" width="700px" height="400px">
 
 <br>
+
+6. 404 페이지
+
+<img src="https://user-images.githubusercontent.com/36434219/164255280-a49c6b32-2f4a-47b8-a619-645a265696df.png" alt="잘못된 경로 접근시 보여주는 페이지" width="700px" height="400px">
+
+<br>
 <br>
 
 ## ⭐️ 구현한 기능 목록 및 어려웠던 점
@@ -81,24 +89,25 @@
     - Container, Presenter 패턴을 적용하여 렌더링과 로직 부분을 분리하였습니다.
     - axios로 IMDB 오픈 API를 호출하여 데이터를 불러왔습니다.
     - styled-components로 현재의 디자인을 스타일링하였습니다.
-    - 리덕스와 리덕스 툴킷으로 전역 상태를 관리하였습니다.
+    - redux와 redux toolkit으로 전역 상태를 관리하였습니다.
 - 직접 추가하거나 개선한 부분
   - 구현 내용 & 방법
     - 타입스크립트를 적용하여 타입 검사를 컴파일 시점에서 할 수 있도록 하였습니다.
     - 함수 컴포넌트와 React Hooks를 적용하여 Container, Presenter 패턴을 없애고 코드를 경량화하였습니다.
     - 리액트 쿼리를 적용하여 캐싱을 통해 API 호출을 최적화하였습니다.
-    - 캐싱으로 인해 필요 없어진 전역 상태를 없애고 코드를 경량화하였습니다.
-    - 상세 페이지에서 크레딧, 컬렉션, 시즌 탭 등을 추가하여 더 다양한 정보를 볼 수 있도록 하였습니다.
+    - 캐싱으로 인해 필요 없어진 전역 상태를 없애고 코드를 경량화하였습니다. (redux -> recoil)
     - react-slick을 사용하여 무한 슬라이드를 구현하였습니다.
-    - Trending 페이지를 추가하여 더 다양한 정보를 확인할 수 있도록 하였습니다.
+    - 상세 페이지에서 크레딧, 컬렉션, 시즌 탭 등을 추가하여 더 다양한 정보를 볼 수 있도록 하였습니다.
     - 검색 페이지 초기 화면 및 헤더 디자인을 변경하였습니다. (로고, 서치바 추가)
+    - Trending 페이지를 추가하여 더 다양한 정보를 확인할 수 있도록 하였습니다.
+    - 404 페이지를 추가하여 잘못된 경로로 접근하였음을 보여주었습니다.
     - 로딩 바를 보여주어 비동기 작업 중임을 사용자에게 알렸습니다.
     - 반응형 디자인을 도입하였습니다. (데스크탑, 모바일)
   - 구현하면서 어려웠던 점
     - 타입스크립트로 타입을 최대한 좁은 범위로 지정해주는 부분에서 시행착오를 겪었습니다.
     - 클래스 컴포넌트를 함수 컴포넌트와 hook으로 바꾸는 데에서 어떻게 어떤 부분이 변경되었나 이해하고 적용하는데 시행착오를 겪었습니다.
     - 모바일 웹을 위한 반응형 디자인을 저만의 스타일로 구현하는 것에서 시간이 소요되었습니다.
-    - 리액트 쿼리를 적용하여 기존에 axios로 호출하던 부분에 캐싱을 적용하고 중복되는 전역 상태를 정리하는 데에 시행착오를 겪었습니다.
+    - 리액트 쿼리를 적용하여 기존에 axios로 호출하던 부분에 캐싱을 적용하고 데에 시행착오를 겪었습니다.
 
 <br>
 
@@ -116,13 +125,12 @@
 │   ├── GlobalStyles.ts
 │   ├── api.ts
 │   ├── assets
-│   │   ├── images
-│   │   │   ├── imdb.png
-│   │   │   ├── noPersonSmall.png
-│   │   │   ├── noPosterSmall.png
-│   │   │   └── noProductionSmall.png
-│   │   └── styles
-│   │       └── styled.d.ts
+│   │   └── images
+│   │       ├── 404.svg
+│   │       ├── imdb.png
+│   │       ├── noPersonSmall.png
+│   │       ├── noPosterSmall.png
+│   │       └── noProductionSmall.png
 │   ├── components
 │   │   ├── HeaderSearchBar.tsx
 │   │   ├── SearchBar.tsx
@@ -146,15 +154,15 @@
 │   ├── index.tsx
 │   ├── interface.d.ts
 │   ├── pages
+│   │   ├── 404.tsx
 │   │   ├── Detail.tsx
 │   │   ├── Home.tsx
 │   │   ├── Search.tsx
 │   │   ├── TV.tsx
 │   │   └── Trending.tsx
 │   ├── react-app-env.d.ts
-│   └── redux
-│       ├── slice.ts
-│       └── store.ts
+│   └── recoil
+│       └── index.ts
 ├── tsconfig.json
 └── yarn.lock
 ```
