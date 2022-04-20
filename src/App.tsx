@@ -8,6 +8,7 @@ import Detail from './pages/Detail'
 import Header from './components/common/Header'
 import Loading from './components/common/Loading'
 import Trending from './pages/Trending'
+import NotFound from './pages/404'
 
 function App() {
   return (
@@ -26,8 +27,9 @@ function App() {
               <Route path="trending" element={<Trending />} />
               <Route path="movie/:id" element={<Detail />} />
               <Route path="search" element={<Search />} />
+              <Route path="404" element={<NotFound />} />
+              <Route path="*" element={<Navigate to="/404" replace />} />
             </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

@@ -23,7 +23,7 @@ function Header() {
   }
 
   return (
-    <Head>
+    <Head className={`${pathname === '/404' ? 'hidden' : ''}`}>
       <LogoWrapper onClick={() => navigator('/')}>
         <MdOutlineMovie fontSize={35} />
         <Logo>Jimmyflix</Logo>
@@ -66,6 +66,10 @@ const Head = styled.header`
   background-color: rgb(20, 20, 20);
   z-index: 10;
   box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
+
+  &.hidden {
+    display: none;
+  }
 
   ${customMedia.lessThan('mobile')`
     grid-template-columns: 1fr 1fr 1fr 1fr;
