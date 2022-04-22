@@ -87,7 +87,7 @@
   - 구현 내용 & 방법
     - 클래스 컴포넌트와 생명주기를 활용하여 로직을 구현하였습니다.
     - Container, Presenter 패턴을 적용하여 렌더링과 로직 부분을 분리하였습니다.
-    - axios로 IMDB 오픈 API를 호출하여 데이터를 불러왔습니다.
+    - axios로 TMDB 오픈 API를 호출하여 데이터를 불러왔습니다.
     - styled-components로 현재의 디자인을 스타일링하였습니다.
     - redux와 redux toolkit으로 전역 상태를 관리하였습니다.
 - 직접 추가하거나 개선한 부분
