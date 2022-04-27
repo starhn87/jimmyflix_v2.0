@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import NotFoundImage from '../public/images/404.svg'
 import Helmet from '../components/common/Helmet'
 import { useRouter } from 'next/router'
 import { customMedia } from '../components/common/Header'
@@ -26,7 +25,7 @@ export default function NotFound() {
   return (
     <Wrapper>
       <Helmet content="404 | Jimmyflix" />
-      <Image src={NotFoundImage.src} alt="Not Found" />
+      <Image src={'/images/404.svg'} alt="Not Found" />
       <Message>{second}초 후 홈 화면으로 이동합니다.</Message>
     </Wrapper>
   )

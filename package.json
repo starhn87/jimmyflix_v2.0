@@ -56,7 +56,6 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
-    "@svgr/webpack": "^6.2.1",
     "@types/react-slick": "^0.23.8",
     "@types/styled-components": "^5.1.25",
     "core-js": "^3.22.0",
