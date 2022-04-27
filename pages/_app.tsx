@@ -63,8 +63,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <QueryClientProvider client={queryClient}>
-        <Header />
         <RecoilRoot>
+          <Header />
           <Component {...pageProps} />
         </RecoilRoot>
       </QueryClientProvider>
