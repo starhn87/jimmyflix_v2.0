@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
-import styled from 'styled-components'
-import DefaultPoster from '../../public/images/noPosterSmall.png'
+import styled from '@emotion/styled'
+import DefaultPoster from '../../public/images/defaultPoster.png'
 
 interface PosterProps {
   id: number
@@ -38,9 +38,7 @@ const Poster = ({
             {rating}/10
           </Rating>
         </ImageContainer>
-        <Title>
-          {title.length > 15 ? `${title.substring(0, 15)}...` : title}
-        </Title>
+        <Title>{title}</Title>
         <Year>{year}</Year>
       </Container>
     </a>
@@ -86,9 +84,12 @@ const ImageContainer = styled.div`
 `
 
 const Title = styled.span`
+  overflow: hidden;
   display: block;
-  font-size: 15px;
   margin-bottom: 4px;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const Year = styled.span`

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { TimeType } from '../interface'
 import { useRecoilState } from 'recoil'
 import { timeTypeState } from '../recoil/store'

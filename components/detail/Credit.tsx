@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Logo, Name, Product, Wrapper } from '../detail'
-import DefaultPerson from '../../public/images/noPersonSmall.png'
+import DefaultPerson from '../../public/images/defaultPerson.png'
 import Message from '../common/Message'
 import { useQuery } from 'react-query'
 import { moviesApi, tvApi } from '../../pages/api'

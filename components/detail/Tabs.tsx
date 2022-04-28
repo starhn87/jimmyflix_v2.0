@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { TabType } from '../../interface'
-import { customMedia } from '../common/Header'
+
 interface TabsProps {
   selected: string
   collections: boolean
@@ -64,10 +64,10 @@ const Tab = styled.div`
   z-index: 10;
   box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
 
-  ${customMedia.lessThan('mobile')`
-        width: 95%;
-        padding: 1%;
-    `}
+  @media (max-width: 768px) {
+    width: 95%;
+    padding: 1%;
+  }
 `
 
 const List = styled.ul`
