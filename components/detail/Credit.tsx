@@ -9,15 +9,15 @@ import Loading from '../common/Loading'
 
 interface CreditProps {
   isMovie: boolean
-  parsedId: number
+  id: number
 }
 
-export default function Credit({ isMovie, parsedId }: CreditProps) {
-  const { data, isError, isFetched } = useQuery(['credit', parsedId], () => {
+export default function Credit({ isMovie, id }: CreditProps) {
+  const { data, isError, isFetched } = useQuery(['credit', id], () => {
     if (isMovie) {
-      return moviesApi.cast(parsedId)
+      return moviesApi.cast(id)
     } else {
-      return tvApi.cast(parsedId)
+      return tvApi.cast(id)
     }
   })
 
