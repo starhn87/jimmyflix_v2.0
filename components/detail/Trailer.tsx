@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import { customMedia } from '../common/Header'
+import styled from '@emotion/styled'
 import Message from '../common/Message'
 
 interface TrailerProps {
@@ -36,10 +35,10 @@ const Iframe = styled.iframe`
   width: 100%;
   height: 80%;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     width: 95%;
     height: 400px;
     margin-bottom: 30px;
     padding: 5px 0;
-  `}
+  }
 `

@@ -1,7 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { MdOutlineMovie } from 'react-icons/md'
-import { customMedia } from './common/Header'
 
 interface SearchBarProps {
   onSubmit: (editingValue: string) => void
@@ -60,9 +59,9 @@ const SearchInput = styled.input`
     color: rgba(255, 255, 255, 0.6);
   }
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     font-size: 18px;
-	`}
+  }
 `
 
 const Button = styled.button`
@@ -96,22 +95,22 @@ const SearchBox = styled.article`
   border-radius: 33.5px;
   border: 4px solid #fff;
 
-  ${customMedia.greaterThan('desktop')`
+  @media (min-width: 1630px) {
     width: 670px;
     transition: 1s;
     animation: asc 1s;
-	`}
+  }
 
-  ${customMedia.between('mobile', 'desktop')`
+  @media (min-width: 768px) and (max-width: 1630px) {
     transition: 1s;
     animation: desc 1s;
-	`}
+  }
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     width: 80%;
     font-size: 15px;
-	`}
-  
+  }
+
   @keyframes asc {
     from {
       width: 500px;

@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import SearchBar from '../HeaderSearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
 import { useResetRecoilState } from 'recoil'
@@ -10,12 +10,6 @@ import {
 } from '../../recoil/store'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { generateMedia } from 'styled-media-query'
-
-export const customMedia = generateMedia({
-  desktop: '1630px',
-  mobile: '768px',
-})
 
 function Header() {
   const router = useRouter()
@@ -99,17 +93,17 @@ const Head = styled.header`
     display: none;
   }
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
-	`}
+  }
 `
 
 const List = styled.ul`
   display: flex;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     display: contents;
-	`}
+  }
 `
 
 const Item = styled.li<{ current: boolean }>`
@@ -120,10 +114,10 @@ const Item = styled.li<{ current: boolean }>`
     ${(props) => (props.current ? '#4d96fb' : 'transparent')};
   transition: border-bottom 0.5s ease-in-out;
 
-  ${customMedia.lessThan('mobile')`
-		width: 100%;
-		font-size: 15px;
-	`}
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 15px;
+  }
 `
 
 const Anchor = styled.a`
@@ -137,9 +131,9 @@ const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     display: none;
-	`}
+  }
 
   &:hover {
     cursor: pointer;
@@ -153,7 +147,7 @@ const Logo = styled.div`
 `
 
 const SearchBarWrapper = styled.div`
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     display: none;
-	`}
+  }
 `

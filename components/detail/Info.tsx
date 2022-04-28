@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
-import styled from 'styled-components'
-import { customMedia } from '../common/Header'
+import styled from '@emotion/styled'
 
 interface InfoProps {
   vote_average: number
@@ -71,20 +70,17 @@ export default memo(function Info({
 
 const Rating = styled.span`
   display: inline-flex;
-
-  ${customMedia.lessThan('mobile')`
-    `}
 `
 
 const ItemContainer = styled.div`
   margin: 15px 0;
   line-height: 20px;
 
-  ${customMedia.lessThan('mobile')`
-        width: 95%;
-        margin: 0;
-        padding: 0 1% 3%;
-    `}
+  @media (max-width: 768px) {
+    width: 95%;
+    margin: 0;
+    padding: 0 1% 3%;
+  }
 `
 
 const Item = styled.span``
@@ -98,7 +94,7 @@ const Overview = styled.p`
   font-size: 12px;
   opacity: 0.7;
 
-  ${customMedia.lessThan('mobile')`
-        width: 95%;
-    `}
+  @media (max-width: 768px) {
+    width: 95%;
+  }
 `
