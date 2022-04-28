@@ -1,8 +1,7 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Helmet from '../../components/common/Helmet'
 import Message from '../../components/common/Message'
 import { useRouter } from 'next/router'
-import { moviesApi, tvApi } from '../../pages/api'
 import styled from '@emotion/styled'
 import { Grid } from '../../components/common/Section'
 import DefaultPoster from '../../public/images/defaultPoster.png'
@@ -14,36 +13,29 @@ import Season from '../../components/detail/Season'
 import Credit from '../../components/detail/Credit'
 import Production from '../../components/detail/Production'
 import Collection from '../../components/detail/Collection'
-import { useQuery } from 'react-query'
 import { TabType } from '../../interface'
-import Loading from '../../components/common/Loading'
 
-function Detail() {
-  const router = useRouter()
-  const isMovie = router.pathname.includes('/movies/')
-  const { id } = router.query
-  const parsedId = Number(id)
+interface DetailProps {
+  detail: any
+  id: number
+  isMovie: boolean
+}
+
+function Detail({ detail, id, isMovie }: DetailProps) {
   const [tabName, setTabName] = useState<TabType>('Trailer')
-  const { data, isError, isFetched } = useQuery(['detail', id], () => {
-    if (isMovie) {
-      return moviesApi.movieDetail(parsedId)
-    } else {
-      return tvApi.showDetail(parsedId)
-    }
-  })
-  const tabContent = data
+  const tabContent = detail
     ? {
-        Trailer: <Trailer videos={data.videos} />,
-        Season: <Season seasons={data.seasons} />,
-        Credits: <Credit parsedId={parsedId} isMovie={isMovie} />,
+        Trailer: <Trailer videos={detail.videos} />,
+        Season: <Season seasons={detail.seasons} />,
+        Credits: <Credit id={id} isMovie={isMovie} />,
         Production: (
           <Production
-            production_companies={data.production_companies}
-            production_countries={data.production_countries}
+            production_companies={detail.production_companies}
+            production_countries={detail.production_countries}
           />
         ),
-        Collection: data.belongs_to_collection && (
-          <Collection id={data.belongs_to_collection.id} />
+        Collection: detail.belongs_to_collection && (
+          <Collection id={detail.belongs_to_collection.id} />
         ),
       }
     : {}
@@ -51,69 +43,52 @@ function Detail() {
   useEffect(() => {
     window.scrollTo(0, 0)
     setTabName('Trailer')
-
-    if (isNaN(parsedId)) {
-      router.push('/')
-    }
   }, [id])
-
-  if (!isFetched) {
-    return <Loading />
-  }
 
   return (
     <>
-      {isError ? (
-        <>
-          <Helmet content="Error | Jimmyflix" />
-          <Message color="#e74c3c" text={'Error in detail'}></Message>
-        </>
-      ) : (
-        <>
-          <Container>
-            <Helmet content={`${data.title ?? data.name} | Jimmyflix`} />
-            <Backdrop
-              bgImage={`https://image.tmdb.org/t/p/original${data.backdrop_path}`}
+      <Container>
+        <Helmet content={`${detail.title ?? detail.name} | Jimmyflix`} />
+        <Backdrop
+          bgImage={`https://image.tmdb.org/t/p/original${detail.backdrop_path}`}
+        />
+        <Content>
+          <Cover
+            bgImage={
+              detail.poster_path
+                ? `https://image.tmdb.org/t/p/original${detail.poster_path}`
+                : DefaultPoster.src
+            }
+          />
+          <Data>
+            <Title>
+              <Text>{detail.title ?? detail.name}</Text>
+              <ILink
+                target="_blank"
+                href={`https://www.imdb.com/title/${detail.imdb_id}`}
+              >
+                <Img src={imdb.src}></Img>
+              </ILink>
+            </Title>
+            <Info
+              vote_average={detail.vote_average}
+              release_date={detail.release_date}
+              first_air_date={detail.first_air_date}
+              runtime={detail.runtime}
+              episode_run_time={detail.episode_run_time}
+              genres={detail.genres}
+              overview={detail.overview}
             />
-            <Content>
-              <Cover
-                bgImage={
-                  data.poster_path
-                    ? `https://image.tmdb.org/t/p/original${data.poster_path}`
-                    : DefaultPoster.src
-                }
-              />
-              <Data>
-                <Title>
-                  <Text>{data.title ?? data.name}</Text>
-                  <ILink
-                    target="_blank"
-                    href={`https://www.imdb.com/title/${data.imdb_id}`}
-                  >
-                    <Img src={imdb.src}></Img>
-                  </ILink>
-                </Title>
-                <Info
-                  vote_average={data.vote_average}
-                  release_date={data.release_date}
-                  first_air_date={data.first_air_date}
-                  runtime={data.runtime}
-                  episode_run_time={data.episode_run_time}
-                  genres={data.genres}
-                  overview={data.overview}
-                />
-                <Tabs
-                  selected={tabName}
-                  collections={!!data.belongs_to_collection}
-                  seasons={!!data.seasons}
-                  onClick={setTabName}
-                />
-                {tabContent[tabName]}
-              </Data>
-            </Content>
-          </Container>
-        </>
-      )}
+            <Tabs
+              selected={tabName}
+              collections={!!detail.belongs_to_collection}
+              seasons={!!detail.seasons}
+              onClick={setTabName}
+            />
+            {tabContent[tabName]}
+          </Data>
+        </Content>
+      </Container>
     </>
   )
 }
