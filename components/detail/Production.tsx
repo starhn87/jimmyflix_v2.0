@@ -1,6 +1,6 @@
 import React, { useId } from 'react'
 import { Box, Flag, Logo, Name, Product } from '../../components/detail'
-import DefaultProduction from '../../public/images/noProductionSmall.png'
+import DefaultProduction from '../../public/images/defaultProduction.png'
 import Message from '../common/Message'
 import Section from '../common/Section'
 import { ICompany, ICountry } from '../../interface'

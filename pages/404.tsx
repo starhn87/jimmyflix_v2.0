@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import Helmet from '../components/common/Helmet'
 import { useRouter } from 'next/router'
-import { customMedia } from '../components/common/Header'
 
 export default function NotFound() {
   const [second, setSecond] = useState(5)
@@ -41,25 +40,25 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     height: 100%;
     padding: 20px;
-  `}
+  }
 `
 
 const Image = styled.img`
   width: 90%;
 
-  ${customMedia.greaterThan('desktop')`
+  @media (min-width: 1630px) {
     height: 803px;
-  `}
+  }
 `
 
 const Message = styled.h1`
   padding: 10px;
   font-size: 20px;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     font-size: 14px;
-  `}
+  }
 `

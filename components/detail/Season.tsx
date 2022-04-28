@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Logo, Name, Product, Wrapper } from '../../components/detail'
-import DefaultPoster from '../../public/images/noPosterSmall.png'
+import DefaultPoster from '../../public/images/defaultPoster.png'
 import { ISeason } from '../../interface'
 
 interface SeasonProps {

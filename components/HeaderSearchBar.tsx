@@ -1,5 +1,5 @@
 import React, { FormEvent, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { MdSearch } from 'react-icons/md'
 import { useSetRecoilState } from 'recoil'
 import { isSearchedState, searchValueState } from '../recoil/store'

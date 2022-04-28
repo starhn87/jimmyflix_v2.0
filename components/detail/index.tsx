@@ -3,9 +3,9 @@ import Helmet from '../../components/common/Helmet'
 import Message from '../../components/common/Message'
 import { useRouter } from 'next/router'
 import { moviesApi, tvApi } from '../../pages/api'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { Grid } from '../../components/common/Section'
-import DefaultPoster from '../../public/images/noPosterSmall.png'
+import DefaultPoster from '../../public/images/defaultPoster.png'
 import imdb from '../../public/images/imdb.png'
 import Info from '../../components/detail/Info'
 import Tabs from '../../components/detail/Tabs'
@@ -17,7 +17,6 @@ import Collection from '../../components/detail/Collection'
 import { useQuery } from 'react-query'
 import { TabType } from '../../interface'
 import Loading from '../../components/common/Loading'
-import { customMedia } from '../common/Header'
 
 function Detail() {
   const router = useRouter()
@@ -129,9 +128,9 @@ const Container = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
 
-  ${customMedia.lessThan('mobile')`
-        padding: 0;
-    `}
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `
 
 const Backdrop = styled.div<{ bgImage: string }>`
@@ -147,9 +146,9 @@ const Backdrop = styled.div<{ bgImage: string }>`
   opacity: 0.5;
   z-index: 0;
 
-  ${customMedia.lessThan('mobile')`
-        display: none;
-    `}
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const Content = styled.div`
@@ -159,9 +158,9 @@ const Content = styled.div`
   height: 100%;
   z-index: 1;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     display: block;
-  `}
+  }
 `
 
 const Cover = styled.div<{ bgImage: string }>`
@@ -172,10 +171,10 @@ const Cover = styled.div<{ bgImage: string }>`
   background-size: cover;
   border-radius: 5px;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     width: 100%;
     height: 80%;
-  `}
+  }
 `
 
 const Data = styled.div`
@@ -183,25 +182,25 @@ const Data = styled.div`
   width: 70%;
   margin-left: 15px;
 
-  ${customMedia.greaterThan('mobile')`
+  @media (min-width: 768px) {
     height: 120%;
-  `}
+  }
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     width: 100%;
     margin-left: 2.5%;
-  `}
+  }
 `
 
 const Title = styled.h3`
   font-size: 32px;
   margin-bottom: 5px;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     float: unset;
     padding: 3% 1%;
     width: 95%;
-  `}
+  }
 `
 
 const Text = styled.span`
@@ -254,9 +253,9 @@ export const Box = styled.div`
   width: 100%;
   margin-top: 20px;
 
-  ${customMedia.lessThan('mobile')`
+  @media (max-width: 768px) {
     padding-bottom: 30px;
-  `}
+  }
 `
 
 export const Wrapper = styled(Grid)`

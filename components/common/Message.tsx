@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import { customMedia } from './Header'
+import styled from '@emotion/styled'
 
 interface MessageProps {
   text?: string
@@ -26,7 +25,7 @@ const Text = styled.span<{ color: string }>`
   font-size: 28px;
   color: ${(props) => props.color};
 
-  ${customMedia.lessThan('mobile')`
-        font-size: 22px;
-    `}
+  @media (max-width: 768px) {
+    font-size: 22px;
+  }
 `

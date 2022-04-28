@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { moviesApi } from './api'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useQueries } from 'react-query'
 import Loading from '../components/common/Loading'
 import HelmetWrapper from '../components/common/Helmet'
