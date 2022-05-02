@@ -33,10 +33,9 @@ export async function getServerSideProps({
   req: { url },
   query: { id },
 }: GetServerSidePropsContext) {
-  const isClient = isClientReq(url)
   const parsedId = Number(id)
 
-  if (isClient) {
+  if (isClientReq(url)) {
     return {
       props: {
         id: parsedId,
