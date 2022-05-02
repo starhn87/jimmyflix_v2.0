@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next'
-import { useQuery } from 'react-query'
+import { dehydrate, QueryClient, useQuery } from 'react-query'
 import HelmetWrapper from '../../components/common/Helmet'
 import Loading from '../../components/common/Loading'
 import Message from '../../components/common/Message'
@@ -8,20 +8,15 @@ import { isClientReq } from '../../utils'
 import { moviesApi } from '../api'
 
 export interface DetailProps {
-  detail: any
   id: number
 }
 
-export default function MovieDetail({ detail, id }: DetailProps) {
-  if (detail) {
-    return <Detail detail={detail} id={id} isMovie={true} />
-  }
-
-  const { data, isError, isFetched } = useQuery(['movieDetail', id], () =>
+export default function MovieDetail({ id }: DetailProps) {
+  const { data, isError, isFetching } = useQuery(['movieDetail', id], () =>
     moviesApi.movieDetail(id),
   )
 
-  if (!isFetched) {
+  if (isFetching) {
     return <Loading />
   }
 
@@ -52,11 +47,15 @@ export async function getServerSideProps({
     }
   }
 
-  const detail = await moviesApi.movieDetail(parsedId)
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery(['movieDetail', parsedId], () =>
+    moviesApi.movieDetail(parsedId),
+  )
 
   return {
     props: {
-      detail,
+      dehydratedState: dehydrate(queryClient),
       id: parsedId,
     },
   }

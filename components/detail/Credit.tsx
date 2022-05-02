@@ -13,7 +13,7 @@ interface CreditProps {
 }
 
 export default function Credit({ isMovie, id }: CreditProps) {
-  const { data, isError, isFetched } = useQuery(['credit', id], () => {
+  const { data, isError, isFetching } = useQuery(['credit', id], () => {
     if (isMovie) {
       return moviesApi.cast(id)
     } else {
@@ -21,7 +21,7 @@ export default function Credit({ isMovie, id }: CreditProps) {
     }
   })
 
-  if (!isFetched) {
+  if (isFetching) {
     return <Loading />
   }
 

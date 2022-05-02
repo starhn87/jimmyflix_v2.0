@@ -9,14 +9,22 @@ import Infos from '../../components/common/Infos'
 
 export function TV() {
   const [
-    { data: topRated, isFetched: isTopRatedFetched, isError: isTopRatedError },
-    { data: popular, isFetched: isPopularFetched, isError: isPopularError },
+    {
+      data: topRated,
+      isFetching: isTopRatedFetching,
+      isError: isTopRatedError,
+    },
+    { data: popular, isFetching: isPopularFetching, isError: isPopularError },
     {
       data: airingToday,
-      isFetched: isAiringTodayFetched,
+      isFetching: isAiringTodayFetching,
       isError: isAiringTodayError,
     },
-    { data: onTheAir, isFetched: isOnTheAirFetched, isError: isOnTheAirError },
+    {
+      data: onTheAir,
+      isFetching: isOnTheAirFetching,
+      isError: isOnTheAirError,
+    },
   ] = useQueries([
     {
       queryKey: ['topRatedTv'],
@@ -41,10 +49,10 @@ export function TV() {
   }, [])
 
   if (
-    !isTopRatedFetched ||
-    !isPopularFetched ||
-    !isAiringTodayFetched ||
-    !isOnTheAirFetched
+    isTopRatedFetching ||
+    isPopularFetching ||
+    isAiringTodayFetching ||
+    isOnTheAirFetching
   ) {
     return <Loading />
   }

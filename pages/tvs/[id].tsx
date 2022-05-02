@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next'
-import { useQuery } from 'react-query'
+import { dehydrate, QueryClient, useQuery } from 'react-query'
 import HelmetWrapper from '../../components/common/Helmet'
 import Loading from '../../components/common/Loading'
 import Message from '../../components/common/Message'
@@ -8,16 +8,12 @@ import { isClientReq } from '../../utils'
 import { tvApi } from '../api'
 import { DetailProps } from '../movies/[id]'
 
-export default function TvDetail({ detail, id }: DetailProps) {
-  if (detail) {
-    return <Detail detail={detail} id={id} isMovie={false} />
-  }
-
-  const { data, isError, isFetched } = useQuery(['tvDetail', id], () =>
+export default function TvDetail({ id }: DetailProps) {
+  const { data, isError, isFetching } = useQuery(['tvDetail', id], () =>
     tvApi.showDetail(id),
   )
 
-  if (!isFetched) {
+  if (isFetching) {
     return <Loading />
   }
 
@@ -48,11 +44,15 @@ export async function getServerSideProps({
     }
   }
 
-  const detail = await tvApi.showDetail(parsedId)
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery(['tvDetail', parsedId], () =>
+    tvApi.showDetail(parsedId),
+  )
 
   return {
     props: {
-      detail,
+      dehydratedState: dehydrate(queryClient),
       id: parsedId,
     },
   }

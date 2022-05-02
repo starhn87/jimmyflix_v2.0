@@ -10,11 +10,11 @@ interface CollectionProps {
 }
 
 const Collection = ({ id }: CollectionProps) => {
-  const { data, isError, isFetched } = useQuery(['collection', id], () =>
+  const { data, isError, isFetching } = useQuery(['collection', id], () =>
     collections(id),
   )
 
-  if (!isFetched) {
+  if (isFetching) {
     return <Loading />
   }
 

@@ -14,8 +14,8 @@ function Search() {
   const [isSearched, setIsSearched] = useRecoilState(isSearchedState)
   const [searchValue, setSearchValue] = useRecoilState(searchValueState)
   const [
-    { data: movies, isFetched: isMoviesFetched, isError: isMoviesError },
-    { data: tvs, isFetched: isTvFetched, isError: isTvError },
+    { data: movies, isFetching: isMoviesFetching, isError: isMoviesError },
+    { data: tvs, isFetching: isTvFetching, isError: isTvError },
   ] = useQueries([
     {
       queryKey: ['movieSearch', searchValue],
@@ -36,7 +36,7 @@ function Search() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (searchValue !== '' && (!isMoviesFetched || !isTvFetched)) {
+  if (searchValue !== '' && (isMoviesFetching || isTvFetching)) {
     return <Loading />
   }
 
