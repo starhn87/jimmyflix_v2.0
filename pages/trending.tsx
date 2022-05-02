@@ -12,8 +12,8 @@ import { timeTypeState } from '../recoil/store'
 function Trending() {
   const timeType = useRecoilValue(timeTypeState)
   const [
-    { data: movies, isFetched: isMoviesFetched, isError: isMoviesError },
-    { data: tvs, isFetched: isTvsFetched, isError: isTvError },
+    { data: movies, isFetching: isMoviesFetching, isError: isMoviesError },
+    { data: tvs, isFetching: isTvsFetching, isError: isTvError },
   ] = useQueries([
     {
       queryKey: ['movieTrend', timeType],
@@ -29,7 +29,7 @@ function Trending() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (!isMoviesFetched || !isTvsFetched) {
+  if (isMoviesFetching || isTvsFetching) {
     return <Loading />
   }
 

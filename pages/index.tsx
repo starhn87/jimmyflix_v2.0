@@ -10,12 +10,20 @@ function Home() {
   const [
     {
       data: nowPlaying,
-      isFetched: isNowPlayingFetched,
+      isFetching: isNowPlayingFetching,
       isError: isNowPlayingError,
     },
-    { data: upcoming, isFetched: isUpcomingFetched, isError: isUpcomingError },
-    { data: popular, isFetched: isPopularFetched, isError: isPopularError },
-    { data: topRated, isFetched: isTopRatedFetched, isError: isTopRatedError },
+    {
+      data: upcoming,
+      isFetching: isUpcomingFetching,
+      isError: isUpcomingError,
+    },
+    { data: popular, isFetching: isPopularFetching, isError: isPopularError },
+    {
+      data: topRated,
+      isFetching: isTopRatedFetching,
+      isError: isTopRatedError,
+    },
   ] = useQueries([
     {
       queryKey: ['nowPlaying'],
@@ -40,10 +48,10 @@ function Home() {
   }, [])
 
   if (
-    !isNowPlayingFetched ||
-    !isUpcomingFetched ||
-    !isPopularFetched ||
-    !isTopRatedFetched
+    isNowPlayingFetching ||
+    isUpcomingFetching ||
+    isPopularFetching ||
+    isTopRatedFetching
   ) {
     return <Loading />
   }

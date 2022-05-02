@@ -1,5 +1,5 @@
 import { AppProps } from 'next/app'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { RecoilRoot } from 'recoil'
 import { Global, css } from '@emotion/react'
 import emotionReset from 'emotion-reset'
@@ -52,10 +52,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Global styles={GlobalStyles} />
       <QueryClientProvider client={queryClient}>
-        <RecoilRoot>
-          <Header />
-          <Component {...pageProps} />
-        </RecoilRoot>
+        <Hydrate state={pageProps.dehydratedState}>
+          <RecoilRoot>
+            <Header />
+            <Component {...pageProps} />
+          </RecoilRoot>
+        </Hydrate>
       </QueryClientProvider>
     </>
   )
