@@ -30,10 +30,10 @@ export default function TvDetail({ id }: DetailProps) {
 }
 
 export async function getServerSideProps({
-  req,
+  req: { url },
   query: { id },
 }: GetServerSidePropsContext) {
-  const isClient = isClientReq(req)
+  const isClient = isClientReq(url)
   const parsedId = Number(id)
 
   if (isClient) {
