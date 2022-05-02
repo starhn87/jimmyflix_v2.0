@@ -1,4 +1,5 @@
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
+import { useRouter } from 'next/router'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import HelmetWrapper from '../../components/common/Helmet'
 import Loading from '../../components/common/Loading'
@@ -6,11 +7,14 @@ import Message from '../../components/common/Message'
 import Detail from '../../components/detail'
 import { isClientReq } from '../../utils'
 import { tvApi } from '../api'
-import { DetailProps } from '../movies/[id]'
 
-export default function TvDetail({ id }: DetailProps) {
-  const { data, isError, isFetching } = useQuery(['tvDetail', id], () =>
-    tvApi.showDetail(id),
+export default function TvDetail() {
+  const {
+    query: { id },
+  } = useRouter()
+  const parsedId = Number(id)
+  const { data, isError, isFetching } = useQuery(['tvDetail', parsedId], () =>
+    tvApi.showDetail(parsedId),
   )
 
   if (isFetching) {
@@ -26,23 +30,20 @@ export default function TvDetail({ id }: DetailProps) {
     )
   }
 
-  return <Detail detail={data} id={id} isMovie={false} />
+  return <Detail detail={data} id={parsedId} isMovie={false} />
 }
 
 export async function getServerSideProps({
   req: { url },
   query: { id },
 }: GetServerSidePropsContext) {
-  const parsedId = Number(id)
-
   if (isClientReq(url)) {
     return {
-      props: {
-        id: parsedId,
-      },
+      props: {},
     }
   }
 
+  const parsedId = Number(id)
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery(['tvDetail', parsedId], () =>
@@ -52,7 +53,6 @@ export async function getServerSideProps({
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      id: parsedId,
     },
   }
 }
