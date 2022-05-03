@@ -1,4 +1,5 @@
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
+import { useRouter } from 'next/router'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import HelmetWrapper from '../../components/common/Helmet'
 import Loading from '../../components/common/Loading'
@@ -7,13 +8,14 @@ import Detail from '../../components/detail'
 import { isClientReq } from '../../utils'
 import { moviesApi } from '../api'
 
-export interface DetailProps {
-  id: number
-}
-
-export default function MovieDetail({ id }: DetailProps) {
-  const { data, isError, isFetching } = useQuery(['movieDetail', id], () =>
-    moviesApi.movieDetail(id),
+export default function MovieDetail() {
+  const {
+    query: { id },
+  } = useRouter()
+  const parsedId = Number(id)
+  const { data, isError, isFetching } = useQuery(
+    ['movieDetail', parsedId],
+    () => moviesApi.movieDetail(parsedId),
   )
 
   if (isFetching) {
@@ -29,24 +31,20 @@ export default function MovieDetail({ id }: DetailProps) {
     )
   }
 
-  return <Detail detail={data} id={id} isMovie={true} />
+  return <Detail detail={data} id={parsedId} isMovie={true} />
 }
 
 export async function getServerSideProps({
-  req,
+  req: { url },
   query: { id },
 }: GetServerSidePropsContext) {
-  const isClient = isClientReq(req)
-  const parsedId = Number(id)
-
-  if (isClient) {
+  if (isClientReq(url)) {
     return {
-      props: {
-        id: parsedId,
-      },
+      props: {},
     }
   }
 
+  const parsedId = Number(id)
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery(['movieDetail', parsedId], () =>
