@@ -3,9 +3,11 @@ import Helmet from '../../components/common/Helmet'
 import Header from '../../components/common/Header'
 import { tvApi } from '../api'
 import { Container } from '..'
-import { useQueries } from 'react-query'
+import { dehydrate, QueryClient, useQueries } from 'react-query'
 import Loading from '../../components/common/Loading'
 import Infos from '../../components/common/Infos'
+import { GetServerSidePropsContext } from 'next'
+import { isClientReq } from '../../utils'
 
 export function TV() {
   const [
@@ -89,6 +91,29 @@ export function TV() {
       </Container>
     </>
   )
+}
+
+export async function getServerSideProps({
+  req: { url },
+}: GetServerSidePropsContext) {
+  if (isClientReq(url)) {
+    return {
+      props: {},
+    }
+  }
+
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery(['airingToday'], () => tvApi.airingToday())
+  await queryClient.prefetchQuery(['onTheAir'], () => tvApi.onTheAir())
+  await queryClient.prefetchQuery(['popularTv'], () => tvApi.popular())
+  await queryClient.prefetchQuery(['topRatedTv'], () => tvApi.topRated())
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  }
 }
 
 export default TV

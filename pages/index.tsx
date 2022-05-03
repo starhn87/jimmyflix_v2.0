@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { moviesApi } from './api'
 import styled from '@emotion/styled'
-import { useQueries } from 'react-query'
+import { dehydrate, QueryClient, useQueries } from 'react-query'
 import Loading from '../components/common/Loading'
 import HelmetWrapper from '../components/common/Helmet'
 import Infos from '../components/common/Infos'
+import { GetServerSidePropsContext, GetStaticPropsContext } from 'next'
+import { isClientReq } from '../utils'
 
 function Home() {
   const [
@@ -87,6 +89,29 @@ function Home() {
       </Container>
     </>
   )
+}
+
+export async function getServerSideProps({
+  req: { url },
+}: GetServerSidePropsContext) {
+  if (isClientReq(url)) {
+    return {
+      props: {},
+    }
+  }
+
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery(['nowPlaying'], () => moviesApi.nowPlaying())
+  await queryClient.prefetchQuery(['upcoming'], () => moviesApi.upcoming())
+  await queryClient.prefetchQuery(['popularMovie'], () => moviesApi.popular())
+  await queryClient.prefetchQuery(['topRatedMovie'], () => moviesApi.topRated())
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  }
 }
 
 export default Home

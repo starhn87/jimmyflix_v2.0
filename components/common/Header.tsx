@@ -50,9 +50,9 @@ function Header() {
             <Anchor>TV</Anchor>
           </Link>
         </Item>
-        <Item current={router.pathname === '/trending'}>
-          <Link href="/trending">
-            <Anchor>Trending</Anchor>
+        <Item current={router.pathname === '/trend'}>
+          <Link href="/trend">
+            <Anchor>Trend</Anchor>
           </Link>
         </Item>
         <Item
