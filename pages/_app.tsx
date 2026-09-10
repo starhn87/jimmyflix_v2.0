@@ -4,6 +4,7 @@ import { RecoilRoot } from 'recoil'
 import { Global, css } from '@emotion/react'
 import emotionReset from 'emotion-reset'
 import Header from '../components/common/Header'
+import { useState } from 'react'
 
 const GlobalStyles = css`
   ${emotionReset}
@@ -36,18 +37,21 @@ const GlobalStyles = css`
   }
 `
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 1000, // 1분
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-})
-
 function MyApp({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000, // 1분
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+  )
+
   return (
     <>
       <Global styles={GlobalStyles} />

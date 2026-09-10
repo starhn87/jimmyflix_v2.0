@@ -37,7 +37,7 @@ function Header() {
             router.pathname === '/' || router.pathname.includes('/movies')
           }
         >
-          <Link href="/">
+          <Link href="/" passHref>
             <Anchor>Movies</Anchor>
           </Link>
         </Item>
@@ -46,12 +46,12 @@ function Header() {
             router.pathname === '/tvs' || router.pathname.includes('/tvs')
           }
         >
-          <Link href="/tvs">
+          <Link href="/tvs" passHref>
             <Anchor>TV</Anchor>
           </Link>
         </Item>
         <Item current={router.pathname === '/trend'}>
-          <Link href="/trend">
+          <Link href="/trend" passHref>
             <Anchor>Trend</Anchor>
           </Link>
         </Item>
@@ -59,7 +59,7 @@ function Header() {
           current={router.pathname.includes('/search')}
           onClick={() => onClick()}
         >
-          <Link href="/search">
+          <Link href="/search" passHref>
             <Anchor>Search</Anchor>
           </Link>
         </Item>

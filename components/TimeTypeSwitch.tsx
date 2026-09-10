@@ -4,14 +4,16 @@ import { TimeType } from '../interface'
 import { useRecoilState } from 'recoil'
 import { timeTypeState } from '../recoil/store'
 
-const TIME_TYPE = [
+const TIME_TYPES: { id: number; label: string; value: TimeType }[] = [
   {
     id: 1,
-    name: 'Day',
+    label: 'Day',
+    value: 'day',
   },
   {
     id: 2,
-    name: 'Week',
+    label: 'Week',
+    value: 'week',
   },
 ]
 
@@ -25,13 +27,15 @@ export default function TimeTypeSwitch() {
   return (
     <Wrapper>
       <MatchTypeBox>
-        {TIME_TYPE.map((time) => (
+        {TIME_TYPES.map((time) => (
           <MatchType
             key={time.id}
-            className={`${timeType === time.name ? 'active' : ''}`}
-            onClick={() => onClick(time.name as TimeType)}
+            type="button"
+            aria-pressed={timeType === time.value}
+            className={`${timeType === time.value ? 'active' : ''}`}
+            onClick={() => onClick(time.value)}
           >
-            <ContentBox>{time.name}</ContentBox>
+            <ContentBox>{time.label}</ContentBox>
           </MatchType>
         ))}
       </MatchTypeBox>
@@ -89,9 +93,4 @@ const ContentBox = styled.article`
   justify-content: center;
   align-items: center;
   line-height: 1px;
-`
-
-const Icon = styled.div`
-  margin-right: 5px;
-  font-size: 18px;
 `

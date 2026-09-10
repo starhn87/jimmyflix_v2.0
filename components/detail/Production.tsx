@@ -1,6 +1,5 @@
-import React, { useId } from 'react'
+import React from 'react'
 import { Box, Flag, Logo, Name, Product } from '../../components/detail'
-import DefaultProduction from '../../public/images/defaultProduction.png'
 import Message from '../common/Message'
 import Section from '../common/Section'
 import { ICompany, ICountry } from '../../interface'
@@ -28,7 +27,7 @@ export default function Production({
                       src={
                         company.logo_path
                           ? `https://image.tmdb.org/t/p/original${company.logo_path}`
-                          : DefaultProduction.src
+                          : '/images/defaultProduction.png'
                       }
                       alt={`${company.name}`}
                     />
@@ -45,9 +44,10 @@ export default function Production({
           {production_countries?.length > 0 && (
             <Section slide={false} title="Production Countries">
               {production_countries.map((country: ICountry) => (
-                <div key={useId()}>
+                <div key={country.iso_3166_1}>
                   <Flag
                     src={`https://flagcdn.com/w160/${country.iso_3166_1.toLowerCase()}.png`}
+                    alt={`${country.name} flag`}
                   />
                   <Name>
                     {country.name.length > 17

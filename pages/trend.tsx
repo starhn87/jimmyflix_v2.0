@@ -67,7 +67,7 @@ export async function getServerSideProps({
     }
   }
 
-  const timeType = 'Day'
+  const timeType: TimeType = 'day'
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery(['movieTrend', timeType], () =>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import Helmet from '../../components/common/Helmet'
-import Header from '../../components/common/Header'
 import { tvApi } from '../api'
 import { Container } from '..'
 import { dehydrate, QueryClient, useQueries } from 'react-query'
@@ -62,7 +61,6 @@ export function TV() {
   return (
     <>
       <Helmet content="TV Shows | Jimmyflix" />
-      <Header />
       <Container>
         <Infos
           slider={true}

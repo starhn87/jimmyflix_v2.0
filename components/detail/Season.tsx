@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Logo, Name, Product, Wrapper } from '../../components/detail'
-import DefaultPoster from '../../public/images/defaultPoster.png'
 import { ISeason } from '../../interface'
 
 interface SeasonProps {
@@ -20,7 +19,7 @@ export default function Season({ seasons }: SeasonProps) {
                     src={
                       season.poster_path
                         ? `https://image.tmdb.org/t/p/original${season.poster_path}`
-                        : DefaultPoster.src
+                        : '/images/defaultPoster.png'
                     }
                     alt={season.name}
                   />

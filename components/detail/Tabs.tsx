@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import styled from '@emotion/styled'
 import { TabType } from '../../interface'
 
@@ -15,25 +15,14 @@ export default function Tabs({
   seasons,
   onClick,
 }: TabsProps) {
-  const [menus, setMenu] = useState<TabType[]>([
+  const menus: TabType[] = [
     'Trailer',
     'Credits',
     'Production',
-  ])
+  ]
 
-  useEffect(() => {
-    const newMenus = [...menus]
-
-    if (collections) {
-      newMenus.push('Collection')
-    }
-
-    if (seasons) {
-      newMenus.push('Season')
-    }
-
-    setMenu(newMenus)
-  }, [])
+  if (collections) menus.push('Collection')
+  if (seasons) menus.push('Season')
 
   return (
     <Tab>

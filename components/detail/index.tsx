@@ -4,8 +4,6 @@ import Message from '../../components/common/Message'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { Grid } from '../../components/common/Section'
-import DefaultPoster from '../../public/images/defaultPoster.png'
-import imdb from '../../public/images/imdb.png'
 import Info from '../../components/detail/Info'
 import Tabs from '../../components/detail/Tabs'
 import Trailer from '../../components/detail/Trailer'
@@ -57,7 +55,7 @@ function Detail({ detail, id, isMovie }: DetailProps) {
             bgImage={
               detail.poster_path
                 ? `https://image.tmdb.org/t/p/original${detail.poster_path}`
-                : DefaultPoster.src
+                : '/images/defaultPoster.png'
             }
           />
           <Data>
@@ -67,7 +65,7 @@ function Detail({ detail, id, isMovie }: DetailProps) {
                 target="_blank"
                 href={`https://www.imdb.com/title/${detail.imdb_id}`}
               >
-                <Img src={imdb.src}></Img>
+                <Img src="/images/imdb.png" alt="View on IMDb" />
               </ILink>
             </Title>
             <Info
@@ -82,7 +80,7 @@ function Detail({ detail, id, isMovie }: DetailProps) {
             <Tabs
               selected={tabName}
               collections={!!detail.belongs_to_collection}
-              seasons={!!detail.seasons}
+              seasons={detail.seasons?.length > 0}
               onClick={setTabName}
             />
             {tabContent[tabName]}

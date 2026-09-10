@@ -82,4 +82,4 @@ export type TabType =
   | 'Production'
   | 'Collection'
 
-export type TimeType = 'Day' | 'Week'
+export type TimeType = 'day' | 'week'

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Logo, Name, Product, Wrapper } from '../detail'
-import DefaultPerson from '../../public/images/defaultPerson.png'
 import Message from '../common/Message'
 import { useQuery } from 'react-query'
 import { moviesApi, tvApi } from '../../pages/api'
@@ -13,13 +12,11 @@ interface CreditProps {
 }
 
 export default function Credit({ isMovie, id }: CreditProps) {
-  const { data, isError, isFetching } = useQuery(['credit', id], () => {
-    if (isMovie) {
-      return moviesApi.cast(id)
-    } else {
-      return tvApi.cast(id)
-    }
-  })
+  const mediaType = isMovie ? 'movie' : 'tv'
+  const { data, isError, isFetching } = useQuery(
+    ['credit', mediaType, id],
+    () => (isMovie ? moviesApi.cast(id) : tvApi.cast(id)),
+  )
 
   if (isFetching) {
     return <Loading />
@@ -37,7 +34,7 @@ export default function Credit({ isMovie, id }: CreditProps) {
                     src={
                       profile.profile_path
                         ? `https://image.tmdb.org/t/p/original${profile.profile_path}`
-                        : DefaultPerson.src
+                        : '/images/defaultPerson.png'
                     }
                     alt={profile.original_name}
                   />
@@ -50,7 +47,7 @@ export default function Credit({ isMovie, id }: CreditProps) {
         </Box>
       )}
       {isError && <Message color="#e74c3c" text={'Error in credits.'} />}
-      {!isError && data.length === 0 && (
+      {!isError && data?.length === 0 && (
         <Message color="#eee" text={'No Credits Found'} />
       )}
     </>

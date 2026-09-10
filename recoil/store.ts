@@ -13,5 +13,5 @@ export const searchValueState = atom({
 
 export const timeTypeState = atom<TimeType>({
   key: 'timeType',
-  default: 'Day',
+  default: 'day',
 })

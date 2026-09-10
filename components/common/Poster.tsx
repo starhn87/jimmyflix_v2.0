@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
 import styled from '@emotion/styled'
-import DefaultPoster from '../../public/images/defaultPoster.png'
 
 interface PosterProps {
   id: number
@@ -25,11 +24,12 @@ const Poster = ({
       <Container>
         <ImageContainer>
           <Image
-            bgUrl={
+            src={
               imageUrl
                 ? `https://image.tmdb.org/t/p/w300${imageUrl}`
-                : DefaultPoster.src
+                : '/images/defaultPoster.png'
             }
+            alt={`${title} poster`}
           />
           <Rating>
             <span role="img" aria-label="rating">
@@ -52,12 +52,12 @@ const Container = styled.div`
   font-size: 12px;
 `
 
-const Image = styled.div<{ bgUrl: string }>`
+const Image = styled.img`
+  display: block;
+  width: 100%;
   height: 220px;
-  background-image: url(${(props) => props.bgUrl});
-  background-size: cover;
+  object-fit: cover;
   border-radius: 4px;
-  background-position: center center;
   transition: opacity 0.1s linear;
 `
 
