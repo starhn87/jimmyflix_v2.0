@@ -2,7 +2,7 @@ const cardPlaceholders = Array.from({ length: 8 })
 const linePlaceholders = Array.from({ length: 3 })
 
 function Bone({ className }: { className: string }) {
-  return <div className={`bg-white/7 ${className}`} />
+  return <div className={`bg-tone/7 ${className}`} />
 }
 
 function LoadingAnnouncement({ label }: { label: string }) {
@@ -35,8 +35,8 @@ function MediaRailSkeletonVisual() {
 function HeroSkeletonVisual() {
   return (
     <section aria-hidden="true" className="relative min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_28%,rgba(34,211,238,0.09),rgba(8,11,18,0.5)_54%,#080b12_86%)]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#080b12] via-[#0d1420]/65 to-[#0d1420]/30" />
+      <div className="absolute inset-0 hero-vignette" />
+      <div className="absolute inset-0 bg-gradient-to-t from-canvas via-surface/65 to-surface/30" />
       <div className="relative mx-auto flex min-h-[520px] max-w-[1600px] items-end px-4 pb-20 sm:min-h-[600px] sm:px-6 sm:pb-24 lg:min-h-[680px] lg:px-10 lg:pb-28">
         <div className="w-full max-w-2xl">
           <Bone className="h-3 w-32 rounded-full" />
@@ -163,11 +163,11 @@ export function DetailSkeleton({ label }: { label: string }) {
       aria-busy="true"
       aria-live="polite"
       aria-label={label}
-      className="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-[#080b12]"
+      className="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-canvas"
     >
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
-        <div aria-hidden="true" className="absolute inset-x-0 top-0 hidden h-[780px] bg-[radial-gradient(circle_at_72%_20%,rgba(34,211,238,0.08),transparent_45%),linear-gradient(to_bottom,rgba(18,27,40,0.8),#080b12)] md:block" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 hidden h-[780px] bg-gradient-to-b from-surface/80 to-canvas md:block" />
         <div aria-hidden="true" className="relative mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
           <Bone className="aspect-2/3 w-full rounded-2xl lg:row-span-3" />
 

@@ -34,34 +34,34 @@ export function Hero({ item, mediaType, eyebrow }: HeroProps) {
           className="-z-30 object-cover object-center"
         />
       ) : null}
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_76%_28%,rgba(8,11,18,0.05),rgba(8,11,18,0.72)_55%,#080b12_86%)]" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#080b12] via-[#080b12]/35 to-[#080b12]/15" />
+      <div className="absolute inset-0 -z-20 hero-vignette" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-canvas via-canvas/35 to-canvas/15" />
       <div className="mx-auto flex min-h-[520px] max-w-[1600px] items-end px-4 pb-20 sm:min-h-[600px] sm:px-6 sm:pb-24 lg:min-h-[680px] lg:px-10 lg:pb-28">
         <div className="max-w-2xl">
-          <p className="text-xs font-semibold tracking-[0.24em] text-cyan-300 uppercase sm:text-sm">
+          <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase sm:text-sm">
             {eyebrow}
           </p>
-          <h1 id="featured-title" className="mt-4 text-4xl leading-[1.04] font-bold tracking-[-0.035em] text-balance text-white drop-shadow-2xl sm:text-6xl lg:text-7xl">
+          <h1 id="featured-title" className="mt-4 text-4xl leading-[1.04] font-bold tracking-[-0.035em] text-balance text-ink sm:text-6xl lg:text-7xl">
             {title}
           </h1>
-          <div className="mt-5 flex flex-wrap items-center gap-2 text-sm text-slate-200">
-            <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-white/16 bg-black/35 px-3 backdrop-blur-sm">
-              {rating.value === 'NR' ? null : <StarIcon className="size-3.5 text-amber-300" />}
+          <div className="mt-5 flex flex-wrap items-center gap-2 text-sm text-muted">
+            <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-tone/16 bg-overlay px-3 backdrop-blur-sm">
+              {rating.value === 'NR' ? null : <StarIcon className="size-3.5 text-warning" />}
               {rating.value === 'NR' ? 'Not rated' : `${rating.value}/10`}
             </span>
-            <span className="inline-flex min-h-8 items-center rounded-full border border-white/16 bg-black/35 px-3 backdrop-blur-sm">
+            <span className="inline-flex min-h-8 items-center rounded-full border border-tone/16 bg-overlay px-3 backdrop-blur-sm">
               {getMediaYear(item)}
             </span>
           </div>
           {item.overview ? (
-            <p className="mt-5 line-clamp-3 max-w-xl text-sm leading-6 text-slate-200/90 drop-shadow-lg sm:text-base sm:leading-7">
+            <p className="mt-5 line-clamp-3 max-w-xl text-sm leading-6 text-muted/90 sm:text-base sm:leading-7">
               {item.overview}
             </p>
           ) : null}
           <Link
             href={getMediaHref(item, mediaType)}
             prefetch={false}
-            className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-bold text-slate-950 shadow-xl shadow-black/25 outline-none transition hover:bg-cyan-100 focus-visible:ring-4 focus-visible:ring-cyan-300/40"
+            className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-action px-6 text-sm font-bold text-on-action shadow-panel outline-none transition hover:bg-action-hover focus-visible:ring-4 focus-visible:ring-accent/40"
           >
             <PlayIcon className="size-4" />
             View details

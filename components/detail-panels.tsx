@@ -13,14 +13,14 @@ import type {
   Video,
 } from '@/types/tmdb'
 
-const panelHeading = 'text-lg font-semibold tracking-tight text-white sm:text-xl'
+const panelHeading = 'text-lg font-semibold tracking-tight text-ink sm:text-xl'
 const responsiveCardGrid =
   'mt-5 flex flex-wrap justify-center gap-x-4 gap-y-8 sm:gap-5 lg:justify-start'
 const centeredItem = 'w-[47%] max-w-[180px] text-center sm:w-[180px]'
 
 function EmptyPanel({ message }: { message: string }) {
   return (
-    <p className="mt-7 rounded-2xl border border-white/8 bg-white/4 p-7 text-center text-sm text-slate-400">
+    <p className="mt-7 rounded-2xl border border-tone/8 bg-tone/4 p-7 text-center text-sm text-subtle">
       {message}
     </p>
   )
@@ -64,7 +64,7 @@ export function CreditsPanel({
       <ul className={responsiveCardGrid}>
         {cast.slice(0, 30).map((person) => (
           <li key={`${person.id}-${person.character || person.name}`} className={centeredItem}>
-            <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-white/8 bg-slate-900 shadow-lg shadow-black/25">
+            <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-lg shadow-black/25">
               <Image
                 src={getProfileUrl(person.profile_path)}
                 alt={person.name || person.original_name}
@@ -73,8 +73,8 @@ export function CreditsPanel({
                 className="object-cover object-center"
               />
             </div>
-            <p className="mt-3 text-sm font-semibold text-white">{person.name || person.original_name}</p>
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-3 text-sm font-semibold text-ink">{person.name || person.original_name}</p>
+            <p className="mt-1 text-xs leading-5 text-faint">
               {person.character || 'Cast member'}
             </p>
           </li>
@@ -88,7 +88,7 @@ function CompanyCard({ company }: { company: ProductionCompany }) {
   const logo = getImageUrl(company.logo_path, 'w300') || '/images/defaultProduction.png'
   return (
     <li className={centeredItem}>
-      <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-xl border border-white/10 bg-slate-100 shadow-lg shadow-black/20">
+      <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-xl border border-tone/10 bg-slate-100 shadow-panel">
         <Image
           src={logo}
           alt={company.name}
@@ -97,7 +97,7 @@ function CompanyCard({ company }: { company: ProductionCompany }) {
           className="object-contain object-center p-4"
         />
       </div>
-      <p className="mt-3 text-sm leading-5 font-medium text-slate-200">{company.name}</p>
+      <p className="mt-3 text-sm leading-5 font-medium text-muted">{company.name}</p>
     </li>
   )
 }
@@ -105,7 +105,7 @@ function CompanyCard({ company }: { company: ProductionCompany }) {
 function CountryCard({ country }: { country: ProductionCountry }) {
   return (
     <li className={centeredItem}>
-      <div className="relative mx-auto aspect-5/3 w-full overflow-hidden rounded-xl border border-white/10 bg-slate-900 shadow-lg shadow-black/20">
+      <div className="relative mx-auto aspect-5/3 w-full overflow-hidden rounded-xl border border-tone/10 bg-surface shadow-panel">
         <Image
           src={`https://flagcdn.com/w320/${country.iso_3166_1.toLowerCase()}.png`}
           alt={`${country.name} flag`}
@@ -114,7 +114,7 @@ function CountryCard({ country }: { country: ProductionCountry }) {
           className="object-cover object-center"
         />
       </div>
-      <p className="mt-3 text-sm leading-5 font-medium text-slate-200">{country.name}</p>
+      <p className="mt-3 text-sm leading-5 font-medium text-muted">{country.name}</p>
     </li>
   )
 }
@@ -160,7 +160,7 @@ export function SeasonsPanel({ seasons }: { seasons: Season[] }) {
       <ul className={responsiveCardGrid}>
         {seasons.map((season) => (
           <li key={season.id} className={centeredItem}>
-            <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-white/8 bg-slate-900">
+            <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface">
               <Image
                 src={getImageUrl(season.poster_path, 'w342') || '/images/defaultPoster.png'}
                 alt={`${season.name} poster`}
@@ -169,7 +169,7 @@ export function SeasonsPanel({ seasons }: { seasons: Season[] }) {
                 className="object-cover object-center"
               />
             </div>
-            <p className="mt-3 text-sm font-medium text-white">{season.name}</p>
+            <p className="mt-3 text-sm font-medium text-ink">{season.name}</p>
           </li>
         ))}
       </ul>

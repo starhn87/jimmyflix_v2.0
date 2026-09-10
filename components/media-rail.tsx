@@ -18,11 +18,11 @@ export function MediaRail({ title, description, children }: MediaRailProps) {
         <div>
           <h2
             id={titleId}
-            className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
+            className="text-xl font-semibold tracking-tight text-ink sm:text-2xl"
           >
             {title}
           </h2>
-          <p className="mt-1 text-sm text-slate-500">{description}</p>
+          <p className="mt-1 text-sm text-faint">{description}</p>
         </div>
       </div>
 

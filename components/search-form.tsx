@@ -39,13 +39,13 @@ export function SearchForm({ initialQuery = '', compact = false }: SearchFormPro
       <div className="w-full">
         {!compact ? (
           <div className="mb-8 text-center">
-            <p className="text-xs font-semibold tracking-[0.24em] text-cyan-300 uppercase">
+            <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase">
               Find your next watch
             </p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance text-white sm:text-5xl">
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance text-ink sm:text-5xl">
               Search every story
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-slate-400 sm:text-base">
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-subtle sm:text-base">
               Explore movies and TV shows by title.
             </p>
           </div>
@@ -55,7 +55,7 @@ export function SearchForm({ initialQuery = '', compact = false }: SearchFormPro
           <label htmlFor="main-search" className="sr-only">
             Movie or TV show title
           </label>
-          <div className="group grid min-h-15 grid-cols-[minmax(0,1fr)_58px] overflow-hidden rounded-2xl border border-white/15 bg-white/7 shadow-2xl shadow-black/25 transition focus-within:border-cyan-300/70 focus-within:ring-4 focus-within:ring-cyan-300/10">
+          <div className="group grid min-h-15 grid-cols-[minmax(0,1fr)_58px] overflow-hidden rounded-2xl border border-tone/15 bg-tone/7 shadow-media transition focus-within:border-accent/70 focus-within:ring-4 focus-within:ring-accent/10">
             <input
               ref={inputRef}
               id="main-search"
@@ -69,19 +69,19 @@ export function SearchForm({ initialQuery = '', compact = false }: SearchFormPro
               aria-invalid={Boolean(error)}
               aria-describedby={error ? 'main-search-error' : undefined}
               spellCheck={false}
-              className="min-w-0 bg-transparent px-5 text-base text-white outline-none placeholder:text-slate-500 sm:text-lg"
+              className="min-w-0 bg-transparent px-5 text-base text-ink outline-none placeholder:text-faint sm:text-lg"
             />
             <button
               type="submit"
               aria-label="Search movies and TV shows"
-              className="grid place-items-center border-l border-white/10 bg-cyan-300 text-slate-950 outline-none transition hover:bg-cyan-200 focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-white"
+              className="grid place-items-center border-l border-tone/10 bg-action text-on-action outline-none transition hover:bg-action-hover focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-white"
             >
               <SearchIcon className="size-6" />
             </button>
           </div>
         </form>
         {error ? (
-          <p id="main-search-error" role="alert" className="mt-3 px-2 text-sm text-rose-300">
+          <p id="main-search-error" role="alert" className="mt-3 px-2 text-sm text-danger">
             {error}
           </p>
         ) : null}

@@ -25,14 +25,14 @@ export function ErrorState({
         compact ? 'min-h-40 p-6' : 'my-16 min-h-72 max-w-3xl p-8 sm:p-12'
       }`}
     >
-      <h2 className="text-xl font-semibold text-white sm:text-2xl">{title}</h2>
-      <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400 sm:text-base">{message}</p>
+      <h2 className="text-xl font-semibold text-ink sm:text-2xl">{title}</h2>
+      <p className="mt-3 max-w-xl text-sm leading-6 text-subtle sm:text-base">{message}</p>
       <div className="flex flex-wrap items-center justify-center gap-3">
         {retry ? <RetryButton /> : null}
         {backHref ? (
           <Link
             href={backHref}
-            className="mt-5 inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 text-sm font-semibold text-slate-200 outline-none transition hover:bg-white/8 focus-visible:ring-3 focus-visible:ring-cyan-300/35"
+            className="mt-5 inline-flex min-h-11 items-center rounded-full border border-tone/15 px-5 text-sm font-semibold text-muted outline-none transition hover:bg-tone/8 focus-visible:ring-3 focus-visible:ring-accent/35"
           >
             {backLabel}
           </Link>

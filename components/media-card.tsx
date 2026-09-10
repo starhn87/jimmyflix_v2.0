@@ -29,10 +29,10 @@ export function MediaCard({ item, mediaType, highPriority = false }: MediaCardPr
       href={getMediaHref(item, type)}
       prefetch={false}
       aria-label={`${title}, ${typeLabel}, ${year}, ${rating.label}`}
-      className="group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-cyan-300/60 focus-visible:ring-offset-4 focus-visible:ring-offset-[#080b12]"
+      className="group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
     >
       <article className="min-w-0">
-        <div className="relative aspect-2/3 overflow-hidden rounded-xl border border-white/8 bg-slate-900 shadow-[0_16px_45px_rgba(0,0,0,0.32)]">
+        <div className="relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media">
           <Image
             src={getPosterUrl(item.poster_path)}
             alt={`${title} poster`}
@@ -44,18 +44,18 @@ export function MediaCard({ item, mediaType, highPriority = false }: MediaCardPr
           <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/75 to-transparent" />
           <span
             aria-label={rating.label}
-            className="absolute right-2 bottom-2 inline-flex min-h-7 items-center gap-1 rounded-full border border-white/15 bg-black/80 px-2 text-xs font-semibold text-white shadow-lg backdrop-blur-sm"
+            className="absolute right-2 bottom-2 inline-flex min-h-7 items-center gap-1 rounded-full border border-tone/15 bg-black/80 px-2 text-xs font-semibold text-white shadow-lg backdrop-blur-sm"
           >
             {rating.value === 'NR' ? null : <StarIcon className="size-3 text-amber-300" />}
             {rating.value}
           </span>
         </div>
-        <h3 className="mt-3 line-clamp-2 min-h-[2.65rem] text-[0.92rem] leading-[1.35] font-semibold text-white transition-colors group-hover:text-cyan-100">
+        <h3 className="mt-3 line-clamp-2 min-h-[2.65rem] text-[0.92rem] leading-[1.35] font-semibold text-ink transition-colors group-hover:text-accent-strong">
           {title}
         </h3>
-        <p className="mt-1 flex items-center justify-between gap-2 text-xs text-slate-500">
+        <p className="mt-1 flex items-center justify-between gap-2 text-xs text-faint">
           <span className="truncate">{year}</span>
-          <span className="shrink-0 font-medium text-cyan-300/80">
+          <span className="shrink-0 font-medium text-accent/80">
             {type === 'movie' ? 'Movie' : 'TV'}
           </span>
         </p>

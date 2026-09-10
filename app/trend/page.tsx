@@ -24,13 +24,13 @@ export default async function TrendPage({ searchParams }: TrendPageProps) {
   return (
     <main className="pb-20">
       <header className="mx-auto max-w-[1600px] px-4 pt-14 pb-10 sm:px-6 sm:pt-20 lg:px-10">
-        <p className="text-xs font-semibold tracking-[0.24em] text-cyan-300 uppercase">
+        <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase">
           Live discovery
         </p>
-        <h1 className="mt-3 text-4xl font-bold tracking-[-0.035em] text-white sm:text-6xl">
+        <h1 className="mt-3 text-4xl font-bold tracking-[-0.035em] text-ink sm:text-6xl">
           What’s trending
         </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
+        <p className="mt-4 max-w-2xl text-sm leading-6 text-subtle sm:text-base">
           Follow the movies and shows attracting the most attention right now.
         </p>
         <TimeWindowSwitch selected={window} />

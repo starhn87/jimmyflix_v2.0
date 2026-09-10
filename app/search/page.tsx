@@ -17,9 +17,9 @@ interface SearchPageProps {
 
 function EmptyResults({ query }: { query: string }) {
   return (
-    <section className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/4 px-6 py-12 text-center">
-      <h2 className="text-xl font-semibold text-white">No matches for “{query}”</h2>
-      <p className="mt-3 text-sm leading-6 text-slate-400">
+    <section className="mx-auto max-w-2xl rounded-2xl border border-tone/10 bg-tone/4 px-6 py-12 text-center">
+      <h2 className="text-xl font-semibold text-ink">No matches for “{query}”</h2>
+      <p className="mt-3 text-sm leading-6 text-subtle">
         Check the spelling or try a shorter title.
       </p>
     </section>
@@ -37,7 +37,7 @@ async function SearchResults({ query }: { query: string }) {
 
   return (
     <>
-      <p className="mx-auto max-w-[1600px] px-4 pb-8 text-sm text-slate-400 sm:px-6 lg:px-10">
+      <p className="mx-auto max-w-[1600px] px-4 pb-8 text-sm text-subtle sm:px-6 lg:px-10">
         {total === 1 ? '1 title found' : `${total} titles found`}
       </p>
       <div className="mx-auto max-w-[1600px] space-y-14 px-4 sm:px-6 lg:px-10">
@@ -49,7 +49,7 @@ async function SearchResults({ query }: { query: string }) {
           />
         ) : movies.length > 0 ? (
           <section aria-labelledby="movie-results-title">
-            <h2 id="movie-results-title" className="mb-5 text-xl font-semibold text-white sm:text-2xl">
+            <h2 id="movie-results-title" className="mb-5 text-xl font-semibold text-ink sm:text-2xl">
               Movies
             </h2>
             <MediaGrid items={movies} mediaType="movie" label="Movie search results" />
@@ -64,7 +64,7 @@ async function SearchResults({ query }: { query: string }) {
           />
         ) : tvShows.length > 0 ? (
           <section aria-labelledby="tv-results-title">
-            <h2 id="tv-results-title" className="mb-5 text-xl font-semibold text-white sm:text-2xl">
+            <h2 id="tv-results-title" className="mb-5 text-xl font-semibold text-ink sm:text-2xl">
               TV shows
             </h2>
             <MediaGrid items={tvShows} mediaType="tv" label="TV show search results" />
@@ -96,10 +96,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     <main className="pb-20">
       <SearchForm key={`form-${query}`} initialQuery={query} compact />
       <header className="mx-auto max-w-[1600px] px-4 pb-4 sm:px-6 lg:px-10">
-        <p className="text-xs font-semibold tracking-[0.24em] text-cyan-300 uppercase">
+        <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase">
           Search results
         </p>
-        <h1 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">
+        <h1 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-ink sm:text-5xl">
           “{query}”
         </h1>
       </header>

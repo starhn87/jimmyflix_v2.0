@@ -26,7 +26,7 @@ export function BackButton({ fallbackHref = '/' }: BackButtonProps) {
     <button
       type="button"
       onClick={goBack}
-      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 text-sm font-semibold text-slate-200 outline-none transition hover:border-white/25 hover:bg-white/10 hover:text-white focus-visible:ring-3 focus-visible:ring-cyan-300/35"
+      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-tone/15 bg-tone/5 px-5 text-sm font-semibold text-muted outline-none transition hover:border-tone/25 hover:bg-tone/10 hover:text-ink focus-visible:ring-3 focus-visible:ring-accent/35"
     >
       <ArrowLeftIcon className="size-4" />
       Go back

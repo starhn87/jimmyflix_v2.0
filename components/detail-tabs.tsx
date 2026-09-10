@@ -44,7 +44,7 @@ export function DetailTabs({ tabs }: DetailTabsProps) {
 
   return (
     <div>
-      <div className="no-scrollbar overflow-x-auto rounded-2xl border border-white/10 bg-black/30 p-1.5 shadow-xl shadow-black/20 backdrop-blur-md">
+      <div className="no-scrollbar overflow-x-auto rounded-2xl border border-tone/10 bg-overlay p-1.5 shadow-panel backdrop-blur-md">
         <div role="tablist" aria-label="Title information" className="flex min-w-max gap-1">
           {tabs.map((tab, index) => {
             const active = selected.id === tab.id
@@ -65,15 +65,15 @@ export function DetailTabs({ tabs }: DetailTabsProps) {
                 tabIndex={active ? 0 : -1}
                 onClick={() => setSelectedId(tab.id)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
-                className={`relative min-h-11 min-w-28 rounded-xl px-5 text-sm font-semibold outline-none transition focus-visible:ring-3 focus-visible:ring-cyan-300/40 ${
+                className={`relative min-h-11 min-w-28 rounded-xl px-5 text-sm font-semibold outline-none transition focus-visible:ring-3 focus-visible:ring-accent/40 ${
                   active
-                    ? 'bg-white/10 text-white shadow-inner'
-                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                    ? 'bg-tone/10 text-ink shadow-inner'
+                    : 'text-subtle hover:bg-tone/5 hover:text-ink'
                 }`}
               >
                 {tab.label}
                 {active ? (
-                  <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-full bg-cyan-300" />
+                  <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-full bg-action" />
                 ) : null}
               </button>
             )
@@ -86,7 +86,7 @@ export function DetailTabs({ tabs }: DetailTabsProps) {
         role="tabpanel"
         aria-labelledby={`${instanceId}-${selected.id}-tab`}
         tabIndex={0}
-        className="min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-cyan-300/25"
+        className="min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/25"
       >
         {selected.content}
       </div>
