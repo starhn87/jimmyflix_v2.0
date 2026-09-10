@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Logo, Name, Product, Wrapper } from '../detail'
+import { Box, CenteredItem, Logo, Name, Product, Wrapper } from '../detail'
 import Message from '../common/Message'
 import { useQuery } from 'react-query'
 import { moviesApi, tvApi } from '../../pages/api'
@@ -40,7 +40,7 @@ export default function Credit({ isMovie, id }: CreditProps) {
         <Box>
           <Wrapper>
             {data.map((profile: IProfile) => (
-              <div key={profile.id}>
+              <CenteredItem key={profile.id}>
                 <Product>
                   <Logo
                     src={
@@ -53,7 +53,7 @@ export default function Credit({ isMovie, id }: CreditProps) {
                 </Product>
                 <Name>{profile.character}</Name>
                 <Name>({profile.original_name})</Name>
-              </div>
+              </CenteredItem>
             ))}
           </Wrapper>
         </Box>

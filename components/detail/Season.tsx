@@ -1,5 +1,12 @@
 import React from 'react'
-import { Box, Logo, Name, Product, Wrapper } from '../../components/detail'
+import {
+  Box,
+  CenteredItem,
+  Logo,
+  Name,
+  Product,
+  Wrapper,
+} from '../../components/detail'
 import { ISeason } from '../../interface'
 
 interface SeasonProps {
@@ -13,7 +20,7 @@ export default function Season({ seasons }: SeasonProps) {
         <Box>
           <Wrapper>
             {seasons.map((season: ISeason) => (
-              <div key={season.id}>
+              <CenteredItem key={season.id}>
                 <Product>
                   <Logo
                     src={
@@ -29,7 +36,7 @@ export default function Season({ seasons }: SeasonProps) {
                     ? `${season.name.substring(0, 20)}...`
                     : season.name}
                 </Name>
-              </div>
+              </CenteredItem>
             ))}
           </Wrapper>
         </Box>

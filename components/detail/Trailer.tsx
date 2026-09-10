@@ -14,14 +14,16 @@ export default function Trailer({ videos }: TrailerProps) {
   return (
     <>
       {videos.results && videos.results.length > 0 && (
-        <Iframe
-          key={videos.results[0].key}
-          src={`https://www.youtube.com/embed/${videos.results[0].key}`}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          title="Embedded youtube official trailer"
-        />
+        <VideoFrame>
+          <Iframe
+            key={videos.results[0].key}
+            src={`https://www.youtube.com/embed/${videos.results[0].key}`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            loading="lazy"
+            title="Embedded youtube official trailer"
+          />
+        </VideoFrame>
       )}
       {(!videos.results || videos.results.length == 0) && (
         <Message color="#eee" text={'No Trailer Found'} />
@@ -30,15 +32,20 @@ export default function Trailer({ videos }: TrailerProps) {
   )
 }
 
-const Iframe = styled.iframe`
-  margin-top: 15px;
+const VideoFrame = styled.div`
   width: 100%;
-  height: 80%;
+  max-width: 1100px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  margin: 16px auto 0;
+  border-radius: 10px;
+  background: #050505;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+`
 
-  @media (max-width: 768px) {
-    width: 95%;
-    height: 400px;
-    margin-bottom: 30px;
-    padding: 5px 0;
-  }
+const Iframe = styled.iframe`
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
 `

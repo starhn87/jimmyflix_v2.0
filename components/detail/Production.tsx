@@ -1,5 +1,12 @@
 import React from 'react'
-import { Box, Flag, Logo, Name, Product } from '../../components/detail'
+import {
+  Box,
+  CenteredItem,
+  Flag,
+  Logo,
+  Name,
+  Product,
+} from '../../components/detail'
 import Message from '../common/Message'
 import Section from '../common/Section'
 import { ICompany, ICountry } from '../../interface'
@@ -20,7 +27,7 @@ export default function Production({
           {production_companies?.length > 0 && (
             <Section slide={false} title="Production Companies">
               {production_companies.map((company: ICompany) => (
-                <div key={company.id}>
+                <CenteredItem key={company.id}>
                   <Product>
                     <Logo
                       logo={company.logo_path}
@@ -37,14 +44,14 @@ export default function Production({
                       ? `${company.name.substring(0, 17)}...`
                       : company.name}
                   </Name>
-                </div>
+                </CenteredItem>
               ))}
             </Section>
           )}
           {production_countries?.length > 0 && (
             <Section slide={false} title="Production Countries">
               {production_countries.map((country: ICountry) => (
-                <div key={country.iso_3166_1}>
+                <CenteredItem key={country.iso_3166_1}>
                   <Flag
                     src={`https://flagcdn.com/w160/${country.iso_3166_1.toLowerCase()}.png`}
                     alt={`${country.name} flag`}
@@ -54,7 +61,7 @@ export default function Production({
                       ? `${country.name.substring(0, 17)}...`
                       : country.name}
                   </Name>
-                </div>
+                </CenteredItem>
               ))}
             </Section>
           )}

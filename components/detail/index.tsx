@@ -255,27 +255,49 @@ const Panel = styled.div`
 export const Product = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 220px;
+  overflow: hidden;
   margin-bottom: 8px;
+  border-radius: 8px;
   background-color: #f7f7f7;
 `
 
 export const Logo = styled.img<{ logo?: string }>`
+  display: block;
   width: 100%;
+  height: 100%;
   max-height: 220px;
+  margin: 0 auto;
   padding: ${(props) => (props.logo ? '5px' : 0)};
+  object-fit: ${(props) => (props.logo ? 'contain' : 'cover')};
+  object-position: center;
 `
 
 export const Flag = styled.img`
-  width: 150px;
-  height: 90px;
+  display: block;
+  width: min(150px, 100%);
+  height: auto;
+  aspect-ratio: 5 / 3;
   margin-bottom: 8px;
+  margin-inline: auto;
+  object-fit: cover;
 `
 
 export const Name = styled.p`
-  margin-bottom: 10px;
-  justify-content: center;
+  margin: 0 auto 10px;
   font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  text-align: center;
+`
+
+export const CenteredItem = styled.div`
+  width: 100%;
+  max-width: 180px;
+  min-width: 0;
+  margin-inline: auto;
+  text-align: center;
 `
 
 export const Box = styled.div`
@@ -289,4 +311,12 @@ export const Box = styled.div`
 
 export const Wrapper = styled(Grid)`
   margin-top: 0;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 180px));
+  justify-content: center;
+  justify-items: center;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, minmax(0, 150px));
+    justify-content: center;
+  }
 `
