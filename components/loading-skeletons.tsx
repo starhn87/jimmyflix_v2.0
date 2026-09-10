@@ -23,11 +23,10 @@ function MediaRailSkeletonVisual() {
             className="w-[42vw] min-w-[136px] max-w-[190px] shrink-0 sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]"
           >
             <Bone className="aspect-2/3 w-full rounded-xl" />
-            <div className="mt-3 space-y-1.5">
+            <div className="mt-3 min-h-15">
               <Bone className="h-4 w-4/5 rounded-md" />
-              <Bone className="h-4 w-3/5 rounded-md" />
+              <Bone className="mt-1 h-4 w-2/5 rounded-md" />
             </div>
-            <Bone className="mt-1 h-4 w-2/5 rounded-md" />
           </li>
         ))}
       </ul>
