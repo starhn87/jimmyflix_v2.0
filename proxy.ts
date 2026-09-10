@@ -3,11 +3,10 @@ import {
   defaultLocale,
   getLocalePath,
   isLocale,
+  localeCookieMaxAge,
   localeCookieName,
   type Locale,
 } from '@/lib/i18n'
-
-const ONE_YEAR = 60 * 60 * 24 * 365
 
 function preferredLocale(request: NextRequest): Locale {
   const saved = request.cookies.get(localeCookieName)?.value
@@ -40,9 +39,12 @@ export function proxy(request: NextRequest) {
     const response = NextResponse.next()
     if (request.cookies.get(localeCookieName)?.value !== segment) {
       response.cookies.set(localeCookieName, segment, {
-        maxAge: ONE_YEAR,
+        maxAge: localeCookieMaxAge,
+        expires: new Date(Date.now() + localeCookieMaxAge * 1000),
         path: '/',
         sameSite: 'lax',
+        secure: request.nextUrl.protocol === 'https:',
+        priority: 'medium',
       })
     }
     return response

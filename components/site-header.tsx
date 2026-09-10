@@ -20,7 +20,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
 
   return (
     <header className="sticky top-0 z-50 border-b border-tone/8 bg-canvas/90 shadow-header backdrop-blur-xl">
-      <div className="mx-auto grid min-h-16 max-w-[1600px] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-0.5 px-1 sm:gap-x-3 sm:px-6 lg:grid-cols-[auto_minmax(0,1fr)_minmax(260px,320px)_auto] lg:px-10">
+      <div className="mx-auto grid min-h-18 max-w-[1600px] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-0 px-3 max-[359px]:gap-y-1 max-[359px]:py-2 sm:gap-x-3 sm:px-6 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_minmax(260px,320px)_auto] lg:px-10">
         <Link
           href={getLocalePath(locale)}
           prefetch={false}
@@ -43,8 +43,8 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
           </span>
         </Link>
 
-        <nav aria-label={messages.primaryNavigation} className="order-2 min-w-0">
-          <ul className="flex items-center justify-center gap-0.5 sm:gap-2">
+        <nav aria-label={messages.primaryNavigation} className="order-2 min-w-0 max-[359px]:order-5 max-[359px]:col-span-full max-[359px]:row-start-2">
+          <ul className="flex items-center justify-center gap-2 sm:gap-3 lg:gap-5">
             {navigation.map((item) => {
               const current = item.match
               return (
@@ -53,7 +53,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                     href={getLocalePath(locale, item.href)}
                     prefetch={false}
                     aria-current={current ? 'page' : undefined}
-                    className={`relative flex min-h-11 items-center rounded-lg px-1 text-[0.8rem] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent sm:px-4 sm:text-sm ${
+                    className={`relative flex min-h-11 items-center rounded-lg px-1 text-[0.8rem] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent sm:px-4 sm:text-sm lg:text-base ${
                       current
                         ? 'text-ink'
                         : 'text-subtle hover:bg-tone/5 hover:text-ink'
@@ -61,7 +61,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                   >
                     {item.label}
                     {current ? (
-                      <span className="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-action shadow-[0_0_12px_rgba(167,139,250,0.72)]" />
+                      <span className="absolute inset-x-1 bottom-0.5 h-0.5 rounded-full bg-action shadow-[0_0_12px_rgba(167,139,250,0.72)] sm:inset-x-3 lg:inset-x-4" />
                     ) : null}
                   </Link>
                 </li>

@@ -36,7 +36,7 @@ export function HeaderSearchControl({ locale, messages, initialQuery = '', expan
           focusOnOpen.current = !open
           setOpen(!open)
         }}
-        className="order-3 grid size-11 shrink-0 place-items-center rounded-full text-ink outline-none hover:bg-tone/8 focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
+        className="order-3 grid size-11 shrink-0 place-items-center rounded-full text-ink outline-none hover:bg-tone/8 focus-visible:ring-2 focus-visible:ring-accent max-[359px]:col-start-3 lg:hidden"
       >
         <SearchIcon className="size-5" />
       </button>

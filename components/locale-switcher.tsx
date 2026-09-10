@@ -1,7 +1,12 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { getLocalePath, localeCookieName, type Locale } from '@/lib/i18n'
+import {
+  getLocalePath,
+  localeCookieMaxAge,
+  localeCookieName,
+  type Locale,
+} from '@/lib/i18n'
 
 interface LocaleSwitcherProps {
   locale: Locale
@@ -15,7 +20,9 @@ export function LocaleSwitcher({ locale, label, buttonLabel }: LocaleSwitcherPro
   const nextPath = getLocalePath(nextLocale, pathname)
 
   const rememberLocale = (link: HTMLAnchorElement) => {
-    document.cookie = `${localeCookieName}=${nextLocale}; path=/; max-age=31536000; samesite=lax`
+    const expires = new Date(Date.now() + localeCookieMaxAge * 1000).toUTCString()
+    const secure = window.location.protocol === 'https:' ? '; secure' : ''
+    document.cookie = `${localeCookieName}=${nextLocale}; path=/; max-age=${localeCookieMaxAge}; expires=${expires}; samesite=lax; priority=medium${secure}`
     link.href = `${nextPath}${window.location.search}${window.location.hash}`
   }
 

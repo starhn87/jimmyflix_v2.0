@@ -4,6 +4,7 @@ export type Locale = (typeof locales)[number]
 
 export const defaultLocale: Locale = 'en'
 export const localeCookieName = 'jimmyflix-locale-v1'
+export const localeCookieMaxAge = 60 * 60 * 24 * 400
 
 export const isLocale = (value: string | undefined): value is Locale =>
   locales.some((locale) => locale === value)
