@@ -19,7 +19,7 @@
 | 7. 구조·의존성 현대화 | 로컬 구현·검증 완료 | App Router, Tailwind 4, 서버 데이터 계층, 기본 스크롤 레일, 의존성 축소 |
 | 로딩·스트리밍 세분화 | 로컬 구현·검증 완료 | 화면별 스켈레톤, 검색·트렌드 결과 스트리밍, 상세 부가 데이터 분리 |
 | Core Web Vitals·성능 | 로컬 구현·검증 완료 | LCP 우선순위, 섹션별 스트리밍, Client island 축소, 초기 이미지·RSC 요청 절감 |
-| 레일·상세·브랜드 마감 | 로컬 구현·검증 완료 | 레일 패딩·가장자리 버튼·끝 상태, 데스크톱 상세 좌측 정렬, 브랜드 favicon |
+| 레일·상세·브랜드 마감 | 프로덕션 반영 완료 | 레일 패딩·가장자리 버튼·끝 상태, 데스크톱 상세 좌측 정렬, 브랜드 favicon |
 | 8. 전환 배포 | 프로덕션 반영 완료 | 프리뷰에서 실제 데이터·반응형·상호작용·성능을 확인한 뒤 운영 배포 완료 |
 
 ## 1차 구현 내용
@@ -152,5 +152,6 @@ Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
 - 레일 hover fixture: 오른쪽 가장자리에서 오버레이 버튼 opacity 1, 기본 상태 opacity 0, 모바일에서 컨트롤 `display: none`, 가로 넘침 0px 확인
 - 상세 카드 fixture: 1440px Credits·Production 첫 카드의 목록 시작점 offset 0px, 375px 홀수 마지막 카드 중심 187.49px와 화면 중심 187.5px 일치 확인
 - favicon fixture: `/favicon.ico`와 `/icon.svg` HTTP 200, 각각 `image/x-icon`·`image/svg+xml`, 문서 head의 파일 기반 icon metadata 확인
+- Vercel 프로덕션 `4nrt055pj`: `main`의 커밋 `3ec8330` 배포 완료. 운영 홈에서 실제 콘텐츠 20개, 데스크톱 첫 카드 여백 48px, 시작 버튼 disabled, favicon SVG·ICO metadata, 가로 넘침 0px 확인
 
 로컬 브라우저에는 `NEXT_PUBLIC_API_KEY`가 설정되지 않아 TMDB 응답이 401이었다. 이 조건을 3차 구현의 실패·재시도 상태 검증에 사용했고, 정상 응답과 사용자 흐름은 프로덕션에서 확인했다.
