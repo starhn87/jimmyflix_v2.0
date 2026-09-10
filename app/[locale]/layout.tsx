@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation'
 import Script from 'next/script'
 import type { ReactNode } from 'react'
 import { SiteHeader } from '@/components/site-header'
-import { MediaResourceHints } from '@/components/media-resource-hints'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale, locales } from '@/lib/i18n'
 import { themeScript } from '@/lib/theme'
@@ -68,7 +67,6 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={geist.variable} suppressHydrationWarning>
       <body>
-        <MediaResourceHints />
         <SiteHeader locale={locale} messages={dictionary.header} />
         {children}
         <Script

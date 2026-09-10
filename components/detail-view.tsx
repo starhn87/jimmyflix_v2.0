@@ -8,7 +8,6 @@ import {
   TrailerPanel,
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
-import { ProgressiveBackdrop } from '@/components/progressive-backdrop'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 import {
@@ -40,7 +39,7 @@ export function DetailView({
   const title = getMediaTitle(detail, locale)
   const rating = formatRating(detail.vote_average, locale)
   const duration = detail.runtime || detail.episode_run_time?.find((time) => time > 0)
-  const backdrop = getImageUrl(detail.backdrop_path, 'original')
+  const backdrop = getImageUrl(detail.backdrop_path, 'w1280')
   const tabs: DetailTab[] = [
     { id: 'trailer', label: dictionary.detail.trailer, content: <TrailerPanel detail={detail} locale={locale} /> },
     {
@@ -74,14 +73,18 @@ export function DetailView({
   return (
     <main aria-labelledby="detail-title" className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden bg-canvas">
       {backdrop ? (
-        <div className="absolute inset-x-0 top-0 -z-30 hidden aspect-video overflow-hidden md:block">
-          <div className="absolute inset-0 opacity-55">
-            <ProgressiveBackdrop
-              path={detail.backdrop_path!}
-              sourceSize="w1280"
-              className="object-cover object-center"
-            />
-          </div>
+        <div className="absolute inset-x-0 top-0 -z-30 hidden aspect-video overflow-hidden bg-surface md:block">
+          <Image
+            src={backdrop}
+            alt=""
+            fill
+            loading="eager"
+            fetchPriority="high"
+            placeholder={imageSkeletonPlaceholder}
+            quality={90}
+            sizes="100vw"
+            className="object-cover object-center opacity-55"
+          />
           <div className="detail-backdrop-fade absolute inset-0" />
         </div>
       ) : null}
@@ -95,7 +98,7 @@ export function DetailView({
             loading="eager"
             fetchPriority="high"
             placeholder={imageSkeletonPlaceholder}
-            unoptimized
+            quality={85}
             sizes="(max-width: 639px) 112px, (max-width: 1023px) 150px, (max-width: 1279px) 40vw, 480px"
             className="object-cover object-center"
           />
