@@ -1,33 +1,28 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { DetailTabs, type DetailTab } from '@/components/detail-tabs'
 import {
-  CollectionPanel,
-  CreditsPanel,
   ProductionPanel,
   SeasonsPanel,
   TrailerPanel,
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
 import { formatRating, getImageUrl, getMediaTitle, getMediaYear, getPosterUrl } from '@/lib/media'
-import type { CastMember, MediaDetail, MediaItem, MediaType } from '@/types/tmdb'
+import type { MediaDetail, MediaType } from '@/types/tmdb'
 
 interface DetailViewProps {
   detail: MediaDetail
   mediaType: MediaType
-  cast: CastMember[]
-  creditsError: boolean
-  collection: MediaItem[]
-  collectionError: boolean
+  creditsPanel: ReactNode
+  collectionPanel?: ReactNode
 }
 
 export function DetailView({
   detail,
   mediaType,
-  cast,
-  creditsError,
-  collection,
-  collectionError,
+  creditsPanel,
+  collectionPanel,
 }: DetailViewProps) {
   const title = getMediaTitle(detail)
   const rating = formatRating(detail.vote_average)
@@ -38,7 +33,7 @@ export function DetailView({
     {
       id: 'credits',
       label: 'Credits',
-      content: <CreditsPanel cast={cast} error={creditsError} />,
+      content: creditsPanel,
     },
     {
       id: 'production',
@@ -47,11 +42,11 @@ export function DetailView({
     },
   ]
 
-  if (detail.belongs_to_collection) {
+  if (detail.belongs_to_collection && collectionPanel) {
     tabs.push({
       id: 'collection',
       label: 'Collection',
-      content: <CollectionPanel items={collection} error={collectionError} />,
+      content: collectionPanel,
     })
   }
 
@@ -84,7 +79,7 @@ export function DetailView({
             src={getPosterUrl(detail.poster_path)}
             alt={`${title} poster`}
             fill
-            fetchPriority="high"
+            preload
             sizes="(max-width: 640px) 150px, (max-width: 1024px) 24vw, 390px"
             className="object-cover object-center"
           />

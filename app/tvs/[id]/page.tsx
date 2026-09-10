@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
+import { CreditsDataPanel } from '@/components/detail-data-panels'
 import { DetailView } from '@/components/detail-view'
+import { DetailPanelSkeleton } from '@/components/loading-skeletons'
 import { getMediaTitle } from '@/lib/media'
 import { getCredits, getTvDetail, TmdbNotFoundError } from '@/lib/tmdb'
 
@@ -42,17 +45,17 @@ export default async function TvDetailPage({ params }: TvDetailPageProps) {
     throw error
   }
 
-  const creditsResult = await Promise.allSettled([getCredits('tv', id)])
-  const castResult = creditsResult[0]
+  const creditsRequest = getCredits('tv', id)
 
   return (
     <DetailView
       detail={detail}
       mediaType="tv"
-      cast={castResult.status === 'fulfilled' ? castResult.value : []}
-      creditsError={castResult.status === 'rejected'}
-      collection={[]}
-      collectionError={false}
+      creditsPanel={(
+        <Suspense fallback={<DetailPanelSkeleton label="Loading credits" />}>
+          <CreditsDataPanel request={creditsRequest} />
+        </Suspense>
+      )}
     />
   )
 }

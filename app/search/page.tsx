@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { ErrorState } from '@/components/error-state'
+import { SearchResultsSkeleton } from '@/components/loading-skeletons'
 import { MediaGrid } from '@/components/media-grid'
 import { SearchForm } from '@/components/search-form'
 import { searchMovies, searchTv } from '@/lib/tmdb'
@@ -24,19 +26,7 @@ function EmptyResults({ query }: { query: string }) {
   )
 }
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const params = await searchParams
-  const rawQuery = Array.isArray(params.q) ? params.q[0] : params.q
-  const query = rawQuery?.trim() || ''
-
-  if (!query) {
-    return (
-      <main>
-        <SearchForm />
-      </main>
-    )
-  }
-
+async function SearchResults({ query }: { query: string }) {
   const [moviesResult, tvResult] = await Promise.allSettled([
     searchMovies(query),
     searchTv(query),
@@ -46,20 +36,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const total = movies.length + tvShows.length
 
   return (
-    <main className="pb-20">
-      <SearchForm key={query} initialQuery={query} compact />
-      <header className="mx-auto max-w-[1600px] px-4 pb-8 sm:px-6 lg:px-10">
-        <p className="text-xs font-semibold tracking-[0.24em] text-cyan-300 uppercase">
-          Search results
-        </p>
-        <h1 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">
-          “{query}”
-        </h1>
-        <p className="mt-3 text-sm text-slate-400">
-          {total === 1 ? '1 title found' : `${total} titles found`}
-        </p>
-      </header>
-
+    <>
+      <p className="mx-auto max-w-[1600px] px-4 pb-8 text-sm text-slate-400 sm:px-6 lg:px-10">
+        {total === 1 ? '1 title found' : `${total} titles found`}
+      </p>
       <div className="mx-auto max-w-[1600px] space-y-14 px-4 sm:px-6 lg:px-10">
         {moviesResult.status === 'rejected' ? (
           <ErrorState
@@ -95,6 +75,38 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <EmptyResults query={query} />
         ) : null}
       </div>
+    </>
+  )
+}
+
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const params = await searchParams
+  const rawQuery = Array.isArray(params.q) ? params.q[0] : params.q
+  const query = rawQuery?.trim() || ''
+
+  if (!query) {
+    return (
+      <main>
+        <SearchForm />
+      </main>
+    )
+  }
+
+  return (
+    <main className="pb-20">
+      <SearchForm key={`form-${query}`} initialQuery={query} compact />
+      <header className="mx-auto max-w-[1600px] px-4 pb-4 sm:px-6 lg:px-10">
+        <p className="text-xs font-semibold tracking-[0.24em] text-cyan-300 uppercase">
+          Search results
+        </p>
+        <h1 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">
+          “{query}”
+        </h1>
+      </header>
+
+      <Suspense key={`results-${query}`} fallback={<SearchResultsSkeleton />}>
+        <SearchResults query={query} />
+      </Suspense>
     </main>
   )
 }

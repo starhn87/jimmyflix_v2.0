@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
+import { CollectionDataPanel, CreditsDataPanel } from '@/components/detail-data-panels'
 import { DetailView } from '@/components/detail-view'
+import { DetailPanelSkeleton } from '@/components/loading-skeletons'
 import { getCollection, getCredits, getMovieDetail, TmdbNotFoundError } from '@/lib/tmdb'
 import { getMediaTitle } from '@/lib/media'
 
@@ -42,21 +45,25 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
     throw error
   }
 
-  const [creditsResult, collectionResult] = await Promise.allSettled([
-    getCredits('movie', id),
-    detail.belongs_to_collection
-      ? getCollection(detail.belongs_to_collection.id)
-      : Promise.resolve([]),
-  ])
+  const creditsRequest = getCredits('movie', id)
+  const collectionRequest = detail.belongs_to_collection
+    ? getCollection(detail.belongs_to_collection.id)
+    : undefined
 
   return (
     <DetailView
       detail={detail}
       mediaType="movie"
-      cast={creditsResult.status === 'fulfilled' ? creditsResult.value : []}
-      creditsError={creditsResult.status === 'rejected'}
-      collection={collectionResult.status === 'fulfilled' ? collectionResult.value : []}
-      collectionError={collectionResult.status === 'rejected'}
+      creditsPanel={(
+        <Suspense fallback={<DetailPanelSkeleton label="Loading credits" />}>
+          <CreditsDataPanel request={creditsRequest} />
+        </Suspense>
+      )}
+      collectionPanel={collectionRequest ? (
+        <Suspense fallback={<DetailPanelSkeleton label="Loading collection" />}>
+          <CollectionDataPanel request={collectionRequest} />
+        </Suspense>
+      ) : undefined}
     />
   )
 }

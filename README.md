@@ -70,8 +70,8 @@ corepack yarn build
 ## 디렉터리 구조
 
 ```text
-app/                  App Router 페이지, 레이아웃, 오류·로딩 경계
-components/           카드, 레일, 검색, 상세 탭 등 재사용 UI
+app/                  App Router 페이지, 화면별 로딩·오류 경계
+components/           카드, 레일, 검색, 상세 탭·스켈레톤 등 재사용 UI
 lib/media.ts          제목·연도·이미지·라우트 표시 규칙
 lib/tmdb.ts           서버 전용 TMDB 요청과 캐시 정책
 types/tmdb.ts         TMDB 응답에 필요한 도메인 타입
@@ -80,3 +80,5 @@ docs/                 진단, UX 백로그, 전환 및 검증 기록
 ```
 
 TMDB 요청 키는 클라이언트 컴포넌트에 전달하지 않습니다. 상세 ID가 잘못되었거나 TMDB가 404를 반환하면 App Router의 `notFound()`로 연결하고, 목록과 검색의 독립 요청은 `Promise.allSettled`로 분리해 일부 실패에도 나머지 결과를 표시합니다.
+
+전역 고정 로더는 사용하지 않습니다. 목록과 상세는 실제 레이아웃에 맞는 가까운 라우트 스켈레톤을 사용하고, 검색·트렌드·상세 부가 정보는 `Suspense`로 나눠 이미 렌더된 검색창, 기간 선택, 핵심 상세 정보를 유지합니다.

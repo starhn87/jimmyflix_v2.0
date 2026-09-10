@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import { MediaSectionsSkeleton } from '@/components/loading-skeletons'
 import { MediaSection } from '@/components/media-section'
 import { TimeWindowSwitch } from '@/components/time-window-switch'
 import { getTrendingSections } from '@/lib/tmdb'
@@ -13,11 +15,20 @@ interface TrendPageProps {
   searchParams: Promise<{ window?: string | string[] }>
 }
 
+async function TrendingResults({ window }: { window: TimeWindow }) {
+  const sections = await getTrendingSections(window)
+
+  return (
+    <div className="space-y-10 sm:space-y-14">
+      {sections.map((section) => <MediaSection key={section.id} section={section} />)}
+    </div>
+  )
+}
+
 export default async function TrendPage({ searchParams }: TrendPageProps) {
   const params = await searchParams
   const rawWindow = Array.isArray(params.window) ? params.window[0] : params.window
   const window: TimeWindow = rawWindow === 'week' ? 'week' : 'day'
-  const sections = await getTrendingSections(window)
 
   return (
     <main className="pb-20">
@@ -33,9 +44,12 @@ export default async function TrendPage({ searchParams }: TrendPageProps) {
         </p>
         <TimeWindowSwitch selected={window} />
       </header>
-      <div className="space-y-10 sm:space-y-14">
-        {sections.map((section) => <MediaSection key={section.id} section={section} />)}
-      </div>
+      <Suspense
+        key={window}
+        fallback={<MediaSectionsSkeleton label={`Loading ${window} trending titles`} />}
+      >
+        <TrendingResults window={window} />
+      </Suspense>
     </main>
   )
 }
