@@ -61,7 +61,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                   >
                     {item.label}
                     {current ? (
-                      <span className="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-action shadow-[0_0_12px_rgba(103,232,249,0.75)]" />
+                      <span className="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-action shadow-[0_0_12px_rgba(167,139,250,0.72)]" />
                     ) : null}
                   </Link>
                 </li>

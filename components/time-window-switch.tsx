@@ -26,7 +26,7 @@ export function TimeWindowSwitch({
             prefetch={false}
             aria-current={active ? 'page' : undefined}
             className={`inline-flex min-h-10 min-w-24 items-center justify-center rounded-full px-5 text-sm font-semibold capitalize outline-none transition focus-visible:ring-3 focus-visible:ring-accent/40 ${
-              active ? 'bg-action text-on-action shadow-lg shadow-cyan-950/30' : 'text-subtle hover:bg-tone/6 hover:text-ink'
+              active ? 'bg-action text-on-action shadow-lg shadow-black/30' : 'text-subtle hover:bg-tone/6 hover:text-ink'
             }`}
           >
             {window === 'day' ? todayLabel : weekLabel}

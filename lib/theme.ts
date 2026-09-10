@@ -2,7 +2,7 @@ export type Theme = 'dark' | 'light'
 
 export const THEME_STORAGE_KEY = 'jimmyflix-theme-v1'
 export const THEME_CHANGE_EVENT = 'jimmyflix-theme-change'
-export const THEME_COLORS = { dark: '#080b12', light: '#f5f7fb' } as const
+export const THEME_COLORS = { dark: '#0b0912', light: '#faf8ff' } as const
 
 // Runs before first paint; only fixed application values are interpolated.
 export const themeScript = `(() => {

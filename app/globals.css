@@ -25,48 +25,50 @@
 
 :root {
   color-scheme: dark;
-  --canvas: #080b12;
-  --surface: #0f172a;
-  --ink: #f8fafc;
-  --muted: #cbd5e1;
-  --subtle: #94a3b8;
-  --faint: #94a3b8;
+  --canvas: #0b0912;
+  --surface: #181326;
+  --ink: #fbf9ff;
+  --muted: #d8d0e8;
+  --subtle: #b1a6c8;
+  --faint: #9d91b7;
   --tone: #fff;
-  --accent: #67e8f9;
-  --accent-strong: #cffafe;
-  --action: #67e8f9;
-  --action-hover: #a5f3fc;
-  --on-action: #020617;
-  --overlay: rgb(0 0 0 / 30%);
+  --accent: #a78bfa;
+  --accent-strong: #ddd6fe;
+  --action: #a78bfa;
+  --action-hover: #c4b5fd;
+  --on-action: #100a20;
+  --overlay: rgb(0 0 0 / 34%);
   --danger: #fda4af;
   --warning: #fcd34d;
   --media-shadow: 0 20px 55px rgb(0 0 0 / 32%);
   --header-shadow: 0 8px 30px rgb(0 0 0 / 24%);
   --panel-shadow: 0 8px 24px rgb(0 0 0 / 20%);
-  --hero-vignette: radial-gradient(circle at 76% 28%, rgb(8 11 18 / 5%), rgb(8 11 18 / 72%) 55%, #080b12 86%);
+  --ambient-glow: radial-gradient(circle at 12% -12%, rgb(167 139 250 / 14%), transparent 34rem);
+  --hero-vignette: radial-gradient(circle at 76% 28%, rgb(11 9 18 / 5%), rgb(11 9 18 / 72%) 55%, #0b0912 86%);
 }
 
 :root[data-theme='light'] {
   color-scheme: light;
-  --canvas: #f5f7fb;
-  --surface: #e2e8f0;
-  --ink: #0f172a;
-  --muted: #334155;
-  --subtle: #475569;
-  --faint: #526277;
-  --tone: #0f172a;
-  --accent: #0369a1;
-  --accent-strong: #075985;
-  --action: #0369a1;
-  --action-hover: #075985;
+  --canvas: #faf8ff;
+  --surface: #eee9f8;
+  --ink: #1c1233;
+  --muted: #45375f;
+  --subtle: #5f5274;
+  --faint: #6d5e84;
+  --tone: #1c1233;
+  --accent: #6d28d9;
+  --accent-strong: #5b21b6;
+  --action: #6d28d9;
+  --action-hover: #5b21b6;
   --on-action: #fff;
-  --overlay: rgb(255 255 255 / 75%);
+  --overlay: rgb(255 255 255 / 78%);
   --danger: #be123c;
   --warning: #92400e;
-  --media-shadow: 0 16px 40px rgb(15 23 42 / 12%);
-  --header-shadow: 0 4px 20px rgb(15 23 42 / 6%);
-  --panel-shadow: 0 5px 16px rgb(15 23 42 / 8%);
-  --hero-vignette: radial-gradient(circle at 76% 28%, rgb(245 247 251 / 5%), rgb(245 247 251 / 88%) 55%, #f5f7fb 86%);
+  --media-shadow: 0 16px 40px rgb(28 18 51 / 12%);
+  --header-shadow: 0 4px 20px rgb(28 18 51 / 7%);
+  --panel-shadow: 0 5px 16px rgb(28 18 51 / 9%);
+  --ambient-glow: radial-gradient(circle at 12% -12%, rgb(109 40 217 / 8%), transparent 34rem);
+  --hero-vignette: radial-gradient(circle at 76% 28%, rgb(250 248 255 / 5%), rgb(250 248 255 / 88%) 55%, #faf8ff 86%);
 }
 
 .hero-vignette {
@@ -96,7 +98,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 12% -12%, rgba(34, 211, 238, 0.08), transparent 34rem),
+    var(--ambient-glow),
     var(--canvas);
   color: var(--ink);
   font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
@@ -119,7 +121,7 @@ input {
 }
 
 ::selection {
-  background: rgba(103, 232, 249, 0.28);
+  background: rgb(167 139 250 / 38%);
   color: white;
 }
 
