@@ -63,7 +63,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                     <span className="relative">
                       {item.label}
                       {current ? (
-                        <span aria-hidden="true" className="absolute -inset-x-1 -bottom-3 h-0.5 rounded-full bg-action shadow-[0_0_12px_rgba(167,139,250,0.72)]" />
+                        <span aria-hidden="true" className="absolute -bottom-3 left-1/2 h-0.5 w-[calc(100%+0.5rem)] min-w-10 -translate-x-1/2 rounded-full bg-action shadow-[0_0_12px_rgba(167,139,250,0.72)] sm:min-w-12" />
                       ) : null}
                     </span>
                   </Link>
