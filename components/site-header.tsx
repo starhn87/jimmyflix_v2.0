@@ -20,7 +20,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
 
   return (
     <header className="sticky top-0 z-50 border-b border-tone/8 bg-canvas/90 shadow-header backdrop-blur-xl">
-      <div className="mx-auto grid min-h-18 max-w-[1600px] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-0 px-4 max-[369px]:gap-y-1 max-[369px]:py-2 sm:gap-x-3 sm:px-6 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_minmax(260px,320px)_auto] lg:px-10">
+      <div className="mx-auto grid min-h-18 max-w-[1600px] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-0 px-4 max-[379px]:gap-y-1 max-[379px]:py-2 sm:gap-x-3 sm:px-6 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_minmax(260px,320px)_auto] lg:px-10">
         <Link
           href={getLocalePath(locale)}
           prefetch={false}
@@ -43,8 +43,8 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
           </span>
         </Link>
 
-        <nav aria-label={messages.primaryNavigation} className="order-2 min-w-0 max-[369px]:order-5 max-[369px]:col-span-full max-[369px]:row-start-2">
-          <ul className="flex items-center justify-center gap-2 sm:gap-3 lg:gap-5">
+        <nav aria-label={messages.primaryNavigation} className="order-2 min-w-0 max-[379px]:order-5 max-[379px]:col-span-full max-[379px]:row-start-2">
+          <ul className="flex items-center justify-center gap-2 sm:gap-3">
             {navigation.map((item) => {
               const current = item.match
               return (
@@ -53,7 +53,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                     href={getLocalePath(locale, item.href)}
                     prefetch={false}
                     aria-current={current ? 'page' : undefined}
-                    className={`relative flex min-h-11 min-w-12 items-center justify-center rounded-lg px-1 text-[0.8rem] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent sm:min-w-20 sm:px-4 sm:text-sm lg:min-w-28 lg:text-base ${
+                    className={`relative flex min-h-11 min-w-12 items-center justify-center rounded-lg px-1 text-[0.85rem] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent sm:min-w-20 sm:px-4 sm:text-sm lg:min-w-24 lg:text-base ${
                       current
                         ? 'text-ink'
                         : 'text-subtle hover:bg-tone/5 hover:text-ink'

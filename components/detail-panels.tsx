@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { ErrorState } from '@/components/error-state'
 import { MediaCard } from '@/components/media-card'
 import { VideoEmbed } from '@/components/video-embed'
-import { getImageUrl, getProfileUrl } from '@/lib/media'
+import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 import type {
@@ -83,6 +83,8 @@ export function CreditsPanel({
                 src={getProfileUrl(person.profile_path)}
                 alt={person.name || person.original_name}
                 fill
+                placeholder={imageSkeletonPlaceholder}
+                quality={85}
                 sizes="(max-width: 480px) 42vw, 180px"
                 className="object-cover object-center"
               />
@@ -107,6 +109,8 @@ function CompanyCard({ company }: { company: ProductionCompany }) {
           src={logo}
           alt={company.name}
           fill
+          placeholder={imageSkeletonPlaceholder}
+          quality={85}
           sizes="180px"
           className="object-contain object-center p-4"
         />
@@ -124,9 +128,11 @@ function CountryCard({ country, flagAlt }: {
     <li className={centeredItem}>
       <div className="relative mx-auto aspect-5/3 w-full overflow-hidden rounded-xl border border-tone/10 bg-surface shadow-panel">
         <Image
-          src={`https://flagcdn.com/w320/${country.iso_3166_1.toLowerCase()}.png`}
+          src={`https://flagcdn.com/w640/${country.iso_3166_1.toLowerCase()}.png`}
           alt={flagAlt}
           fill
+          placeholder={imageSkeletonPlaceholder}
+          quality={85}
           sizes="180px"
           className="object-cover object-center"
         />
@@ -185,9 +191,11 @@ export function SeasonsPanel({ seasons, locale }: { seasons: Season[]; locale: L
           <li key={season.id} className={centeredItem}>
             <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface">
               <Image
-                src={getImageUrl(season.poster_path, 'w342') || '/images/defaultPoster.png'}
+                src={getImageUrl(season.poster_path, 'w500') || '/images/defaultPoster.png'}
                 alt={dictionary.common.posterAlt(season.name)}
                 fill
+                placeholder={imageSkeletonPlaceholder}
+                quality={85}
                 sizes="180px"
                 className="object-cover object-center"
               />

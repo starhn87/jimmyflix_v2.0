@@ -44,7 +44,9 @@
   --header-shadow: 0 8px 30px rgb(0 0 0 / 24%);
   --panel-shadow: 0 8px 24px rgb(0 0 0 / 20%);
   --ambient-glow: radial-gradient(circle at 12% -12%, rgb(167 139 250 / 14%), transparent 34rem);
-  --hero-vignette: radial-gradient(circle at 76% 28%, rgb(11 9 18 / 5%), rgb(11 9 18 / 72%) 55%, #0b0912 86%);
+  --hero-vignette: linear-gradient(90deg, rgb(11 9 18 / 52%) 0%, rgb(11 9 18 / 22%) 40%, transparent 72%);
+  --hero-bottom-fade: linear-gradient(to top, #0b0912 0%, rgb(11 9 18 / 58%) 18%, rgb(11 9 18 / 12%) 48%, transparent 65%);
+  --detail-backdrop-fade: linear-gradient(to bottom, rgb(11 9 18 / 18%) 0%, rgb(11 9 18 / 58%) 62%, #0b0912 100%);
 }
 
 :root[data-theme='light'] {
@@ -68,11 +70,21 @@
   --header-shadow: 0 4px 20px rgb(28 18 51 / 7%);
   --panel-shadow: 0 5px 16px rgb(28 18 51 / 9%);
   --ambient-glow: radial-gradient(circle at 12% -12%, rgb(109 40 217 / 8%), transparent 34rem);
-  --hero-vignette: radial-gradient(circle at 76% 28%, rgb(250 248 255 / 5%), rgb(250 248 255 / 88%) 55%, #faf8ff 86%);
+  --hero-vignette: linear-gradient(90deg, rgb(250 248 255 / 48%) 0%, rgb(250 248 255 / 18%) 40%, transparent 72%);
+  --hero-bottom-fade: linear-gradient(to top, #faf8ff 0%, rgb(250 248 255 / 62%) 18%, rgb(250 248 255 / 14%) 48%, transparent 65%);
+  --detail-backdrop-fade: linear-gradient(to bottom, rgb(250 248 255 / 12%) 0%, rgb(250 248 255 / 60%) 62%, #faf8ff 100%);
 }
 
 .hero-vignette {
   background: var(--hero-vignette);
+}
+
+.hero-bottom-fade {
+  background: var(--hero-bottom-fade);
+}
+
+.detail-backdrop-fade {
+  background: var(--detail-backdrop-fade);
 }
 
 .theme-moon,

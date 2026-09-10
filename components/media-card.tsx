@@ -8,6 +8,7 @@ import {
   getMediaType,
   getMediaYear,
   getPosterUrl,
+  imageSkeletonPlaceholder,
 } from '@/lib/media'
 import type { MediaItem, MediaType } from '@/types/tmdb'
 import type { Locale } from '@/lib/i18n'
@@ -42,6 +43,8 @@ export function MediaCard({ item, mediaType, highPriority = false, locale }: Med
             alt={locale === 'ko' ? `${title} 포스터` : `${title} poster`}
             fill
             fetchPriority={highPriority ? 'high' : undefined}
+            placeholder={imageSkeletonPlaceholder}
+            quality={85}
             sizes="(max-width: 480px) 42vw, (max-width: 768px) 27vw, (max-width: 1200px) 20vw, 190px"
             className="object-cover object-center transition duration-300 ease-out group-hover:scale-[1.035] group-focus-visible:scale-[1.035] motion-reduce:transition-none"
           />

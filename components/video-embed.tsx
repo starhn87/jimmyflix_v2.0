@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { PlayIcon } from '@/components/icons'
+import { imageSkeletonPlaceholder } from '@/lib/media'
 
 interface VideoEmbedProps {
   videoKey: string
@@ -35,6 +36,8 @@ export function VideoEmbed({ videoKey, frameTitle, playLabel }: VideoEmbedProps)
             src={`https://i.ytimg.com/vi/${videoKey}/maxresdefault.jpg`}
             alt=""
             fill
+            placeholder={imageSkeletonPlaceholder}
+            quality={85}
             sizes="(max-width: 768px) 100vw, 1100px"
             className="object-cover object-center transition duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
           />

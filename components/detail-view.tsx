@@ -32,7 +32,7 @@ export function DetailView({
   const title = getMediaTitle(detail, locale)
   const rating = formatRating(detail.vote_average, locale)
   const duration = detail.runtime || detail.episode_run_time?.find((time) => time > 0)
-  const backdrop = getImageUrl(detail.backdrop_path, 'w1280')
+  const backdrop = getImageUrl(detail.backdrop_path, 'original')
   const tabs: DetailTab[] = [
     { id: 'trailer', label: dictionary.detail.trailer, content: <TrailerPanel detail={detail} locale={locale} /> },
     {
@@ -66,26 +66,28 @@ export function DetailView({
   return (
     <main aria-labelledby="detail-title" className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden bg-canvas">
       {backdrop ? (
-        <div className="absolute inset-x-0 top-0 -z-30 hidden h-[780px] overflow-hidden md:block">
+        <div className="absolute inset-x-0 top-0 -z-30 hidden aspect-video overflow-hidden md:block">
           <Image
             src={backdrop}
             alt=""
             fill
+            quality={90}
             sizes="100vw"
-            className="object-cover object-[center_20%] opacity-45 blur-[2px]"
+            className="object-cover object-center opacity-55"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-canvas/20 via-canvas/75 to-canvas" />
+          <div className="detail-backdrop-fade absolute inset-0" />
         </div>
       ) : null}
 
       <div className="mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
         <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl border border-tone/10 bg-surface shadow-media lg:row-span-3">
           <Image
-            src={getPosterUrl(detail.poster_path)}
+            src={getImageUrl(detail.poster_path, 'original') || getPosterUrl(detail.poster_path)}
             alt={dictionary.common.posterAlt(title)}
             fill
             loading="eager"
             fetchPriority="high"
+            quality={90}
             sizes="(max-width: 639px) 112px, (max-width: 1023px) 150px, (max-width: 1279px) 40vw, 480px"
             className="object-cover object-center"
           />

@@ -21,7 +21,7 @@ interface HeroProps {
 export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
   const title = getMediaTitle(item, locale)
   const rating = formatRating(item.vote_average, locale)
-  const backdrop = getImageUrl(item.backdrop_path, 'w1280')
+  const backdrop = getImageUrl(item.backdrop_path, 'original')
 
   return (
     <section aria-labelledby="featured-title" className="relative isolate min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
@@ -32,12 +32,13 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
           fill
           loading="eager"
           fetchPriority="high"
+          quality={90}
           sizes="100vw"
           className="-z-30 object-cover object-center"
         />
       ) : null}
       <div className="absolute inset-0 -z-20 hero-vignette" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-canvas via-canvas/35 to-canvas/15" />
+      <div className="hero-bottom-fade absolute inset-0 -z-10" />
       <div className="mx-auto flex min-h-[520px] max-w-[1600px] items-end px-4 pb-20 sm:min-h-[600px] sm:px-6 sm:pb-24 lg:min-h-[680px] lg:px-10 lg:pb-28">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase sm:text-sm">
