@@ -16,9 +16,10 @@ export interface DetailTab {
 
 interface DetailTabsProps {
   tabs: DetailTab[]
+  label: string
 }
 
-export function DetailTabs({ tabs }: DetailTabsProps) {
+export function DetailTabs({ tabs, label }: DetailTabsProps) {
   const instanceId = useId().replaceAll(':', '')
   const [selectedId, setSelectedId] = useState(tabs[0]?.id || '')
   const buttons = useRef<Array<HTMLButtonElement | null>>([])
@@ -45,7 +46,7 @@ export function DetailTabs({ tabs }: DetailTabsProps) {
   return (
     <div>
       <div className="no-scrollbar overflow-x-auto rounded-2xl border border-tone/10 bg-overlay p-1.5 shadow-panel backdrop-blur-md">
-        <div role="tablist" aria-label="Title information" className="flex min-w-max gap-1">
+        <div role="tablist" aria-label={label} className="flex min-w-max gap-1">
           {tabs.map((tab, index) => {
             const active = selected.id === tab.id
             const tabId = `${instanceId}-${tab.id}-tab`

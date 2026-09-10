@@ -5,9 +5,10 @@ import { ArrowLeftIcon } from '@/components/icons'
 
 interface BackButtonProps {
   fallbackHref?: string
+  label?: string
 }
 
-export function BackButton({ fallbackHref = '/' }: BackButtonProps) {
+export function BackButton({ fallbackHref = '/', label = 'Go back' }: BackButtonProps) {
   const router = useRouter()
 
   const goBack = () => {
@@ -29,7 +30,7 @@ export function BackButton({ fallbackHref = '/' }: BackButtonProps) {
       className="inline-flex min-h-11 items-center gap-2 rounded-full border border-tone/15 bg-tone/5 px-5 text-sm font-semibold text-muted outline-none transition hover:border-tone/25 hover:bg-tone/10 hover:text-ink focus-visible:ring-3 focus-visible:ring-accent/35"
     >
       <ArrowLeftIcon className="size-4" />
-      Go back
+      {label}
     </button>
   )
 }

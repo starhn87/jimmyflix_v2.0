@@ -6,10 +6,11 @@ import { PlayIcon } from '@/components/icons'
 
 interface VideoEmbedProps {
   videoKey: string
-  title: string
+  frameTitle: string
+  playLabel: string
 }
 
-export function VideoEmbed({ videoKey, title }: VideoEmbedProps) {
+export function VideoEmbed({ videoKey, frameTitle, playLabel }: VideoEmbedProps) {
   const [playing, setPlaying] = useState(false)
 
   return (
@@ -17,7 +18,7 @@ export function VideoEmbed({ videoKey, title }: VideoEmbedProps) {
       {playing ? (
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${videoKey}?autoplay=1&rel=0`}
-          title={`${title} official trailer`}
+          title={frameTitle}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
@@ -27,7 +28,7 @@ export function VideoEmbed({ videoKey, title }: VideoEmbedProps) {
         <button
           type="button"
           onClick={() => setPlaying(true)}
-          aria-label={`Play ${title} official trailer`}
+          aria-label={playLabel}
           className="group relative block size-full overflow-hidden text-left outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-accent/70"
         >
           <Image
@@ -44,7 +45,7 @@ export function VideoEmbed({ videoKey, title }: VideoEmbedProps) {
             </span>
           </span>
           <span className="absolute inset-x-5 bottom-5 line-clamp-2 text-sm font-semibold text-white drop-shadow-lg sm:text-base">
-            Play {title} official trailer
+            {playLabel}
           </span>
         </button>
       )}

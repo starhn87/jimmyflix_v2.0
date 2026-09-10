@@ -138,16 +138,16 @@ function ResultGridSkeleton() {
   )
 }
 
-export function SearchResultsSkeleton() {
+export function SearchResultsSkeleton({ label = 'Loading search results' }: { label?: string }) {
   return (
     <div
       role="status"
       aria-busy="true"
       aria-live="polite"
-      aria-label="Loading search results"
+      aria-label={label}
       className="mx-auto max-w-[1600px] animate-pulse px-4 motion-reduce:animate-none sm:px-6 lg:px-10"
     >
-      <LoadingAnnouncement label="Loading search results" />
+      <LoadingAnnouncement label={label} />
       <Bone className="mb-8 h-4 w-24 rounded-md" />
       <div className="space-y-14">
         <ResultGridSkeleton />

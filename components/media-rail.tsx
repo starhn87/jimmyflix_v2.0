@@ -1,13 +1,17 @@
 import { Children, type ReactNode } from 'react'
 import { MediaRailControls } from '@/components/media-rail-controls'
+import { getDictionary } from '@/lib/dictionaries'
+import type { Locale } from '@/lib/i18n'
 
 interface MediaRailProps {
   title: string
   description: string
   children: ReactNode
+  locale: Locale
 }
 
-export function MediaRail({ title, description, children }: MediaRailProps) {
+export function MediaRail({ title, description, children, locale }: MediaRailProps) {
+  const dictionary = getDictionary(locale)
   const slug = title.replaceAll(' ', '-').toLowerCase()
   const titleId = `${slug}-title`
   const railId = `${slug}-rail`
@@ -29,7 +33,7 @@ export function MediaRail({ title, description, children }: MediaRailProps) {
       <div className="relative">
         <ul
           id={railId}
-          aria-label={`${title} carousel`}
+          aria-label={dictionary.common.carouselLabel(title)}
           className="no-scrollbar flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-7 sm:scroll-px-8 sm:gap-4 sm:px-8 lg:scroll-px-12 lg:gap-5 lg:px-12"
         >
           {Children.toArray(children).map((child, index) => (
@@ -41,7 +45,11 @@ export function MediaRail({ title, description, children }: MediaRailProps) {
             </li>
           ))}
         </ul>
-        <MediaRailControls railId={railId} title={title} />
+        <MediaRailControls
+          railId={railId}
+          backwardLabel={dictionary.common.scrollBackward(title)}
+          forwardLabel={dictionary.common.scrollForward(title)}
+        />
       </div>
     </section>
   )

@@ -1,6 +1,8 @@
 import 'server-only'
 
 import { cache } from 'react'
+import { getDictionary } from '@/lib/dictionaries'
+import { tmdbLanguage, type Locale } from '@/lib/i18n'
 import { runCatalogSearch } from '@/lib/search'
 import type {
   CastMember,
@@ -20,6 +22,12 @@ const API_BASE_URL = 'https://api.themoviedb.org/3/'
 const DEFAULT_REVALIDATE_SECONDS = 60 * 30
 
 type QueryValue = string | number | boolean | undefined
+
+interface TmdbFetchOptions {
+  revalidate?: number
+  timeoutMs?: number
+  locale?: Locale
+}
 
 export class TmdbNotFoundError extends Error {
   constructor() {
@@ -41,12 +49,15 @@ const getApiKey = () => {
 async function tmdbFetch<T>(
   path: string,
   query: Record<string, QueryValue> = {},
-  revalidate = DEFAULT_REVALIDATE_SECONDS,
-  timeoutMs?: number,
+  {
+    revalidate = DEFAULT_REVALIDATE_SECONDS,
+    timeoutMs,
+    locale = 'en',
+  }: TmdbFetchOptions = {},
 ): Promise<T> {
   const url = new URL(path.replace(/^\//, ''), API_BASE_URL)
   url.searchParams.set('api_key', getApiKey())
-  url.searchParams.set('language', 'en-US')
+  url.searchParams.set('language', tmdbLanguage[locale])
 
   Object.entries(query).forEach(([key, value]) => {
     if (value !== undefined) {
@@ -71,11 +82,11 @@ async function tmdbFetch<T>(
   return (await response.json()) as T
 }
 
-const getList = async (path: string, revalidate?: number) => {
+const getList = async (path: string, locale: Locale, revalidate?: number) => {
   const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
     path,
     {},
-    revalidate,
+    { revalidate, locale },
   )
   return response.results
 }
@@ -128,138 +139,114 @@ const createSectionRequests = (
     request: loadSection(definition),
   }))
 
-export const getMovieSectionRequests = () =>
-  createSectionRequests([
-    {
-      id: 'now-playing',
-      title: 'Now playing',
-      description: 'Movies playing in theaters now',
-      mediaType: 'movie',
-      load: () => getList('movie/now_playing'),
-    },
-    {
-      id: 'top-rated-movies',
-      title: 'Top rated',
-      description: 'Audience favorites with lasting appeal',
-      mediaType: 'movie',
-      load: () => getList('movie/top_rated'),
-    },
-    {
-      id: 'upcoming',
-      title: 'Coming soon',
-      description: 'Upcoming releases to keep on your radar',
-      mediaType: 'movie',
-      load: () => getList('movie/upcoming'),
-    },
-    {
-      id: 'popular-movies',
-      title: 'Popular movies',
-      description: 'The titles people are watching right now',
-      mediaType: 'movie',
-      load: () => getList('movie/popular'),
-    },
-  ])
+export const getMovieSectionRequests = (locale: Locale) => {
+  const localized = getDictionary(locale).sections.movie
+  const endpoints = ['movie/now_playing', 'movie/top_rated', 'movie/upcoming', 'movie/popular']
 
-export const getTvSectionRequests = () =>
-  createSectionRequests([
-    {
-      id: 'top-rated-tv',
-      title: 'Top rated shows',
-      description: 'Series with the strongest audience ratings',
-      mediaType: 'tv',
-      load: () => getList('tv/top_rated'),
-    },
-    {
-      id: 'popular-tv',
-      title: 'Popular shows',
-      description: 'Series drawing the biggest audiences',
-      mediaType: 'tv',
-      load: () => getList('tv/popular'),
-    },
-    {
-      id: 'on-the-air',
-      title: 'On the air',
-      description: 'Shows currently releasing new episodes',
-      mediaType: 'tv',
-      load: () => getList('tv/on_the_air'),
-    },
-    {
-      id: 'airing-today',
-      title: 'Airing today',
-      description: 'New episodes scheduled for today',
-      mediaType: 'tv',
-      load: () => getList('tv/airing_today'),
-    },
-  ])
+  return createSectionRequests(localized.map((section, index) => ({
+    ...section,
+    mediaType: 'movie' as const,
+    load: () => getList(endpoints[index], locale),
+  })))
+}
 
-export const getTrendingSectionRequests = (window: TimeWindow) =>
-  createSectionRequests([
+export const getTvSectionRequests = (locale: Locale) => {
+  const localized = getDictionary(locale).sections.tv
+  const endpoints = ['tv/top_rated', 'tv/popular', 'tv/on_the_air', 'tv/airing_today']
+
+  return createSectionRequests(localized.map((section, index) => ({
+    ...section,
+    mediaType: 'tv' as const,
+    load: () => getList(endpoints[index], locale),
+  })))
+}
+
+export const getTrendingSectionRequests = (window: TimeWindow, locale: Locale) => {
+  const dictionary = getDictionary(locale)
+
+  return createSectionRequests([
     {
       id: `trending-movies-${window}`,
-      title: 'Trending movies',
-      description: `Movies gaining attention this ${window}`,
+      title: dictionary.sections.trendingMovies,
+      description: dictionary.sections.trendingMoviesDescription(window),
       mediaType: 'movie',
-      load: () => getList(`trending/movie/${window}`, 60 * 10),
+      load: () => getList(`trending/movie/${window}`, locale, 60 * 10),
     },
     {
       id: `trending-tv-${window}`,
-      title: 'Trending shows',
-      description: `Shows gaining attention this ${window}`,
+      title: dictionary.sections.trendingShows,
+      description: dictionary.sections.trendingShowsDescription(window),
       mediaType: 'tv',
-      load: () => getList(`trending/tv/${window}`, 60 * 10),
+      load: () => getList(`trending/tv/${window}`, locale, 60 * 10),
     },
   ])
+}
 
-const searchMovies = (query: string) =>
+const searchMovies = (query: string, locale: Locale) =>
   tmdbFetch<TmdbListResponse<MediaItem>>(
     'search/movie',
     { query: query.trim(), include_adult: false },
-    60 * 5,
-    5000,
+    { revalidate: 60 * 5, timeoutMs: 5000, locale },
   ).then((response) => response.results)
 
-const searchTv = (query: string) =>
+const searchTv = (query: string, locale: Locale) =>
   tmdbFetch<TmdbListResponse<MediaItem>>(
     'search/tv',
     { query: query.trim(), include_adult: false },
-    60 * 5,
-    5000,
+    { revalidate: 60 * 5, timeoutMs: 5000, locale },
   ).then((response) => response.results)
 
-export const searchCatalog = (query: string) => runCatalogSearch(query, {
-  movies: searchMovies,
-  tv: searchTv,
+export const searchCatalog = (query: string, locale: Locale) => runCatalogSearch(query, {
+  movies: (term) => searchMovies(term, locale),
+  tv: (term) => searchTv(term, locale),
   people: (term) => tmdbFetch<TmdbListResponse<PersonSearchResult>>(
-    'search/person', { query: term, include_adult: false }, 60 * 5, 5000,
+    'search/person',
+    { query: term, include_adult: false },
+    { revalidate: 60 * 5, timeoutMs: 5000, locale },
   ).then((response) => response.results),
   keywords: (term) => tmdbFetch<TmdbListResponse<Keyword>>(
-    'search/keyword', { query: term }, 60 * 5, 5000,
+    'search/keyword',
+    { query: term },
+    { revalidate: 60 * 5, timeoutMs: 5000, locale },
   ).then((response) => response.results),
-  credits: (id) => tmdbFetch<PersonCredits>(`person/${id}/combined_credits`, {}, 60 * 30, 5000),
+  credits: (id) => tmdbFetch<PersonCredits>(
+    `person/${id}/combined_credits`,
+    {},
+    { revalidate: 60 * 30, timeoutMs: 5000, locale },
+  ),
   discover: (mediaType, keywordIds) => tmdbFetch<TmdbListResponse<MediaItem>>(
     `discover/${mediaType}`,
     { with_keywords: keywordIds.join('|'), include_adult: false, sort_by: 'popularity.desc' },
-    60 * 5,
-    5000,
+    { revalidate: 60 * 5, timeoutMs: 5000, locale },
   ).then((response) => response.results),
-})
+}, locale === 'ko' ? {
+  movieTitles: '영화 제목',
+  tvTitles: 'TV 프로그램 제목',
+  people: '인물',
+  creditsFor: (name) => `${name}의 출연작`,
+  topics: '주제',
+  moviesByTopic: '주제별 영화',
+  tvByTopic: '주제별 TV 프로그램',
+} : undefined)
 
-export const getMovieDetail = cache((id: number) =>
-  tmdbFetch<MediaDetail>(`movie/${id}`, { append_to_response: 'videos' }),
+export const getMovieDetail = cache((id: number, locale: Locale) =>
+  tmdbFetch<MediaDetail>(`movie/${id}`, { append_to_response: 'videos' }, { locale }),
 )
 
-export const getTvDetail = cache((id: number) =>
-  tmdbFetch<MediaDetail>(`tv/${id}`, { append_to_response: 'videos' }),
+export const getTvDetail = cache((id: number, locale: Locale) =>
+  tmdbFetch<MediaDetail>(`tv/${id}`, { append_to_response: 'videos' }, { locale }),
 )
 
-export const getCredits = cache(async (mediaType: MediaType, id: number) => {
+export const getCredits = cache(async (mediaType: MediaType, id: number, locale: Locale) => {
   const response = await tmdbFetch<{ cast: CastMember[] }>(
     `${mediaType}/${id}/credits`,
+    {},
+    { locale },
   )
   return response.cast
 })
 
-export const getCollection = cache(async (id: number) => {
-  const response = await tmdbFetch<CollectionDetail>(`collection/${id}`)
+export const getCollection = cache(async (id: number, locale: Locale) => {
+  const response = await tmdbFetch<CollectionDetail>(`collection/${id}`, {}, { locale })
   return response.parts
 })

@@ -8,6 +8,8 @@ import {
   TrailerPanel,
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
+import { getDictionary } from '@/lib/dictionaries'
+import type { Locale } from '@/lib/i18n'
 import { formatRating, getImageUrl, getMediaTitle, getMediaYear, getPosterUrl } from '@/lib/media'
 import type { MediaDetail, MediaType } from '@/types/tmdb'
 
@@ -16,6 +18,7 @@ interface DetailViewProps {
   mediaType: MediaType
   creditsPanel: ReactNode
   collectionPanel?: ReactNode
+  locale: Locale
 }
 
 export function DetailView({
@@ -23,29 +26,31 @@ export function DetailView({
   mediaType,
   creditsPanel,
   collectionPanel,
+  locale,
 }: DetailViewProps) {
-  const title = getMediaTitle(detail)
-  const rating = formatRating(detail.vote_average)
+  const dictionary = getDictionary(locale)
+  const title = getMediaTitle(detail, locale)
+  const rating = formatRating(detail.vote_average, locale)
   const duration = detail.runtime || detail.episode_run_time?.find((time) => time > 0)
   const backdrop = getImageUrl(detail.backdrop_path, 'w1280')
   const tabs: DetailTab[] = [
-    { id: 'trailer', label: 'Trailer', content: <TrailerPanel detail={detail} /> },
+    { id: 'trailer', label: dictionary.detail.trailer, content: <TrailerPanel detail={detail} locale={locale} /> },
     {
       id: 'credits',
-      label: 'Credits',
+      label: dictionary.detail.credits,
       content: creditsPanel,
     },
     {
       id: 'production',
-      label: 'Production',
-      content: <ProductionPanel detail={detail} />,
+      label: dictionary.detail.production,
+      content: <ProductionPanel detail={detail} locale={locale} />,
     },
   ]
 
   if (detail.belongs_to_collection && collectionPanel) {
     tabs.push({
       id: 'collection',
-      label: 'Collection',
+      label: dictionary.detail.collection,
       content: collectionPanel,
     })
   }
@@ -53,8 +58,8 @@ export function DetailView({
   if (mediaType === 'tv' && detail.seasons?.length) {
     tabs.push({
       id: 'seasons',
-      label: 'Seasons',
-      content: <SeasonsPanel seasons={detail.seasons} />,
+      label: dictionary.detail.seasons,
+      content: <SeasonsPanel seasons={detail.seasons} locale={locale} />,
     })
   }
 
@@ -77,7 +82,7 @@ export function DetailView({
         <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl border border-tone/10 bg-surface shadow-media lg:row-span-3">
           <Image
             src={getPosterUrl(detail.poster_path)}
-            alt={`${title} poster`}
+            alt={dictionary.common.posterAlt(title)}
             fill
             loading="eager"
             fetchPriority="high"
@@ -96,7 +101,7 @@ export function DetailView({
                 href={`https://www.imdb.com/title/${detail.imdb_id}`}
                 target="_blank"
                 rel="noreferrer"
-                aria-label={`View ${title} on IMDb (opens in a new tab)`}
+                aria-label={dictionary.detail.imdbLabel(title)}
                 className="inline-flex min-h-8 shrink-0 items-center rounded-md bg-[#f5c518] px-2 font-mono text-xs font-black text-black outline-none focus-visible:ring-3 focus-visible:ring-white/60 sm:mt-1"
               >
                 IMDb
@@ -104,7 +109,7 @@ export function DetailView({
             ) : null}
           </div>
 
-          <ul aria-label="Title details" className="mt-4 flex flex-wrap gap-2">
+          <ul aria-label={dictionary.detail.titleDetails} className="mt-4 flex flex-wrap gap-2">
             {rating ? (
               <li
                 aria-label={rating.label}
@@ -115,11 +120,11 @@ export function DetailView({
               </li>
             ) : null}
             <li className="inline-flex min-h-8 items-center rounded-full border border-tone/14 bg-overlay px-3 text-xs text-ink backdrop-blur-sm sm:text-sm">
-              {getMediaYear(detail)}
+              {getMediaYear(detail, locale)}
             </li>
             {duration ? (
               <li className="inline-flex min-h-8 items-center rounded-full border border-tone/14 bg-overlay px-3 text-xs text-ink backdrop-blur-sm sm:text-sm">
-                {duration} min
+                {dictionary.detail.minutes(duration)}
               </li>
             ) : null}
             {detail.genres?.length ? (
@@ -131,11 +136,11 @@ export function DetailView({
         </header>
 
         <p className="col-span-2 max-w-[76ch] text-[0.95rem] leading-7 text-muted lg:col-span-1 lg:col-start-2 lg:text-base lg:leading-8">
-          {detail.overview || 'No overview is available for this title.'}
+          {detail.overview || dictionary.detail.noOverview}
         </p>
 
         <div className="col-span-2 min-w-0 pb-16 lg:col-span-1 lg:col-start-2">
-          <DetailTabs tabs={tabs} />
+          <DetailTabs tabs={tabs} label={dictionary.detail.tabListLabel} />
         </div>
       </div>
     </main>

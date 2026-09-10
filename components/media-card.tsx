@@ -10,23 +10,27 @@ import {
   getPosterUrl,
 } from '@/lib/media'
 import type { MediaItem, MediaType } from '@/types/tmdb'
+import type { Locale } from '@/lib/i18n'
 
 interface MediaCardProps {
   item: MediaItem
   mediaType?: MediaType
   highPriority?: boolean
+  locale: Locale
 }
 
-export function MediaCard({ item, mediaType, highPriority = false }: MediaCardProps) {
-  const title = getMediaTitle(item)
+export function MediaCard({ item, mediaType, highPriority = false, locale }: MediaCardProps) {
+  const title = getMediaTitle(item, locale)
   const type = getMediaType(item, mediaType)
-  const year = getMediaYear(item)
-  const rating = formatRating(item.vote_average)
-  const typeLabel = type === 'movie' ? 'Movie' : 'TV show'
+  const year = getMediaYear(item, locale)
+  const rating = formatRating(item.vote_average, locale)
+  const typeLabel = type === 'movie'
+    ? (locale === 'ko' ? '영화' : 'Movie')
+    : (locale === 'ko' ? 'TV 프로그램' : 'TV show')
 
   return (
     <Link
-      href={getMediaHref(item, type)}
+      href={getMediaHref(item, type, locale)}
       prefetch={false}
       aria-label={[title, typeLabel, year, rating?.label].filter(Boolean).join(', ')}
       className="group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
@@ -35,7 +39,7 @@ export function MediaCard({ item, mediaType, highPriority = false }: MediaCardPr
         <div className="relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media">
           <Image
             src={getPosterUrl(item.poster_path)}
-            alt={`${title} poster`}
+            alt={locale === 'ko' ? `${title} 포스터` : `${title} poster`}
             fill
             fetchPriority={highPriority ? 'high' : undefined}
             sizes="(max-width: 480px) 42vw, (max-width: 768px) 27vw, (max-width: 1200px) 20vw, 190px"

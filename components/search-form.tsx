@@ -3,13 +3,16 @@
 import Form from 'next/form'
 import { type FormEvent, type RefObject, useState } from 'react'
 import { SearchIcon } from '@/components/icons'
+import { getLocalePath, type HeaderMessages, type Locale } from '@/lib/i18n'
 
 interface SearchFormProps {
+  locale: Locale
+  messages: HeaderMessages
   initialQuery?: string
   inputRef: RefObject<HTMLInputElement | null>
 }
 
-export function SearchForm({ initialQuery = '', inputRef }: SearchFormProps) {
+export function SearchForm({ locale, messages, initialQuery = '', inputRef }: SearchFormProps) {
   const [error, setError] = useState('')
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -18,7 +21,7 @@ export function SearchForm({ initialQuery = '', inputRef }: SearchFormProps) {
 
     if (!query) {
       event.preventDefault()
-      setError('Enter a title, actor, or keyword.')
+      setError(messages.searchEmptyError)
       input?.focus()
       return
     }
@@ -28,9 +31,9 @@ export function SearchForm({ initialQuery = '', inputRef }: SearchFormProps) {
   }
 
   return (
-    <Form action="/search" prefetch={false} onSubmit={handleSubmit} role="search">
+    <Form action={getLocalePath(locale, '/search')} prefetch={false} onSubmit={handleSubmit} role="search">
       <label htmlFor="catalog-search" className="sr-only">
-        Search by title, actor, or keyword
+        {messages.searchLabel}
       </label>
       <div className="relative">
         <input
@@ -39,7 +42,7 @@ export function SearchForm({ initialQuery = '', inputRef }: SearchFormProps) {
           name="q"
           type="search"
           defaultValue={initialQuery}
-          placeholder="Titles, actors, keywords"
+          placeholder={messages.searchPlaceholder}
           maxLength={200}
           onChange={() => { if (error) setError('') }}
           aria-invalid={Boolean(error)}
@@ -49,7 +52,7 @@ export function SearchForm({ initialQuery = '', inputRef }: SearchFormProps) {
         />
         <button
           type="submit"
-          aria-label="Search"
+          aria-label={messages.searchButton}
           className="absolute top-0 right-0 grid size-11 place-items-center rounded-full text-subtle outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent"
         >
           <SearchIcon className="size-5" />

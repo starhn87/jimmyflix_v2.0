@@ -3,6 +3,8 @@ import { ErrorState } from '@/components/error-state'
 import { MediaCard } from '@/components/media-card'
 import { VideoEmbed } from '@/components/video-embed'
 import { getImageUrl, getProfileUrl } from '@/lib/media'
+import { getDictionary } from '@/lib/dictionaries'
+import type { Locale } from '@/lib/i18n'
 import type {
   CastMember,
   MediaDetail,
@@ -31,36 +33,48 @@ const getTrailer = (videos: Video[] | undefined) =>
     (video) => video.site === 'YouTube' && video.type === 'Trailer' && video.official,
   ) || videos?.find((video) => video.site === 'YouTube' && video.type === 'Trailer')
 
-export function TrailerPanel({ detail }: { detail: MediaDetail }) {
-  const title = detail.title || detail.name || 'This title'
+export function TrailerPanel({ detail, locale }: { detail: MediaDetail; locale: Locale }) {
+  const dictionary = getDictionary(locale)
+  const title = detail.title || detail.name || dictionary.common.untitled
   const trailer = getTrailer(detail.videos?.results)
 
-  if (!trailer) return <EmptyPanel message="No trailer is available for this title." />
-  return <VideoEmbed videoKey={trailer.key} title={title} />
+  if (!trailer) return <EmptyPanel message={dictionary.detail.noTrailer} />
+  return (
+    <VideoEmbed
+      videoKey={trailer.key}
+      frameTitle={dictionary.detail.trailerFrameTitle(title)}
+      playLabel={dictionary.detail.playTrailer(title)}
+    />
+  )
 }
 
 export function CreditsPanel({
   cast,
   error,
+  locale,
 }: {
   cast: CastMember[]
   error: boolean
+  locale: Locale
 }) {
+  const dictionary = getDictionary(locale)
   if (error) {
     return (
       <ErrorState
         compact
-        title="Couldn't load credits"
-        message="The cast list is temporarily unavailable."
+        title={dictionary.detail.creditsErrorTitle}
+        message={dictionary.detail.creditsErrorMessage}
+        retryLabel={dictionary.common.retry}
+        retryingLabel={dictionary.common.retrying}
       />
     )
   }
 
-  if (cast.length === 0) return <EmptyPanel message="No cast information is available." />
+  if (cast.length === 0) return <EmptyPanel message={dictionary.detail.noCast} />
 
   return (
     <section className="pt-7" aria-labelledby="cast-title">
-      <h2 id="cast-title" className={panelHeading}>Cast</h2>
+      <h2 id="cast-title" className={panelHeading}>{dictionary.detail.cast}</h2>
       <ul className={responsiveCardGrid}>
         {cast.slice(0, 30).map((person) => (
           <li key={`${person.id}-${person.character || person.name}`} className={centeredItem}>
@@ -75,7 +89,7 @@ export function CreditsPanel({
             </div>
             <p className="mt-3 text-sm font-semibold text-ink">{person.name || person.original_name}</p>
             <p className="mt-1 text-xs leading-5 text-faint">
-              {person.character || 'Cast member'}
+              {person.character || dictionary.detail.castMember}
             </p>
           </li>
         ))}
@@ -102,13 +116,16 @@ function CompanyCard({ company }: { company: ProductionCompany }) {
   )
 }
 
-function CountryCard({ country }: { country: ProductionCountry }) {
+function CountryCard({ country, flagAlt }: {
+  country: ProductionCountry
+  flagAlt: string
+}) {
   return (
     <li className={centeredItem}>
       <div className="relative mx-auto aspect-5/3 w-full overflow-hidden rounded-xl border border-tone/10 bg-surface shadow-panel">
         <Image
           src={`https://flagcdn.com/w320/${country.iso_3166_1.toLowerCase()}.png`}
-          alt={`${country.name} flag`}
+          alt={flagAlt}
           fill
           sizes="180px"
           className="object-cover object-center"
@@ -119,19 +136,20 @@ function CountryCard({ country }: { country: ProductionCountry }) {
   )
 }
 
-export function ProductionPanel({ detail }: { detail: MediaDetail }) {
+export function ProductionPanel({ detail, locale }: { detail: MediaDetail; locale: Locale }) {
+  const dictionary = getDictionary(locale)
   const companies = detail.production_companies || []
   const countries = detail.production_countries || []
 
   if (companies.length === 0 && countries.length === 0) {
-    return <EmptyPanel message="No production information is available." />
+    return <EmptyPanel message={dictionary.detail.noProduction} />
   }
 
   return (
     <div className="space-y-10 pt-7">
       {companies.length > 0 ? (
         <section aria-labelledby="companies-title">
-          <h2 id="companies-title" className={panelHeading}>Production companies</h2>
+          <h2 id="companies-title" className={panelHeading}>{dictionary.detail.productionCompanies}</h2>
           <ul className={responsiveCardGrid}>
             {companies.map((company) => <CompanyCard key={company.id} company={company} />)}
           </ul>
@@ -139,10 +157,14 @@ export function ProductionPanel({ detail }: { detail: MediaDetail }) {
       ) : null}
       {countries.length > 0 ? (
         <section aria-labelledby="countries-title">
-          <h2 id="countries-title" className={panelHeading}>Production countries</h2>
+          <h2 id="countries-title" className={panelHeading}>{dictionary.detail.productionCountries}</h2>
           <ul className={responsiveCardGrid}>
             {countries.map((country) => (
-              <CountryCard key={country.iso_3166_1} country={country} />
+              <CountryCard
+                key={country.iso_3166_1}
+                country={country}
+                flagAlt={dictionary.detail.flagAlt(country.name)}
+              />
             ))}
           </ul>
         </section>
@@ -151,19 +173,20 @@ export function ProductionPanel({ detail }: { detail: MediaDetail }) {
   )
 }
 
-export function SeasonsPanel({ seasons }: { seasons: Season[] }) {
-  if (seasons.length === 0) return <EmptyPanel message="No season information is available." />
+export function SeasonsPanel({ seasons, locale }: { seasons: Season[]; locale: Locale }) {
+  const dictionary = getDictionary(locale)
+  if (seasons.length === 0) return <EmptyPanel message={dictionary.detail.noSeasons} />
 
   return (
     <section className="pt-7" aria-labelledby="seasons-title">
-      <h2 id="seasons-title" className={panelHeading}>Seasons</h2>
+      <h2 id="seasons-title" className={panelHeading}>{dictionary.detail.seasons}</h2>
       <ul className={responsiveCardGrid}>
         {seasons.map((season) => (
           <li key={season.id} className={centeredItem}>
             <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface">
               <Image
                 src={getImageUrl(season.poster_path, 'w342') || '/images/defaultPoster.png'}
-                alt={`${season.name} poster`}
+                alt={dictionary.common.posterAlt(season.name)}
                 fill
                 sizes="180px"
                 className="object-cover object-center"
@@ -180,29 +203,34 @@ export function SeasonsPanel({ seasons }: { seasons: Season[] }) {
 export function CollectionPanel({
   items,
   error,
+  locale,
 }: {
   items: MediaItem[]
   error: boolean
+  locale: Locale
 }) {
+  const dictionary = getDictionary(locale)
   if (error) {
     return (
       <ErrorState
         compact
-        title="Couldn't load this collection"
-        message="The collection titles are temporarily unavailable."
+        title={dictionary.detail.collectionErrorTitle}
+        message={dictionary.detail.collectionErrorMessage}
+        retryLabel={dictionary.common.retry}
+        retryingLabel={dictionary.common.retrying}
       />
     )
   }
 
-  if (items.length === 0) return <EmptyPanel message="No collection titles are available." />
+  if (items.length === 0) return <EmptyPanel message={dictionary.detail.noCollection} />
 
   return (
     <section className="pt-7" aria-labelledby="collection-title">
-      <h2 id="collection-title" className={panelHeading}>Collection titles</h2>
+      <h2 id="collection-title" className={panelHeading}>{dictionary.detail.collectionTitles}</h2>
       <ul className="mt-5 flex flex-wrap justify-center gap-4 sm:gap-5 lg:justify-start">
         {items.map((item) => (
           <li key={item.id} className="w-[47%] max-w-[180px] sm:w-[180px]">
-            <MediaCard item={item} mediaType="movie" />
+            <MediaCard item={item} mediaType="movie" locale={locale} />
           </li>
         ))}
       </ul>

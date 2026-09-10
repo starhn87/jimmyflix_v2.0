@@ -22,6 +22,26 @@ export interface CatalogSearchResult {
   unavailable: string[]
 }
 
+export interface SearchSourceLabels {
+  movieTitles: string
+  tvTitles: string
+  people: string
+  creditsFor: (name: string) => string
+  topics: string
+  moviesByTopic: string
+  tvByTopic: string
+}
+
+const defaultSourceLabels: SearchSourceLabels = {
+  movieTitles: 'Movie titles',
+  tvTitles: 'TV titles',
+  people: 'People',
+  creditsFor: (name) => `Credits for ${name}`,
+  topics: 'Topics',
+  moviesByTopic: 'Movies by topic',
+  tvByTopic: 'TV shows by topic',
+}
+
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase('en').normalize('NFKC')
 
 function selectMatches<T extends { id: number; name: string }>(items: T[], query: string, limit: number) {
@@ -44,7 +64,11 @@ function mergeResults(mediaType: MediaType, direct: MediaItem[], related: MediaI
   return [...result.values()]
 }
 
-export async function runCatalogSearch(rawQuery: string, sources: SearchSources): Promise<CatalogSearchResult> {
+export async function runCatalogSearch(
+  rawQuery: string,
+  sources: SearchSources,
+  labels: SearchSourceLabels = defaultSourceLabels,
+): Promise<CatalogSearchResult> {
   const query = rawQuery.trim()
   if (query.length > MAX_SEARCH_LENGTH) throw new RangeError('Search query is too long.')
   if (!query) return { movies: [], tvShows: [], people: [], keywords: [], unavailable: [] }
@@ -60,12 +84,12 @@ export async function runCatalogSearch(rawQuery: string, sources: SearchSources)
   }
 
   // Start all four searches together; expand each source as soon as it resolves.
-  const moviesRequest = read(sources.movies(query), 'Movie titles', [])
-  const tvRequest = read(sources.tv(query), 'TV titles', [])
-  const peopleRequest = read(sources.people(query), 'People', []).then(async (matches) => {
+  const moviesRequest = read(sources.movies(query), labels.movieTitles, [])
+  const tvRequest = read(sources.tv(query), labels.tvTitles, [])
+  const peopleRequest = read(sources.people(query), labels.people, []).then(async (matches) => {
     const people = selectMatches(matches.filter((person) => !person.adult), query, MAX_PEOPLE)
     const groups = await Promise.all(people.map(async (person) => {
-      const credits = await read(sources.credits(person.id), `Credits for ${person.name}`, {
+      const credits = await read(sources.credits(person.id), labels.creditsFor(person.name), {
         cast: person.known_for || [], crew: [],
       })
       return { name: person.name, items: [...credits.cast, ...credits.crew] }
@@ -75,13 +99,13 @@ export async function runCatalogSearch(rawQuery: string, sources: SearchSources)
       items: groups.flatMap((group) => group.items).filter((item) => item.media_type === 'movie' || item.media_type === 'tv'),
     }
   })
-  const keywordsRequest = read(sources.keywords(query), 'Topics', []).then(async (matches) => {
+  const keywordsRequest = read(sources.keywords(query), labels.topics, []).then(async (matches) => {
     const keywords = selectMatches(matches, query, MAX_KEYWORDS)
     if (!keywords.length) return { names: [], movies: [], tvShows: [] }
     const ids = keywords.map((keyword) => keyword.id)
     const [movies, tvShows] = await Promise.all([
-      read(sources.discover('movie', ids), 'Movies by topic', []),
-      read(sources.discover('tv', ids), 'TV shows by topic', []),
+      read(sources.discover('movie', ids), labels.moviesByTopic, []),
+      read(sources.discover('tv', ids), labels.tvByTopic, []),
     ])
     return { names: keywords.map((keyword) => keyword.name), movies, tvShows }
   })

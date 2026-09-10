@@ -6,9 +6,11 @@ import { DetailView } from '@/components/detail-view'
 import { DetailPanelSkeleton } from '@/components/loading-skeletons'
 import { getCollection, getCredits, getMovieDetail, TmdbNotFoundError } from '@/lib/tmdb'
 import { getMediaTitle } from '@/lib/media'
+import { getDictionary } from '@/lib/dictionaries'
+import { isLocale } from '@/lib/i18n'
 
 interface MovieDetailPageProps {
-  params: Promise<{ id: string }>
+  params: Promise<{ locale: string; id: string }>
 }
 
 const parseId = (value: string) => {
@@ -17,51 +19,56 @@ const parseId = (value: string) => {
 }
 
 export async function generateMetadata({ params }: MovieDetailPageProps): Promise<Metadata> {
-  const { id: rawId } = await params
+  const { locale, id: rawId } = await params
+  if (!isLocale(locale)) return {}
+  const dictionary = getDictionary(locale)
   const id = parseId(rawId)
-  if (!id) return { title: 'Movie not found' }
+  if (!id) return { title: dictionary.detail.movieNotFound }
 
   try {
-    const detail = await getMovieDetail(id)
+    const detail = await getMovieDetail(id, locale)
     return {
-      title: getMediaTitle(detail),
-      description: detail.overview || 'Movie details on Jimmyflix.',
+      title: getMediaTitle(detail, locale),
+      description: detail.overview || dictionary.detail.movieDescriptionFallback,
     }
   } catch {
-    return { title: 'Movie details' }
+    return { title: dictionary.detail.movieMetadataFallback }
   }
 }
 
 export default async function MovieDetailPage({ params }: MovieDetailPageProps) {
-  const { id: rawId } = await params
+  const { locale, id: rawId } = await params
+  if (!isLocale(locale)) notFound()
+  const dictionary = getDictionary(locale)
   const id = parseId(rawId)
   if (!id) notFound()
 
   let detail
   try {
-    detail = await getMovieDetail(id)
+    detail = await getMovieDetail(id, locale)
   } catch (error) {
     if (error instanceof TmdbNotFoundError) notFound()
     throw error
   }
 
-  const creditsRequest = getCredits('movie', id)
+  const creditsRequest = getCredits('movie', id, locale)
   const collectionRequest = detail.belongs_to_collection
-    ? getCollection(detail.belongs_to_collection.id)
+    ? getCollection(detail.belongs_to_collection.id, locale)
     : undefined
 
   return (
     <DetailView
       detail={detail}
       mediaType="movie"
+      locale={locale}
       creditsPanel={(
-        <Suspense fallback={<DetailPanelSkeleton label="Loading credits" />}>
-          <CreditsDataPanel request={creditsRequest} />
+        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingCredits} />}>
+          <CreditsDataPanel request={creditsRequest} locale={locale} />
         </Suspense>
       )}
       collectionPanel={collectionRequest ? (
-        <Suspense fallback={<DetailPanelSkeleton label="Loading collection" />}>
-          <CollectionDataPanel request={collectionRequest} />
+        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingCollection} />}>
+          <CollectionDataPanel request={collectionRequest} locale={locale} />
         </Suspense>
       ) : undefined}
     />

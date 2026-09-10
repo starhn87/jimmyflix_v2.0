@@ -4,8 +4,11 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { SearchForm } from '@/components/search-form'
 import { SearchIcon } from '@/components/icons'
+import type { HeaderMessages, Locale } from '@/lib/i18n'
 
-export function HeaderSearchControl({ initialQuery = '', expanded = false }: {
+export function HeaderSearchControl({ locale, messages, initialQuery = '', expanded = false }: {
+  locale: Locale
+  messages: HeaderMessages
   initialQuery?: string
   expanded?: boolean
 }) {
@@ -26,7 +29,7 @@ export function HeaderSearchControl({ initialQuery = '', expanded = false }: {
       <button
         ref={buttonRef}
         type="button"
-        aria-label={open ? 'Close search' : 'Open search'}
+        aria-label={open ? messages.closeSearch : messages.openSearch}
         aria-expanded={open}
         aria-controls="header-search-panel"
         onClick={() => {
@@ -47,19 +50,25 @@ export function HeaderSearchControl({ initialQuery = '', expanded = false }: {
         }}
         className={`relative order-5 col-span-full pb-3 lg:order-3 lg:col-span-1 lg:block lg:pb-0 ${open ? 'block' : 'hidden'}`}
       >
-        <SearchForm initialQuery={initialQuery} inputRef={inputRef} />
+        <SearchForm locale={locale} messages={messages} initialQuery={initialQuery} inputRef={inputRef} />
       </div>
     </>
   )
 }
 
-export function HeaderSearch({ pathname }: { pathname: string }) {
+export function HeaderSearch({ locale, messages, pathname }: {
+  locale: Locale
+  messages: HeaderMessages
+  pathname: string
+}) {
   const params = useSearchParams()
   const query = pathname === '/search' ? params.get('q')?.trim() || '' : ''
 
   return (
     <HeaderSearchControl
       key={`${pathname}:${query}`}
+      locale={locale}
+      messages={messages}
       initialQuery={query}
       expanded={pathname === '/search'}
     />

@@ -9,16 +9,18 @@ import {
   getMediaYear,
 } from '@/lib/media'
 import type { MediaItem, MediaType } from '@/types/tmdb'
+import type { Locale } from '@/lib/i18n'
 
 interface HeroProps {
   item: MediaItem
   mediaType: MediaType
   eyebrow: string
+  locale: Locale
 }
 
-export function Hero({ item, mediaType, eyebrow }: HeroProps) {
-  const title = getMediaTitle(item)
-  const rating = formatRating(item.vote_average)
+export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
+  const title = getMediaTitle(item, locale)
+  const rating = formatRating(item.vote_average, locale)
   const backdrop = getImageUrl(item.backdrop_path, 'w1280')
 
   return (
@@ -52,7 +54,7 @@ export function Hero({ item, mediaType, eyebrow }: HeroProps) {
               </span>
             ) : null}
             <span className="inline-flex min-h-8 items-center rounded-full border border-tone/16 bg-overlay px-3 backdrop-blur-sm">
-              {getMediaYear(item)}
+              {getMediaYear(item, locale)}
             </span>
           </div>
           {item.overview ? (
@@ -61,12 +63,12 @@ export function Hero({ item, mediaType, eyebrow }: HeroProps) {
             </p>
           ) : null}
           <Link
-            href={getMediaHref(item, mediaType)}
+            href={getMediaHref(item, mediaType, locale)}
             prefetch={false}
             className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-action px-6 text-sm font-bold text-on-action shadow-panel outline-none transition hover:bg-action-hover focus-visible:ring-4 focus-visible:ring-accent/40"
           >
             <PlayIcon className="size-4" />
-            View details
+            {locale === 'ko' ? '상세 보기' : 'View details'}
           </Link>
         </div>
       </div>

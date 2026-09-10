@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from 'react'
 import { MoonIcon, SunIcon } from '@/components/icons'
+import type { HeaderMessages } from '@/lib/i18n'
 import { THEME_CHANGE_EVENT, THEME_COLORS, THEME_STORAGE_KEY, type Theme } from '@/lib/theme'
 
 let inMemoryChoice: Theme | null = null
@@ -53,7 +54,7 @@ function subscribe(onChange: () => void) {
   }
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ messages }: { messages: HeaderMessages }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   const toggleTheme = () => {
@@ -67,9 +68,9 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      aria-label="Dark mode"
+      aria-label={messages.darkMode}
       aria-pressed={theme === 'dark'}
-      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={theme === 'dark' ? messages.switchToLight : messages.switchToDark}
       onClick={toggleTheme}
       className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full border border-tone/15 bg-tone/5 text-ink outline-none transition-colors hover:bg-tone/10 focus-visible:ring-3 focus-visible:ring-accent/50"
     >

@@ -8,6 +8,8 @@ interface ErrorStateProps {
   backHref?: string
   backLabel?: string
   retry?: boolean
+  retryLabel?: string
+  retryingLabel?: string
 }
 
 export function ErrorState({
@@ -17,6 +19,8 @@ export function ErrorState({
   backHref,
   backLabel = 'Back to browse',
   retry = true,
+  retryLabel = 'Try again',
+  retryingLabel = 'Trying again…',
 }: ErrorStateProps) {
   return (
     <section
@@ -28,7 +32,7 @@ export function ErrorState({
       <h2 className="text-xl font-semibold text-ink sm:text-2xl">{title}</h2>
       <p className="mt-3 max-w-xl text-sm leading-6 text-subtle sm:text-base">{message}</p>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        {retry ? <RetryButton /> : null}
+        {retry ? <RetryButton label={retryLabel} pendingLabel={retryingLabel} /> : null}
         {backHref ? (
           <Link
             href={backHref}
