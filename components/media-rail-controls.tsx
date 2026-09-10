@@ -60,7 +60,7 @@ export function MediaRailControls({ railId, title }: MediaRailControlsProps) {
         disabled={!navigation.backward}
         aria-controls={railId}
         aria-label={`Scroll ${title} backward`}
-        className="absolute inset-y-0 left-0 z-10 hidden w-20 items-center justify-center bg-gradient-to-r from-[#080b12]/95 via-[#080b12]/80 to-transparent text-white opacity-0 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-cyan-300/50 disabled:pointer-events-none disabled:opacity-0 sm:flex lg:w-24"
+        className="absolute inset-y-0 left-0 z-10 hidden w-20 cursor-pointer items-center justify-center bg-gradient-to-r from-[#080b12]/95 via-[#080b12]/80 to-transparent text-white opacity-0 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-cyan-300/50 disabled:pointer-events-none disabled:opacity-0 sm:flex lg:w-24"
       >
         <ArrowLeftIcon className="size-9 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] lg:size-10" />
       </button>
@@ -70,7 +70,7 @@ export function MediaRailControls({ railId, title }: MediaRailControlsProps) {
         disabled={!navigation.forward}
         aria-controls={railId}
         aria-label={`Scroll ${title} forward`}
-        className="absolute inset-y-0 right-0 z-10 hidden w-20 items-center justify-center bg-gradient-to-l from-[#080b12]/95 via-[#080b12]/80 to-transparent text-white opacity-0 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-cyan-300/50 disabled:pointer-events-none disabled:opacity-0 sm:flex lg:w-24"
+        className="absolute inset-y-0 right-0 z-10 hidden w-20 cursor-pointer items-center justify-center bg-gradient-to-l from-[#080b12]/95 via-[#080b12]/80 to-transparent text-white opacity-0 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-cyan-300/50 disabled:pointer-events-none disabled:opacity-0 sm:flex lg:w-24"
       >
         <ArrowRightIcon className="size-9 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] lg:size-10" />
       </button>
