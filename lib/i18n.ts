@@ -43,4 +43,8 @@ export interface HeaderMessages {
   switchToDark: string
   switchLanguage: string
   languageButton: string
+  settings: string
+  closeSettings: string
+  language: string
+  theme: string
 }

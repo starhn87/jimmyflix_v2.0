@@ -56,6 +56,7 @@ interface Dictionary {
     timeWindowLabel: string
     today: string
     week: string
+    loading: string
   }
   search: {
     metadataTitle: string
@@ -173,6 +174,10 @@ const dictionaries: Record<Locale, Dictionary> = {
       switchToDark: 'Switch to dark mode',
       switchLanguage: 'Switch to Korean',
       languageButton: 'KO',
+      settings: 'Settings',
+      closeSettings: 'Close settings',
+      language: 'Language',
+      theme: 'Theme',
     },
     common: {
       untitled: 'Untitled',
@@ -221,6 +226,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       timeWindowLabel: 'Trending time window',
       today: 'Today',
       week: 'This week',
+      loading: 'Loading trending movies and TV shows',
     },
     search: {
       metadataTitle: 'Search',
@@ -340,6 +346,10 @@ const dictionaries: Record<Locale, Dictionary> = {
       switchToDark: '다크 모드로 전환',
       switchLanguage: '영어로 전환',
       languageButton: 'EN',
+      settings: '설정',
+      closeSettings: '설정 닫기',
+      language: '언어',
+      theme: '테마',
     },
     common: {
       untitled: '제목 없음',
@@ -388,6 +398,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       timeWindowLabel: '트렌드 기간',
       today: '오늘',
       week: '이번 주',
+      loading: '트렌드 영화와 TV 프로그램 불러오는 중',
     },
     search: {
       metadataTitle: '검색',

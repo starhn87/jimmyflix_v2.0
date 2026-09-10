@@ -10,7 +10,14 @@ import {
 import { StarIcon } from '@/components/icons'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
-import { formatRating, getImageUrl, getMediaTitle, getMediaYear, getPosterUrl } from '@/lib/media'
+import {
+  formatRating,
+  getImageUrl,
+  getMediaTitle,
+  getMediaYear,
+  getPosterUrl,
+  imageSkeletonPlaceholder,
+} from '@/lib/media'
 import type { MediaDetail, MediaType } from '@/types/tmdb'
 
 interface DetailViewProps {
@@ -71,7 +78,8 @@ export function DetailView({
             src={backdrop}
             alt=""
             fill
-            quality={90}
+            loading="eager"
+            quality={85}
             sizes="100vw"
             className="object-cover object-center opacity-55"
           />
@@ -82,12 +90,13 @@ export function DetailView({
       <div className="mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
         <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl border border-tone/10 bg-surface shadow-media lg:row-span-3">
           <Image
-            src={getImageUrl(detail.poster_path, 'original') || getPosterUrl(detail.poster_path)}
+            src={getImageUrl(detail.poster_path, 'w780') || getPosterUrl(detail.poster_path)}
             alt={dictionary.common.posterAlt(title)}
             fill
             loading="eager"
             fetchPriority="high"
-            quality={90}
+            placeholder={imageSkeletonPlaceholder}
+            quality={85}
             sizes="(max-width: 639px) 112px, (max-width: 1023px) 150px, (max-width: 1279px) 40vw, 480px"
             className="object-cover object-center"
           />

@@ -11,7 +11,7 @@ function LoadingAnnouncement({ label }: { label: string }) {
 
 function MediaRailSkeletonVisual() {
   return (
-    <section aria-hidden="true">
+    <section aria-hidden="true" className="render-later">
       <div className="mb-5 px-4 sm:px-8 lg:px-12">
         <Bone className="h-7 w-40 rounded-lg sm:w-52" />
         <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
@@ -23,8 +23,11 @@ function MediaRailSkeletonVisual() {
             className="w-[42vw] min-w-[136px] max-w-[190px] shrink-0 sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]"
           >
             <Bone className="aspect-2/3 w-full rounded-xl" />
-            <Bone className="mt-3 h-4 w-4/5 rounded-md" />
-            <Bone className="mt-2 h-3 w-2/5 rounded-md" />
+            <div className="mt-3 space-y-1.5">
+              <Bone className="h-4 w-4/5 rounded-md" />
+              <Bone className="h-4 w-3/5 rounded-md" />
+            </div>
+            <Bone className="mt-1 h-4 w-2/5 rounded-md" />
           </li>
         ))}
       </ul>
@@ -121,6 +124,29 @@ export function MediaSectionsSkeleton({
   )
 }
 
+export function TrendSkeleton({ label }: { label: string }) {
+  return (
+    <main aria-busy="true" aria-live="polite" aria-label={label} className="pb-20">
+      <LoadingAnnouncement label={label} />
+      <div className="animate-pulse motion-reduce:animate-none">
+        <header className="mx-auto max-w-[1600px] px-4 pt-14 pb-10 sm:px-6 sm:pt-20 lg:px-10">
+          <Bone className="h-4 w-32 rounded-md" />
+          <Bone className="mt-3 h-10 w-64 max-w-[80vw] rounded-xl sm:h-15 sm:w-96" />
+          <div className="mt-4 max-w-2xl space-y-2">
+            <Bone className="h-6 w-full rounded-md" />
+            <Bone className="h-6 w-3/4 rounded-md sm:hidden" />
+          </div>
+          <Bone className="mt-7 h-[50px] w-[202px] rounded-full" />
+        </header>
+        <div className="space-y-10 sm:space-y-14">
+          <MediaRailSkeletonVisual />
+          <MediaRailSkeletonVisual />
+        </div>
+      </div>
+    </main>
+  )
+}
+
 function ResultGridSkeleton() {
   return (
     <section aria-hidden="true">
@@ -129,8 +155,11 @@ function ResultGridSkeleton() {
         {cardPlaceholders.map((_, index) => (
           <li key={index} className="min-w-0">
             <Bone className="aspect-2/3 w-full rounded-xl" />
-            <Bone className="mt-3 h-4 w-4/5 rounded-md" />
-            <Bone className="mt-2 h-3 w-2/5 rounded-md" />
+            <div className="mt-3 space-y-1.5">
+              <Bone className="h-4 w-4/5 rounded-md" />
+              <Bone className="h-4 w-3/5 rounded-md" />
+            </div>
+            <Bone className="mt-1 h-4 w-2/5 rounded-md" />
           </li>
         ))}
       </ul>
@@ -167,7 +196,7 @@ export function DetailSkeleton({ label }: { label: string }) {
     >
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
-        <div aria-hidden="true" className="absolute inset-x-0 top-0 hidden h-[780px] bg-gradient-to-b from-surface/80 to-canvas md:block" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 hidden aspect-video bg-gradient-to-b from-surface/80 to-canvas md:block" />
         <div aria-hidden="true" className="relative mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
           <Bone className="aspect-2/3 w-full rounded-2xl lg:row-span-3" />
 

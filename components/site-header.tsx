@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Suspense } from 'react'
 import { HeaderSearch, HeaderSearchControl } from '@/components/header-search'
 import { LocaleSwitcher } from '@/components/locale-switcher'
+import { MobilePreferences } from '@/components/mobile-preferences'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { getLocalePath, type HeaderMessages, type Locale } from '@/lib/i18n'
 
@@ -20,7 +21,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
 
   return (
     <header className="sticky top-0 z-50 border-b border-tone/8 bg-canvas/90 shadow-header backdrop-blur-xl">
-      <div className="mx-auto grid min-h-18 max-w-[1600px] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-0 px-4 max-[379px]:gap-y-1 max-[379px]:py-2 sm:gap-x-3 sm:px-6 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_minmax(260px,320px)_auto] lg:px-10">
+      <div className="mx-auto grid min-h-18 max-w-[1600px] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-0 px-4 max-[329px]:gap-y-1 max-[329px]:py-2 sm:gap-x-3 sm:px-6 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_minmax(260px,320px)_auto] lg:px-10">
         <Link
           href={getLocalePath(locale)}
           prefetch={false}
@@ -43,7 +44,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
           </span>
         </Link>
 
-        <nav aria-label={messages.primaryNavigation} className="order-2 min-w-0 max-[379px]:order-5 max-[379px]:col-span-full max-[379px]:row-start-2">
+        <nav aria-label={messages.primaryNavigation} className="order-2 min-w-0 max-[329px]:order-5 max-[329px]:col-span-full max-[329px]:row-start-2">
           <ul className="flex items-center justify-center gap-2 sm:gap-3">
             {navigation.map((item) => {
               const current = item.match
@@ -75,13 +76,16 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
         <Suspense fallback={<HeaderSearchControl locale={locale} messages={messages} expanded={routePath === '/search'} />}>
           <HeaderSearch locale={locale} messages={messages} pathname={routePath} />
         </Suspense>
-        <div className="order-4 flex items-center gap-1 sm:gap-2">
-          <LocaleSwitcher
-            locale={locale}
-            label={messages.switchLanguage}
-            buttonLabel={messages.languageButton}
-          />
-          <ThemeToggle messages={messages} />
+        <div className="order-4 flex items-center">
+          <MobilePreferences locale={locale} messages={messages} />
+          <div className="hidden items-center gap-2 sm:flex">
+            <LocaleSwitcher
+              locale={locale}
+              label={messages.switchLanguage}
+              buttonLabel={messages.languageButton}
+            />
+            <ThemeToggle messages={messages} />
+          </div>
         </div>
       </div>
     </header>
