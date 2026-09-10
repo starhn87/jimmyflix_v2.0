@@ -66,16 +66,13 @@ export function DetailTabs({ tabs, label }: DetailTabsProps) {
                 tabIndex={active ? 0 : -1}
                 onClick={() => setSelectedId(tab.id)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
-                className={`relative min-h-11 min-w-28 rounded-xl px-5 text-sm font-semibold outline-none transition focus-visible:ring-3 focus-visible:ring-accent/40 ${
+                className={`min-h-11 min-w-28 rounded-xl px-5 text-sm font-semibold outline-none transition focus-visible:ring-3 focus-visible:ring-accent/40 ${
                   active
                     ? 'bg-tone/10 text-ink shadow-inner'
                     : 'text-subtle hover:bg-tone/5 hover:text-ink'
                 }`}
               >
                 {tab.label}
-                {active ? (
-                  <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-full bg-action" />
-                ) : null}
               </button>
             )
           })}

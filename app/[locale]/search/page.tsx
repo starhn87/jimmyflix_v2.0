@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: SearchPageProps): Promise<Met
 
 function EmptyResults({ query, dictionary }: { query: string; dictionary: Dictionary }) {
   return (
-    <section className="mx-auto max-w-2xl rounded-2xl border border-tone/10 bg-tone/4 px-6 py-12 text-center">
+    <section className="mx-auto max-w-2xl rounded-2xl border border-tone/10 bg-tone/4 px-4 py-12 text-center sm:px-6">
       <h2 className="text-xl font-semibold text-ink">{dictionary.search.noMatches(query)}</h2>
       <p className="mt-3 text-sm leading-6 text-subtle">
         {dictionary.search.noMatchesHelp}

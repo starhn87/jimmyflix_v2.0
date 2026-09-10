@@ -18,7 +18,7 @@ export function MediaRail({ title, description, children, locale }: MediaRailPro
 
   return (
     <section aria-labelledby={titleId} className="render-later">
-      <div className="mb-5 px-5 sm:px-8 lg:px-12">
+      <div className="mb-5 px-4 sm:px-8 lg:px-12">
         <div>
           <h2
             id={titleId}
@@ -34,7 +34,7 @@ export function MediaRail({ title, description, children, locale }: MediaRailPro
         <ul
           id={railId}
           aria-label={dictionary.common.carouselLabel(title)}
-          className="no-scrollbar flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-7 sm:scroll-px-8 sm:gap-4 sm:px-8 lg:scroll-px-12 lg:gap-5 lg:px-12"
+          className="no-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-7 sm:scroll-px-8 sm:gap-4 sm:px-8 lg:scroll-px-12 lg:gap-5 lg:px-12"
         >
           {Children.toArray(children).map((child, index) => (
             <li

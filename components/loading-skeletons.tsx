@@ -12,11 +12,11 @@ function LoadingAnnouncement({ label }: { label: string }) {
 function MediaRailSkeletonVisual() {
   return (
     <section aria-hidden="true">
-      <div className="mb-5 px-5 sm:px-8 lg:px-12">
+      <div className="mb-5 px-4 sm:px-8 lg:px-12">
         <Bone className="h-7 w-40 rounded-lg sm:w-52" />
         <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
       </div>
-      <ul className="flex gap-3 overflow-hidden px-5 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12">
+      <ul className="flex gap-3 overflow-hidden px-4 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12">
         {cardPlaceholders.map((_, index) => (
           <li
             key={index}
