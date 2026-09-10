@@ -1,9 +1,9 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import HelmetWrapper from '../../components/common/Helmet'
 import Loading from '../../components/common/Loading'
-import Message from '../../components/common/Message'
+import RequestError from '../../components/common/RequestError'
 import Detail from '../../components/detail'
 import { isClientReq } from '../../utils'
 import { tvApi } from '../api'
@@ -13,21 +13,31 @@ export default function TvDetail() {
     query: { id },
   } = useRouter()
   const parsedId = Number(id)
-  const { data, isError, isFetching } = useQuery(['tvDetail', parsedId], () =>
-    tvApi.showDetail(parsedId),
+  const { data, isError, isLoading, isFetching, refetch } = useQuery(
+    ['tvDetail', parsedId],
+    () => tvApi.showDetail(parsedId),
+    {
+      enabled: Number.isFinite(parsedId),
+    },
   )
 
-  if (isFetching) {
-    return <Loading />
-  }
+  if (isLoading || !data) {
+    if (isError) {
+      return (
+        <>
+          <HelmetWrapper content="Error | Jimmyflix" />
+          <RequestError
+            title="Couldn't load this TV show"
+            onRetry={() => void refetch()}
+            isRetrying={isFetching}
+            backHref="/tvs"
+            backLabel="Browse TV shows"
+          />
+        </>
+      )
+    }
 
-  if (isError) {
-    return (
-      <>
-        <HelmetWrapper content="Error | Jimmyflix" />
-        <Message color="#e74c3c" text={'Error in detail'}></Message>
-      </>
-    )
+    return <Loading label="Loading TV show details…" />
   }
 
   return <Detail detail={data} id={parsedId} isMovie={false} />

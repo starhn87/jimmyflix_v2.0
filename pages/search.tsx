@@ -7,6 +7,7 @@ import { Container } from '.'
 import { moviesApi, tvApi } from './api'
 import SearchBar from '../components/SearchBar'
 import Infos from '../components/common/Infos'
+import RequestError from '../components/common/RequestError'
 
 const getQueryValue = (value: string | string[] | undefined) =>
   (Array.isArray(value) ? value[0] : value ?? '').trim()
@@ -21,12 +22,14 @@ function Search() {
       isLoading: isMoviesLoading,
       isFetching: isMoviesFetching,
       isError: isMoviesError,
+      refetch: refetchMovies,
     },
     {
       data: tvs = [],
       isLoading: isTvLoading,
       isFetching: isTvFetching,
       isError: isTvError,
+      refetch: refetchTvs,
     },
   ] = useQueries([
     {
@@ -105,9 +108,16 @@ function Search() {
               data={movies}
               title="Movies"
               isError={isMoviesError}
+              isFetching={isMoviesFetching}
+              onRetry={() => void refetchMovies()}
             />
           ) : isMoviesError ? (
-            <ResultMessage error>Movies could not be loaded.</ResultMessage>
+            <RequestError
+              compact
+              title="Couldn't load movies"
+              onRetry={() => void refetchMovies()}
+              isRetrying={isMoviesFetching}
+            />
           ) : (
             <EmptySection>
               <h2>Movies</h2>
@@ -123,9 +133,16 @@ function Search() {
               data={tvs}
               title="TV Shows"
               isError={isTvError}
+              isFetching={isTvFetching}
+              onRetry={() => void refetchTvs()}
             />
           ) : isTvError ? (
-            <ResultMessage error>TV shows could not be loaded.</ResultMessage>
+            <RequestError
+              compact
+              title="Couldn't load TV shows"
+              onRetry={() => void refetchTvs()}
+              isRetrying={isTvFetching}
+            />
           ) : (
             <EmptySection>
               <h2>TV Shows</h2>
@@ -176,8 +193,8 @@ const EmptySection = styled.section`
   }
 `
 
-const ResultMessage = styled.p<{ error?: boolean }>`
+const ResultMessage = styled.p`
   margin: 24px 0 48px;
-  color: ${(props) => (props.error ? '#ff9c91' : 'rgba(255, 255, 255, 0.65)')};
+  color: rgba(255, 255, 255, 0.65);
   font-size: 18px;
 `

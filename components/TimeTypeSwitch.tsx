@@ -43,7 +43,7 @@ export default function TimeTypeSwitch() {
   )
 }
 
-const Wrapper = styled.article`
+const Wrapper = styled.div`
   display: flex;
   justify-content: center;
 `
@@ -88,7 +88,7 @@ const MatchType = styled.button`
   }
 `
 
-const ContentBox = styled.article`
+const ContentBox = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;

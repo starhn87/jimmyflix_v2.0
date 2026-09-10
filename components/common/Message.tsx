@@ -4,10 +4,11 @@ import styled from '@emotion/styled'
 interface MessageProps {
   text?: string
   color: string
+  role?: 'status' | 'alert'
 }
 
-const Message = ({ text, color }: MessageProps) => (
-  <Container>
+const Message = ({ text, color, role = 'status' }: MessageProps) => (
+  <Container role={role}>
     <Text color={color}>{text}</Text>
   </Container>
 )

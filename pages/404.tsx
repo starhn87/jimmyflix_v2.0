@@ -1,64 +1,115 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
-import Helmet from '../components/common/Helmet'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
+import Helmet from '../components/common/Helmet'
 
 export default function NotFound() {
-  const [second, setSecond] = useState(5)
   const router = useRouter()
 
-  useEffect(() => {
-    if (second === 0) {
-      router.push('/')
+  const goBack = () => {
+    const hasInternalReferrer =
+      document.referrer &&
+      new URL(document.referrer).origin === window.location.origin
+
+    if (hasInternalReferrer) {
+      router.back()
+      return
     }
 
-    const decrease = setTimeout(() => {
-      setSecond((prev) => prev - 1)
-    }, 1000)
-
-    return () => {
-      clearTimeout(decrease)
-    }
-  })
+    void router.push('/')
+  }
 
   return (
     <Wrapper>
-      <Helmet content="404 | Jimmyflix" />
-      <Image src={'/images/404.svg'} alt="Not Found" />
-      <Message>{second}초 후 홈 화면으로 이동합니다.</Message>
+      <Helmet content="Page not found | Jimmyflix" />
+      <Image src="/images/404.svg" alt="" aria-hidden="true" />
+      <Title>Page not found</Title>
+      <Description>
+        The page may have moved or the address may be incorrect.
+      </Description>
+      <Actions>
+        <Link href="/" passHref>
+          <HomeLink>Go to movies</HomeLink>
+        </Link>
+        <BackButton type="button" onClick={goBack}>
+          Previous page
+        </BackButton>
+      </Actions>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
-  position: fixed;
+const Wrapper = styled.main`
   display: flex;
-  top: 0;
   width: 100%;
-  padding: 20px;
+  min-height: calc(100vh - 50px);
+  padding: 32px 20px;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
-  @media (max-width: 768px) {
-    height: 100%;
-    padding: 20px;
-  }
+  text-align: center;
 `
 
 const Image = styled.img`
-  width: 90%;
+  width: min(90%, 760px);
+  max-height: 55vh;
+`
 
-  @media (min-width: 1630px) {
-    height: 803px;
+const Title = styled.h1`
+  margin-top: 20px;
+  font-size: clamp(24px, 5vw, 38px);
+  font-weight: 600;
+`
+
+const Description = styled.p`
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.5;
+`
+
+const Actions = styled.div`
+  display: flex;
+  margin-top: 24px;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+`
+
+const HomeLink = styled.a`
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #4d96fb;
+  border-radius: 6px;
+  align-items: center;
+  color: #fff;
+  background: #347fdc;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:focus-visible {
+    outline: 3px solid rgba(77, 150, 251, 0.45);
+    outline-offset: 3px;
   }
 `
 
-const Message = styled.h1`
-  padding: 10px;
-  font-size: 20px;
+const BackButton = styled.button`
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #4d96fb;
+  border-radius: 6px;
+  align-items: center;
+  color: #8ebeff;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
 
-  @media (max-width: 768px) {
-    font-size: 14px;
+  &:focus-visible {
+    outline: 3px solid rgba(77, 150, 251, 0.45);
+    outline-offset: 3px;
   }
 `

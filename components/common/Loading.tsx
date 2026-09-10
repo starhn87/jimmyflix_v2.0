@@ -1,84 +1,58 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-const Loading = () => (
-  <Ring>
-    LOADING
-    <span></span>
-  </Ring>
+interface LoadingProps {
+  label?: string
+  fullPage?: boolean
+}
+
+const Loading = ({
+  label = 'Loading content…',
+  fullPage = true,
+}: LoadingProps) => (
+  <Container role="status" aria-live="polite" fullPage={fullPage}>
+    <Spinner aria-hidden="true" />
+    <Label>{label}</Label>
+  </Container>
 )
 
 export default Loading
 
-const Ring = styled.div`
-  position: fixed;
-  width: 12rem;
-  height: 12rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 0.7rem solid #23a2f7;
+const Container = styled.div<{ fullPage: boolean }>`
+  position: ${(props) => (props.fullPage ? 'fixed' : 'relative')};
+  min-height: ${(props) => (props.fullPage ? 'calc(100vh - 50px)' : '180px')};
+  inset: ${(props) => (props.fullPage ? '50px 0 0' : 'auto')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  z-index: ${(props) => (props.fullPage ? 9 : 'auto')};
+`
+
+const Spinner = styled.span`
+  width: 42px;
+  height: 42px;
+  border: 4px solid rgba(77, 150, 251, 0.25);
+  border-top-color: #4d96fb;
   border-radius: 50%;
-  text-align: center;
-  line-height: 10.5rem;
-  font-size: 1.2rem;
-  font-weight: 1000;
-  color: #23a2f7;
-  letter-spacing: 0.3rem;
-  z-index: 99999;
+  animation: spin 0.8s linear infinite;
 
-  &:before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: -0.7rem;
-    left: -0.7rem;
-    border: 0.7rem solid transparent;
-    border-top: 0.7rem solid #002473;
-    border-right: 0.7rem solid #002473;
-    border-radius: 50%;
-    animation: animateA 3s linear infinite;
-  }
-
-  span {
-    position: absolute;
-    display: block;
-    width: 50%;
-    height: 0.4rem;
-    top: calc(50% - 0.2rem);
-    left: 50%;
-    background: transparent;
-    transform-origin: left;
-    animation: animateB 3s linear infinite;
-
-    &:before {
-      content: '';
-      position: absolute;
-      width: 1.7rem;
-      height: 1.7rem;
-      top: 0rem;
-      right: -1.2rem;
-      border-radius: 50%;
-      background: #002473;
-    }
-  }
-
-  @keyframes animateA {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
+  @keyframes spin {
+    to {
       transform: rotate(360deg);
     }
   }
 
-  @keyframes animateB {
-    0% {
-      transform: rotate(45deg);
-    }
-    100% {
-      transform: rotate(405deg);
-    }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    border-color: rgba(77, 150, 251, 0.55);
   }
+`
+
+const Label = styled.span`
+  line-height: 1.4;
 `

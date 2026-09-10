@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { moviesApi } from './api'
 import styled from '@emotion/styled'
 import { dehydrate, QueryClient, useQueries } from 'react-query'
-import Loading from '../components/common/Loading'
 import HelmetWrapper from '../components/common/Helmet'
 import Infos from '../components/common/Infos'
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next'
@@ -12,19 +11,31 @@ function Home() {
   const [
     {
       data: nowPlaying,
+      isLoading: isNowPlayingLoading,
       isFetching: isNowPlayingFetching,
       isError: isNowPlayingError,
+      refetch: refetchNowPlaying,
     },
     {
       data: upcoming,
+      isLoading: isUpcomingLoading,
       isFetching: isUpcomingFetching,
       isError: isUpcomingError,
+      refetch: refetchUpcoming,
     },
-    { data: popular, isFetching: isPopularFetching, isError: isPopularError },
+    {
+      data: popular,
+      isLoading: isPopularLoading,
+      isFetching: isPopularFetching,
+      isError: isPopularError,
+      refetch: refetchPopular,
+    },
     {
       data: topRated,
+      isLoading: isTopRatedLoading,
       isFetching: isTopRatedFetching,
       isError: isTopRatedError,
+      refetch: refetchTopRated,
     },
   ] = useQueries([
     {
@@ -49,15 +60,6 @@ function Home() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (
-    isNowPlayingFetching ||
-    isUpcomingFetching ||
-    isPopularFetching ||
-    isTopRatedFetching
-  ) {
-    return <Loading />
-  }
-
   return (
     <>
       <HelmetWrapper content="Movies | Jimmyflix" />
@@ -67,24 +69,36 @@ function Home() {
           data={nowPlaying}
           title={'Now Playing Movies'}
           isError={isNowPlayingError}
+          isLoading={isNowPlayingLoading}
+          isFetching={isNowPlayingFetching}
+          onRetry={() => void refetchNowPlaying()}
         />
         <Infos
           slider={true}
           data={topRated}
           title={'Top Rated Movies'}
           isError={isTopRatedError}
+          isLoading={isTopRatedLoading}
+          isFetching={isTopRatedFetching}
+          onRetry={() => void refetchTopRated()}
         />
         <Infos
           slider={true}
           data={upcoming}
           title={'Upcoming Movies'}
           isError={isUpcomingError}
+          isLoading={isUpcomingLoading}
+          isFetching={isUpcomingFetching}
+          onRetry={() => void refetchUpcoming()}
         />
         <Infos
           slider={true}
           data={popular}
           title={'Popular Movies'}
           isError={isPopularError}
+          isLoading={isPopularLoading}
+          isFetching={isPopularFetching}
+          onRetry={() => void refetchPopular()}
         />
       </Container>
     </>

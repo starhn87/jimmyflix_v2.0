@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { trendingApi } from './api'
 import styled from '@emotion/styled'
 import { dehydrate, QueryClient, useQueries } from 'react-query'
-import Loading from '../components/common/Loading'
 import HelmetWrapper from '../components/common/Helmet'
 import Infos from '../components/common/Infos'
 import TimeTypeSwitch from '../components/TimeTypeSwitch'
@@ -15,8 +14,20 @@ import { TimeType } from '../interface'
 function Trend() {
   const timeType = useRecoilValue(timeTypeState)
   const [
-    { data: movies, isFetching: isMoviesFetching, isError: isMoviesError },
-    { data: tvs, isFetching: isTvsFetching, isError: isTvError },
+    {
+      data: movies,
+      isLoading: isMoviesLoading,
+      isFetching: isMoviesFetching,
+      isError: isMoviesError,
+      refetch: refetchMovies,
+    },
+    {
+      data: tvs,
+      isLoading: isTvsLoading,
+      isFetching: isTvsFetching,
+      isError: isTvError,
+      refetch: refetchTvs,
+    },
   ] = useQueries([
     {
       queryKey: ['movieTrend', timeType],
@@ -32,10 +43,6 @@ function Trend() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (isMoviesFetching || isTvsFetching) {
-    return <Loading />
-  }
-
   return (
     <>
       <HelmetWrapper content="Trend | Jimmyflix" />
@@ -46,12 +53,18 @@ function Trend() {
           data={movies}
           title={'Movie Trend'}
           isError={isMoviesError}
+          isLoading={isMoviesLoading}
+          isFetching={isMoviesFetching}
+          onRetry={() => void refetchMovies()}
         />
         <Infos
           slider={true}
           data={tvs}
           title={'TV Show Trend'}
           isError={isTvError}
+          isLoading={isTvsLoading}
+          isFetching={isTvsFetching}
+          onRetry={() => void refetchTvs()}
         />
       </Container>
     </>

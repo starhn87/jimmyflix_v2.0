@@ -1,9 +1,9 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import HelmetWrapper from '../../components/common/Helmet'
 import Loading from '../../components/common/Loading'
-import Message from '../../components/common/Message'
+import RequestError from '../../components/common/RequestError'
 import Detail from '../../components/detail'
 import { isClientReq } from '../../utils'
 import { moviesApi } from '../api'
@@ -13,22 +13,31 @@ export default function MovieDetail() {
     query: { id },
   } = useRouter()
   const parsedId = Number(id)
-  const { data, isError, isFetching } = useQuery(
+  const { data, isError, isLoading, isFetching, refetch } = useQuery(
     ['movieDetail', parsedId],
     () => moviesApi.movieDetail(parsedId),
+    {
+      enabled: Number.isFinite(parsedId),
+    },
   )
 
-  if (isFetching) {
-    return <Loading />
-  }
+  if (isLoading || !data) {
+    if (isError) {
+      return (
+        <>
+          <HelmetWrapper content="Error | Jimmyflix" />
+          <RequestError
+            title="Couldn't load this movie"
+            onRetry={() => void refetch()}
+            isRetrying={isFetching}
+            backHref="/"
+            backLabel="Browse movies"
+          />
+        </>
+      )
+    }
 
-  if (isError) {
-    return (
-      <>
-        <HelmetWrapper content="Error | Jimmyflix" />
-        <Message color="#e74c3c" text={'Error in detail'}></Message>
-      </>
-    )
+    return <Loading label="Loading movie details…" />
   }
 
   return <Detail detail={data} id={parsedId} isMovie={true} />
