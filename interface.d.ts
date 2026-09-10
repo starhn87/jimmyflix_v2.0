@@ -29,12 +29,6 @@ export interface IShow {
 
 export interface IContent extends IMovie, IShow {}
 
-export interface IState {
-  isSearched: boolean
-  searchValue: string
-  timeType: TimeType
-}
-
 export interface ICollection {
   id: number
   poster_path: string

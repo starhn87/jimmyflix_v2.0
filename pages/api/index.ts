@@ -29,19 +29,11 @@ export const moviesApi = {
       .then((res) => res.data),
   cast: async (id: number) =>
     await api.get(`movie/${id}/credits`).then((res) => res.data.cast),
-  search: async (term: string, isSearched: boolean) => {
-    if (!isSearched) {
-      return
-    }
-
-    if (term.trim() === '') {
-      return null
-    }
-
+  search: async (term: string) => {
     return await api
       .get('search/movie', {
         params: {
-          query: term,
+          query: term.trim(),
         },
       })
       .then((res) => res.data.results)
@@ -70,19 +62,11 @@ export const tvApi = {
       .then((res) => res.data),
   cast: async (id: number) =>
     await api.get(`tv/${id}/credits`).then((res) => res.data.cast),
-  search: async (term: string, isSearched: boolean) => {
-    if (!isSearched) {
-      return
-    }
-
-    if (term.trim() === '') {
-      return null
-    }
-
+  search: async (term: string) => {
     return await api
       .get('search/tv', {
         params: {
-          query: term,
+          query: term.trim(),
         },
       })
       .then((res) => res.data.results)

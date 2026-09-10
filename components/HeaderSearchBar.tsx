@@ -1,61 +1,79 @@
 import React, { FormEvent, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { MdSearch } from 'react-icons/md'
-import { useSetRecoilState } from 'recoil'
-import { isSearchedState, searchValueState } from '../recoil/store'
 import { useRouter } from 'next/router'
 
 export default function SearchBar() {
   const [editingValue, setEditingValue] = useState('')
   const [focused, setFocused] = useState(false)
+  const [error, setError] = useState('')
   const searchRef = useRef<HTMLInputElement | null>(null)
   const router = useRouter()
-  const setSearchValue = useSetRecoilState(searchValueState)
-  const setIsSearched = useSetRecoilState(isSearchedState)
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setEditingValue('')
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const query = editingValue.trim()
 
-    if (editingValue.trim() === '') {
-      alert('Input what you want to search!')
+    if (!query) {
+      setError('Enter a title to search.')
+      searchRef.current?.focus()
       return
     }
 
+    setError('')
     searchRef.current?.blur()
-    router.push('/search')
-    setSearchValue(editingValue)
-    setIsSearched(true)
+    setEditingValue('')
+    void router.push({
+      pathname: '/search',
+      query: { q: query },
+    })
   }
 
   return (
-    <SearchBarWrapper className={focused ? 'active' : ''}>
-      <Form onSubmit={onSubmit}>
+    <SearchBarWrapper
+      className={focused ? 'active' : ''}
+      invalid={Boolean(error)}
+    >
+      <Form onSubmit={onSubmit} noValidate>
+        <Label htmlFor="header-search-query">Search movies and TV shows</Label>
         <Search
           ref={searchRef}
+          id="header-search-query"
           value={editingValue}
-          onChange={(e) => setEditingValue(e.target.value)}
-          type="text"
-          placeholder="Movie / TV Show Search"
+          onChange={(event) => {
+            setEditingValue(event.target.value)
+            setError('')
+          }}
+          type="search"
+          placeholder="Search titles"
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? 'header-search-error' : undefined}
           spellCheck={false}
         />
-        <Button type="submit">
-          <MdSearch size={18} />
+        <Button type="submit" aria-label="Search movies and TV shows">
+          <MdSearch size={18} aria-hidden="true" />
         </Button>
       </Form>
+      {error && (
+        <ErrorMessage id="header-search-error" role="alert">
+          {error}
+        </ErrorMessage>
+      )}
     </SearchBarWrapper>
   )
 }
 
-const SearchBarWrapper = styled.article`
+const SearchBarWrapper = styled.div<{ invalid: boolean }>`
+  position: relative;
   width: 195px;
   background: transparent;
   border: none;
-  border-bottom: 1px solid #fff;
-  opacity: 0.5;
-  transition: 0.3s ease;
+  border-bottom: 1px solid
+    ${(props) => (props.invalid ? '#ff9c91' : '#fff')};
+  opacity: ${(props) => (props.invalid ? 1 : 0.65)};
+  transition: opacity 0.2s ease, border-color 0.2s ease;
 
   &:hover,
   &.active {
@@ -67,11 +85,24 @@ const Form = styled.form`
   display: grid;
   height: 100%;
   padding: 5px 0;
-  grid-template-columns: 85% 15%;
+  grid-template-columns: minmax(0, 1fr) 34px;
   align-items: center;
 `
 
+const Label = styled.label`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`
+
 const Search = styled.input`
+  min-width: 0;
   width: 100%;
   height: 100%;
   padding: 0 0 0 10px;
@@ -82,17 +113,15 @@ const Search = styled.input`
   outline: none;
 
   &::placeholder {
-    color: white;
-  }
-
-  &:focus {
+    color: rgba(255, 255, 255, 0.8);
   }
 `
 
 const Button = styled.button`
-  position: relative;
-  top: 4px;
-  font-size: 14px;
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  min-height: 34px;
   color: white;
   background-color: transparent;
   border: none;
@@ -100,4 +129,23 @@ const Button = styled.button`
   &:hover {
     cursor: pointer;
   }
+
+  &:focus-visible {
+    outline: 2px solid #4d96fb;
+    outline-offset: 1px;
+    border-radius: 50%;
+  }
+`
+
+const ErrorMessage = styled.p`
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  width: max-content;
+  max-width: 220px;
+  padding: 7px 9px;
+  border-radius: 4px;
+  color: #fff;
+  background: #9f3128;
+  font-size: 12px;
 `

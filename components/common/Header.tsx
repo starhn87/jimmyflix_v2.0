@@ -2,68 +2,56 @@ import React, { memo } from 'react'
 import styled from '@emotion/styled'
 import SearchBar from '../HeaderSearchBar'
 import { MdOutlineMovie } from 'react-icons/md'
-import { useResetRecoilState } from 'recoil'
-import {
-  isSearchedState,
-  searchValueState,
-  timeTypeState,
-} from '../../recoil/store'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 function Header() {
   const router = useRouter()
-  const resetSearchValue = useResetRecoilState(searchValueState)
-  const resetIsSearched = useResetRecoilState(isSearchedState)
-  const resetTimeType = useResetRecoilState(timeTypeState)
-
-  const onClick = () => {
-    if (router.pathname === '/search') {
-      resetIsSearched()
-      resetSearchValue()
-      resetTimeType()
-    }
-  }
+  const isMoviesPage =
+    router.pathname === '/' || router.pathname.includes('/movies')
+  const isTvPage =
+    router.pathname === '/tvs' || router.pathname.includes('/tvs')
+  const isTrendPage = router.pathname === '/trend'
+  const isSearchPage = router.pathname.includes('/search')
 
   return (
-    <Head className={`${router.pathname === '/404' ? 'hidden' : ''}`}>
-      <LogoWrapper onClick={() => router.push('/')}>
-        <MdOutlineMovie fontSize={35} />
-        <Logo>Jimmyflix</Logo>
-      </LogoWrapper>
-      <List>
-        <Item
-          current={
-            router.pathname === '/' || router.pathname.includes('/movies')
-          }
-        >
-          <Link href="/" passHref>
-            <Anchor>Movies</Anchor>
-          </Link>
-        </Item>
-        <Item
-          current={
-            router.pathname === '/tvs' || router.pathname.includes('/tvs')
-          }
-        >
-          <Link href="/tvs" passHref>
-            <Anchor>TV</Anchor>
-          </Link>
-        </Item>
-        <Item current={router.pathname === '/trend'}>
-          <Link href="/trend" passHref>
-            <Anchor>Trend</Anchor>
-          </Link>
-        </Item>
-        <Item
-          current={router.pathname.includes('/search')}
-          onClick={() => onClick()}
-        >
-          <Link href="/search" passHref>
-            <Anchor>Search</Anchor>
-          </Link>
-        </Item>
-      </List>
+    <Head className={router.pathname === '/404' ? 'hidden' : ''}>
+      <Link href="/" passHref>
+        <LogoWrapper aria-label="Jimmyflix home">
+          <MdOutlineMovie fontSize={35} aria-hidden="true" />
+          <Logo>Jimmyflix</Logo>
+        </LogoWrapper>
+      </Link>
+      <Navigation aria-label="Primary navigation">
+        <List>
+          <Item current={isMoviesPage}>
+            <Link href="/" passHref>
+              <Anchor aria-current={isMoviesPage ? 'page' : undefined}>
+                Movies
+              </Anchor>
+            </Link>
+          </Item>
+          <Item current={isTvPage}>
+            <Link href="/tvs" passHref>
+              <Anchor aria-current={isTvPage ? 'page' : undefined}>TV</Anchor>
+            </Link>
+          </Item>
+          <Item current={isTrendPage}>
+            <Link href="/trend" passHref>
+              <Anchor aria-current={isTrendPage ? 'page' : undefined}>
+                Trend
+              </Anchor>
+            </Link>
+          </Item>
+          <Item current={isSearchPage}>
+            <Link href="/search" passHref>
+              <Anchor aria-current={isSearchPage ? 'page' : undefined}>
+                Search
+              </Anchor>
+            </Link>
+          </Item>
+        </List>
+      </Navigation>
       <SearchBarWrapper>
         <SearchBar />
       </SearchBarWrapper>
@@ -98,6 +86,12 @@ const Head = styled.header`
   }
 `
 
+const Navigation = styled.nav`
+  @media (max-width: 768px) {
+    display: contents;
+  }
+`
+
 const List = styled.ul`
   display: flex;
 
@@ -125,9 +119,14 @@ const Anchor = styled.a`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:focus-visible {
+    outline: 2px solid #4d96fb;
+    outline-offset: -4px;
+  }
 `
 
-const LogoWrapper = styled.div`
+const LogoWrapper = styled.a`
   display: flex;
   align-items: center;
 
@@ -137,6 +136,11 @@ const LogoWrapper = styled.div`
 
   &:hover {
     cursor: pointer;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #4d96fb;
+    outline-offset: 4px;
   }
 `
 

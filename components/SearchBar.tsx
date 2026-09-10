@@ -1,131 +1,160 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled from '@emotion/styled'
 import { MdOutlineMovie } from 'react-icons/md'
 
 interface SearchBarProps {
+  initialValue?: string
+  compact?: boolean
   onSubmit: (editingValue: string) => void
 }
 
-export default function SearchBar({ onSubmit }: SearchBarProps) {
-  const [editingValue, setEditingValue] = useState('')
+export default function SearchBar({
+  initialValue = '',
+  compact = false,
+  onSubmit,
+}: SearchBarProps) {
+  const [editingValue, setEditingValue] = useState(initialValue)
+  const [error, setError] = useState('')
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setEditingValue('')
+  useEffect(() => {
+    setEditingValue(initialValue)
+    setError('')
+  }, [initialValue])
 
-    if (editingValue.trim() === '') {
-      alert('Input what you want to search!')
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEditingValue(event.target.value)
+
+    if (error) {
+      setError('')
+    }
+  }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const query = editingValue.trim()
+
+    if (!query) {
+      setError('Enter a movie or TV show title.')
+      inputRef.current?.focus()
       return
     }
 
-    onSubmit(editingValue)
+    setError('')
+    onSubmit(query)
   }
 
   return (
-    <SearchBox>
-      <form onSubmit={handleSubmit}>
+    <SearchBox compact={compact} aria-label="Search movies and TV shows">
+      <Form onSubmit={handleSubmit} noValidate>
+        <Label htmlFor="main-search-query">Movie or TV show title</Label>
         <SearchInput
+          ref={inputRef}
+          id="main-search-query"
           value={editingValue}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setEditingValue(e.target.value)
-          }
-          placeholder="Movie / TV Show Search"
+          onChange={handleChange}
+          placeholder="Search movies and TV shows"
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? 'main-search-error' : undefined}
+          spellCheck={false}
         />
-        <Button type="submit">
-          <MdOutlineMovie />
+        <Button type="submit" aria-label="Search movies and TV shows">
+          <MdOutlineMovie aria-hidden="true" />
         </Button>
-      </form>
+      </Form>
+      {error && (
+        <ErrorMessage id="main-search-error" role="alert">
+          {error}
+        </ErrorMessage>
+      )}
     </SearchBox>
   )
 }
 
-const SearchInput = styled.input`
-  position: absolute;
-  display: block;
-  width: 600px;
-  height: 44px;
-  top: 7px;
-  padding: 0 25px;
-  line-height: 44px;
-  outline: 0;
-  border: 0;
-  font-size: 24px;
-  font-weight: 400;
-  color: #fff;
-  background: transparent;
-  animation: fadein 1s;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-  }
+const SearchBox = styled.section<{ compact: boolean }>`
+  width: min(100%, 670px);
+  margin: ${(props) =>
+    props.compact
+      ? 'clamp(52px, 8vw, 84px) auto 36px'
+      : 'clamp(140px, 34vh, 320px) auto 0'};
 
   @media (max-width: 768px) {
-    font-size: 18px;
+    margin-top: ${(props) => (props.compact ? '48px' : '28vh')};
+  }
+`
+
+const Form = styled.form`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px;
+  min-height: 58px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  border-radius: 30px;
+  background: rgba(20, 20, 20, 0.72);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: #4d96fb;
+    box-shadow: 0 0 0 3px rgba(77, 150, 251, 0.3);
+  }
+`
+
+const Label = styled.label`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`
+
+const SearchInput = styled.input`
+  min-width: 0;
+  width: 100%;
+  padding: 0 8px 0 24px;
+  outline: 0;
+  border: 0;
+  font-size: clamp(17px, 2.5vw, 22px);
+  color: #fff;
+  background: transparent;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.62);
   }
 `
 
 const Button = styled.button`
-  position: absolute;
-  width: 65px;
-  height: 44px;
-  top: 10px;
-  right: 0;
-  line-height: 44px;
-  font-size: 24px;
-  font-weight: 400;
+  display: grid;
+  place-items: center;
+  min-width: 48px;
+  border: 0;
+  font-size: 25px;
   color: #fff;
   background-color: transparent;
-  border: none;
 
   &:hover {
     cursor: pointer;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -5px;
+    border-radius: 999px;
   }
 `
 
-const SearchBox = styled.article`
-  position: absolute;
-  width: 500px;
-  height: 67px;
-  top: calc(100vh - 50%);
-  left: 50%;
-  padding: 5px;
-  transform: translate(-50%, -50%);
-  background: transparent;
-  box-sizing: border-box;
-  border-radius: 33.5px;
-  border: 4px solid #fff;
-
-  @media (min-width: 1630px) {
-    width: 670px;
-    transition: 1s;
-    animation: asc 1s;
-  }
-
-  @media (min-width: 768px) and (max-width: 1630px) {
-    transition: 1s;
-    animation: desc 1s;
-  }
-
-  @media (max-width: 768px) {
-    width: 80%;
-    font-size: 15px;
-  }
-
-  @keyframes asc {
-    from {
-      width: 500px;
-    }
-    to {
-      width: 670px;
-    }
-  }
-
-  @keyframes desc {
-    from {
-      width: 670px;
-    }
-    to {
-      width: 500px;
-    }
-  }
+const ErrorMessage = styled.p`
+  margin: 10px 20px 0;
+  color: #ff9c91;
+  font-size: 14px;
 `
