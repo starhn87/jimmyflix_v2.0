@@ -48,7 +48,7 @@ export const getProfileUrl = (path: string | null | undefined) =>
 
 export const formatRating = (rating: number | undefined) => {
   if (!Number.isFinite(rating) || Number(rating) <= 0) {
-    return { value: 'NR', label: 'Not rated' }
+    return null
   }
 
   const value = Number(rating).toFixed(1)

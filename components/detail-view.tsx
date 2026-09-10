@@ -105,13 +105,15 @@ export function DetailView({
           </div>
 
           <ul aria-label="Title details" className="mt-4 flex flex-wrap gap-2">
-            <li
-              aria-label={rating.label}
-              className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-tone/14 bg-overlay px-3 text-xs text-ink backdrop-blur-sm sm:text-sm"
-            >
-              {rating.value === 'NR' ? null : <StarIcon className="size-3.5 text-warning" />}
-              {rating.value === 'NR' ? 'Not rated' : `${rating.value}/10`}
-            </li>
+            {rating ? (
+              <li
+                aria-label={rating.label}
+                className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-tone/14 bg-overlay px-3 text-xs text-ink backdrop-blur-sm sm:text-sm"
+              >
+                <StarIcon className="size-3.5 text-warning" />
+                {rating.value}/10
+              </li>
+            ) : null}
             <li className="inline-flex min-h-8 items-center rounded-full border border-tone/14 bg-overlay px-3 text-xs text-ink backdrop-blur-sm sm:text-sm">
               {getMediaYear(detail)}
             </li>

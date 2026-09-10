@@ -45,10 +45,12 @@ export function Hero({ item, mediaType, eyebrow }: HeroProps) {
             {title}
           </h1>
           <div className="mt-5 flex flex-wrap items-center gap-2 text-sm text-muted">
-            <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-tone/16 bg-overlay px-3 backdrop-blur-sm">
-              {rating.value === 'NR' ? null : <StarIcon className="size-3.5 text-warning" />}
-              {rating.value === 'NR' ? 'Not rated' : `${rating.value}/10`}
-            </span>
+            {rating ? (
+              <span aria-label={rating.label} className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-tone/16 bg-overlay px-3 backdrop-blur-sm">
+                <StarIcon className="size-3.5 text-warning" />
+                {rating.value}/10
+              </span>
+            ) : null}
             <span className="inline-flex min-h-8 items-center rounded-full border border-tone/16 bg-overlay px-3 backdrop-blur-sm">
               {getMediaYear(item)}
             </span>
