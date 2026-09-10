@@ -123,11 +123,20 @@ const SkeletonList = styled.div`
   overflow: hidden;
   grid-template-columns: repeat(6, minmax(120px, 1fr));
   gap: 24px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 `
 
 const SkeletonCard = styled.div`
-  height: 220px;
-  border-radius: 4px;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.06) 25%,

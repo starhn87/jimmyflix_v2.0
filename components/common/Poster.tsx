@@ -11,6 +11,22 @@ interface PosterProps {
   isMovie?: boolean
 }
 
+const getRating = (rating: number) => {
+  if (!Number.isFinite(rating) || rating <= 0) {
+    return {
+      label: 'Not rated',
+      value: 'NR',
+    }
+  }
+
+  const value = rating.toFixed(1)
+
+  return {
+    label: `Rating ${value} out of 10`,
+    value,
+  }
+}
+
 const Poster = ({
   id,
   imageUrl,
@@ -18,81 +34,135 @@ const Poster = ({
   rating,
   year,
   isMovie = false,
-}: PosterProps) => (
-  <Link href={isMovie ? `/movies/${id}` : `/tvs/${id}`}>
-    <a>
-      <Container>
-        <ImageContainer>
-          <Image
-            src={
-              imageUrl
-                ? `https://image.tmdb.org/t/p/w300${imageUrl}`
-                : '/images/defaultPoster.png'
-            }
-            alt={`${title} poster`}
-          />
-          <Rating>
-            <span role="img" aria-label="rating">
-              ⭐
-            </span>{' '}
-            {rating}/10
-          </Rating>
-        </ImageContainer>
-        <Title>{title}</Title>
-        <Year>{year}</Year>
-      </Container>
-    </a>
-  </Link>
-)
+}: PosterProps) => {
+  const displayTitle = title || 'Untitled'
+  const ratingInfo = getRating(rating)
+  const mediaLabel = isMovie ? 'Movie' : 'TV show'
+  const cardLabel = [displayTitle, mediaLabel, year, ratingInfo.label]
+    .filter(Boolean)
+    .join(', ')
+
+  return (
+    <Link href={isMovie ? `/movies/${id}` : `/tvs/${id}`} passHref>
+      <CardLink aria-label={cardLabel}>
+        <Container>
+          <ImageContainer>
+            <Image
+              src={
+                imageUrl
+                  ? `https://image.tmdb.org/t/p/w300${imageUrl}`
+                  : '/images/defaultPoster.png'
+              }
+              alt={`${displayTitle} poster`}
+            />
+            <Rating aria-label={ratingInfo.label}>
+              <span aria-hidden="true">★</span>
+              {ratingInfo.value}
+            </Rating>
+          </ImageContainer>
+          <Title title={displayTitle}>{displayTitle}</Title>
+          <Metadata>
+            <Year>{year || 'Year unknown'}</Year>
+            <MediaType>{isMovie ? 'Movie' : 'TV'}</MediaType>
+          </Metadata>
+        </Container>
+      </CardLink>
+    </Link>
+  )
+}
 
 export default Poster
 
-const Container = styled.div`
-  width: 95%;
+const CardLink = styled.a`
+  display: block;
+  min-width: 0;
+  border-radius: 8px;
+
+  &:focus-visible {
+    outline: 3px solid rgba(77, 150, 251, 0.75);
+    outline-offset: 4px;
+  }
+
+  &:hover img,
+  &:focus-visible img {
+    transform: scale(1.025);
+  }
+`
+
+const Container = styled.article`
+  min-width: 0;
+  width: 100%;
   font-size: 12px;
+`
+
+const ImageContainer = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  background: #242424;
 `
 
 const Image = styled.img`
   display: block;
   width: 100%;
-  height: 220px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
-  transition: opacity 0.1s linear;
+  transition: transform 0.18s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 `
 
 const Rating = styled.span`
   position: absolute;
-  font-size: 16px;
-  bottom: 7px;
-  right: 7px;
-  opacity: 0;
-  transition: opacity 0.1s linear;
+  right: 8px;
+  bottom: 8px;
+  display: inline-flex;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  align-items: center;
+  gap: 4px;
+  color: #fff;
+  background: rgba(8, 8, 8, 0.86);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
 `
 
-const ImageContainer = styled.div`
-  position: relative;
-  margin-bottom: 7px;
-  &:hover {
-    ${Image} {
-      opacity: 0.2;
-    }
-    ${Rating} {
-      opacity: 1;
-    }
-  }
-`
-
-const Title = styled.span`
+const Title = styled.h3`
+  display: -webkit-box;
   overflow: hidden;
-  display: block;
-  margin-bottom: 4px;
+  min-height: 2.7em;
+  margin: 10px 0 6px;
   font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+`
+
+const Metadata = styled.p`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.4;
+`
+
+const Year = styled.span`
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `
 
-const Year = styled.span`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+const MediaType = styled.span`
+  flex: none;
+  color: rgba(142, 190, 255, 0.92);
 `

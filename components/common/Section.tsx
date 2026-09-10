@@ -71,26 +71,34 @@ const Section = ({ slide, title, children }: SectionProps) => {
 
 export default Section
 
-const Container = styled.div`
+const Container = styled.section`
   margin-top: 10px;
+
   :not(:last-child) {
     margin-bottom: 50px;
   }
 `
 
-const Title = styled.span`
+const Title = styled.h2`
   font-size: 20px;
   font-weight: 600;
+  line-height: 1.35;
 `
 
 export const Grid = styled.div`
-  margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 150px);
-  grid-gap: 25px;
+  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 28px 20px;
+  align-items: start;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
 `
 
 const Wrapper = styled.div`
-  margin: 35px auto;
-  width: 95%;
+  width: 96%;
+  margin: 28px auto 35px;
 `

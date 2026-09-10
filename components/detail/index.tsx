@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import Helmet from '../../components/common/Helmet'
-import Message from '../../components/common/Message'
-import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
-import { Grid } from '../../components/common/Section'
-import Info from '../../components/detail/Info'
-import Tabs from '../../components/detail/Tabs'
-import Trailer from '../../components/detail/Trailer'
-import Season from '../../components/detail/Season'
-import Credit from '../../components/detail/Credit'
-import Production from '../../components/detail/Production'
-import Collection from '../../components/detail/Collection'
+import Helmet from '../common/Helmet'
+import { Grid } from '../common/Section'
+import Info from './Info'
+import Tabs from './Tabs'
+import Trailer from './Trailer'
+import Season from './Season'
+import Credit from './Credit'
+import Production from './Production'
+import Collection from './Collection'
 import { TabType } from '../../interface'
 
 interface DetailProps {
@@ -21,22 +19,21 @@ interface DetailProps {
 
 function Detail({ detail, id, isMovie }: DetailProps) {
   const [tabName, setTabName] = useState<TabType>('Trailer')
-  const tabContent = detail
-    ? {
-        Trailer: <Trailer videos={detail.videos} />,
-        Season: <Season seasons={detail.seasons} />,
-        Credits: <Credit id={id} isMovie={isMovie} />,
-        Production: (
-          <Production
-            production_companies={detail.production_companies}
-            production_countries={detail.production_countries}
-          />
-        ),
-        Collection: detail.belongs_to_collection && (
-          <Collection id={detail.belongs_to_collection.id} />
-        ),
-      }
-    : {}
+  const title = detail.title ?? detail.name ?? 'Untitled'
+  const tabContent = {
+    Trailer: <Trailer videos={detail.videos ?? { results: [] }} />,
+    Season: <Season seasons={detail.seasons} />,
+    Credits: <Credit id={id} isMovie={isMovie} />,
+    Production: (
+      <Production
+        production_companies={detail.production_companies}
+        production_countries={detail.production_countries}
+      />
+    ),
+    Collection: detail.belongs_to_collection ? (
+      <Collection id={detail.belongs_to_collection.id} />
+    ) : null,
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -44,80 +41,94 @@ function Detail({ detail, id, isMovie }: DetailProps) {
   }, [id])
 
   return (
-    <>
-      <Container>
-        <Helmet content={`${detail.title ?? detail.name} | Jimmyflix`} />
+    <Container aria-labelledby="detail-title">
+      <Helmet content={`${title} | Jimmyflix`} />
+      {detail.backdrop_path ? (
         <Backdrop
           bgImage={`https://image.tmdb.org/t/p/original${detail.backdrop_path}`}
+          aria-hidden="true"
         />
-        <Content>
-          <Cover
-            bgImage={
-              detail.poster_path
-                ? `https://image.tmdb.org/t/p/original${detail.poster_path}`
-                : '/images/defaultPoster.png'
-            }
-          />
-          <Data>
-            <Title>
-              <Text>{detail.title ?? detail.name}</Text>
-              <ILink
+      ) : null}
+      <Content>
+        <Cover
+          src={
+            detail.poster_path
+              ? `https://image.tmdb.org/t/p/w500${detail.poster_path}`
+              : '/images/defaultPoster.png'
+          }
+          alt={`${title} poster`}
+        />
+        <Heading>
+          <TitleRow>
+            <Title id="detail-title">{title}</Title>
+            {detail.imdb_id ? (
+              <IMDbLink
                 target="_blank"
+                rel="noreferrer"
                 href={`https://www.imdb.com/title/${detail.imdb_id}`}
+                aria-label={`View ${title} on IMDb (opens in a new tab)`}
               >
-                <Img src="/images/imdb.png" alt="View on IMDb" />
-              </ILink>
-            </Title>
-            <Info
-              vote_average={detail.vote_average}
-              release_date={detail.release_date}
-              first_air_date={detail.first_air_date}
-              runtime={detail.runtime}
-              episode_run_time={detail.episode_run_time}
-              genres={detail.genres}
-              overview={detail.overview}
-            />
-            <Tabs
-              selected={tabName}
-              collections={!!detail.belongs_to_collection}
-              seasons={detail.seasons?.length > 0}
-              onClick={setTabName}
-            />
-            {tabContent[tabName]}
-          </Data>
-        </Content>
-      </Container>
-    </>
+                <IMDbImage src="/images/imdb.png" alt="" />
+              </IMDbLink>
+            ) : null}
+          </TitleRow>
+          <Info
+            vote_average={detail.vote_average}
+            release_date={detail.release_date}
+            first_air_date={detail.first_air_date}
+            runtime={detail.runtime}
+            episode_run_time={detail.episode_run_time}
+            genres={detail.genres}
+          />
+        </Heading>
+        <Overview>
+          {detail.overview || 'No overview is available for this title.'}
+        </Overview>
+        <TabsArea>
+          <Tabs
+            selected={tabName}
+            collections={Boolean(detail.belongs_to_collection)}
+            seasons={detail.seasons?.length > 0}
+            onClick={setTabName}
+          />
+        </TabsArea>
+        <Panel>{tabContent[tabName]}</Panel>
+      </Content>
+    </Container>
   )
 }
 
 export default Detail
 
-const Container = styled.div`
+const Container = styled.main`
   position: relative;
-  padding: 50px;
-  width: 100%;
-  height: calc(100vh - 50px);
-  overflow-x: hidden;
-  overflow-y: auto;
+  min-height: calc(100vh - 50px);
+  overflow: hidden;
+  padding: clamp(28px, 4vw, 56px);
+  background: #141414;
 
   @media (max-width: 768px) {
-    padding: 0;
+    padding: 24px 16px 48px;
   }
 `
 
 const Backdrop = styled.div<{ bgImage: string }>`
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 120%;
-  background-image: url(${(props) => props.bgImage});
-  background-position: center center;
+  inset: 0 0 auto;
+  height: min(72vh, 760px);
+  background-image: linear-gradient(
+      to bottom,
+      rgba(20, 20, 20, 0.28),
+      rgba(20, 20, 20, 0.78) 70%,
+      #141414 100%
+    ),
+    url(${(props) => props.bgImage});
+  background-position: center 22%;
   background-size: cover;
   filter: blur(3px);
-  opacity: 0.5;
-  z-index: 0;
+  opacity: 0.58;
+  pointer-events: none;
+  transform: scale(1.015);
 
   @media (max-width: 768px) {
     display: none;
@@ -126,74 +137,119 @@ const Backdrop = styled.div<{ bgImage: string }>`
 
 const Content = styled.div`
   position: relative;
-  display: flex;
-  width: 100%;
-  height: 100%;
   z-index: 1;
+  display: grid;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  grid-template-columns: minmax(240px, 0.78fr) minmax(0, 1.45fr);
+  grid-template-areas:
+    'poster heading'
+    'poster overview'
+    'poster tabs'
+    'poster panel';
+  column-gap: clamp(28px, 4vw, 52px);
+  row-gap: 22px;
+  align-items: start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: minmax(96px, 120px) minmax(0, 1fr);
+    grid-template-areas:
+      'poster heading'
+      'overview overview'
+      'tabs tabs'
+      'panel panel';
+    column-gap: 16px;
+    row-gap: 22px;
+  }
+`
+
+const Cover = styled.img`
+  grid-area: poster;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #242424;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.38);
+
+  @media (min-width: 769px) {
+    max-height: 72vh;
+  }
+`
+
+const Heading = styled.header`
+  grid-area: heading;
+  min-width: 0;
+  padding-top: 4px;
+`
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
 
   @media (max-width: 768px) {
     display: block;
   }
 `
 
-const Cover = styled.div<{ bgImage: string }>`
-  width: 50%;
-  height: 120%;
-  background-image: url(${(props) => props.bgImage});
-  background-position: center center;
-  background-size: cover;
-  border-radius: 5px;
+const Title = styled.h1`
+  min-width: 0;
+  font-size: clamp(30px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 
   @media (max-width: 768px) {
-    width: 100%;
-    height: 80%;
+    font-size: clamp(22px, 6.4vw, 30px);
+    line-height: 1.18;
   }
 `
 
-const Data = styled.div`
-  overflow-y: auto;
-  width: 70%;
-  margin-left: 15px;
+const IMDbLink = styled.a`
+  display: inline-flex;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
 
-  @media (min-width: 768px) {
-    height: 120%;
+  &:focus-visible {
+    outline: 3px solid rgba(77, 150, 251, 0.75);
+    outline-offset: 2px;
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    margin-left: 2.5%;
+    margin-top: 8px;
   }
 `
 
-const Title = styled.h3`
-  font-size: 32px;
-  margin-bottom: 5px;
-
-  @media (max-width: 768px) {
-    float: unset;
-    padding: 3% 1%;
-    width: 95%;
-  }
+const IMDbImage = styled.img`
+  display: block;
+  width: 38px;
+  height: auto;
 `
 
-const Text = styled.span`
-  margin-right: 20px;
+const Overview = styled.p`
+  grid-area: overview;
+  max-width: 76ch;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 15px;
+  line-height: 1.75;
 `
 
-const ILink = styled.a`
-  width: 100px;
-  height: 10px;
-  vertical-align: super;
-
-  &:hover {
-    text-decoration: underline;
-  }
+const TabsArea = styled.div`
+  grid-area: tabs;
+  min-width: 0;
 `
 
-const Img = styled.img`
-  width: 33px;
-  height: 17px;
-  vertical-align: -4px;
+const Panel = styled.div`
+  grid-area: panel;
+  min-width: 0;
+  padding-bottom: 40px;
 `
 
 export const Product = styled.div`
