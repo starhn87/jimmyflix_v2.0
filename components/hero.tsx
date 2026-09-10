@@ -1,6 +1,6 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { PlayIcon, StarIcon } from '@/components/icons'
+import { ProgressiveBackdrop } from '@/components/progressive-backdrop'
 import {
   formatRating,
   getImageUrl,
@@ -26,16 +26,9 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
   return (
     <section aria-labelledby="featured-title" className="relative isolate min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
       {backdrop ? (
-        <Image
-          src={backdrop}
-          alt=""
-          fill
-          loading="eager"
-          fetchPriority="high"
-          quality={90}
-          sizes="100vw"
-          className="-z-30 object-cover object-center"
-        />
+        <div className="absolute inset-0 -z-30">
+          <ProgressiveBackdrop path={item.backdrop_path!} className="object-cover object-center" />
+        </div>
       ) : null}
       <div className="absolute inset-0 -z-20 hero-vignette" />
       <div className="hero-bottom-fade absolute inset-0 -z-10" />

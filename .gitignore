@@ -33,3 +33,5 @@ yarn-error.log*
 .vscode
 .next
 next-env.d.ts
+.vercel
+.env*.local
