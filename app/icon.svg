@@ -1,13 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="background" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#67E8F9" />
-      <stop offset="1" stop-color="#2563EB" />
+    <linearGradient id="ticket" x1="4" y1="12" x2="56" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22d3ee" />
+      <stop offset="1" stop-color="#2563eb" />
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="17" fill="url(#background)" />
-  <g fill="none" stroke="#020617" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M16 25h34v25H16z" />
-    <path d="M16 32h34M24 25l7 7M38 25l7 7M14 16l34-5 2 9-34 5z" />
-  </g>
+  <path transform="rotate(-12 32 32)" fill="url(#ticket)" fill-rule="evenodd" d="M8 12H56Q61 12 61 17V25C53 25 53 39 61 39V47Q61 52 56 52H8Q3 52 3 47V39C11 39 11 25 3 25V17Q3 12 8 12ZM34 19H43V35C43 42 39 46 32 46C24 46 20 42 20 35H29C29 38 30 39 32 39C33.5 39 34 38 34 35Z" />
 </svg>
