@@ -87,8 +87,8 @@ Server Component도 TMDB 네트워크 응답을 기다려야 하므로 로딩 �
 react-slick의 무한 복제 슬라이드는 브라우저 기본 가로 스크롤로 교체했다.
 
 - 모바일은 손가락 스크롤과 관성 이동을 그대로 사용한다.
-- 카드에는 `scroll-snap-align: start`, 목록에는 `scroll-snap-type: x mandatory`를 적용한다.
-- 데스크톱 화살표는 현재 목록 너비의 약 82%만큼 부드럽게 이동한다.
+- 카드에는 `scroll-snap-align: start`, 목록에는 `scroll-snap-type: x mandatory`와 반응형 `scroll-padding`을 적용한다. 시작과 끝에서도 모바일 20px, 태블릿 32px, 데스크톱 48px의 좌우 여백을 유지한다.
+- 데스크톱 화살표는 레일 양 끝에 겹쳐 두고 해당 가장자리를 hover하거나 키보드로 포커스할 때 표시한다. 현재 목록 너비의 약 82%만큼 부드럽게 이동하며 시작에서는 이전 버튼, 끝에서는 다음 버튼을 비활성화한다.
 - DOM 복제와 외부 slick CSS가 없어 읽기 순서가 단순하고, 모든 카드를 기본 스크롤 동작으로 탐색할 수 있다.
 - 레일 본문과 카드는 Server Component로 렌더하고 좌우 버튼만 작은 Client Component로 분리한다. 화면 밖 레일에는 `content-visibility: auto`와 고유 높이를 적용해 초기 style·layout·이미지 작업을 미룬다.
 - 포스터는 2:3 비율, 제목은 두 줄, 평점·연도·매체 유형은 항상 표시한다.
@@ -100,8 +100,9 @@ react-slick의 무한 복제 슬라이드는 브라우저 기본 가로 스크�
 - 공식 YouTube Trailer를 우선 선택하고, 없으면 일반 YouTube Trailer를 사용한다. 영상이 없으면 빈 플레이어 대신 설명을 표시한다.
 - 초기 HTML에는 YouTube iframe을 넣지 않는다. 사용자가 재생 버튼을 누르면 `youtube-nocookie.com` 플레이어를 로드한다.
 - 예고편 썸네일도 기본 lazy loading을 사용해 상세 포스터와 초기 네트워크 우선순위를 경쟁하지 않는다.
-- Credits·Production·Seasons·Collection은 `flex-wrap`과 `justify-center`를 사용한다. 모바일에서 마지막 줄의 항목 수가 홀수여도 마지막 카드가 중앙에 놓인다.
+- Credits·Production·Seasons·Collection은 `flex-wrap`을 사용한다. 모바일에서는 마지막 줄의 항목 수가 홀수여도 마지막 카드가 중앙에 놓이고, 데스크톱에서는 카드 목록을 콘텐츠 영역 왼쪽에 맞춘다.
 - 인물 사진, 제작사 로고, 국기에는 모두 `object-position: center`를 적용한다. 로고는 `object-fit: contain`, 인물과 국기는 목적에 맞는 고정 비율을 사용한다.
+- 브라우저 favicon은 헤더의 청록·파랑 그라데이션 필름 아이콘과 같은 SVG·다중 해상도 ICO를 사용한다.
 
 ## 접근성
 
@@ -152,6 +153,8 @@ Chrome DevTools MCP 1.9.0으로 프로덕션 빌드의 고정 fixture를 측정�
 - 예고편 재생 후 iframe도 동일 영역을 채우며 전체 화면 권한을 유지한다.
 - 좌우 방향키로 상세 탭을 변경할 수 있다.
 - 데스크톱 레일의 다음 버튼과 모바일 기본 가로 스크롤로 숨은 카드에 도달할 수 있다.
+- 데스크톱 레일은 양 끝 48px 여백을 유지하고 현재 스크롤 방향으로 더 이동할 수 없는 버튼에 실제 `disabled` 속성을 제공한다.
+- 상세 카드 목록은 1024px 이상에서 왼쪽 정렬되고, 모바일에서는 홀수 마지막 행의 중앙 정렬을 유지한다.
 - 영화·TV·상세 로딩 화면이 실제 콘텐츠의 비율과 반응형 배치를 예약하고, 검색·트렌드에서는 조작 컨트롤을 유지한 채 결과만 교체한다.
 - 375px 로딩 화면과 1440px 목록 로딩 화면에 가로 넘침이 없고 `aria-busy` 영역 이름이 노출된다.
 - 오류 오버레이, hydration 오류, 브라우저 페이지 오류가 없다.

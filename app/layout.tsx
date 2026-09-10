@@ -19,7 +19,6 @@ export const metadata: Metadata = {
   description:
     'Browse popular, trending, top-rated, and upcoming movies and TV shows.',
   applicationName: 'Jimmyflix',
-  icons: { icon: '/favicon.ico' },
   openGraph: {
     title: 'Jimmyflix',
     description: 'Discover movies and TV shows worth watching.',

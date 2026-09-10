@@ -14,8 +14,8 @@ import type {
 } from '@/types/tmdb'
 
 const panelHeading = 'text-lg font-semibold tracking-tight text-white sm:text-xl'
-const centeredGrid =
-  'mt-5 flex flex-wrap justify-center gap-x-4 gap-y-8 sm:gap-5'
+const responsiveCardGrid =
+  'mt-5 flex flex-wrap justify-center gap-x-4 gap-y-8 sm:gap-5 lg:justify-start'
 const centeredItem = 'w-[47%] max-w-[180px] text-center sm:w-[180px]'
 
 function EmptyPanel({ message }: { message: string }) {
@@ -61,7 +61,7 @@ export function CreditsPanel({
   return (
     <section className="pt-7" aria-labelledby="cast-title">
       <h2 id="cast-title" className={panelHeading}>Cast</h2>
-      <ul className={centeredGrid}>
+      <ul className={responsiveCardGrid}>
         {cast.slice(0, 30).map((person) => (
           <li key={`${person.id}-${person.character || person.name}`} className={centeredItem}>
             <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-white/8 bg-slate-900 shadow-lg shadow-black/25">
@@ -132,7 +132,7 @@ export function ProductionPanel({ detail }: { detail: MediaDetail }) {
       {companies.length > 0 ? (
         <section aria-labelledby="companies-title">
           <h2 id="companies-title" className={panelHeading}>Production companies</h2>
-          <ul className={centeredGrid}>
+          <ul className={responsiveCardGrid}>
             {companies.map((company) => <CompanyCard key={company.id} company={company} />)}
           </ul>
         </section>
@@ -140,7 +140,7 @@ export function ProductionPanel({ detail }: { detail: MediaDetail }) {
       {countries.length > 0 ? (
         <section aria-labelledby="countries-title">
           <h2 id="countries-title" className={panelHeading}>Production countries</h2>
-          <ul className={centeredGrid}>
+          <ul className={responsiveCardGrid}>
             {countries.map((country) => (
               <CountryCard key={country.iso_3166_1} country={country} />
             ))}
@@ -157,7 +157,7 @@ export function SeasonsPanel({ seasons }: { seasons: Season[] }) {
   return (
     <section className="pt-7" aria-labelledby="seasons-title">
       <h2 id="seasons-title" className={panelHeading}>Seasons</h2>
-      <ul className={centeredGrid}>
+      <ul className={responsiveCardGrid}>
         {seasons.map((season) => (
           <li key={season.id} className={centeredItem}>
             <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-white/8 bg-slate-900">
@@ -199,7 +199,7 @@ export function CollectionPanel({
   return (
     <section className="pt-7" aria-labelledby="collection-title">
       <h2 id="collection-title" className={panelHeading}>Collection titles</h2>
-      <ul className="mt-5 flex flex-wrap justify-center gap-4 sm:gap-5">
+      <ul className="mt-5 flex flex-wrap justify-center gap-4 sm:gap-5 lg:justify-start">
         {items.map((item) => (
           <li key={item.id} className="w-[47%] max-w-[180px] sm:w-[180px]">
             <MediaCard item={item} mediaType="movie" />

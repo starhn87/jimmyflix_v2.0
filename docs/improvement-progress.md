@@ -19,6 +19,7 @@
 | 7. 구조·의존성 현대화 | 로컬 구현·검증 완료 | App Router, Tailwind 4, 서버 데이터 계층, 기본 스크롤 레일, 의존성 축소 |
 | 로딩·스트리밍 세분화 | 로컬 구현·검증 완료 | 화면별 스켈레톤, 검색·트렌드 결과 스트리밍, 상세 부가 데이터 분리 |
 | Core Web Vitals·성능 | 로컬 구현·검증 완료 | LCP 우선순위, 섹션별 스트리밍, Client island 축소, 초기 이미지·RSC 요청 절감 |
+| 레일·상세·브랜드 마감 | 로컬 구현·검증 완료 | 레일 패딩·가장자리 버튼·끝 상태, 데스크톱 상세 좌측 정렬, 브랜드 favicon |
 | 8. 전환 배포 | 프로덕션 반영 완료 | 프리뷰에서 실제 데이터·반응형·상호작용·성능을 확인한 뒤 운영 배포 완료 |
 
 ## 1차 구현 내용
@@ -99,6 +100,13 @@
 - 고정 fixture와 동일한 Slow 4G·CPU 4배 감속 조건에서 LCP는 781ms에서 743ms로, 초기 encoded resource 합계는 509,346B에서 373,012B로 줄었다. CLS는 0.00을 유지했고 레일 버튼 Event Timing은 24ms에서 16ms로 줄었다.
 - LCP discovery의 우선순위·초기 HTML 발견·비 lazy 조건을 모두 통과했다. DevTools DOM size 경고도 변경 후 사라졌다.
 
+## 레일·상세·브랜드 마감
+
+- 레일의 반응형 좌우 여백과 같은 크기의 `scroll-padding`을 추가해 첫 카드와 마지막 카드에서도 여백이 스크롤 스냅에 의해 사라지지 않게 했다.
+- 데스크톱 좌우 버튼을 레일 가장자리에 겹치고 hover·키보드 포커스 시 나타나는 그라데이션 컨트롤로 바꿨다. 스크롤과 크기 변화를 감지해 시작·끝 버튼의 실제 `disabled` 상태를 갱신한다.
+- Credits·Production·Seasons·Collection 카드는 모바일 중앙 정렬을 유지하면서 1024px 이상에서는 콘텐츠 영역 왼쪽부터 배치한다. 로딩 스켈레톤도 같은 기준을 따른다.
+- 기존 React favicon을 제거하고 헤더의 필름 아이콘을 재현한 SVG와 16·24·32·48·64px ICO를 App Router 파일 기반 메타데이터로 제공한다.
+
 ## 검증 기록
 
 Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
@@ -140,5 +148,9 @@ Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
 - 프리뷰 브라우저 검증: 홈·상세·트렌드의 오류 오버레이와 콘솔 오류 없음, 모바일 영상 343×192.94px, Credits·Production 이미지 `object-position: 50% 50%`, 가로 넘침 0px 확인
 - 프리뷰 성능 확인: 390×844 화면에서 LCP 1.88초, CLS 0, FCP 96ms 확인
 - Vercel 프로덕션 `GG2mqpRK6fqywtVURP2jK2ksdjvG`: `main`의 커밋 `cc6ff67` 빌드와 `https://jimmyflix.vercel.app` 연결 완료, 주요 라우트 HTTP 200과 실제 콘텐츠 응답 확인
+- 레일 fixture: 1440px에서 시작·끝 여백 48px, 시작 시 이전 버튼 disabled, 한 번 이동 후 이전 버튼 활성화, 최대 scrollLeft에서 다음 버튼 disabled 확인
+- 레일 hover fixture: 오른쪽 가장자리에서 오버레이 버튼 opacity 1, 기본 상태 opacity 0, 모바일에서 컨트롤 `display: none`, 가로 넘침 0px 확인
+- 상세 카드 fixture: 1440px Credits·Production 첫 카드의 목록 시작점 offset 0px, 375px 홀수 마지막 카드 중심 187.49px와 화면 중심 187.5px 일치 확인
+- favicon fixture: `/favicon.ico`와 `/icon.svg` HTTP 200, 각각 `image/x-icon`·`image/svg+xml`, 문서 head의 파일 기반 icon metadata 확인
 
 로컬 브라우저에는 `NEXT_PUBLIC_API_KEY`가 설정되지 않아 TMDB 응답이 401이었다. 이 조건을 3차 구현의 실패·재시도 상태 검증에 사용했고, 정상 응답과 사용자 흐름은 프로덕션에서 확인했다.

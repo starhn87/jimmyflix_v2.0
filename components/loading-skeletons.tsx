@@ -12,11 +12,11 @@ function LoadingAnnouncement({ label }: { label: string }) {
 function MediaRailSkeletonVisual() {
   return (
     <section aria-hidden="true">
-      <div className="mb-5 px-4 sm:px-6 lg:px-10">
+      <div className="mb-5 px-5 sm:px-8 lg:px-12">
         <Bone className="h-7 w-40 rounded-lg sm:w-52" />
         <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
       </div>
-      <ul className="flex gap-3 overflow-hidden px-4 pb-7 sm:gap-4 sm:px-6 lg:gap-5 lg:px-10">
+      <ul className="flex gap-3 overflow-hidden px-5 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12">
         {cardPlaceholders.map((_, index) => (
           <li
             key={index}
@@ -208,7 +208,7 @@ export function DetailPanelSkeleton({ label }: { label: string }) {
     >
       <LoadingAnnouncement label={label} />
       <Bone className="h-6 w-28 rounded-lg" />
-      <div aria-hidden="true" className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-8 sm:gap-5">
+      <div aria-hidden="true" className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-8 sm:gap-5 lg:justify-start">
         {Array.from({ length: 5 }, (_, index) => (
           <div key={index} className="w-[47%] max-w-[180px] text-center sm:w-[180px]">
             <Bone className="aspect-2/3 w-full rounded-xl" />
