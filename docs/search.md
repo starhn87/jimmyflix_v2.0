@@ -43,7 +43,7 @@
 ## 검증
 
 - `node --test tests/search.test.mjs`: 인물 크레딧·주제 합치기, 중복 ID와 반복 출연 제거, 정확한 이름 우선, 성인 제외, 실패 시 대체 결과, 요청 및 결과 수 제한, 병렬 실행, 빈 입력·길이 제한 등 6개 테스트 통과.
-- `corepack yarn lint`, `corepack yarn typecheck`, `corepack yarn build` 통과. `/`와 `/tvs`의 정적 생성 유지.
+- `corepack yarn lint`, `corepack yarn typecheck`, `corepack yarn build` 통과. `/`와 `/tv`의 정적 생성 유지.
 - 고정 TMDB 응답으로 실제 로컬 검색 경로를 검증했다. 검증 전용 응답은 저장소 밖의 프로세스에만 주입했으며 앱 코드와 최종 빌드에 포함하지 않는다.
 - 제목 검색, 인물 이름으로 영화·TV 찾기, 주제 검색, 재검색, 뒤로가기·새로고침 시 입력 복원, 전체 문서 재로드 없는 이동을 확인했다.
 - 320px에서 가로 넘침 0px, 검색 입력 너비 304px, 44px 돋보기·테마 토글, 펼침 시 입력 포커스, Escape 복귀, 공백 제출 오류를 확인했다.

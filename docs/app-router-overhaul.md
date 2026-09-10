@@ -26,11 +26,11 @@
 app/
 ├── layout.tsx             전역 메타데이터, 글꼴, 공통 헤더
 ├── (home)/                `/` 영화 목록과 전용 로딩 경계
-├── tvs/                   TV 목록과 전용 로딩 경계
+├── tv/                    TV 목록과 전용 로딩 경계
 ├── trend/page.tsx         URL 기반 트렌드와 결과 스트리밍
 ├── search/page.tsx        URL 기반 검색과 결과 스트리밍
 ├── movies/[id]/           영화 상세와 전용 로딩 경계
-├── tvs/[id]/              TV 상세와 전용 로딩 경계
+├── tv/[id]/               TV 상세와 전용 로딩 경계
 ├── error.tsx              복구 가능한 오류 경계
 └── not-found.tsx          사용자 제어형 404
 

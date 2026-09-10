@@ -37,7 +37,7 @@ export const getMediaType = (
 
 export const getMediaHref = (item: MediaItem, fallback: MediaType | undefined, locale: Locale) => {
   const mediaType = getMediaType(item, fallback)
-  const href = mediaType === 'movie' ? `/movies/${item.id}` : `/tvs/${item.id}`
+  const href = mediaType === 'movie' ? `/movies/${item.id}` : `/tv/${item.id}`
   return getLocalePath(locale, href)
 }
 

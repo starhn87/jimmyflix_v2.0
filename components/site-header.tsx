@@ -15,7 +15,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
   const routePath = pathname.replace(/^\/(?:en|ko)(?=\/|$)/, '') || '/'
   const navigation = [
     { href: '/', label: messages.movies, match: routePath === '/' || routePath.startsWith('/movies') },
-    { href: '/tvs', label: messages.tv, match: routePath.startsWith('/tvs') },
+    { href: '/tv', label: messages.tv, match: routePath.startsWith('/tv') },
     { href: '/trend', label: messages.trend, match: routePath.startsWith('/trend') },
   ]
 

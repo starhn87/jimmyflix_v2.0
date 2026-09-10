@@ -31,11 +31,11 @@ Emotion, React Query, Recoil, Axios, react-slick과 전역 polyfill은 제거했
 | 경로 | 역할 |
 | --- | --- |
 | `/{locale}` | 현재 상영·고평점·공개 예정·인기 영화 |
-| `/{locale}/tvs` | 고평점·인기·방송 중·오늘 방송 TV |
+| `/{locale}/tv` | 고평점·인기·방송 중·오늘 방송 TV |
 | `/{locale}/trend?window=day\|week` | 일간·주간 영화 및 TV 트렌드 |
 | `/{locale}/search?q=...` | 제목·배우·주제 키워드 영화·TV 통합 검색 |
 | `/{locale}/movies/[id]` | 영화 상세, 예고편·출연진·제작·컬렉션 |
-| `/{locale}/tvs/[id]` | TV 상세, 예고편·출연진·제작·시즌 |
+| `/{locale}/tv/[id]` | TV 상세, 예고편·출연진·제작·시즌 |
 
 `locale`은 영어 `en` 또는 한국어 `ko`다. 언어가 없는 기존 주소는 저장된 선택이나 브라우저 언어에 맞는 경로로 자동 이동한다.
 
