@@ -1,5 +1,7 @@
 # UI/UX 개선 백로그
 
+> 이 문서는 전환 전 화면을 기준으로 만든 과제와 수용 기준을 보존한다. 구현 결과는 [개선 작업 진행 기록](improvement-progress.md), 전환 후 설계는 [App Router·Tailwind 전환 기록](app-router-overhaul.md)에서 확인한다.
+
 작성일: 2026-09-10 · 총 28개 항목: P1 8개, P2 18개, P3 2개
 
 > 이 문서는 최초 진단 기준을 보존한다. 이후 구현과 검증 상태는 [개선 작업 진행 기록](improvement-progress.md)에서 관리한다.

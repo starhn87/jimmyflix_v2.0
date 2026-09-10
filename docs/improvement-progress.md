@@ -14,8 +14,10 @@
 | 3. 검색·상태 UX | 프로덕션 반영 완료 | 모바일 재검색, URL 검색 상태, 입력 검증과 종류별 빈 상태 |
 | 4. 로딩·오류 UX | 프로덕션 반영 완료 | 섹션별 로딩, 재시도, 기존 데이터 유지, 상세·404 복귀 경로 |
 | 5. 카드·상세 UI | 프로덕션 반영 완료 | 긴 제목, 상시 평점, 포스터 비율, 모바일 상세 정보와 단일 스크롤 |
-| 6. 접근성·미디어 | 예정 | 탭 키보드 조작, 포커스, 이미지·예고편 최적화 |
-| 7. 구조·의존성 현대화 | 예정 | 타입·API 계층, SSR 병렬화, Next.js 및 상태 관리 개선 |
+| 상세 미디어 hotfix | 프로덕션 반영 완료 | 예고편 16:9 확대, Credits·Production·Seasons 모바일 이미지 중앙 정렬 |
+| 6. 접근성·미디어 | 로컬 구현·검증 완료 | 탭 키보드 조작, 포커스, `next/image`, 클릭 후 예고편 로드 |
+| 7. 구조·의존성 현대화 | 로컬 구현·검증 완료 | App Router, Tailwind 4, 서버 데이터 계층, 기본 스크롤 레일, 의존성 축소 |
+| 8. 전환 배포 | 승인 대기 | 프리뷰 배포의 실제 TMDB 데이터·Vercel 런타임 검증 후 운영 승격 |
 
 ## 1차 구현 내용
 
@@ -57,6 +59,27 @@
 - 상세 바깥과 정보 영역의 고정 높이·중첩 세로 스크롤을 제거하고 문서 스크롤 하나로 모든 내용을 탐색하게 했다. 제목은 `h1`, 목록 섹션은 `h2`, 카드 제목은 `h3` 구조를 사용한다.
 - 상세 줄거리의 글자 크기·줄 간격·대비를 높이고, 줄거리나 IMDb ID가 없을 때 잘못된 빈 영역이나 외부 링크가 생기지 않도록 처리했다.
 
+## 상세 미디어 hotfix
+
+- 상세 예고편을 너비 100%, 최대 1100px, 16:9 컨테이너로 바꾸고 iframe이 이 영역을 완전히 채우도록 했다.
+- Credits·Production·Seasons 이미지에 중앙 기준을 적용하고 목록 자체도 가운데 배치했다.
+- 커밋 `ce96b69`를 Vercel 프로덕션 배포 `dpl_AkEGercQeVDYoBdjmjwYtJrNcrCZ`로 반영했다.
+- 운영의 영화 `/movies/1386315`에서 데스크톱 영상 772.47×434.5px, 375px Credits 카드 이미지 중심 오차 0px, 모바일 가로 넘침 0px를 확인했다. Production 로고·국기도 동일하게 중앙 정렬되고 배포 후 런타임 오류가 없었다.
+
+## 5차 구조 전환 내용
+
+- 구현 커밋 `b5b0107`에서 App Router·Tailwind 전환과 구형 런타임 의존성 제거를 한 단위로 기록했다.
+- Next.js 16.3.4·React 19.3.0·TypeScript 5.9.3·Tailwind CSS 4.3.3으로 기술 기준을 올리고 Pages Router를 App Router로 전환했다.
+- `app/layout.tsx`에서 공통 헤더·메타데이터·글꼴을 구성하고 영화, TV, 트렌드, 검색, 상세, 로딩, 오류, 404 라우트를 App Router 규약으로 옮겼다.
+- TMDB 호출을 `lib/tmdb.ts`로 모았다. Server Component가 데이터를 받고 API 키를 브라우저에 전달하지 않으며, 독립 요청은 `Promise.allSettled`로 병렬 처리한다.
+- 검색어와 트렌드 기간을 URL에 유지해 Recoil을 제거했다. 서버 응답과 Next.js Data Cache를 사용해 React Query·Axios도 제거했다.
+- Emotion과 런타임 스타일을 Tailwind 유틸리티로 교체했다. 공통 색·간격·비율과 반응형 상태를 컴포넌트에서 확인할 수 있게 했다.
+- react-slick 무한 슬라이드를 브라우저 기본 가로 스크롤과 CSS scroll snap으로 교체했다. 모바일 터치와 데스크톱 화살표를 같은 DOM 순서에서 제공한다.
+- 예고편은 공식 YouTube Trailer를 우선 선택하고 클릭 전에는 썸네일만 표시한다. 재생 시 개인정보 강화 도메인의 iframe을 로드한다.
+- 상세 탭에 WAI-ARIA 역할과 방향키·Home·End 조작을 추가했다. Credits·Production·Seasons·Collection의 마지막 줄도 가운데 정렬한다.
+- PnP 로더와 저장소에 추적하던 Yarn 캐시를 제거하고 `node_modules` linker를 사용한다. 직접 런타임 의존성은 Next·React·React DOM 세 개로 줄였다.
+- 최종 구조와 운영 방법은 [App Router·Tailwind 전환 기록](app-router-overhaul.md)에 정리했다.
+
 ## 검증 기록
 
 Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
@@ -84,5 +107,9 @@ Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
 - 상세 fixture: 320·375·768·1440px에서 가로 넘침과 내부 세로 스크롤 없음, 제목·평점·연도·상영시간이 모바일 첫 화면에 표시되고 데스크톱 포스터·정보 grid가 유지되는지 확인
 - 프로덕션 카드·상세 UI: 320px 검색 결과 2열과 2:3 포스터 비율, 375px 상세 첫 화면의 제목·핵심 메타데이터, Credits 탭 전환, 1440px 상세 grid, 가로 넘침·내부 세로 스크롤·브라우저 오류 없음 확인
 - 브라우저 기본 동작: 의미 있는 본문 렌더링, Next.js 오류 오버레이 없음, 검색 폼과 내비게이션의 접근 가능한 이름 확인
+- App Router 전환: `yarn lint`, `yarn typecheck`, `yarn build` 통과, 모든 목표 라우트가 App Router 빌드 결과에 포함됨
+- 전환 상세 fixture: 1440px 영상 922×518.625px, 375px 영상 343×192.9px로 16:9 유지, 페이지 가로 넘침 0px
+- 전환 중앙 정렬 fixture: 375px Credits·Production의 홀수 번째 마지막 카드 중심이 뷰포트 중심 187.5px와 일치하고 이미지 `object-position`이 `50% 50%`인지 확인
+- 전환 상호작용: 상세 탭에서 `ArrowRight`로 Trailer → Credits 전환, 재생 후 iframe 영역 채움, 데스크톱 레일 다음 버튼으로 `scrollLeft` 40 → 1283 이동 확인
 
 로컬 브라우저에는 `NEXT_PUBLIC_API_KEY`가 설정되지 않아 TMDB 응답이 401이었다. 이 조건을 3차 구현의 실패·재시도 상태 검증에 사용했고, 정상 응답과 사용자 흐름은 프로덕션에서 확인했다.
