@@ -34,7 +34,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "lint": "next lint",
+    "start": "next start",
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "homepage": "http://jimmyflix.netlify.app",
   "browserslist": {
@@ -49,7 +51,7 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.8.7",
   "devDependencies": {
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.9",
@@ -61,6 +63,7 @@
     "core-js": "^3.22.0",
     "emotion-reset": "^3.0.1",
     "eslint": "^8.14.0",
+    "eslint-config-next": "12.1.5",
     "eslint-config-react-app": "^7.0.0",
     "intercept-stdout": "^0.1.2",
     "yarn-upgrade-all": "^0.7.1"
