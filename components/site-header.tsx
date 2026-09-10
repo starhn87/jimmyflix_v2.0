@@ -28,7 +28,15 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
           className="group order-1 my-3 flex shrink-0 items-center gap-2 rounded-lg text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <span className="grid size-9 place-items-center transition-transform group-hover:scale-105 sm:size-10">
-            <Image src="/icon.svg" alt="" width={40} height={40} sizes="40px" unoptimized />
+            <Image
+              src="/icon.svg"
+              alt=""
+              width={40}
+              height={40}
+              sizes="40px"
+              loading="eager"
+              unoptimized
+            />
           </span>
           <span className="hidden font-mono text-lg font-semibold tracking-tight sm:inline">
             Jimmyflix
