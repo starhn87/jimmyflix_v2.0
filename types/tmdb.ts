@@ -12,6 +12,25 @@ export interface MediaItem {
   release_date?: string
   first_air_date?: string
   media_type?: MediaType | 'person'
+  adult?: boolean
+  popularity?: number
+}
+
+export interface PersonSearchResult {
+  id: number
+  name: string
+  adult?: boolean
+  known_for: MediaItem[]
+}
+
+export interface Keyword {
+  id: number
+  name: string
+}
+
+export interface PersonCredits {
+  cast: MediaItem[]
+  crew: MediaItem[]
 }
 
 export interface Genre {

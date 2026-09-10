@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { cache } from 'react'
+import { runCatalogSearch } from '@/lib/search'
 import type {
   CastMember,
   CollectionDetail,
@@ -8,6 +9,9 @@ import type {
   MediaItem,
   MediaSectionData,
   MediaType,
+  Keyword,
+  PersonCredits,
+  PersonSearchResult,
   TimeWindow,
   TmdbListResponse,
 } from '@/types/tmdb'
@@ -38,6 +42,7 @@ async function tmdbFetch<T>(
   path: string,
   query: Record<string, QueryValue> = {},
   revalidate = DEFAULT_REVALIDATE_SECONDS,
+  timeoutMs?: number,
 ): Promise<T> {
   const url = new URL(path.replace(/^\//, ''), API_BASE_URL)
   url.searchParams.set('api_key', getApiKey())
@@ -52,6 +57,7 @@ async function tmdbFetch<T>(
   const response = await fetch(url, {
     headers: { Accept: 'application/json' },
     next: { revalidate },
+    signal: timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined,
   })
 
   if (response.status === 404) {
@@ -204,19 +210,39 @@ export const getTrendingSectionRequests = (window: TimeWindow) =>
     },
   ])
 
-export const searchMovies = (query: string) =>
+const searchMovies = (query: string) =>
   tmdbFetch<TmdbListResponse<MediaItem>>(
     'search/movie',
     { query: query.trim(), include_adult: false },
     60 * 5,
+    5000,
   ).then((response) => response.results)
 
-export const searchTv = (query: string) =>
+const searchTv = (query: string) =>
   tmdbFetch<TmdbListResponse<MediaItem>>(
     'search/tv',
     { query: query.trim(), include_adult: false },
     60 * 5,
+    5000,
   ).then((response) => response.results)
+
+export const searchCatalog = (query: string) => runCatalogSearch(query, {
+  movies: searchMovies,
+  tv: searchTv,
+  people: (term) => tmdbFetch<TmdbListResponse<PersonSearchResult>>(
+    'search/person', { query: term, include_adult: false }, 60 * 5, 5000,
+  ).then((response) => response.results),
+  keywords: (term) => tmdbFetch<TmdbListResponse<Keyword>>(
+    'search/keyword', { query: term }, 60 * 5, 5000,
+  ).then((response) => response.results),
+  credits: (id) => tmdbFetch<PersonCredits>(`person/${id}/combined_credits`, {}, 60 * 30, 5000),
+  discover: (mediaType, keywordIds) => tmdbFetch<TmdbListResponse<MediaItem>>(
+    `discover/${mediaType}`,
+    { with_keywords: keywordIds.join('|'), include_adult: false, sort_by: 'popularity.desc' },
+    60 * 5,
+    5000,
+  ).then((response) => response.results),
+})
 
 export const getMovieDetail = cache((id: number) =>
   tmdbFetch<MediaDetail>(`movie/${id}`, { append_to_response: 'videos' }),

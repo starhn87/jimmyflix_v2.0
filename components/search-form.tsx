@@ -1,91 +1,65 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { type FormEvent, useRef, useState } from 'react'
+import Form from 'next/form'
+import { type FormEvent, type RefObject, useState } from 'react'
 import { SearchIcon } from '@/components/icons'
 
 interface SearchFormProps {
   initialQuery?: string
-  compact?: boolean
+  inputRef: RefObject<HTMLInputElement | null>
 }
 
-export function SearchForm({ initialQuery = '', compact = false }: SearchFormProps) {
-  const router = useRouter()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [query, setQuery] = useState(initialQuery)
+export function SearchForm({ initialQuery = '', inputRef }: SearchFormProps) {
   const [error, setError] = useState('')
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const normalized = query.trim()
+    const input = inputRef.current
+    const query = input?.value.trim() || ''
 
-    if (!normalized) {
-      setError('Enter a movie or TV show title.')
-      inputRef.current?.focus()
+    if (!query) {
+      event.preventDefault()
+      setError('Enter a title, actor, or keyword.')
+      input?.focus()
       return
     }
 
+    if (input) input.value = query
     setError('')
-    router.push(`/search?q=${encodeURIComponent(normalized)}`)
   }
 
   return (
-    <section
-      aria-label="Search movies and TV shows"
-      className={`mx-auto w-full max-w-3xl px-4 ${
-        compact ? 'pt-10 pb-8 sm:pt-14' : 'grid min-h-[55vh] place-items-center py-16'
-      }`}
-    >
-      <div className="w-full">
-        {!compact ? (
-          <div className="mb-8 text-center">
-            <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase">
-              Find your next watch
-            </p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance text-ink sm:text-5xl">
-              Search every story
-            </h1>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-subtle sm:text-base">
-              Explore movies and TV shows by title.
-            </p>
-          </div>
-        ) : null}
-
-        <form onSubmit={handleSubmit} noValidate>
-          <label htmlFor="main-search" className="sr-only">
-            Movie or TV show title
-          </label>
-          <div className="group grid min-h-15 grid-cols-[minmax(0,1fr)_58px] overflow-hidden rounded-2xl border border-tone/15 bg-tone/7 shadow-media transition focus-within:border-accent/70 focus-within:ring-4 focus-within:ring-accent/10">
-            <input
-              ref={inputRef}
-              id="main-search"
-              value={query}
-              onChange={(event) => {
-                setQuery(event.target.value)
-                if (error) setError('')
-              }}
-              type="search"
-              placeholder="Search movies and TV shows"
-              aria-invalid={Boolean(error)}
-              aria-describedby={error ? 'main-search-error' : undefined}
-              spellCheck={false}
-              className="min-w-0 bg-transparent px-5 text-base text-ink outline-none placeholder:text-faint sm:text-lg"
-            />
-            <button
-              type="submit"
-              aria-label="Search movies and TV shows"
-              className="grid place-items-center border-l border-tone/10 bg-action text-on-action outline-none transition hover:bg-action-hover focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-white"
-            >
-              <SearchIcon className="size-6" />
-            </button>
-          </div>
-        </form>
-        {error ? (
-          <p id="main-search-error" role="alert" className="mt-3 px-2 text-sm text-danger">
-            {error}
-          </p>
-        ) : null}
+    <Form action="/search" prefetch={false} onSubmit={handleSubmit} role="search">
+      <label htmlFor="catalog-search" className="sr-only">
+        Search by title, actor, or keyword
+      </label>
+      <div className="relative">
+        <input
+          ref={inputRef}
+          id="catalog-search"
+          name="q"
+          type="search"
+          defaultValue={initialQuery}
+          placeholder="Titles, actors, keywords"
+          maxLength={200}
+          onChange={() => { if (error) setError('') }}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? 'catalog-search-error' : undefined}
+          spellCheck={false}
+          className="h-11 w-full min-w-0 rounded-full border border-tone/12 bg-tone/6 py-2 pr-12 pl-4 text-base text-ink outline-none transition placeholder:text-faint hover:border-tone/25 focus:border-accent/70 focus:bg-tone/9 focus:ring-3 focus:ring-accent/10 lg:text-sm"
+        />
+        <button
+          type="submit"
+          aria-label="Search"
+          className="absolute top-0 right-0 grid size-11 place-items-center rounded-full text-subtle outline-none hover:text-ink focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          <SearchIcon className="size-5" />
+        </button>
       </div>
-    </section>
+      {error ? (
+        <p id="catalog-search-error" role="alert" className="mt-2 px-3 text-xs text-danger lg:absolute lg:top-full lg:right-0 lg:mt-2 lg:rounded-lg lg:border lg:border-tone/12 lg:bg-canvas lg:py-3 lg:shadow-panel">
+          {error}
+        </p>
+      ) : null}
+    </Form>
   )
 }
