@@ -19,7 +19,7 @@
 | 7. 구조·의존성 현대화 | 로컬 구현·검증 완료 | App Router, Tailwind 4, 서버 데이터 계층, 기본 스크롤 레일, 의존성 축소 |
 | 로딩·스트리밍 세분화 | 로컬 구현·검증 완료 | 화면별 스켈레톤, 검색·트렌드 결과 스트리밍, 상세 부가 데이터 분리 |
 | Core Web Vitals·성능 | 로컬 구현·검증 완료 | LCP 우선순위, 섹션별 스트리밍, Client island 축소, 초기 이미지·RSC 요청 절감 |
-| 8. 전환 배포 | 승인 대기 | 프리뷰 배포의 실제 TMDB 데이터·Vercel 런타임 검증 후 운영 승격 |
+| 8. 전환 배포 | 프로덕션 반영 완료 | 프리뷰에서 실제 데이터·반응형·상호작용·성능을 확인한 뒤 운영 배포 완료 |
 
 ## 1차 구현 내용
 
@@ -136,5 +136,9 @@ Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
 - Core Web Vitals fixture: Chrome DevTools MCP 1.9.0, 390×844 DPR 3, Slow 4G, CPU 4배 감속에서 LCP 743ms, CLS 0.00, LCP image priority High와 discovery 검사 전체 통과 확인
 - 성능 fixture: 초기 resource encoded body 373,012B, 자동 RSC fetch 0개, 화면 밖 이미지 요청 지연, DOM size 문제 미탐지 확인
 - 상호작용 fixture: 1440×1000, Slow 4G, CPU 4배 감속에서 레일 버튼 interaction event 16ms, 목표 scrollLeft 1283 도달 확인
+- Vercel 프리뷰 `9o3g1yqQNJCJuVCVHdyFzrD7ffxr`: 커밋 `cc6ff67` 빌드 성공, 실제 TMDB 카탈로그·검색·트렌드 응답과 모바일·데스크톱 상세 화면 확인
+- 프리뷰 브라우저 검증: 홈·상세·트렌드의 오류 오버레이와 콘솔 오류 없음, 모바일 영상 343×192.94px, Credits·Production 이미지 `object-position: 50% 50%`, 가로 넘침 0px 확인
+- 프리뷰 성능 확인: 390×844 화면에서 LCP 1.88초, CLS 0, FCP 96ms 확인
+- Vercel 프로덕션 `GG2mqpRK6fqywtVURP2jK2ksdjvG`: `main`의 커밋 `cc6ff67` 빌드와 `https://jimmyflix.vercel.app` 연결 완료, 주요 라우트 HTTP 200과 실제 콘텐츠 응답 확인
 
 로컬 브라우저에는 `NEXT_PUBLIC_API_KEY`가 설정되지 않아 TMDB 응답이 401이었다. 이 조건을 3차 구현의 실패·재시도 상태 검증에 사용했고, 정상 응답과 사용자 흐름은 프로덕션에서 확인했다.

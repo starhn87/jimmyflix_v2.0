@@ -156,7 +156,7 @@ Chrome DevTools MCP 1.9.0으로 프로덕션 빌드의 고정 fixture를 측정�
 - 375px 로딩 화면과 1440px 목록 로딩 화면에 가로 넘침이 없고 `aria-busy` 영역 이름이 노출된다.
 - 오류 오버레이, hydration 오류, 브라우저 페이지 오류가 없다.
 
-실제 TMDB 정상 데이터와 Vercel 런타임 검증은 배포 승인 후 프리뷰에서 다시 수행한다. Vercel에는 `TMDB_API_KEY`를 서버 전용 환경 변수로 설정하고, 전환 기간이 끝나면 `NEXT_PUBLIC_API_KEY` 호환 경로를 제거한다.
+Vercel 프리뷰와 운영 배포에서 실제 TMDB 데이터, 주요 라우트, 상세 반응형 화면과 상호작용을 확인했다. Vercel은 `TMDB_API_KEY`를 서버 전용 환경 변수로 사용하며, 전환 기간이 끝나면 `NEXT_PUBLIC_API_KEY` 호환 경로를 제거한다.
 
 ## 남은 개선 후보
 
