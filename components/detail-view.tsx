@@ -73,7 +73,7 @@ export function DetailView({
         </div>
       ) : null}
 
-      <div className="mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(280px,390px)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
+      <div className="mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
         <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-[0_24px_70px_rgba(0,0,0,0.4)] lg:row-span-3">
           <Image
             src={getPosterUrl(detail.poster_path)}
@@ -81,7 +81,7 @@ export function DetailView({
             fill
             loading="eager"
             fetchPriority="high"
-            sizes="(max-width: 640px) 150px, (max-width: 1024px) 24vw, 390px"
+            sizes="(max-width: 639px) 112px, (max-width: 1023px) 150px, (max-width: 1279px) 40vw, 480px"
             className="object-cover object-center"
           />
         </div>

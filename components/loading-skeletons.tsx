@@ -168,7 +168,7 @@ export function DetailSkeleton({ label }: { label: string }) {
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
         <div aria-hidden="true" className="absolute inset-x-0 top-0 hidden h-[780px] bg-[radial-gradient(circle_at_72%_20%,rgba(34,211,238,0.08),transparent_45%),linear-gradient(to_bottom,rgba(18,27,40,0.8),#080b12)] md:block" />
-        <div aria-hidden="true" className="relative mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(280px,390px)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
+        <div aria-hidden="true" className="relative mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
           <Bone className="aspect-2/3 w-full rounded-2xl lg:row-span-3" />
 
           <header className="min-w-0 pt-1 lg:pt-4">
