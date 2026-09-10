@@ -7,6 +7,8 @@ TMDB 데이터를 이용해 영화와 TV 프로그램을 탐색하는 반응형 
 - 기존 진단: [저장소 구조 및 개선점 진단](docs/repository-review.md)
 - UX 과제: [UI/UX 개선 백로그](docs/ui-ux-backlog.md)
 - 구현 기록: [개선 작업 진행 기록](docs/improvement-progress.md)
+- 언어 전환: [한국어·영어 현지화 구조](docs/localization.md)
+- 브랜드 컬러: [브랜드 컬러 제안](docs/brand-color-proposal.md)
 
 ## 현재 기술 구성
 
@@ -16,6 +18,7 @@ TMDB 데이터를 이용해 영화와 TV 프로그램을 탐색하는 반응형 
 | 언어 | TypeScript 5 strict mode |
 | 스타일 | Tailwind CSS 4 |
 | 데이터 | React Server Components에서 TMDB API 직접 호출, Next.js Data Cache |
+| 현지화 | 영어·한국어 URL, 서버 UI 사전, TMDB 언어별 응답 |
 | 이미지 | `next/image`, TMDB 크기별 이미지 URL |
 | 목록 탐색 | 브라우저 기본 가로 스크롤 + CSS scroll snap |
 | 배포 | Vercel, Node.js 24 |
@@ -27,12 +30,14 @@ Emotion, React Query, Recoil, Axios, react-slick과 전역 polyfill은 제거했
 
 | 경로 | 역할 |
 | --- | --- |
-| `/` | 현재 상영·고평점·공개 예정·인기 영화 |
-| `/tvs` | 고평점·인기·방송 중·오늘 방송 TV |
-| `/trend?window=day\|week` | 일간·주간 영화 및 TV 트렌드 |
-| `/search?q=...` | 영화·TV 통합 검색 |
-| `/movies/[id]` | 영화 상세, 예고편·출연진·제작·컬렉션 |
-| `/tvs/[id]` | TV 상세, 예고편·출연진·제작·시즌 |
+| `/{locale}` | 현재 상영·고평점·공개 예정·인기 영화 |
+| `/{locale}/tvs` | 고평점·인기·방송 중·오늘 방송 TV |
+| `/{locale}/trend?window=day\|week` | 일간·주간 영화 및 TV 트렌드 |
+| `/{locale}/search?q=...` | 제목·배우·주제 키워드 영화·TV 통합 검색 |
+| `/{locale}/movies/[id]` | 영화 상세, 예고편·출연진·제작·컬렉션 |
+| `/{locale}/tvs/[id]` | TV 상세, 예고편·출연진·제작·시즌 |
+
+`locale`은 영어 `en` 또는 한국어 `ko`다. 언어가 없는 기존 주소는 저장된 선택이나 브라우저 언어에 맞는 경로로 자동 이동한다.
 
 ## 로컬 실행
 
@@ -70,10 +75,13 @@ corepack yarn build
 ## 디렉터리 구조
 
 ```text
-app/                  App Router 페이지, 화면별 로딩·오류 경계
+app/[locale]/         언어별 App Router 페이지, 화면별 로딩·오류 경계
 components/           카드, 레일, 검색, 상세 탭·스켈레톤 등 재사용 UI
 lib/media.ts          제목·연도·이미지·라우트 표시 규칙
 lib/tmdb.ts           서버 전용 TMDB 요청과 캐시 정책
+lib/dictionaries.ts   영어·한국어 서버 전용 UI 사전
+lib/i18n.ts           지원 언어, 경로, TMDB 언어 코드
+proxy.ts              언어 없는 URL 감지와 리다이렉트
 types/tmdb.ts         TMDB 응답에 필요한 도메인 타입
 public/images/        로컬 대체 이미지와 404 자산
 docs/                 진단, UX 백로그, 전환 및 검증 기록
