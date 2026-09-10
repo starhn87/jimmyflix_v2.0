@@ -89,8 +89,8 @@ export function DetailView({
         </div>
       ) : null}
 
-      <div className="mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
-        <div className="relative aspect-2/3 w-full overflow-hidden rounded-2xl border border-tone/10 bg-surface shadow-media lg:row-span-3">
+      <div className="mx-auto grid max-w-[1480px] grid-cols-1 items-start gap-y-0 px-4 pt-0 pb-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-x-4 sm:gap-y-6 sm:px-6 sm:py-8 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
+        <div className="relative -mx-4 aspect-2/3 w-[calc(100%+2rem)] overflow-hidden border-b border-tone/10 bg-surface shadow-media sm:mx-0 sm:w-full sm:rounded-2xl sm:border lg:row-span-3">
           <Image
             src={getImageUrl(detail.poster_path, 'w780') || getPosterUrl(detail.poster_path)}
             alt={dictionary.common.posterAlt(title)}
@@ -99,14 +99,14 @@ export function DetailView({
             fetchPriority="high"
             placeholder={imageSkeletonPlaceholder}
             quality={85}
-            sizes="(max-width: 639px) 112px, (max-width: 1023px) 150px, (max-width: 1279px) 40vw, 480px"
+            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 150px, (max-width: 1279px) 40vw, 480px"
             className="object-cover object-center"
           />
         </div>
 
-        <header className="min-w-0 pt-1 lg:pt-4">
+        <header className="min-w-0 pt-6 sm:pt-1 lg:pt-4">
           <div className="flex flex-wrap items-start gap-3">
-            <h1 id="detail-title" className="min-w-0 text-2xl leading-[1.1] font-bold tracking-[-0.03em] text-balance text-ink sm:text-4xl lg:text-6xl">
+            <h1 id="detail-title" className="min-w-0 text-3xl leading-[1.1] font-bold tracking-[-0.03em] text-balance text-ink sm:text-4xl lg:text-6xl">
               {title}
             </h1>
             {detail.imdb_id ? (
@@ -148,12 +148,17 @@ export function DetailView({
           </ul>
         </header>
 
-        <p className="col-span-2 max-w-[76ch] text-[0.95rem] leading-7 text-muted lg:col-span-1 lg:col-start-2 lg:text-base lg:leading-8">
+        <p className="mt-6 max-w-[76ch] text-[0.95rem] leading-7 text-muted sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2 lg:text-base lg:leading-8">
           {detail.overview || dictionary.detail.noOverview}
         </p>
 
-        <div className="col-span-2 min-w-0 pb-16 lg:col-span-1 lg:col-start-2">
-          <DetailTabs tabs={tabs} label={dictionary.detail.tabListLabel} />
+        <div className="mt-6 min-w-0 pb-16 sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2">
+          <DetailTabs
+            tabs={tabs}
+            label={dictionary.detail.tabListLabel}
+            scrollBackwardLabel={dictionary.detail.scrollTabsBackward}
+            scrollForwardLabel={dictionary.detail.scrollTabsForward}
+          />
         </div>
       </div>
     </main>

@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { ErrorState } from '@/components/error-state'
+import { LoadingCardImage } from '@/components/loading-card-image'
 import { MediaCard } from '@/components/media-card'
 import { VideoEmbed } from '@/components/video-embed'
 import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
@@ -104,17 +105,13 @@ function CompanyCard({ company }: { company: ProductionCompany }) {
   const logo = getImageUrl(company.logo_path, 'w300') || '/images/defaultProduction.png'
   return (
     <li className={centeredItem}>
-      <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-xl border border-tone/10 bg-slate-100 shadow-panel">
-        <Image
-          src={logo}
-          alt={company.name}
-          fill
-          placeholder={imageSkeletonPlaceholder}
-          quality={85}
-          sizes="180px"
-          className="object-contain object-center p-4"
-        />
-      </div>
+      <LoadingCardImage
+        src={logo}
+        alt={company.name}
+        sizes="180px"
+        imageClassName="object-contain object-center p-4"
+        containerClassName="relative mx-auto aspect-square w-full overflow-hidden rounded-xl border border-tone/10 bg-slate-100 shadow-panel"
+      />
       <p className="mt-3 text-sm leading-5 font-medium text-muted">{company.name}</p>
     </li>
   )
@@ -126,17 +123,13 @@ function CountryCard({ country, flagAlt }: {
 }) {
   return (
     <li className={centeredItem}>
-      <div className="relative mx-auto aspect-5/3 w-full overflow-hidden rounded-xl border border-tone/10 bg-surface shadow-panel">
-        <Image
-          src={`https://flagcdn.com/w640/${country.iso_3166_1.toLowerCase()}.png`}
-          alt={flagAlt}
-          fill
-          placeholder={imageSkeletonPlaceholder}
-          quality={85}
-          sizes="180px"
-          className="object-cover object-center"
-        />
-      </div>
+      <LoadingCardImage
+        src={`https://flagcdn.com/w640/${country.iso_3166_1.toLowerCase()}.png`}
+        alt={flagAlt}
+        sizes="180px"
+        imageClassName="object-cover object-center"
+        containerClassName="relative mx-auto aspect-5/3 w-full overflow-hidden rounded-xl border border-tone/10 bg-surface shadow-panel"
+      />
       <p className="mt-3 text-sm leading-5 font-medium text-muted">{country.name}</p>
     </li>
   )

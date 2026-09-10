@@ -196,10 +196,10 @@ export function DetailSkeleton({ label }: { label: string }) {
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
         <div aria-hidden="true" className="absolute inset-x-0 top-0 hidden aspect-video bg-gradient-to-b from-surface/80 to-canvas md:block" />
-        <div aria-hidden="true" className="relative mx-auto grid max-w-[1480px] grid-cols-[112px_minmax(0,1fr)] items-start gap-x-4 gap-y-6 px-4 py-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:px-6 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
-          <Bone className="aspect-2/3 w-full rounded-2xl lg:row-span-3" />
+        <div aria-hidden="true" className="relative mx-auto grid max-w-[1480px] grid-cols-1 items-start gap-y-0 px-4 pt-0 pb-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-x-4 sm:gap-y-6 sm:px-6 sm:py-8 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
+          <Bone className="-mx-4 aspect-2/3 w-[calc(100%+2rem)] rounded-none sm:mx-0 sm:w-full sm:rounded-2xl lg:row-span-3" />
 
-          <header className="min-w-0 pt-1 lg:pt-4">
+          <header className="min-w-0 pt-6 sm:pt-1 lg:pt-4">
             <Bone className="h-8 w-4/5 max-w-xl rounded-lg sm:h-11 lg:h-16" />
             <div className="mt-4 flex flex-wrap gap-2">
               <Bone className="h-8 w-24 rounded-full" />
@@ -209,13 +209,13 @@ export function DetailSkeleton({ label }: { label: string }) {
             </div>
           </header>
 
-          <div className="col-span-2 max-w-[76ch] space-y-3 lg:col-span-1 lg:col-start-2">
+          <div className="mt-6 max-w-[76ch] space-y-3 sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2">
             {linePlaceholders.map((_, index) => (
               <Bone key={index} className={`h-4 rounded-md ${index === 2 ? 'w-3/4' : 'w-full'}`} />
             ))}
           </div>
 
-          <div className="col-span-2 min-w-0 pb-16 lg:col-span-1 lg:col-start-2">
+          <div className="mt-6 min-w-0 pb-16 sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2">
             <Bone className="h-14 w-full rounded-2xl" />
             <Bone className="mx-auto mt-7 aspect-video w-full max-w-[1100px] rounded-2xl" />
           </div>

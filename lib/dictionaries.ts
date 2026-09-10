@@ -106,6 +106,8 @@ interface Dictionary {
     noOverview: string
     imdbLabel: (title: string) => string
     tabListLabel: string
+    scrollTabsBackward: string
+    scrollTabsForward: string
     noTrailer: string
     trailerFrameTitle: (title: string) => string
     playTrailer: (title: string) => string
@@ -276,6 +278,8 @@ const dictionaries: Record<Locale, Dictionary> = {
       noOverview: 'No overview is available for this title.',
       imdbLabel: (title) => `View ${title} on IMDb (opens in a new tab)`,
       tabListLabel: 'Title information',
+      scrollTabsBackward: 'Show previous information tabs',
+      scrollTabsForward: 'Show more information tabs',
       noTrailer: 'No trailer is available for this title.',
       trailerFrameTitle: (title) => `${title} official trailer`,
       playTrailer: (title) => `Play ${title} official trailer`,
@@ -448,6 +452,8 @@ const dictionaries: Record<Locale, Dictionary> = {
       noOverview: '등록된 줄거리가 없습니다.',
       imdbLabel: (title) => `IMDb에서 ${title} 보기(새 탭에서 열림)`,
       tabListLabel: '콘텐츠 상세 정보',
+      scrollTabsBackward: '이전 상세 메뉴 보기',
+      scrollTabsForward: '다음 상세 메뉴 더 보기',
       noTrailer: '등록된 예고편이 없습니다.',
       trailerFrameTitle: (title) => `${title} 공식 예고편`,
       playTrailer: (title) => `${title} 공식 예고편 재생`,
