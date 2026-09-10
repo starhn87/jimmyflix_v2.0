@@ -18,6 +18,7 @@
 | 6. 접근성·미디어 | 로컬 구현·검증 완료 | 탭 키보드 조작, 포커스, `next/image`, 클릭 후 예고편 로드 |
 | 7. 구조·의존성 현대화 | 로컬 구현·검증 완료 | App Router, Tailwind 4, 서버 데이터 계층, 기본 스크롤 레일, 의존성 축소 |
 | 로딩·스트리밍 세분화 | 로컬 구현·검증 완료 | 화면별 스켈레톤, 검색·트렌드 결과 스트리밍, 상세 부가 데이터 분리 |
+| Core Web Vitals·성능 | 로컬 구현·검증 완료 | LCP 우선순위, 섹션별 스트리밍, Client island 축소, 초기 이미지·RSC 요청 절감 |
 | 8. 전환 배포 | 승인 대기 | 프리뷰 배포의 실제 TMDB 데이터·Vercel 런타임 검증 후 운영 승격 |
 
 ## 1차 구현 내용
@@ -89,6 +90,15 @@
 - 상세는 본문 데이터가 준비되면 먼저 표시하고 Credits·Collection 요청을 탭별 `Suspense` 경계로 분리했다. 느린 부가 요청이 예고편과 기본 정보를 막지 않는다.
 - 화면 판독기에는 구체적인 로딩 영역 이름을 제공하고 장식용 블록은 숨겼다. 움직임 감소 설정에서는 pulse 애니메이션이 정지한다.
 
+## Core Web Vitals·성능 개선
+
+- 영화·TV·트렌드의 모든 섹션 요청을 한 번에 시작하되 결과 Promise는 섹션별 `Suspense` 경계에서 기다리도록 바꿨다. 히어로와 빠른 레일은 가장 느린 TMDB 요청을 기다리지 않는다.
+- 히어로와 상세 포스터에 eager loading과 high fetch priority를 명시했다. backdrop 원본은 `w1280`으로 제한하고 예고편 썸네일은 lazy loading으로 돌려 핵심 이미지가 네트워크 우선순위를 확보하게 했다.
+- 20개 카드를 포함하던 전체 레일 Client Component를 Server Component로 바꾸고, 스크롤 버튼만 작은 Client Component로 분리했다. 화면 밖 레일에는 `content-visibility`와 intrinsic size를 적용했다.
+- 카드·히어로·공통 내비게이션·트렌드 기간 링크의 자동 prefetch를 껐다. 첫 로드에서 사용자가 선택하지 않은 카탈로그·상세 RSC 요청을 줄이고 실제 이동 중에는 가장 가까운 로딩 경계를 사용한다.
+- 고정 fixture와 동일한 Slow 4G·CPU 4배 감속 조건에서 LCP는 781ms에서 743ms로, 초기 encoded resource 합계는 509,346B에서 373,012B로 줄었다. CLS는 0.00을 유지했고 레일 버튼 Event Timing은 24ms에서 16ms로 줄었다.
+- LCP discovery의 우선순위·초기 HTML 발견·비 lazy 조건을 모두 통과했다. DevTools DOM size 경고도 변경 후 사라졌다.
+
 ## 검증 기록
 
 Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
@@ -123,5 +133,8 @@ Node.js 24.17.0과 Yarn 3.8.7에서 다음 검증을 통과했다.
 - 로딩 화면 fixture: 1440px 영화 히어로·레일, 375px 상세·검색, 1440px 트렌드에서 실제 콘텐츠와 같은 비율·간격, `main` 1개, 가로 넘침 0px 확인
 - 로딩 접근성: 영화·상세·검색·트렌드 경계에 구체적인 `aria-busy` 이름이 있고 장식용 스켈레톤이 접근성 트리에서 제외되는지 확인
 - 실제 로컬 라우트: API 키가 없는 실패 조건에서도 홈과 검색의 정적 셸·검색 입력을 유지하고, Next 오류 오버레이·브라우저 페이지 오류·가로 넘침이 없음을 확인
+- Core Web Vitals fixture: Chrome DevTools MCP 1.9.0, 390×844 DPR 3, Slow 4G, CPU 4배 감속에서 LCP 743ms, CLS 0.00, LCP image priority High와 discovery 검사 전체 통과 확인
+- 성능 fixture: 초기 resource encoded body 373,012B, 자동 RSC fetch 0개, 화면 밖 이미지 요청 지연, DOM size 문제 미탐지 확인
+- 상호작용 fixture: 1440×1000, Slow 4G, CPU 4배 감속에서 레일 버튼 interaction event 16ms, 목표 scrollLeft 1283 도달 확인
 
 로컬 브라우저에는 `NEXT_PUBLIC_API_KEY`가 설정되지 않아 TMDB 응답이 401이었다. 이 조건을 3차 구현의 실패·재시도 상태 검증에 사용했고, 정상 응답과 사용자 흐름은 프로덕션에서 확인했다.

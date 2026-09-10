@@ -34,7 +34,6 @@ export function VideoEmbed({ videoKey, title }: VideoEmbedProps) {
             src={`https://i.ytimg.com/vi/${videoKey}/maxresdefault.jpg`}
             alt=""
             fill
-            loading="eager"
             sizes="(max-width: 768px) 100vw, 1100px"
             className="object-cover object-center transition duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
           />

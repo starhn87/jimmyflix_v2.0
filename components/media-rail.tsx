@@ -1,7 +1,5 @@
-'use client'
-
-import { Children, type ReactNode, useRef } from 'react'
-import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
+import { Children, type ReactNode } from 'react'
+import { MediaRailControls } from '@/components/media-rail-controls'
 
 interface MediaRailProps {
   title: string
@@ -10,52 +8,27 @@ interface MediaRailProps {
 }
 
 export function MediaRail({ title, description, children }: MediaRailProps) {
-  const railRef = useRef<HTMLUListElement>(null)
-
-  const scroll = (direction: -1 | 1) => {
-    const rail = railRef.current
-    if (!rail) return
-
-    rail.scrollBy({
-      left: direction * Math.max(rail.clientWidth * 0.82, 280),
-      behavior: 'smooth',
-    })
-  }
+  const slug = title.replaceAll(' ', '-').toLowerCase()
+  const titleId = `${slug}-title`
+  const railId = `${slug}-rail`
 
   return (
-    <section aria-labelledby={`${title.replaceAll(' ', '-').toLowerCase()}-title`}>
+    <section aria-labelledby={titleId} className="render-later">
       <div className="mb-5 flex items-end justify-between gap-4 px-4 sm:px-6 lg:px-10">
         <div>
           <h2
-            id={`${title.replaceAll(' ', '-').toLowerCase()}-title`}
+            id={titleId}
             className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
           >
             {title}
           </h2>
           <p className="mt-1 text-sm text-slate-500">{description}</p>
         </div>
-        <div className="hidden shrink-0 items-center gap-2 sm:flex">
-          <button
-            type="button"
-            onClick={() => scroll(-1)}
-            aria-label={`Scroll ${title} backward`}
-            className="grid size-10 place-items-center rounded-full border border-white/12 bg-white/5 text-slate-300 outline-none transition hover:border-white/25 hover:bg-white/10 hover:text-white focus-visible:ring-3 focus-visible:ring-cyan-300/35"
-          >
-            <ArrowLeftIcon className="size-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => scroll(1)}
-            aria-label={`Scroll ${title} forward`}
-            className="grid size-10 place-items-center rounded-full border border-white/12 bg-white/5 text-slate-300 outline-none transition hover:border-white/25 hover:bg-white/10 hover:text-white focus-visible:ring-3 focus-visible:ring-cyan-300/35"
-          >
-            <ArrowRightIcon className="size-5" />
-          </button>
-        </div>
+        <MediaRailControls railId={railId} title={title} />
       </div>
 
       <ul
-        ref={railRef}
+        id={railId}
         aria-label={`${title} carousel`}
         className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-7 sm:gap-4 sm:px-6 lg:gap-5 lg:px-10"
       >

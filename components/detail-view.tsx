@@ -27,7 +27,7 @@ export function DetailView({
   const title = getMediaTitle(detail)
   const rating = formatRating(detail.vote_average)
   const duration = detail.runtime || detail.episode_run_time?.find((time) => time > 0)
-  const backdrop = getImageUrl(detail.backdrop_path, 'original')
+  const backdrop = getImageUrl(detail.backdrop_path, 'w1280')
   const tabs: DetailTab[] = [
     { id: 'trailer', label: 'Trailer', content: <TrailerPanel detail={detail} /> },
     {
@@ -79,7 +79,8 @@ export function DetailView({
             src={getPosterUrl(detail.poster_path)}
             alt={`${title} poster`}
             fill
-            preload
+            loading="eager"
+            fetchPriority="high"
             sizes="(max-width: 640px) 150px, (max-width: 1024px) 24vw, 390px"
             className="object-cover object-center"
           />

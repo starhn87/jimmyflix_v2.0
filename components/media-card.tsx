@@ -27,6 +27,7 @@ export function MediaCard({ item, mediaType, highPriority = false }: MediaCardPr
   return (
     <Link
       href={getMediaHref(item, type)}
+      prefetch={false}
       aria-label={`${title}, ${typeLabel}, ${year}, ${rating.label}`}
       className="group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-cyan-300/60 focus-visible:ring-offset-4 focus-visible:ring-offset-[#080b12]"
     >

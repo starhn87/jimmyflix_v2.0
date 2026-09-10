@@ -10,6 +10,7 @@ export function TimeWindowSwitch({ selected }: { selected: TimeWindow }) {
           <Link
             key={window}
             href={`/trend?window=${window}`}
+            prefetch={false}
             aria-current={active ? 'page' : undefined}
             className={`inline-flex min-h-10 min-w-24 items-center justify-center rounded-full px-5 text-sm font-semibold capitalize outline-none transition focus-visible:ring-3 focus-visible:ring-cyan-300/40 ${
               active ? 'bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-950/30' : 'text-slate-400 hover:bg-white/6 hover:text-white'

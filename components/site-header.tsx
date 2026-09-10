@@ -37,6 +37,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-3 px-4 sm:px-6 lg:px-10">
         <Link
           href="/"
+          prefetch={false}
           aria-label="Jimmyflix home"
           className="group flex shrink-0 items-center gap-2 rounded-lg text-white outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
         >
@@ -56,6 +57,7 @@ export function SiteHeader() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    prefetch={false}
                     aria-current={current ? 'page' : undefined}
                     className={`relative flex min-h-11 items-center rounded-lg px-2.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 sm:px-4 ${
                       current

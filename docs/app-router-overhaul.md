@@ -35,8 +35,10 @@ app/
 └── not-found.tsx          사용자 제어형 404
 
 components/
+├── catalog-content.tsx   섹션별 서버 데이터 스트리밍
 ├── media-card.tsx         공통 2:3 작품 카드
-├── media-rail.tsx         기본 스크롤 기반 가로 목록
+├── media-rail.tsx         서버 렌더 기반 가로 목록
+├── media-rail-controls.tsx 레일 버튼만 담당하는 Client Component
 ├── hero.tsx               목록 대표 작품 영역
 ├── search-form.tsx        검증을 포함한 검색 폼
 ├── detail-view.tsx        영화·TV 공통 상세 레이아웃
@@ -46,7 +48,7 @@ components/
 └── video-embed.tsx        클릭 후 로드하는 16:9 플레이어
 
 lib/
-├── tmdb.ts                서버 요청, 캐시, 오류 분류, 병렬 조회
+├── tmdb.ts                서버 요청, 캐시, 오류 분류, 독립 요청 시작
 └── media.ts               표시값과 이미지·상세 URL 생성
 ```
 
@@ -63,7 +65,7 @@ flowchart LR
 ## 데이터와 오류 처리
 
 - `lib/tmdb.ts`만 API 키를 읽고 TMDB를 호출한다. 키가 클라이언트 컴포넌트의 props나 브라우저 요청 URL에 포함되지 않는다.
-- 목록·검색처럼 독립적인 요청은 `Promise.allSettled`로 병렬 실행한다. 한 섹션이 실패해도 성공한 섹션과 조작 컨트롤을 유지한다.
+- 영화·TV·트렌드의 섹션 요청은 같은 렌더에서 모두 시작하고 요청별 Promise를 가장 가까운 `Suspense` 경계에 전달한다. 검색의 영화·TV 요청은 `Promise.allSettled`로 함께 실행한다. 어느 경우든 한 요청이 실패해도 성공한 결과와 조작 컨트롤을 유지한다.
 - 같은 렌더 요청 안의 상세·메타데이터 조회는 React `cache`로 중복을 줄인다. TMDB 응답은 콘텐츠 종류에 따라 5분, 10분, 30분 재검증 정책을 사용한다.
 - 상세 경로의 ID를 양의 안전 정수로 제한한다. TMDB의 404는 `notFound()`로 보내고, 일시적인 서버 오류는 App Router 오류 경계에서 다시 시도할 수 있다.
 - 검색어 `q`와 트렌드 기간 `window`를 URL에 보존한다. 직접 접근, 새로고침, 공유, 뒤로가기에서 동일한 화면을 복원한다.
@@ -76,6 +78,7 @@ Server Component도 TMDB 네트워크 응답을 기다려야 하므로 로딩 �
 - 목록 로딩은 실제 히어로 높이, 2:3 카드 너비, 레일 간격을 그대로 사용한다. 상세 로딩은 모바일 포스터·정보 2열과 데스크톱 상세 grid, 16:9 예고편 영역을 그대로 예약한다.
 - 검색창과 검색어 제목은 먼저 렌더하고 영화·TV 결과만 `Suspense`에서 스트리밍한다. 새 검색어에는 별도 경계 key를 사용해 이전 결과 대신 해당 결과 스켈레톤을 보여준다.
 - 트렌드 제목과 Today·This week 선택은 계속 조작할 수 있고, 기간이 바뀌면 결과 레일만 스켈레톤으로 전환된다.
+- 영화·TV 히어로는 우선순위가 가장 높은 성공 섹션이 준비되는 즉시 렌더한다. 나머지 섹션은 각자의 Promise가 끝나는 순서대로 표시하므로 가장 느린 API 응답이 첫 콘텐츠와 다른 레일을 막지 않는다.
 - 상세의 핵심 정보와 Trailer·Production 탭은 상세 응답 직후 렌더한다. Credits와 Collection 요청은 별도 `Suspense` 경계에서 진행되어 부가 정보가 핵심 화면을 막지 않는다.
 - 시각 스켈레톤은 접근성 트리에서 숨기고, 로딩 영역의 이름을 상태 메시지로 제공한다. 움직임 감소 설정에서는 pulse 애니메이션을 멈춘다.
 
@@ -87,6 +90,7 @@ react-slick의 무한 복제 슬라이드는 브라우저 기본 가로 스크�
 - 카드에는 `scroll-snap-align: start`, 목록에는 `scroll-snap-type: x mandatory`를 적용한다.
 - 데스크톱 화살표는 현재 목록 너비의 약 82%만큼 부드럽게 이동한다.
 - DOM 복제와 외부 slick CSS가 없어 읽기 순서가 단순하고, 모든 카드를 기본 스크롤 동작으로 탐색할 수 있다.
+- 레일 본문과 카드는 Server Component로 렌더하고 좌우 버튼만 작은 Client Component로 분리한다. 화면 밖 레일에는 `content-visibility: auto`와 고유 높이를 적용해 초기 style·layout·이미지 작업을 미룬다.
 - 포스터는 2:3 비율, 제목은 두 줄, 평점·연도·매체 유형은 항상 표시한다.
 
 ## 상세 화면과 미디어
@@ -95,6 +99,7 @@ react-slick의 무한 복제 슬라이드는 브라우저 기본 가로 스크�
 - 예고편 컨테이너는 `width: 100%`, 최대 1100px, `aspect-ratio: 16 / 9`다. iframe은 컨테이너를 완전히 채운다.
 - 공식 YouTube Trailer를 우선 선택하고, 없으면 일반 YouTube Trailer를 사용한다. 영상이 없으면 빈 플레이어 대신 설명을 표시한다.
 - 초기 HTML에는 YouTube iframe을 넣지 않는다. 사용자가 재생 버튼을 누르면 `youtube-nocookie.com` 플레이어를 로드한다.
+- 예고편 썸네일도 기본 lazy loading을 사용해 상세 포스터와 초기 네트워크 우선순위를 경쟁하지 않는다.
 - Credits·Production·Seasons·Collection은 `flex-wrap`과 `justify-center`를 사용한다. 모바일에서 마지막 줄의 항목 수가 홀수여도 마지막 카드가 중앙에 놓인다.
 - 인물 사진, 제작사 로고, 국기에는 모두 `object-position: center`를 적용한다. 로고는 `object-fit: contain`, 인물과 국기는 목적에 맞는 고정 비율을 사용한다.
 
@@ -117,9 +122,30 @@ react-slick의 무한 복제 슬라이드는 브라우저 기본 가로 스크�
 | 1024px 이상 | 큰 상세 포스터와 정보 패널 2열, 레일 화살표 제공 |
 | 1440px 이상 | 콘텐츠 최대 너비 제한, 넓은 화면의 과도한 카드 확대 방지 |
 
+## Core Web Vitals와 성능
+
+Chrome DevTools MCP 1.9.0으로 프로덕션 빌드의 고정 fixture를 측정했다. 조건은 390×844, DPR 3, Slow 4G, CPU 4배 감속이며 히어로 1개와 20장짜리 레일 4개를 사용했다. 아래 값은 실제 사용자 데이터가 아닌 같은 로컬 환경에서 변경 전후를 비교한 실험실 수치다. 캐시 편차를 줄이기 위해 두 번째 측정값을 비교했다.
+
+| 지표 | 변경 전 | 변경 후 | 결과 |
+| --- | ---: | ---: | ---: |
+| LCP | 781ms | 743ms | 38ms, 4.9% 감소 |
+| CLS | 0.00 | 0.00 | 레이아웃 이동 없음 유지 |
+| 레일 버튼 상호작용 Event Timing | 24ms | 16ms | 8ms, 33% 감소 |
+| 초기 resource encoded body 합계 | 509,346B | 373,012B | 136,334B, 26.8% 감소 |
+| 초기 이미지 요청 | 6개 | 3개 | 화면 밖 이미지 작업 3개 지연 |
+| 자동 RSC fetch | 14개 | 0개 | 미선택 경로 선행 요청 제거 |
+
+- 히어로와 상세 포스터를 `loading="eager"`, `fetchPriority="high"`로 표시했다. DevTools의 LCP discovery 세 검사는 변경 후 모두 통과했고, 네트워크 우선순위도 Low에서 High로 바뀌었다.
+- TMDB backdrop 원본 대신 `w1280` 소스를 사용해 이미지 최적화 서버가 가져오고 디코딩할 원본 크기를 제한했다.
+- 카드·히어로·공통 내비게이션·트렌드 기간 링크의 자동 prefetch를 끄고 실제 조작 시 가장 가까운 로딩 경계로 전환한다. 초기 화면에서 사용자가 선택하지 않은 정적 카탈로그와 동적 상세 RSC payload가 네트워크·메인 스레드를 점유하지 않게 한다.
+- 포스터와 예고편에는 2:3·16:9 비율을 계속 예약해 이미지 지연 로드와 스트리밍 중에도 CLS 0.00을 유지했다.
+- DevTools의 DOM size 진단은 변경 전 전체 layout 대상 1,282개와 42ms layout update를 보고했지만 변경 후에는 DOM size 문제가 탐지되지 않았다.
+- CSS render blocking과 Next.js 호환용 legacy JavaScript 진단은 각각 예상 LCP 절감 0ms였으므로 빌드 파이프라인을 복잡하게 만드는 변경은 적용하지 않았다.
+
 ## 확인한 수용 기준
 
 - Next.js 16 프로덕션 빌드와 TypeScript strict 검사를 통과한다.
+- 영화·TV·트렌드의 독립 섹션이 개별 `Suspense` 경계에서 렌더되고 한 섹션 오류가 다른 섹션을 막지 않는다.
 - 데스크톱 상세의 예고편 영역은 가용 콘텐츠 너비를 사용하고 16:9를 유지한다.
 - 375px 상세의 예고편 영역은 343×193px이며 페이지 가로 넘침이 없다.
 - 375px Credits·Production fixture에서 홀수 번째 마지막 카드의 중심은 뷰포트 중심 187.5px와 일치한다.
@@ -135,7 +161,7 @@ react-slick의 무한 복제 슬라이드는 브라우저 기본 가로 스크�
 ## 남은 개선 후보
 
 1. 실제 기기와 보조 기술에서 터치·탭 읽기 순서를 확인한다.
-2. Speed Insights 또는 동일 조건의 Lighthouse로 LCP·CLS 기준선을 수집한다.
+2. 프리뷰와 운영 배포 후 Vercel Speed Insights 또는 RUM으로 실제 사용자 LCP·INP·CLS를 수집한다.
 3. 원격 이미지 로드 실패 시 로컬 이미지로 교체하는 공통 래퍼를 추가한다.
 4. 검색 결과가 많아질 경우 페이지네이션이나 더 보기 기능을 추가한다.
 5. 언어 정책을 정한 뒤 UI 문구와 TMDB `language` 값을 함께 국제화한다.

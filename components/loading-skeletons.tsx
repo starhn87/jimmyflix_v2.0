@@ -9,7 +9,7 @@ function LoadingAnnouncement({ label }: { label: string }) {
   return <span className="sr-only">{label}</span>
 }
 
-function MediaRailSkeleton() {
+function MediaRailSkeletonVisual() {
   return (
     <section aria-hidden="true">
       <div className="mb-5 px-4 sm:px-6 lg:px-10">
@@ -32,32 +32,68 @@ function MediaRailSkeleton() {
   )
 }
 
+function HeroSkeletonVisual() {
+  return (
+    <section aria-hidden="true" className="relative min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_28%,rgba(34,211,238,0.09),rgba(8,11,18,0.5)_54%,#080b12_86%)]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#080b12] via-[#0d1420]/65 to-[#0d1420]/30" />
+      <div className="relative mx-auto flex min-h-[520px] max-w-[1600px] items-end px-4 pb-20 sm:min-h-[600px] sm:px-6 sm:pb-24 lg:min-h-[680px] lg:px-10 lg:pb-28">
+        <div className="w-full max-w-2xl">
+          <Bone className="h-3 w-32 rounded-full" />
+          <Bone className="mt-5 h-11 w-4/5 max-w-xl rounded-xl sm:h-16" />
+          <div className="mt-5 flex gap-2">
+            <Bone className="h-8 w-24 rounded-full" />
+            <Bone className="h-8 w-16 rounded-full" />
+          </div>
+          <div className="mt-5 max-w-xl space-y-2.5">
+            <Bone className="h-4 w-full rounded-md" />
+            <Bone className="h-4 w-5/6 rounded-md" />
+          </div>
+          <Bone className="mt-7 h-12 w-36 rounded-full" />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function HeroSkeleton({ label }: { label: string }) {
+  return (
+    <div
+      role="status"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label={label}
+      className="animate-pulse motion-reduce:animate-none"
+    >
+      <LoadingAnnouncement label={label} />
+      <HeroSkeletonVisual />
+    </div>
+  )
+}
+
+export function MediaSectionSkeleton({ label }: { label: string }) {
+  return (
+    <div
+      role="status"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label={label}
+      className="animate-pulse motion-reduce:animate-none"
+    >
+      <LoadingAnnouncement label={label} />
+      <MediaRailSkeletonVisual />
+    </div>
+  )
+}
+
 export function CatalogSkeleton({ label }: { label: string }) {
   return (
     <main aria-busy="true" aria-live="polite" aria-label={label}>
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
-        <section aria-hidden="true" className="relative min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_28%,rgba(34,211,238,0.09),rgba(8,11,18,0.5)_54%,#080b12_86%)]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080b12] via-[#0d1420]/65 to-[#0d1420]/30" />
-          <div className="relative mx-auto flex min-h-[520px] max-w-[1600px] items-end px-4 pb-20 sm:min-h-[600px] sm:px-6 sm:pb-24 lg:min-h-[680px] lg:px-10 lg:pb-28">
-            <div className="w-full max-w-2xl">
-              <Bone className="h-3 w-32 rounded-full" />
-              <Bone className="mt-5 h-11 w-4/5 max-w-xl rounded-xl sm:h-16" />
-              <div className="mt-5 flex gap-2">
-                <Bone className="h-8 w-24 rounded-full" />
-                <Bone className="h-8 w-16 rounded-full" />
-              </div>
-              <div className="mt-5 max-w-xl space-y-2.5">
-                <Bone className="h-4 w-full rounded-md" />
-                <Bone className="h-4 w-5/6 rounded-md" />
-              </div>
-              <Bone className="mt-7 h-12 w-36 rounded-full" />
-            </div>
-          </div>
-        </section>
+        <HeroSkeletonVisual />
         <div className="relative z-10 -mt-8 space-y-10 pb-20 sm:space-y-14">
-          {Array.from({ length: 4 }, (_, index) => <MediaRailSkeleton key={index} />)}
+          {Array.from({ length: 4 }, (_, index) => <MediaRailSkeletonVisual key={index} />)}
         </div>
       </div>
     </main>
@@ -80,7 +116,7 @@ export function MediaSectionsSkeleton({
       className="animate-pulse space-y-10 motion-reduce:animate-none sm:space-y-14"
     >
       <LoadingAnnouncement label={label} />
-      {Array.from({ length: count }, (_, index) => <MediaRailSkeleton key={index} />)}
+      {Array.from({ length: count }, (_, index) => <MediaRailSkeletonVisual key={index} />)}
     </div>
   )
 }

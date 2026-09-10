@@ -19,7 +19,7 @@ interface HeroProps {
 export function Hero({ item, mediaType, eyebrow }: HeroProps) {
   const title = getMediaTitle(item)
   const rating = formatRating(item.vote_average)
-  const backdrop = getImageUrl(item.backdrop_path, 'original')
+  const backdrop = getImageUrl(item.backdrop_path, 'w1280')
 
   return (
     <section aria-labelledby="featured-title" className="relative isolate min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
@@ -28,7 +28,8 @@ export function Hero({ item, mediaType, eyebrow }: HeroProps) {
           src={backdrop}
           alt=""
           fill
-          preload
+          loading="eager"
+          fetchPriority="high"
           sizes="100vw"
           className="-z-30 object-cover object-center"
         />
@@ -59,6 +60,7 @@ export function Hero({ item, mediaType, eyebrow }: HeroProps) {
           ) : null}
           <Link
             href={getMediaHref(item, mediaType)}
+            prefetch={false}
             className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-bold text-slate-950 shadow-xl shadow-black/25 outline-none transition hover:bg-cyan-100 focus-visible:ring-4 focus-visible:ring-cyan-300/40"
           >
             <PlayIcon className="size-4" />

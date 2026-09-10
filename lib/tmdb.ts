@@ -82,28 +82,48 @@ interface SectionDefinition {
   load: () => Promise<MediaItem[]>
 }
 
-const settleSections = async (
-  definitions: SectionDefinition[],
-): Promise<MediaSectionData[]> => {
-  const results = await Promise.allSettled(
-    definitions.map((definition) => definition.load()),
-  )
+export interface MediaSectionRequest {
+  id: string
+  title: string
+  request: Promise<MediaSectionData>
+}
 
-  return definitions.map((definition, index) => {
-    const result = results[index]
+const loadSection = async (
+  definition: SectionDefinition,
+): Promise<MediaSectionData> => {
+  try {
+    const items = await definition.load()
     return {
       id: definition.id,
       title: definition.title,
       description: definition.description,
       mediaType: definition.mediaType,
-      items: result.status === 'fulfilled' ? result.value : [],
-      error: result.status === 'rejected',
+      items,
+      error: false,
     }
-  })
+  } catch {
+    return {
+      id: definition.id,
+      title: definition.title,
+      description: definition.description,
+      mediaType: definition.mediaType,
+      items: [],
+      error: true,
+    }
+  }
 }
 
-export const getMovieSections = () =>
-  settleSections([
+const createSectionRequests = (
+  definitions: SectionDefinition[],
+): MediaSectionRequest[] =>
+  definitions.map((definition) => ({
+    id: definition.id,
+    title: definition.title,
+    request: loadSection(definition),
+  }))
+
+export const getMovieSectionRequests = () =>
+  createSectionRequests([
     {
       id: 'now-playing',
       title: 'Now playing',
@@ -134,8 +154,8 @@ export const getMovieSections = () =>
     },
   ])
 
-export const getTvSections = () =>
-  settleSections([
+export const getTvSectionRequests = () =>
+  createSectionRequests([
     {
       id: 'top-rated-tv',
       title: 'Top rated shows',
@@ -166,8 +186,8 @@ export const getTvSections = () =>
     },
   ])
 
-export const getTrendingSections = (window: TimeWindow) =>
-  settleSections([
+export const getTrendingSectionRequests = (window: TimeWindow) =>
+  createSectionRequests([
     {
       id: `trending-movies-${window}`,
       title: 'Trending movies',

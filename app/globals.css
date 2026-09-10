@@ -55,6 +55,11 @@ input {
   }
 }
 
+@utility render-later {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
