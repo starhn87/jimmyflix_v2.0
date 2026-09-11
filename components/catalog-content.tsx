@@ -5,7 +5,7 @@ import { Hero } from '@/components/hero'
 import { MediaSection } from '@/components/media-section'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
-import type { MediaSectionRequest } from '@/lib/tmdb'
+import { getDailyRotationIndex, type MediaSectionRequest } from '@/lib/tmdb'
 import type { MediaType } from '@/types/tmdb'
 
 interface CatalogHeroProps {
@@ -28,7 +28,8 @@ export async function CatalogHero({
   const dictionary = getDictionary(locale)
   for (const { request } of requests) {
     const section = await request
-    const featured = section.items[0]
+    const candidates = section.items.filter((item) => item.backdrop_path).slice(0, 12)
+    const featured = candidates[getDailyRotationIndex(candidates.length)]
 
     if (featured) {
       return <Hero item={featured} mediaType={mediaType} eyebrow={eyebrow} locale={locale} />

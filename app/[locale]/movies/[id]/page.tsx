@@ -1,10 +1,22 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
-import { CollectionDataPanel, CreditsDataPanel } from '@/components/detail-data-panels'
+import {
+  CollectionDataPanel,
+  CreditsDataPanel,
+  ProductionDataPanel,
+  RelatedTitlesDataSection,
+} from '@/components/detail-data-panels'
 import { DetailView } from '@/components/detail-view'
-import { DetailPanelSkeleton } from '@/components/loading-skeletons'
-import { getCollection, getCredits, getMovieDetail, TmdbNotFoundError } from '@/lib/tmdb'
+import { DetailPanelSkeleton, MediaSectionSkeleton } from '@/components/loading-skeletons'
+import {
+  getCollection,
+  getCredits,
+  getMovieDetail,
+  getRelatedTitles,
+  getWatchProviders,
+  TmdbNotFoundError,
+} from '@/lib/tmdb'
 import { getMediaTitle } from '@/lib/media'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale } from '@/lib/i18n'
@@ -52,6 +64,8 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
   }
 
   const creditsRequest = getCredits('movie', id, locale)
+  const providersRequest = getWatchProviders('movie', id, locale)
+  const relatedRequest = getRelatedTitles('movie', id, locale)
   const collectionRequest = detail.belongs_to_collection
     ? getCollection(detail.belongs_to_collection.id, locale)
     : undefined
@@ -66,11 +80,31 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
           <CreditsDataPanel request={creditsRequest} locale={locale} />
         </Suspense>
       )}
+      productionPanel={(
+        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingProduction} />}>
+          <ProductionDataPanel
+            detail={detail}
+            creditsRequest={creditsRequest}
+            providersRequest={providersRequest}
+            locale={locale}
+          />
+        </Suspense>
+      )}
       collectionPanel={collectionRequest ? (
         <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingCollection} />}>
           <CollectionDataPanel request={collectionRequest} locale={locale} />
         </Suspense>
       ) : undefined}
+      relatedSection={(
+        <Suspense fallback={<MediaSectionSkeleton label={dictionary.detail.loadingRelated} />}>
+          <RelatedTitlesDataSection
+            request={relatedRequest}
+            mediaType="movie"
+            id={id}
+            locale={locale}
+          />
+        </Suspense>
+      )}
     />
   )
 }

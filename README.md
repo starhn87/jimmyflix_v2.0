@@ -1,6 +1,6 @@
 # Jimmyflix
 
-TMDB 데이터를 이용해 영화와 TV 프로그램을 탐색하는 반응형 웹 애플리케이션입니다. 상영작·인기작·평점순·공개 예정작·트렌드 목록, 통합 검색, 작품 상세 정보를 제공합니다.
+TMDB 데이터를 이용해 영화와 TV 프로그램을 탐색하는 반응형 웹 애플리케이션입니다. 상영·방영 정보 외에도 숨은 명작, 짧은 영화, 미니시리즈, 국가·장르별 순환 특집, 작품별 추천과 인물 필모그래피를 제공합니다.
 
 - 운영 주소: [jimmyflix.vercel.app](https://jimmyflix.vercel.app)
 - 구조 전환 기록: [App Router·Tailwind 전환 문서](docs/app-router-overhaul.md)
@@ -17,7 +17,7 @@ TMDB 데이터를 이용해 영화와 TV 프로그램을 탐색하는 반응형 
 | 프레임워크 | Next.js 16 App Router, React 19 |
 | 언어 | TypeScript 5 strict mode |
 | 스타일 | Tailwind CSS 4 |
-| 데이터 | React Server Components에서 TMDB API 직접 호출, Next.js Data Cache |
+| 데이터 | React Server Components에서 TMDB API 직접 호출, Next.js Data Cache, 브라우저 최근 본 기록 |
 | 현지화 | 영어·한국어 URL, 서버 UI 사전, TMDB 언어별 응답 |
 | 이미지 | `next/image`, TMDB 크기별 이미지 URL |
 | 목록 탐색 | 브라우저 기본 가로 스크롤 + CSS scroll snap |
@@ -30,12 +30,13 @@ Emotion, React Query, Recoil, Axios, react-slick과 전역 polyfill은 제거했
 
 | 경로 | 역할 |
 | --- | --- |
-| `/{locale}` | 현재 상영·고평점·공개 예정·인기 영화 |
-| `/{locale}/tv` | 고평점·인기·방송 중·오늘 방송 TV |
+| `/{locale}` | 오늘의 영화, 상영작, 숨은 명작, 100분 이하, 국가·장르 특집, 최근 본 작품 |
+| `/{locale}/tv` | 오늘의 시리즈, 방영작, 숨은 명작, 미니시리즈, 국가·장르 특집 |
 | `/{locale}/trend?window=day\|week` | 일간·주간 영화 및 TV 트렌드 |
 | `/{locale}/search?q=...` | 제목·배우·주제 키워드 영화·TV 통합 검색 |
-| `/{locale}/movies/[id]` | 영화 상세, 예고편·출연진·제작·컬렉션 |
-| `/{locale}/tv/[id]` | TV 상세, 예고편·출연진·제작·시즌 |
+| `/{locale}/movies/[id]` | 영화 상세, 예고편·출연진·제작진·시청 플랫폼·컬렉션·추천작 |
+| `/{locale}/tv/[id]` | TV 상세, 예고편·출연진·제작진·시청 플랫폼·시즌·추천작 |
+| `/{locale}/people/[id]` | 배우·제작진 소개와 출연·제작 필모그래피 |
 
 `locale`은 영어 `en` 또는 한국어 `ko`다. 언어가 없는 기존 주소는 저장된 선택이나 브라우저 언어에 맞는 경로로 자동 이동한다.
 
@@ -86,6 +87,8 @@ types/tmdb.ts         TMDB 응답에 필요한 도메인 타입
 public/images/        로컬 대체 이미지와 404 자산
 docs/                 진단, UX 백로그, 전환 및 검증 기록
 ```
+
+국가 특집은 주 단위, 장르 특집과 상단 추천은 일 단위로 후보가 바뀝니다. 작품 상세에서 최근 본 항목을 최대 16개까지 브라우저 `localStorage`에 저장하며 서버나 다른 기기로 전송하지 않습니다. 시청 플랫폼 정보는 사용자의 UI 언어에 따라 한국 또는 미국 지역 데이터를 사용하고, TMDB가 제공하는 확인 페이지로 연결합니다.
 
 TMDB 요청 키는 클라이언트 컴포넌트에 전달하지 않습니다. 상세 ID가 잘못되었거나 TMDB가 404를 반환하면 App Router의 `notFound()`로 연결하고, 목록과 검색의 독립 요청은 `Promise.allSettled`로 분리해 일부 실패에도 나머지 결과를 표시합니다.
 

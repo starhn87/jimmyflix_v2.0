@@ -3,11 +3,11 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { DetailTabs, type DetailTab } from '@/components/detail-tabs'
 import {
-  ProductionPanel,
   SeasonsPanel,
   TrailerPanel,
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
+import { RecentMediaTracker } from '@/components/recently-viewed'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 import {
@@ -24,7 +24,9 @@ interface DetailViewProps {
   detail: MediaDetail
   mediaType: MediaType
   creditsPanel: ReactNode
+  productionPanel: ReactNode
   collectionPanel?: ReactNode
+  relatedSection?: ReactNode
   locale: Locale
 }
 
@@ -32,7 +34,9 @@ export function DetailView({
   detail,
   mediaType,
   creditsPanel,
+  productionPanel,
   collectionPanel,
+  relatedSection,
   locale,
 }: DetailViewProps) {
   const dictionary = getDictionary(locale)
@@ -50,7 +54,7 @@ export function DetailView({
     {
       id: 'production',
       label: dictionary.detail.production,
-      content: <ProductionPanel detail={detail} locale={locale} />,
+      content: productionPanel,
     },
   ]
 
@@ -72,6 +76,20 @@ export function DetailView({
 
   return (
     <main aria-labelledby="detail-title" className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden bg-canvas">
+      <RecentMediaTracker
+        locale={locale}
+        item={{
+          id: detail.id,
+          title: detail.title,
+          name: detail.name,
+          poster_path: detail.poster_path,
+          backdrop_path: detail.backdrop_path,
+          vote_average: detail.vote_average,
+          release_date: detail.release_date,
+          first_air_date: detail.first_air_date,
+          media_type: mediaType,
+        }}
+      />
       {backdrop ? (
         <div className="absolute inset-x-0 top-0 -z-30 hidden aspect-video overflow-hidden bg-surface md:block">
           <Image
@@ -161,6 +179,7 @@ export function DetailView({
           />
         </div>
       </div>
+      {relatedSection ? <div className="relative z-10 pb-20">{relatedSection}</div> : null}
     </main>
   )
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { AsyncMediaSection, CatalogHero } from '@/components/catalog-content'
 import { HeroSkeleton, MediaSectionSkeleton } from '@/components/loading-skeletons'
+import { RecentlyViewedSection } from '@/components/recently-viewed'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale } from '@/lib/i18n'
 import { getMovieSectionRequests } from '@/lib/tmdb'
@@ -49,6 +50,13 @@ export default async function MoviesPage({ params }: MoviesPageProps) {
             <AsyncMediaSection request={section.request} locale={locale} />
           </Suspense>
         ))}
+        <RecentlyViewedSection
+          locale={locale}
+          title={dictionary.sections.recentlyViewed}
+          description={dictionary.sections.recentlyViewedDescription}
+          backwardLabel={dictionary.common.scrollBackward(dictionary.sections.recentlyViewed)}
+          forwardLabel={dictionary.common.scrollForward(dictionary.sections.recentlyViewed)}
+        />
       </div>
     </main>
   )

@@ -21,7 +21,7 @@ test('actor credits and topics add titles; repeated roles and direct hits do not
   assert.deepEqual(result.movies.map((item) => item.id), [1, 2, 3, 4])
   assert.equal(result.movies[0].title, 'Direct title')
   assert.deepEqual(result.tvShows.map((item) => item.id), [1, 2])
-  assert.deepEqual(result.people, ['Tom Hanks'])
+  assert.deepEqual(result.people, [{ id: 31, name: 'Tom Hanks' }])
   assert.deepEqual(result.unavailable, [])
 })
 

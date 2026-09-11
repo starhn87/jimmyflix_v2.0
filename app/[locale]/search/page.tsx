@@ -52,7 +52,24 @@ async function SearchResults({
       {total > 0 ? (
         <div className="space-y-2 text-sm text-subtle">
           <p>{total === 1 ? dictionary.search.showingOne : dictionary.search.showingMany(total)}</p>
-          {people.length ? <p>{dictionary.search.relatedPeople}: {people.join(' · ')}</p> : null}
+          {people.length ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <span>{dictionary.search.relatedPeople}:</span>
+              <ul className="flex flex-wrap gap-2">
+                {people.map((person) => (
+                  <li key={person.id}>
+                    <Link
+                      href={getLocalePath(locale, `/people/${person.id}`)}
+                      prefetch={false}
+                      className="inline-flex min-h-8 items-center rounded-full border border-tone/15 bg-tone/5 px-3 text-xs font-medium text-ink outline-none transition hover:border-accent/50 hover:text-accent-strong focus-visible:ring-3 focus-visible:ring-accent/40"
+                    >
+                      {person.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           {keywords.length ? <p>{dictionary.search.topics}: {keywords.join(' · ')}</p> : null}
         </div>
       ) : null}

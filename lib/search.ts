@@ -17,7 +17,7 @@ export interface SearchSources {
 export interface CatalogSearchResult {
   movies: MediaItem[]
   tvShows: MediaItem[]
-  people: string[]
+  people: Array<{ id: number; name: string }>
   keywords: string[]
   unavailable: string[]
 }
@@ -92,10 +92,12 @@ export async function runCatalogSearch(
       const credits = await read(sources.credits(person.id), labels.creditsFor(person.name), {
         cast: person.known_for || [], crew: [],
       })
-      return { name: person.name, items: [...credits.cast, ...credits.crew] }
+      return { id: person.id, name: person.name, items: [...credits.cast, ...credits.crew] }
     }))
     return {
-      names: groups.filter((group) => group.items.some((item) => !item.adult && (item.media_type === 'movie' || item.media_type === 'tv'))).map((group) => group.name),
+      people: groups
+        .filter((group) => group.items.some((item) => !item.adult && (item.media_type === 'movie' || item.media_type === 'tv')))
+        .map(({ id, name }) => ({ id, name })),
       items: groups.flatMap((group) => group.items).filter((item) => item.media_type === 'movie' || item.media_type === 'tv'),
     }
   })
@@ -121,7 +123,7 @@ export async function runCatalogSearch(
     tvShows: mergeResults('tv', tvShows, [
       ...people.items.filter((item) => item.media_type === 'tv'), ...keywords.tvShows,
     ]),
-    people: people.names,
+    people: people.people,
     keywords: keywords.names,
     unavailable,
   }

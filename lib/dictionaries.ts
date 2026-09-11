@@ -95,7 +95,9 @@ interface Dictionary {
     loadingMovie: string
     loadingTv: string
     loadingCredits: string
+    loadingProduction: string
     loadingCollection: string
+    loadingRelated: string
     trailer: string
     credits: string
     production: string
@@ -117,6 +119,13 @@ interface Dictionary {
     cast: string
     castMember: string
     noProduction: string
+    keyCrew: string
+    streamingAvailability: string
+    stream: string
+    rent: string
+    buy: string
+    watchOn: (provider: string) => string
+    justWatchAttribution: string
     productionCompanies: string
     productionCountries: string
     flagAlt: (country: string) => string
@@ -125,6 +134,27 @@ interface Dictionary {
     collectionErrorMessage: string
     noCollection: string
     collectionTitles: string
+    moreLikeThis: string
+    moreLikeThisDescription: string
+  }
+  person: {
+    notFound: string
+    metadataFallback: string
+    descriptionFallback: string
+    loading: string
+    profileAlt: (name: string) => string
+    biography: string
+    noBiography: string
+    personalDetails: string
+    knownForDepartment: string
+    born: string
+    died: string
+    placeOfBirth: string
+    alsoKnownAs: string
+    actingCredits: string
+    actingCreditsDescription: string
+    crewCredits: string
+    crewCreditsDescription: string
   }
   error: {
     title: string
@@ -139,6 +169,20 @@ interface Dictionary {
   sections: {
     movie: Array<{ id: string; title: string; description: string }>
     tv: Array<{ id: string; title: string; description: string }>
+    hiddenGemMovies: string
+    hiddenGemMoviesDescription: string
+    shortMovies: string
+    shortMoviesDescription: string
+    hiddenGemShows: string
+    hiddenGemShowsDescription: string
+    miniseries: string
+    miniseriesDescription: string
+    countrySpotlight: (country: string) => string
+    countrySpotlightDescription: (country: string) => string
+    genreSpotlight: (genre: string) => string
+    genreSpotlightDescription: (genre: string) => string
+    recentlyViewed: string
+    recentlyViewedDescription: string
     trendingMovies: string
     trendingShows: string
     trendingMoviesDescription: (window: 'day' | 'week') => string
@@ -156,8 +200,8 @@ const dictionaries: Record<Locale, Dictionary> = {
   en: {
     metadata: {
       title: 'Jimmyflix — Discover movies and TV shows',
-      description: 'Browse popular, trending, top-rated, and upcoming movies and TV shows.',
-      openGraphDescription: 'Discover movies and TV shows worth watching.',
+      description: 'Discover movies and TV shows through rotating themes, hidden gems, recommendations, and people.',
+      openGraphDescription: 'Discover stories through thoughtful collections, related titles, and filmographies.',
     },
     header: {
       home: 'Jimmyflix home',
@@ -203,8 +247,8 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     movies: {
       metadataTitle: 'Movies',
-      metadataDescription: 'Browse movies now playing, top rated, upcoming, and popular.',
-      featured: 'Featured movie',
+      metadataDescription: 'Discover movies now playing, hidden gems, short watches, and rotating country and genre spotlights.',
+      featured: "Today's movie",
       heading: 'Movies',
       unavailable: 'Movies are temporarily unavailable',
       loadingFeatured: 'Loading featured movie',
@@ -212,8 +256,8 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     tv: {
       metadataTitle: 'TV shows',
-      metadataDescription: 'Browse top-rated, popular, currently airing, and daily TV shows.',
-      featured: 'Featured series',
+      metadataDescription: 'Discover currently airing shows, hidden gems, miniseries, and rotating country and genre spotlights.',
+      featured: "Today's series",
       heading: 'TV shows',
       unavailable: 'TV shows are temporarily unavailable',
       loadingFeatured: 'Loading featured TV show',
@@ -267,7 +311,9 @@ const dictionaries: Record<Locale, Dictionary> = {
       loadingMovie: 'Loading movie details',
       loadingTv: 'Loading TV show details',
       loadingCredits: 'Loading credits',
+      loadingProduction: 'Loading production details',
       loadingCollection: 'Loading collection',
+      loadingRelated: 'Loading related titles',
       trailer: 'Trailer',
       credits: 'Credits',
       production: 'Production',
@@ -289,6 +335,13 @@ const dictionaries: Record<Locale, Dictionary> = {
       cast: 'Cast',
       castMember: 'Cast member',
       noProduction: 'No production information is available.',
+      keyCrew: 'Key crew',
+      streamingAvailability: 'Where to watch',
+      stream: 'Stream',
+      rent: 'Rent',
+      buy: 'Buy',
+      watchOn: (provider) => `See availability on ${provider}`,
+      justWatchAttribution: 'Streaming availability provided by JustWatch',
       productionCompanies: 'Production companies',
       productionCountries: 'Production countries',
       flagAlt: (country) => `${country} flag`,
@@ -297,6 +350,27 @@ const dictionaries: Record<Locale, Dictionary> = {
       collectionErrorMessage: 'The collection titles are temporarily unavailable.',
       noCollection: 'No collection titles are available.',
       collectionTitles: 'Collection titles',
+      moreLikeThis: 'More like this',
+      moreLikeThisDescription: 'Recommendations and similar stories to explore next',
+    },
+    person: {
+      notFound: 'Person not found',
+      metadataFallback: 'Person details',
+      descriptionFallback: 'Discover this person’s work on Jimmyflix.',
+      loading: 'Loading person details',
+      profileAlt: (name) => `${name} profile photo`,
+      biography: 'Biography',
+      noBiography: 'No biography is available.',
+      personalDetails: 'Personal details',
+      knownForDepartment: 'Known for',
+      born: 'Born',
+      died: 'Died',
+      placeOfBirth: 'Place of birth',
+      alsoKnownAs: 'Also known as',
+      actingCredits: 'Acting credits',
+      actingCreditsDescription: 'Popular movies and series featuring this person',
+      crewCredits: 'Behind the camera',
+      crewCreditsDescription: 'Selected directing, writing, and production work',
     },
     error: {
       title: 'Something went wrong',
@@ -321,6 +395,20 @@ const dictionaries: Record<Locale, Dictionary> = {
         { id: 'on-the-air', title: 'On the air', description: 'Shows currently releasing new episodes' },
         { id: 'airing-today', title: 'Airing today', description: 'New episodes scheduled for today' },
       ],
+      hiddenGemMovies: 'Hidden-gem movies',
+      hiddenGemMoviesDescription: 'Highly rated stories beyond the usual blockbusters',
+      shortMovies: 'Great movies under 100 minutes',
+      shortMoviesDescription: 'A complete story for when time is short',
+      hiddenGemShows: 'Hidden-gem series',
+      hiddenGemShowsDescription: 'Acclaimed shows waiting to be discovered',
+      miniseries: 'One season, one complete story',
+      miniseriesDescription: 'Limited series you can finish without a long commitment',
+      countrySpotlight: (country) => `Stories from ${country}`,
+      countrySpotlightDescription: (country) => `Popular and acclaimed titles produced in ${country}`,
+      genreSpotlight: (genre) => `${genre} spotlight`,
+      genreSpotlightDescription: (genre) => `A fresh selection of ${genre.toLowerCase()} stories`,
+      recentlyViewed: 'Recently viewed',
+      recentlyViewedDescription: 'Pick up where your browsing left off',
       trendingMovies: 'Trending movies',
       trendingShows: 'Trending shows',
       trendingMoviesDescription: (window) => `Movies gaining attention ${window === 'day' ? 'today' : 'this week'}`,
@@ -330,8 +418,8 @@ const dictionaries: Record<Locale, Dictionary> = {
   ko: {
     metadata: {
       title: 'Jimmyflix — 영화와 TV 프로그램을 발견하세요',
-      description: '인기작, 트렌드, 높은 평점, 공개 예정 영화와 TV 프로그램을 둘러보세요.',
-      openGraphDescription: '지금 볼 만한 영화와 TV 프로그램을 발견하세요.',
+      description: '순환 특집, 숨은 명작, 연관 작품과 인물 필모그래피로 영화와 TV 프로그램을 발견하세요.',
+      openGraphDescription: '주제별 큐레이션과 연관 작품, 필모그래피로 새로운 이야기를 발견하세요.',
     },
     header: {
       home: 'Jimmyflix 홈',
@@ -377,8 +465,8 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     movies: {
       metadataTitle: '영화',
-      metadataDescription: '현재 상영작, 높은 평점, 공개 예정작과 인기 영화를 둘러보세요.',
-      featured: '추천 영화',
+      metadataDescription: '현재 상영작, 숨은 명작, 짧은 영화와 순환하는 국가·장르 특집을 둘러보세요.',
+      featured: '오늘의 영화',
       heading: '영화',
       unavailable: '영화 목록을 일시적으로 이용할 수 없습니다',
       loadingFeatured: '추천 영화 불러오는 중',
@@ -386,8 +474,8 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     tv: {
       metadataTitle: 'TV 프로그램',
-      metadataDescription: '높은 평점, 인기작, 방영 중인 TV 프로그램을 둘러보세요.',
-      featured: '추천 시리즈',
+      metadataDescription: '방영 중인 프로그램, 숨은 명작, 미니시리즈와 순환하는 국가·장르 특집을 둘러보세요.',
+      featured: '오늘의 시리즈',
       heading: 'TV 프로그램',
       unavailable: 'TV 프로그램 목록을 일시적으로 이용할 수 없습니다',
       loadingFeatured: '추천 TV 프로그램 불러오는 중',
@@ -441,7 +529,9 @@ const dictionaries: Record<Locale, Dictionary> = {
       loadingMovie: '영화 상세 정보 불러오는 중',
       loadingTv: 'TV 프로그램 상세 정보 불러오는 중',
       loadingCredits: '출연진 불러오는 중',
+      loadingProduction: '제작 정보 불러오는 중',
       loadingCollection: '컬렉션 불러오는 중',
+      loadingRelated: '연관 작품 불러오는 중',
       trailer: '예고편',
       credits: '출연진',
       production: '제작',
@@ -463,6 +553,13 @@ const dictionaries: Record<Locale, Dictionary> = {
       cast: '출연진',
       castMember: '출연',
       noProduction: '등록된 제작 정보가 없습니다.',
+      keyCrew: '주요 제작진',
+      streamingAvailability: '시청 가능한 곳',
+      stream: '스트리밍',
+      rent: '대여',
+      buy: '구매',
+      watchOn: (provider) => `${provider}에서 시청 정보 보기`,
+      justWatchAttribution: '스트리밍 정보 제공: JustWatch',
       productionCompanies: '제작사',
       productionCountries: '제작 국가',
       flagAlt: (country) => `${country} 국기`,
@@ -471,6 +568,27 @@ const dictionaries: Record<Locale, Dictionary> = {
       collectionErrorMessage: '컬렉션 콘텐츠를 일시적으로 이용할 수 없습니다.',
       noCollection: '등록된 컬렉션 콘텐츠가 없습니다.',
       collectionTitles: '컬렉션 작품',
+      moreLikeThis: '이 작품 다음에는',
+      moreLikeThisDescription: '추천 작품과 비슷한 이야기를 이어서 만나보세요',
+    },
+    person: {
+      notFound: '인물 정보를 찾을 수 없습니다',
+      metadataFallback: '인물 상세 정보',
+      descriptionFallback: 'Jimmyflix에서 이 인물의 작품을 살펴보세요.',
+      loading: '인물 정보 불러오는 중',
+      profileAlt: (name) => `${name} 프로필 사진`,
+      biography: '소개',
+      noBiography: '등록된 소개가 없습니다.',
+      personalDetails: '인물 정보',
+      knownForDepartment: '주요 분야',
+      born: '출생',
+      died: '사망',
+      placeOfBirth: '출생지',
+      alsoKnownAs: '다른 이름',
+      actingCredits: '출연작',
+      actingCreditsDescription: '이 인물이 출연한 인기 영화와 TV 프로그램',
+      crewCredits: '제작 참여작',
+      crewCreditsDescription: '연출·각본·제작으로 참여한 주요 작품',
     },
     error: {
       title: '문제가 발생했습니다',
@@ -495,6 +613,20 @@ const dictionaries: Record<Locale, Dictionary> = {
         { id: 'on-the-air', title: '방영 중', description: '새 에피소드가 공개 중인 프로그램' },
         { id: 'airing-today', title: '오늘 방영', description: '오늘 새 에피소드가 공개되는 프로그램' },
       ],
+      hiddenGemMovies: '숨은 명작 영화',
+      hiddenGemMoviesDescription: '익숙한 흥행작 너머에서 발견한 높은 평점의 영화',
+      shortMovies: '100분 안에 보기 좋은 영화',
+      shortMoviesDescription: '부담 없는 러닝타임으로 완결된 이야기를 만나보세요',
+      hiddenGemShows: '숨은 명작 시리즈',
+      hiddenGemShowsDescription: '아직 널리 알려지지 않은 호평받는 프로그램',
+      miniseries: '한 시즌으로 끝나는 이야기',
+      miniseriesDescription: '긴 호흡의 부담 없이 완주할 수 있는 미니시리즈',
+      countrySpotlight: (country) => `${country} 콘텐츠`,
+      countrySpotlightDescription: (country) => `${country}에서 제작된 인기작과 숨은 명작`,
+      genreSpotlight: (genre) => `${genre} 특집`,
+      genreSpotlightDescription: (genre) => `${genre} 장르에서 새롭게 발견한 작품`,
+      recentlyViewed: '최근 본 작품',
+      recentlyViewedDescription: '최근 둘러본 작품을 다시 확인해 보세요',
       trendingMovies: '인기 급상승 영화',
       trendingShows: '인기 급상승 TV 프로그램',
       trendingMoviesDescription: (window) => `${window === 'day' ? '오늘' : '이번 주'} 주목받는 영화`,

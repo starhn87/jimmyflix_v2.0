@@ -33,6 +33,29 @@ export interface PersonCredits {
   crew: MediaItem[]
 }
 
+export interface PersonCredit extends MediaItem {
+  character?: string
+  job?: string
+  department?: string
+}
+
+export interface PersonDetail {
+  id: number
+  name: string
+  biography: string
+  birthday: string | null
+  deathday: string | null
+  place_of_birth: string | null
+  profile_path: string | null
+  known_for_department: string
+  also_known_as: string[]
+  imdb_id?: string | null
+  combined_credits?: {
+    cast: PersonCredit[]
+    crew: PersonCredit[]
+  }
+}
+
 export interface Genre {
   id: number
   name: string
@@ -56,6 +79,41 @@ export interface ProductionCompany {
 export interface ProductionCountry {
   iso_3166_1: string
   name: string
+}
+
+export interface CrewMember {
+  id: number
+  name: string
+  original_name?: string
+  job: string
+  department: string
+  profile_path: string | null
+}
+
+export interface MediaCredits {
+  cast: CastMember[]
+  crew: CrewMember[]
+}
+
+export interface WatchProvider {
+  provider_id: number
+  provider_name: string
+  logo_path: string | null
+  display_priority: number
+}
+
+export interface WatchProviderRegion {
+  link: string
+  flatrate?: WatchProvider[]
+  free?: WatchProvider[]
+  ads?: WatchProvider[]
+  rent?: WatchProvider[]
+  buy?: WatchProvider[]
+}
+
+export interface WatchProviderResponse {
+  id: number
+  results: Record<string, WatchProviderRegion>
 }
 
 export interface Season {

@@ -95,7 +95,7 @@ export function CatalogSkeleton({ label }: { label: string }) {
       <div className="animate-pulse motion-reduce:animate-none">
         <HeroSkeletonVisual />
         <div className="relative z-10 -mt-8 space-y-10 pb-20 sm:space-y-14">
-          {Array.from({ length: 4 }, (_, index) => <MediaRailSkeletonVisual key={index} />)}
+          {Array.from({ length: 7 }, (_, index) => <MediaRailSkeletonVisual key={index} />)}
         </div>
       </div>
     </main>
@@ -246,5 +246,35 @@ export function DetailPanelSkeleton({ label }: { label: string }) {
         ))}
       </div>
     </div>
+  )
+}
+
+export function PersonSkeleton({ label }: { label: string }) {
+  return (
+    <main
+      aria-busy="true"
+      aria-live="polite"
+      aria-label={label}
+      className="min-h-[calc(100vh-4rem)] bg-canvas pb-20"
+    >
+      <LoadingAnnouncement label={label} />
+      <div className="animate-pulse motion-reduce:animate-none">
+        <div className="mx-auto grid max-w-[1480px] gap-8 px-4 py-8 sm:px-6 md:grid-cols-[minmax(240px,340px)_minmax(0,1fr)] md:gap-12 md:py-14 lg:px-10">
+          <Bone className="mx-auto aspect-2/3 w-full max-w-[340px] rounded-2xl md:mx-0" />
+          <div className="md:pt-3">
+            <Bone className="h-11 w-32 rounded-full" />
+            <Bone className="mt-7 h-12 w-4/5 max-w-xl rounded-xl sm:h-16" />
+            <Bone className="mt-4 h-8 w-24 rounded-full" />
+            <Bone className="mt-9 h-7 w-32 rounded-lg" />
+            <div className="mt-4 max-w-3xl space-y-3">
+              <Bone className="h-4 w-full rounded-md" />
+              <Bone className="h-4 w-full rounded-md" />
+              <Bone className="h-4 w-3/4 rounded-md" />
+            </div>
+          </div>
+        </div>
+        <MediaRailSkeletonVisual />
+      </div>
+    </main>
   )
 }
