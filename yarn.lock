@@ -1354,6 +1354,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/speed-insights@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@vercel/speed-insights@npm:2.0.0"
+  peerDependencies:
+    "@sveltejs/kit": ^1 || ^2
+    next: ">= 13"
+    nuxt: ">= 3"
+    react: ^18 || ^19 || ^19.0.0-rc
+    svelte: ">= 4"
+    vue: ^3
+    vue-router: ^4
+  peerDependenciesMeta:
+    "@sveltejs/kit":
+      optional: true
+    next:
+      optional: true
+    nuxt:
+      optional: true
+    react:
+      optional: true
+    svelte:
+      optional: true
+    vue:
+      optional: true
+    vue-router:
+      optional: true
+  checksum: 618336b186a6b330ccff1862400bfaa8bf3473594a02f975119299ec880850dfd6837aa5276c01a8d4b88bbb3e122f7dca4706a1ed6e8b863f959fc7b343be3a
+  languageName: node
+  linkType: hard
+
 "acorn-jsx@npm:^5.3.2":
   version: 5.3.2
   resolution: "acorn-jsx@npm:5.3.2"
@@ -3270,6 +3300,7 @@ __metadata:
     "@types/react": 19.3.0
     "@types/react-dom": 19.3.0
     "@vercel/analytics": ^2.0.1
+    "@vercel/speed-insights": ^2.0.0
     eslint: 9.39.5
     eslint-config-next: 16.3.4
     next: 16.3.4

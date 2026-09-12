@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { ReactNode } from 'react'
 import { SiteHeader } from '@/components/site-header'
 import { getDictionary } from '@/lib/dictionaries'
@@ -76,6 +77,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: themeScript }}
         />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
