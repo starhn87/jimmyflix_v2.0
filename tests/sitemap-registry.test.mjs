@@ -44,7 +44,7 @@ test('validation skips currently visible titles and rotates through old entries 
   const found = [{ path: '/movies/1' }]
   assert.equal(selectSitemapChecks(registry, found, day2).length, 0)
   const candidates = selectSitemapChecks(registry, found, '2026-09-09T00:00:00.000Z')
-  assert.equal(candidates.length, 50)
+  assert.equal(candidates.length, 20)
   assert.equal(candidates[0].path, '/movies/2')
 })
 

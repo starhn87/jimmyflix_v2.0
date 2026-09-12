@@ -5,7 +5,7 @@ import { readSitemapSnapshot, writeSitemapSnapshot, SITEMAP_CACHE_TAG } from '@/
 import { getSitemapDiscoveries, checkSitemapDetail } from '@/lib/tmdb'
 import { sitemapPageCount } from '@/lib/sitemap-registry'
 
-export const maxDuration = 180
+export const maxDuration = 60
 
 export async function GET(request: Request) {
   if (!isCronAuthorized(request.headers.get('authorization'), process.env.CRON_SECRET)) {

@@ -75,7 +75,8 @@ export function mergeSitemapRegistry(
   return { version: 1, collectedAt, entries: [...records.values()] }
 }
 
-export function selectSitemapChecks(registry: SitemapRegistry, discoveries: SitemapPath[], now: string, limit = 50) {
+// Four batches of five requests leave time for discovery and storage within a 60-second job.
+export function selectSitemapChecks(registry: SitemapRegistry, discoveries: SitemapPath[], now: string, limit = 20) {
   const found = new Set(discoveries.map(({ path }) => path))
   return registry.entries.filter((entry) => !found.has(entry.path)
     && Date.parse(now) - Date.parse(entry.lastCheckedAt || entry.lastSeenAt) >= (entry.missingSince ? 1 : 7) * 86_400_000)
