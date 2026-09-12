@@ -11,12 +11,12 @@ function LoadingAnnouncement({ label }: { label: string }) {
 
 function MediaRailSkeletonVisual({ withToolbar = false }: { withToolbar?: boolean } = {}) {
   return (
-    <section aria-hidden="true" className="render-later">
+    <section aria-hidden="true" className={withToolbar ? undefined : 'render-later'}>
       <div className="mb-5 px-4 sm:px-8 lg:px-12">
-        <Bone className="h-7 w-40 rounded-lg sm:w-52" />
+        <Bone className="h-7 w-40 rounded-lg sm:h-8 sm:w-52" />
         <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
         {withToolbar ? (
-          <div className="mt-4 flex gap-2 overflow-hidden">
+          <div className="mt-4 flex gap-2 overflow-hidden pb-1">
             {['w-24', 'w-28', 'w-24', 'w-28', 'w-24'].map((width, index) => (
               <Bone key={index} className={`h-10 shrink-0 rounded-full ${width}`} />
             ))}
@@ -38,8 +38,8 @@ function MediaRailSkeletonVisual({ withToolbar = false }: { withToolbar?: boolea
         ))}
       </ul>
       {withToolbar ? (
-        <div className="-mt-2 px-4 sm:px-8 lg:px-12">
-          <Bone className="h-3 w-48 rounded-md" />
+        <div className="-mt-2 h-6 px-4 sm:px-8 lg:px-12">
+          <Bone className="h-4 w-48 rounded-md" />
         </div>
       ) : null}
     </section>

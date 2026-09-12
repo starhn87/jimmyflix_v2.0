@@ -61,10 +61,12 @@ export function MediaCard({ item, mediaType, highPriority = false, locale }: Med
             </>
           ) : null}
         </div>
-        <h3 className="mt-3 line-clamp-2 text-[0.92rem] leading-[1.35] font-semibold text-ink transition-colors group-hover:text-accent-strong">
-          {title}
-        </h3>
-        <p className="mt-1 truncate text-xs text-faint">{year}</p>
+        <div className="mt-3 min-h-15">
+          <h3 className="line-clamp-2 text-[0.92rem] leading-[1.35] font-semibold text-ink transition-colors group-hover:text-accent-strong">
+            {title}
+          </h3>
+          <p className="mt-1 truncate text-xs text-faint">{year}</p>
+        </div>
       </article>
     </Link>
   )

@@ -28,7 +28,10 @@ export function MediaRail({
   const railId = `${slug}-rail`
 
   return (
-    <section aria-labelledby={titleId} className="render-later">
+    <section
+      aria-labelledby={titleId}
+      className={toolbar || footer ? undefined : 'render-later'}
+    >
       <div className="mb-5 px-4 sm:px-8 lg:px-12">
         <div>
           <h2
