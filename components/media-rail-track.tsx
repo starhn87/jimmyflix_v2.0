@@ -59,7 +59,9 @@ export function MediaRailTrack({ railId, label, items, backwardLabel, forwardLab
         {items.map((child, index) => (
           <li
             key={`original-${index}`}
-            data-loop-origin={index === 0 ? '' : undefined}
+            data-loop-origin={index}
+            aria-posinset={index + 1}
+            aria-setsize={items.length}
             className={MEDIA_RAIL_ITEM_CLASS_NAME}
           >
             {child}
@@ -68,9 +70,9 @@ export function MediaRailTrack({ railId, label, items, backwardLabel, forwardLab
         {items.slice(0, loopCopyCount).map((child, index) => (
           <li
             key={`copy-${index}`}
-            data-loop-copy={index === 0 ? '' : undefined}
-            aria-hidden="true"
-            inert
+            data-loop-copy={index}
+            aria-posinset={index + 1}
+            aria-setsize={items.length}
             className={MEDIA_RAIL_ITEM_CLASS_NAME}
           >
             {child}

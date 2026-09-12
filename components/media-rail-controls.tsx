@@ -74,7 +74,17 @@ const normalizeLoopPosition = (rail: HTMLElement, loop: LoopBounds | null) => {
   if (!isLoopEnabled(rail, loop) || !loop) return
 
   if (rail.scrollLeft >= loop.end - EDGE_TOLERANCE) {
+    const activeElement = document.activeElement
+    const copy = activeElement?.closest<HTMLElement>('[data-loop-copy]')
     rail.scrollTo({ left: rail.scrollLeft - loop.width, behavior: 'auto' })
+
+    // Keep keyboard focus on the matching visible card when the loop rebases.
+    if (copy && rail.contains(copy) && activeElement instanceof HTMLElement) {
+      const selector = 'a[href], button, [tabindex]'
+      const index = Array.from(copy.querySelectorAll<HTMLElement>(selector)).indexOf(activeElement)
+      const origin = rail.querySelector(`[data-loop-origin="${copy.dataset.loopCopy}"]`)
+      origin?.querySelectorAll<HTMLElement>(selector)[index]?.focus({ preventScroll: true })
+    }
   }
 }
 
@@ -146,9 +156,7 @@ const scrollRail = (railId: string, direction: ScrollDirection) => {
   const loop = getLoopBounds(rail)
 
   if (isLoopEnabled(rail, loop) && loop) {
-    if (rail.scrollLeft >= loop.end - EDGE_TOLERANCE) {
-      rail.scrollTo({ left: rail.scrollLeft - loop.width, behavior: 'auto' })
-    }
+    normalizeLoopPosition(rail, loop)
     if (direction === -1 && rail.scrollLeft - distance < loop.start) {
       rail.scrollTo({ left: rail.scrollLeft + loop.width, behavior: 'auto' })
     }
