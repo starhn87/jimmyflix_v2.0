@@ -1,4 +1,6 @@
 export const MEDIA_RAIL_HEADER_CLASS_NAME = 'mb-5 px-4 sm:px-8 lg:px-12'
+export const MEDIA_RAIL_TITLE_CLASS_NAME = 'text-xl font-semibold tracking-tight text-ink sm:text-2xl'
+export const MEDIA_RAIL_DESCRIPTION_CLASS_NAME = 'mt-1 text-sm text-faint'
 
 // Offset the hover clearance so the resting cards and skeletons keep their spacing.
 export const MEDIA_RAIL_TRACK_CLASS_NAME = '-mt-2 flex gap-3 px-4 pt-2 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12'

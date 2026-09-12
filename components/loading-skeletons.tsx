@@ -1,11 +1,13 @@
 import {
   CATALOG_RAIL_STACK_CLASS_NAME,
   MEDIA_RAIL_HEADER_CLASS_NAME,
+  MEDIA_RAIL_TITLE_CLASS_NAME,
+  MEDIA_RAIL_DESCRIPTION_CLASS_NAME,
   MEDIA_RAIL_ITEM_CLASS_NAME,
   MEDIA_RAIL_SKELETON_LIST_CLASS_NAME,
 } from '@/components/media-rail-styles'
 
-const cardPlaceholders = Array.from({ length: 8 })
+const searchPlaceholders = Array.from({ length: 14 })
 const linePlaceholders = Array.from({ length: 3 })
 
 function Bone({ className }: { className: string }) {
@@ -16,15 +18,16 @@ function LoadingAnnouncement({ label }: { label: string }) {
   return <span className="sr-only">{label}</span>
 }
 
-function MediaRailSkeletonVisual({ withToolbar = false, withMediaTypeFilter = false }: { withToolbar?: boolean; withMediaTypeFilter?: boolean } = {}) {
+function MediaRailSkeletonVisual({ withToolbar = false, itemCount = 40, title, description }: {
+  withToolbar?: boolean; itemCount?: number; title?: string; description?: string
+} = {}) {
   return (
     <section aria-hidden="true" className={withToolbar ? undefined : 'render-later'}>
       <div className={MEDIA_RAIL_HEADER_CLASS_NAME}>
-        <Bone className="h-7 w-40 rounded-lg sm:h-8 sm:w-52" />
-        <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
+        {title ? <h2 className={MEDIA_RAIL_TITLE_CLASS_NAME}>{title}</h2> : <Bone className="h-7 w-40 rounded-lg sm:h-8 sm:w-52" />}
+        {description ? <div className={MEDIA_RAIL_DESCRIPTION_CLASS_NAME}>{description}</div> : <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />}
         {withToolbar ? (
           <div className="mt-4">
-            {withMediaTypeFilter ? <Bone className="mb-3 h-[50px] w-[202px] rounded-full" /> : null}
             <div className="flex gap-2 overflow-hidden pb-1">
               {['w-24', 'w-28', 'w-24', 'w-28', 'w-24'].map((width, index) => (
                 <Bone key={index} className={`h-10 shrink-0 rounded-full ${width}`} />
@@ -34,7 +37,7 @@ function MediaRailSkeletonVisual({ withToolbar = false, withMediaTypeFilter = fa
         ) : null}
       </div>
       <ul className={MEDIA_RAIL_SKELETON_LIST_CLASS_NAME}>
-        {cardPlaceholders.map((_, index) => (
+        {Array.from({ length: itemCount }, (_, index) => (
           <li
             key={index}
             className={MEDIA_RAIL_ITEM_CLASS_NAME}
@@ -93,11 +96,15 @@ export function HeroSkeleton({ label }: { label: string }) {
 export function MediaSectionSkeleton({
   label,
   withToolbar = false,
-  withMediaTypeFilter = false,
+  itemCount = 40,
+  title,
+  description,
 }: {
   label: string
   withToolbar?: boolean
-  withMediaTypeFilter?: boolean
+  itemCount?: number
+  title?: string
+  description?: string
 }) {
   return (
     <div
@@ -108,7 +115,7 @@ export function MediaSectionSkeleton({
       className="animate-pulse motion-reduce:animate-none"
     >
       <LoadingAnnouncement label={label} />
-      <MediaRailSkeletonVisual withToolbar={withToolbar} withMediaTypeFilter={withMediaTypeFilter} />
+      <MediaRailSkeletonVisual withToolbar={withToolbar} itemCount={itemCount} title={title} description={description} />
     </div>
   )
 }
@@ -155,14 +162,13 @@ function ResultGridSkeleton() {
     <section aria-hidden="true">
       <Bone className="mb-5 h-7 w-32 rounded-lg" />
       <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
-        {cardPlaceholders.map((_, index) => (
+        {searchPlaceholders.map((_, index) => (
           <li key={index} className="min-w-0">
             <Bone className="aspect-2/3 w-full rounded-xl" />
-            <div className="mt-3 space-y-1.5">
+            <div className="mt-3 min-h-15">
               <Bone className="h-4 w-4/5 rounded-md" />
-              <Bone className="h-4 w-3/5 rounded-md" />
+              <Bone className="mt-1 h-4 w-2/5 rounded-md" />
             </div>
-            <Bone className="mt-1 h-4 w-2/5 rounded-md" />
           </li>
         ))}
       </ul>

@@ -29,7 +29,7 @@ import type {
   TrendingPerson,
   TrendingPeopleData,
 } from '@/types/tmdb'
-import { selectRankedTitles, selectRepresentativeCredits, TREND_RANKING_LIMIT } from '@/lib/trending'
+import { selectRankedTitles, selectRediscoveredTitles, selectRepresentativeCredits, TREND_RANKING_LIMIT } from '@/lib/trending'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3/'
 const DEFAULT_REVALIDATE_SECONDS = 60 * 30
@@ -607,6 +607,18 @@ export const getStreamingDiscovery = async (
   }
 }
 
+const getTrendingPage = cache((mediaType: MediaType, window: TimeWindow, locale: Locale, page: number) =>
+  tmdbFetch<TmdbListResponse<MediaItem>>(`trending/${mediaType}/${window}`, { page }, {
+    locale, revalidate: 600, timeoutMs: 8000,
+  }),
+)
+
+const getTrendingTitles = cache(async (mediaType: MediaType, window: TimeWindow, locale: Locale) => {
+  const pages = await Promise.allSettled([1, 2].map((page) => getTrendingPage(mediaType, window, locale, page)))
+  if (pages[0].status === 'rejected') throw pages[0].reason
+  return selectRankedTitles(pages.flatMap((page) => page.status === 'fulfilled' ? page.value.results : []), mediaType, CATALOG_ITEM_LIMIT)
+})
+
 export const getTrendingSectionRequests = (window: TimeWindow, locale: Locale) => {
   const dictionary = getDictionary(locale)
 
@@ -616,14 +628,14 @@ export const getTrendingSectionRequests = (window: TimeWindow, locale: Locale) =
       title: dictionary.sections.trendingMovies,
       description: dictionary.sections.trendingMoviesDescription(window),
       mediaType: 'movie',
-      load: () => getList(`trending/movie/${window}`, locale, 60 * 10),
+      load: () => getTrendingTitles('movie', window, locale),
     },
     {
       id: `trending-tv-${window}`,
       title: dictionary.sections.trendingShows,
       description: dictionary.sections.trendingShowsDescription(window),
       mediaType: 'tv',
-      load: () => getList(`trending/tv/${window}`, locale, 60 * 10),
+      load: () => getTrendingTitles('tv', window, locale),
     },
   ])
 }
@@ -635,20 +647,36 @@ export const getTrendingRankingRequests = (window: TimeWindow, locale: Locale) =
     title: mediaType === 'movie' ? dictionary.topMovies : dictionary.topShows,
     description: dictionary.rankingDescription(window),
     mediaType,
-    load: async () => {
-      const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
-        `trending/${mediaType}/${window}`, {}, { locale, revalidate: 600, timeoutMs: 8000 },
-      )
-      return selectRankedTitles(response.results, mediaType)
-    },
+    // Top 10 can stream as soon as page 1 arrives; rediscovery's page 2 must not delay LCP.
+    load: async () => selectRankedTitles((await getTrendingPage(mediaType, window, locale, 1)).results, mediaType),
   })))
 }
 
+export const getTrendingRediscovery = (window: TimeWindow, locale: Locale) => {
+  const dictionary = getDictionary(locale).trend
+  return createSectionRequests([{
+    id: `rediscovery-${window}`,
+    title: dictionary.rediscovery,
+    description: dictionary.rediscoveryDescription(window),
+    mediaType: 'movie',
+    load: async () => {
+      const [movies, shows] = await Promise.all([
+        getTrendingTitles('movie', window, locale), getTrendingTitles('tv', window, locale),
+      ])
+      return selectRediscoveredTitles(movies, shows)
+    },
+  }])[0].request
+}
+
+const getTrendingPersonList = cache((window: TimeWindow, locale: Locale) =>
+  tmdbFetch<TmdbListResponse<TrendingPerson>>(
+    `trending/person/${window}`, {}, { locale, revalidate: 600, timeoutMs: 8000 },
+  ),
+)
+
 export const getTrendingPeople = async (window: TimeWindow, locale: Locale): Promise<TrendingPeopleData> => {
   try {
-    const response = await tmdbFetch<TmdbListResponse<TrendingPerson>>(
-      `trending/person/${window}`, {}, { locale, revalidate: 600, timeoutMs: 8000 },
-    )
+    const response = await getTrendingPersonList(window, locale)
     const seen = new Set<number>()
     const candidates = response.results.filter((person) => {
       if (person.adult || seen.has(person.id)) return false
@@ -819,14 +847,19 @@ export async function getSitemapPaths(): Promise<SitemapPath[]> {
   const paths = await Promise.all(locales.map(async (locale) => {
     const sections = [
       ...getMovieSectionRequests(locale), ...getTvSectionRequests(locale),
-      ...getTrendingSectionRequests('week', locale),
+      ...getTrendingSectionRequests('day', locale), ...getTrendingSectionRequests('week', locale),
     ]
-    const [catalog, people] = await Promise.all([
+    const [catalog, people, dailyPeople, weeklyPeople, ...streaming] = await Promise.all([
       Promise.all(sections.map(({ request }) => request)),
       tmdbFetch<TmdbListResponse<PersonDetail & { adult?: boolean }>>(
         'person/popular', {}, { locale, revalidate: 3600, timeoutMs: 8000 },
       ),
+      getTrendingPersonList('day', locale),
+      getTrendingPersonList('week', locale),
+      getStreamingDiscovery('movie', null, locale),
+      getStreamingDiscovery('tv', null, locale),
     ])
+    catalog.push(...streaming.map(({ section }) => section))
     // A failed refresh must preserve the previous sitemap in the ISR cache.
     if (catalog.some((section) => section.error)) throw new Error('Sitemap catalog is unavailable.')
     return [
@@ -834,7 +867,7 @@ export async function getSitemapPaths(): Promise<SitemapPath[]> {
         path: `/${section.mediaType === 'movie' ? 'movies' : 'tv'}/${item.id}`,
         images: { [locale]: getImageUrl(item.poster_path, 'original') || undefined },
       }))),
-      ...people.results.filter((person) => !person.adult).map((person) => ({
+      ...[...people.results, ...dailyPeople.results, ...weeklyPeople.results].filter((person) => !person.adult).map((person) => ({
         path: `/people/${person.id}`,
         images: { [locale]: getImageUrl(person.profile_path, 'original') || undefined },
       })),

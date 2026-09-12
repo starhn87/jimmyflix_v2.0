@@ -4,21 +4,19 @@ import { LoadingCardImage } from '@/components/loading-card-image'
 import { MediaSectionSkeleton } from '@/components/loading-skeletons'
 import { MediaRail } from '@/components/media-rail'
 import { MediaSection } from '@/components/media-section'
-import { StreamingProviderSection } from '@/components/streaming-provider-section'
 import { TimeWindowSwitch } from '@/components/time-window-switch'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
 import { getMediaHref, getMediaTitle, getProfileUrl } from '@/lib/media'
 import type { MediaSectionRequest } from '@/lib/tmdb'
-import type { MediaType, StreamingDiscoveryData, TimeWindow, TrendingPeopleData } from '@/types/tmdb'
+import type { TimeWindow, TrendingPeopleData } from '@/types/tmdb'
 
 // The rail itself includes 28px of bottom clearance: 12 + 28 = 40, 36 + 28 = 64.
 export const TREND_STACK_CLASS_NAME = 'space-y-3 lg:space-y-9'
 
-export function TrendHeader({ locale, window = 'day', query }: {
+export function TrendHeader({ locale, window = 'day' }: {
   locale: Locale
   window?: TimeWindow
-  query?: Record<string, string | number>
 }) {
   const dictionary = getDictionary(locale).trend
   return (
@@ -26,7 +24,7 @@ export function TrendHeader({ locale, window = 'day', query }: {
       <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase">{dictionary.eyebrow}</p>
       <h1 className="mt-3 text-4xl font-bold tracking-[-0.035em] text-ink sm:text-6xl">{dictionary.heading}</h1>
       <p className="mt-4 max-w-2xl text-sm leading-6 break-keep text-pretty text-subtle sm:text-base">{dictionary.description}</p>
-      <TimeWindowSwitch selected={window} locale={locale} query={query}
+      <TimeWindowSwitch selected={window} locale={locale}
         label={dictionary.timeWindowLabel} todayLabel={dictionary.today} weekLabel={dictionary.week} />
     </header>
   )
@@ -83,49 +81,16 @@ export async function TrendingPeopleSection({ request, locale, window }: {
   )
 }
 
-export function TrendingStreamingSection({ request, locale, window, mediaType }: {
-  request: Promise<StreamingDiscoveryData>
-  locale: Locale
-  window: TimeWindow
-  mediaType: MediaType
-}) {
-  return <StreamingProviderSection request={request} locale={locale} basePath="/trend" ranked
-    query={{ window, kind: mediaType }} filter={<StreamingTypeFilter request={request} locale={locale} window={window} mediaType={mediaType} />} />
-}
-
-async function StreamingTypeFilter({ request, locale, window, mediaType }: {
-  request: Promise<StreamingDiscoveryData>
-  locale: Locale
-  window: TimeWindow
-  mediaType: MediaType
-}) {
-  const { selectedProviderId } = await request
-  const dictionary = getDictionary(locale)
-  return (
-    <nav aria-label={dictionary.trend.streamingTypeLabel} className="flex w-fit rounded-full border border-tone/10 bg-tone/5 p-1">
-      {(['movie', 'tv'] as const).map((type) => (
-        <Link key={type} href={{ pathname: getLocalePath(locale, '/trend'), query: { window, kind: type, provider: selectedProviderId }, hash: 'streaming-trends' }}
-          prefetch={false} scroll={false} aria-current={mediaType === type ? 'true' : undefined}
-          className={`inline-flex min-h-10 min-w-24 items-center justify-center rounded-full px-5 text-sm font-semibold outline-none transition focus-visible:ring-3 focus-visible:ring-accent/40 ${
-            mediaType === type ? 'bg-action text-on-action' : 'text-subtle hover:bg-tone/6 hover:text-ink'
-          }`}>
-          {type === 'movie' ? dictionary.common.movie : dictionary.common.tvShow}
-        </Link>
-      ))}
-    </nav>
-  )
-}
-
 export function TrendSkeleton({ locale }: { locale: Locale }) {
   const dictionary = getDictionary(locale)
   return (
     <main aria-busy="true" aria-label={dictionary.trend.loading} className="pb-20">
       <TrendHeader locale={locale} />
       <div className={TREND_STACK_CLASS_NAME}>
-        <MediaSectionSkeleton label={dictionary.trend.topMovies} />
-        <MediaSectionSkeleton label={dictionary.trend.topShows} />
-        <MediaSectionSkeleton label={dictionary.trend.people} />
-        <MediaSectionSkeleton label={dictionary.sections.loadingStreaming} withToolbar withMediaTypeFilter />
+        <MediaSectionSkeleton label={dictionary.trend.topMovies} title={dictionary.trend.topMovies} description={dictionary.trend.rankingDescription('day')} itemCount={10} />
+        <MediaSectionSkeleton label={dictionary.trend.topShows} title={dictionary.trend.topShows} description={dictionary.trend.rankingDescription('day')} itemCount={10} />
+        <MediaSectionSkeleton label={dictionary.trend.people} title={dictionary.trend.people} description={dictionary.trend.peopleDescription('day')} itemCount={10} />
+        <MediaSectionSkeleton label={dictionary.trend.rediscovery} title={dictionary.trend.rediscovery} description={dictionary.trend.rediscoveryDescription('day')} itemCount={20} />
       </div>
     </main>
   )

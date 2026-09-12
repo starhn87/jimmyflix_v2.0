@@ -1,7 +1,8 @@
 import { createSitemap } from '@/lib/sitemap'
 import { getSitemapPaths } from '@/lib/tmdb'
 
-export const revalidate = 3600
+// Match the shortest catalog cache (daily/weekly trends). Keep this literal for Next.js.
+export const revalidate = 600
 
 export default async function sitemap() {
   return createSitemap([

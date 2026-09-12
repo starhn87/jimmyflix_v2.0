@@ -1,10 +1,21 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { selectRankedTitles, selectRepresentativeCredits } from '../lib/trending.ts'
+import { selectRankedTitles, selectRediscoveredTitles, selectRepresentativeCredits } from '../lib/trending.ts'
 
 const movie = (id, overrides = {}) => ({
   id, title: `Movie ${id}`, media_type: 'movie', poster_path: `/${id}.jpg`,
   vote_average: 7, vote_count: 100, popularity: id * 10, ...overrides,
+})
+
+test('rediscovery uses the five-year cutoff, valid dates and actual trends, preserving distinct film and series IDs', () => {
+  const movies = [movie(1, { release_date: '2021-09-13' }), movie(2, { release_date: '2021-09-14' }),
+    movie(3, { release_date: '' }), movie(4, { release_date: 'invalid' }),
+    movie(5, { release_date: '2000-01-01', adult: true }), movie(6, { release_date: '1990-01-01' })]
+  const shows = [movie(1, { media_type: 'tv', first_air_date: '2000-01-01' })]
+  assert.deepEqual(selectRediscoveredTitles(movies, shows, new Date('2026-09-13T00:00:00Z'))
+    .map(({ id, media_type }) => [media_type, id]), [['movie', 1], ['tv', 1], ['movie', 6]])
+  assert.equal(movies[0].media_type, 'movie')
+  assert.deepEqual(selectRediscoveredTitles([], [], new Date('2026-09-13T00:00:00Z')), [])
 })
 
 test('Top 10 preserves the trend response order rather than re-sorting by popularity or rating', () => {

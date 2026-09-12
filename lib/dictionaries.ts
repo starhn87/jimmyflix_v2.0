@@ -63,9 +63,8 @@ interface Dictionary {
     rankingDescription: (window: 'day' | 'week') => string
     people: string
     peopleDescription: (window: 'day' | 'week') => string
-    streamingTitle: (provider: string, mediaType: 'movie' | 'tv') => string
-    streamingAttribution: string
-    streamingTypeLabel: string
+    rediscovery: string
+    rediscoveryDescription: (window: 'day' | 'week') => string
   }
   search: {
     metadataTitle: string
@@ -301,10 +300,10 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     trend: {
       metadataTitle: 'Trending',
-      metadataDescription: 'Explore today’s and this week’s movie and TV Top 10, people in the spotlight, and popular titles on your streaming services.',
+      metadataDescription: 'Explore today’s and this week’s movie and TV Top 10, people in the spotlight, and older films and series back in the conversation.',
       eyebrow: 'TMDB trending',
       heading: 'What’s trending',
-      description: 'Explore the Top 10, discover the people behind the stories, and find your next streaming pick.',
+      description: 'Explore the Top 10, discover the people behind the stories, and revisit older films and series in the conversation.',
       timeWindowLabel: 'Trending time window',
       today: 'Today',
       week: 'This week',
@@ -314,9 +313,8 @@ const dictionaries: Record<Locale, Dictionary> = {
       rankingDescription: (window) => `Global TMDB trends · ${window === 'day' ? 'Today' : 'This week'}`,
       people: 'People in the spotlight',
       peopleDescription: (window) => `${window === 'day' ? 'Today’s' : 'This week’s'} people and their work`,
-      streamingTitle: (provider, mediaType) => `${provider} ${mediaType === 'movie' ? 'movie' : 'TV'} Top 10`,
-      streamingAttribution: 'US availability: JustWatch · Popularity: TMDB',
-      streamingTypeLabel: 'Streaming ranking category',
+      rediscovery: 'Back in the conversation',
+      rediscoveryDescription: (window) => `First released 5+ years ago · ${window === 'day' ? 'Today’s' : 'This week’s'} TMDB trends`,
     },
     search: {
       metadataTitle: 'Search',
@@ -563,10 +561,10 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     trend: {
       metadataTitle: '트렌드',
-      metadataDescription: '오늘과 이번 주의 영화·TV TOP 10, 주목받는 인물과 대표작, OTT별 인기작을 만나보세요.',
+      metadataDescription: '오늘과 이번 주의 영화·TV TOP 10, 주목받는 인물과 대표작, 다시 주목받는 작품을 만나보세요.',
       eyebrow: 'TMDB 트렌드',
       heading: '지금 뜨는 콘텐츠',
-      description: '영화·TV TOP 10부터 주목받는 인물, OTT별 인기작까지 만나보세요.',
+      description: '영화·TV TOP 10부터 주목받는 인물, 다시 주목받는 작품까지 만나보세요.',
       timeWindowLabel: '트렌드 기간',
       today: '오늘',
       week: '이번 주',
@@ -576,9 +574,8 @@ const dictionaries: Record<Locale, Dictionary> = {
       rankingDescription: (window) => `TMDB 글로벌 화제성 · ${window === 'day' ? '오늘' : '이번 주'} 기준`,
       people: '지금 주목받는 인물',
       peopleDescription: (window) => `${window === 'day' ? '오늘' : '이번 주'} 화제의 인물과 대표작`,
-      streamingTitle: (provider, mediaType) => `${provider} ${mediaType === 'movie' ? '영화' : 'TV'} TOP 10`,
-      streamingAttribution: '한국 시청 정보: JustWatch · 인기도: TMDB',
-      streamingTypeLabel: 'OTT 인기작 종류',
+      rediscovery: '다시 주목받는 작품',
+      rediscoveryDescription: (window) => `첫 공개 후 5년 이상 · ${window === 'day' ? '오늘' : '이번 주'} TMDB 트렌드에 오른 작품`,
     },
     search: {
       metadataTitle: '검색',

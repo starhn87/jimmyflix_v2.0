@@ -65,7 +65,7 @@ export function MediaSection({
       >
         {section.items.map((item, index) => (
           <MediaCard
-            key={item.id}
+            key={`${item.media_type || section.mediaType}-${item.id}`}
             item={item}
             mediaType={section.mediaType}
             highPriority={prioritizeFirst && index < 4}
