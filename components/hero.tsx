@@ -36,7 +36,7 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
           placeholder={imageSkeletonPlaceholder}
           quality={90}
           sizes="100vw"
-          className="-z-30 object-cover object-center"
+          className="-z-30 object-cover object-top"
         />
       ) : null}
       <div className="absolute inset-0 -z-20 hero-vignette" />

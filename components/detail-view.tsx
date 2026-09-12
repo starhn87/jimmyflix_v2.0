@@ -143,22 +143,9 @@ export function DetailView({
         </div>
 
         <header className="min-w-0 pt-6 sm:pt-1 lg:pt-4">
-          <div className="flex flex-wrap items-start gap-3">
-            <h1 id="detail-title" className="min-w-0 text-3xl leading-[1.1] font-bold tracking-[-0.03em] text-balance text-ink sm:text-4xl lg:text-6xl">
-              {title}
-            </h1>
-            {detail.imdb_id ? (
-              <Link
-                href={`https://www.imdb.com/title/${detail.imdb_id}`}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={dictionary.detail.imdbLabel(title)}
-                className="inline-flex min-h-8 shrink-0 items-center rounded-md bg-[#f5c518] px-2 font-mono text-xs font-black text-black outline-none focus-visible:ring-3 focus-visible:ring-white/60 sm:mt-1"
-              >
-                IMDb
-              </Link>
-            ) : null}
-          </div>
+          <h1 id="detail-title" className="min-w-0 text-3xl leading-[1.1] font-bold tracking-[-0.03em] text-balance text-ink sm:text-4xl lg:text-6xl">
+            {title}
+          </h1>
 
           <ul aria-label={dictionary.detail.titleDetails} className="mt-4 flex flex-wrap gap-2">
             {rating ? (
