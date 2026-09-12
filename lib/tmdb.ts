@@ -17,6 +17,10 @@ import type {
   PersonSearchResult,
   TimeWindow,
   TmdbListResponse,
+  SeasonDetail,
+  StreamingDiscoveryData,
+  WatchProvider,
+  WatchProviderListResponse,
   WatchProviderRegion,
   WatchProviderResponse,
 } from '@/types/tmdb'
@@ -121,15 +125,6 @@ const countrySpotlights: LocalizedSpotlight[] = [
   { value: 'BR', name: { en: 'Brazil', ko: '브라질' } },
 ]
 
-const movieGenreSpotlights: LocalizedSpotlight[] = [
-  { value: 99, name: { en: 'Documentary', ko: '다큐멘터리' } },
-  { value: 16, name: { en: 'Animation', ko: '애니메이션' } },
-  { value: 80, name: { en: 'Crime', ko: '범죄' } },
-  { value: 10402, name: { en: 'Music', ko: '음악' } },
-  { value: 878, name: { en: 'Science fiction', ko: 'SF' } },
-  { value: 36, name: { en: 'History', ko: '역사' } },
-]
-
 const tvGenreSpotlights: LocalizedSpotlight[] = [
   { value: 99, name: { en: 'Documentary', ko: '다큐멘터리' } },
   { value: 16, name: { en: 'Animation', ko: '애니메이션' } },
@@ -138,6 +133,108 @@ const tvGenreSpotlights: LocalizedSpotlight[] = [
   { value: 10765, name: { en: 'Sci-fi & fantasy', ko: 'SF·판타지' } },
   { value: 10768, name: { en: 'War & politics', ko: '전쟁·정치' } },
 ]
+
+const movieThemeSpotlights: LocalizedSpotlight[] = [
+  { value: 4379, name: { en: 'Time travel', ko: '시간 여행' } },
+  { value: 10051, name: { en: 'Heist stories', ko: '하이스트' } },
+  { value: 10683, name: { en: 'Coming of age', ko: '성장 이야기' } },
+  { value: 10349, name: { en: 'Survival', ko: '생존' } },
+  { value: 3801, name: { en: 'Space travel', ko: '우주 여행' } },
+  { value: 33519, name: { en: 'Courtroom drama', ko: '법정 드라마' } },
+  { value: 248927, name: { en: 'Found family', ko: '선택한 가족' } },
+]
+
+interface DiscoverySpotlight {
+  id: string
+  name: Record<Locale, string>
+  query: (locale: Locale) => Record<string, QueryValue>
+}
+
+const movieLensSpotlights: DiscoverySpotlight[] = [
+  {
+    id: 'family-night',
+    name: { en: 'Family movie night', ko: '온 가족 영화' },
+    query: (locale) => ({
+      sort_by: 'popularity.desc',
+      'vote_average.gte': 6,
+      'vote_count.gte': 100,
+      region: locale === 'ko' ? 'KR' : 'US',
+      certification_country: locale === 'ko' ? 'KR' : 'US',
+      certification: locale === 'ko' ? 'ALL' : 'G|PG',
+    }),
+  },
+  ...[
+    ['1980s', '1980-01-01', '1989-12-31', '1980년대'],
+    ['1990s', '1990-01-01', '1999-12-31', '1990년대'],
+    ['2000s', '2000-01-01', '2009-12-31', '2000년대'],
+    ['2010s', '2010-01-01', '2019-12-31', '2010년대'],
+  ].map(([id, from, to, koreanName]) => ({
+    id,
+    name: { en: `${id} favorites`, ko: `${koreanName} 명작` },
+    query: () => ({
+      sort_by: 'vote_average.desc',
+      'vote_average.gte': 7,
+      'vote_count.gte': 500,
+      'primary_release_date.gte': from,
+      'primary_release_date.lte': to,
+    }),
+  })),
+]
+
+const tvFormatSpotlights: DiscoverySpotlight[] = [
+  {
+    id: 'reality-tv',
+    name: { en: 'Reality TV', ko: '리얼리티' },
+    query: () => ({
+      sort_by: 'popularity.desc',
+      'vote_average.gte': 6,
+      'vote_count.gte': 30,
+      with_type: 3,
+    }),
+  },
+  {
+    id: 'talk-shows',
+    name: { en: 'Talk shows', ko: '토크쇼' },
+    query: () => ({
+      sort_by: 'popularity.desc',
+      'vote_average.gte': 6,
+      'vote_count.gte': 20,
+      with_type: 5,
+    }),
+  },
+  {
+    id: 'completed-series',
+    name: { en: 'Completed series', ko: '완결 시리즈' },
+    query: () => ({
+      sort_by: 'vote_average.desc',
+      'vote_average.gte': 7,
+      'vote_count.gte': 100,
+      with_status: 3,
+    }),
+  },
+]
+
+const preferredProviderIds: Record<Locale, Record<MediaType, number[]>> = {
+  ko: {
+    movie: [8, 337, 356, 97, 119],
+    tv: [8, 337, 356, 97, 119],
+  },
+  en: {
+    movie: [8, 337, 15, 9, 350],
+    tv: [8, 337, 15, 9, 350],
+  },
+}
+
+const providerFallbacks: Record<number, Pick<WatchProvider, 'provider_id' | 'provider_name' | 'logo_path' | 'display_priority'>> = {
+  8: { provider_id: 8, provider_name: 'Netflix', logo_path: null, display_priority: 0 },
+  9: { provider_id: 9, provider_name: 'Prime Video', logo_path: null, display_priority: 0 },
+  15: { provider_id: 15, provider_name: 'Hulu', logo_path: null, display_priority: 0 },
+  97: { provider_id: 97, provider_name: 'Watcha', logo_path: null, display_priority: 0 },
+  119: { provider_id: 119, provider_name: 'Prime Video', logo_path: null, display_priority: 0 },
+  337: { provider_id: 337, provider_name: 'Disney+', logo_path: null, display_priority: 0 },
+  350: { provider_id: 350, provider_name: 'Apple TV+', logo_path: null, display_priority: 0 },
+  356: { provider_id: 356, provider_name: 'Wavve', logo_path: null, display_priority: 0 },
+}
 
 export const getDailyRotationIndex = (itemCount: number, cadenceDays = 1) => {
   if (itemCount <= 0) return 0
@@ -196,13 +293,29 @@ const createSectionRequests = (
     request: loadSection(definition),
   }))
 
+const getRegionalReleaseCalendar = (locale: Locale) => {
+  const start = new Date()
+  const end = new Date(start)
+  end.setUTCDate(end.getUTCDate() + 45)
+
+  return getDiscoverList('movie', {
+    sort_by: 'primary_release_date.asc',
+    region: locale === 'ko' ? 'KR' : 'US',
+    with_release_type: '2|3',
+    'primary_release_date.gte': start.toISOString().slice(0, 10),
+    'primary_release_date.lte': end.toISOString().slice(0, 10),
+  }, locale)
+}
+
 export const getMovieSectionRequests = (locale: Locale) => {
   const dictionary = getDictionary(locale).sections
-  const [nowPlaying, topRated, upcoming] = dictionary.movie
+  const [nowPlaying, , upcoming] = dictionary.movie
   const country = getRotatingSpotlight(countrySpotlights, 7)
-  const genre = getRotatingSpotlight(movieGenreSpotlights)
+  const theme = getRotatingSpotlight(movieThemeSpotlights)
+  const lens = getRotatingSpotlight(movieLensSpotlights, 7)
   const countryName = country.name[locale]
-  const genreName = genre.name[locale]
+  const themeName = theme.name[locale]
+  const lensName = lens.name[locale]
 
   return createSectionRequests([
     {
@@ -246,37 +359,42 @@ export const getMovieSectionRequests = (locale: Locale) => {
       }, locale),
     },
     {
-      id: `movie-genre-${genre.value}`,
-      title: dictionary.genreSpotlight(genreName),
-      description: dictionary.genreSpotlightDescription(genreName),
+      id: `movie-theme-${theme.value}`,
+      title: dictionary.themeSpotlight(themeName),
+      description: dictionary.themeSpotlightDescription(themeName),
       mediaType: 'movie',
       load: () => getDiscoverList('movie', {
         sort_by: 'popularity.desc',
-        'vote_average.gte': 6,
-        'vote_count.gte': 100,
-        with_genres: genre.value,
+        'vote_average.gte': 6.5,
+        'vote_count.gte': 200,
+        with_keywords: theme.value,
       }, locale),
     },
     {
-      ...topRated,
+      id: `movie-lens-${lens.id}`,
+      title: dictionary.movieLensSpotlight(lensName),
+      description: dictionary.movieLensSpotlightDescription(lensName),
       mediaType: 'movie',
-      load: () => getList('movie/top_rated', locale),
+      load: () => getDiscoverList('movie', lens.query(locale), locale),
     },
     {
       ...upcoming,
+      description: dictionary.releaseCalendarDescription,
       mediaType: 'movie',
-      load: () => getList('movie/upcoming', locale),
+      load: () => getRegionalReleaseCalendar(locale),
     },
   ])
 }
 
 export const getTvSectionRequests = (locale: Locale) => {
   const dictionary = getDictionary(locale).sections
-  const [topRated, , onTheAir, airingToday] = dictionary.tv
+  const [, , onTheAir, airingToday] = dictionary.tv
   const country = getRotatingSpotlight(countrySpotlights, 7)
   const genre = getRotatingSpotlight(tvGenreSpotlights)
+  const format = getRotatingSpotlight(tvFormatSpotlights, 7)
   const countryName = country.name[locale]
   const genreName = genre.name[locale]
+  const formatName = format.name[locale]
 
   return createSectionRequests([
     {
@@ -332,9 +450,11 @@ export const getTvSectionRequests = (locale: Locale) => {
       }, locale),
     },
     {
-      ...topRated,
+      id: `tv-format-${format.id}`,
+      title: dictionary.tvFormatSpotlight(formatName),
+      description: dictionary.tvFormatSpotlightDescription(formatName),
       mediaType: 'tv',
-      load: () => getList('tv/top_rated', locale),
+      load: () => getDiscoverList('tv', format.query(locale), locale),
     },
     {
       ...airingToday,
@@ -342,6 +462,74 @@ export const getTvSectionRequests = (locale: Locale) => {
       load: () => getList('tv/airing_today', locale),
     },
   ])
+}
+
+const getPreferredProviders = async (mediaType: MediaType, locale: Locale) => {
+  const ids = preferredProviderIds[locale][mediaType]
+  let availableProviders: WatchProvider[] = []
+
+  try {
+    const response = await tmdbFetch<WatchProviderListResponse>(
+      `watch/providers/${mediaType}`,
+      { watch_region: locale === 'ko' ? 'KR' : 'US' },
+      { locale, revalidate: 60 * 60 * 24 },
+    )
+    availableProviders = response.results
+  } catch {
+    // Keep the selector usable if provider metadata is temporarily unavailable.
+  }
+
+  return ids.map((id) => (
+    availableProviders.find((provider) => provider.provider_id === id) || providerFallbacks[id]
+  )).filter((provider): provider is WatchProvider => Boolean(provider))
+}
+
+export const getStreamingDiscovery = async (
+  mediaType: MediaType,
+  requestedProviderId: number | null,
+  locale: Locale,
+): Promise<StreamingDiscoveryData> => {
+  const dictionary = getDictionary(locale).sections
+  const preferredIds = preferredProviderIds[locale][mediaType]
+  const selectedProviderId = requestedProviderId && preferredIds.includes(requestedProviderId)
+    ? requestedProviderId
+    : preferredIds[0]
+  const providersRequest = getPreferredProviders(mediaType, locale)
+  const titlesRequest = getDiscoverList(mediaType, {
+    sort_by: 'popularity.desc',
+    'vote_count.gte': mediaType === 'movie' ? 50 : 25,
+    watch_region: locale === 'ko' ? 'KR' : 'US',
+    with_watch_providers: selectedProviderId,
+    with_watch_monetization_types: 'flatrate',
+  }, locale)
+  const [providersResult, titlesResult] = await Promise.allSettled([
+    providersRequest,
+    titlesRequest,
+  ])
+  const providers = providersResult.status === 'fulfilled'
+    ? providersResult.value
+    : preferredIds.map((id) => providerFallbacks[id]).filter(Boolean)
+  const selected = providers.find((provider) => provider.provider_id === selectedProviderId) || providers[0]
+  const mediaLabel = mediaType === 'movie'
+    ? dictionary.streamingMovies
+    : dictionary.streamingShows
+  const section: MediaSectionData = {
+    id: `streaming-${mediaType}`,
+    title: mediaLabel(selected.provider_name),
+    description: dictionary.streamingDescription(selected.provider_name),
+    mediaType,
+    items: titlesResult.status === 'fulfilled' ? titlesResult.value : [],
+    error: titlesResult.status === 'rejected',
+  }
+
+  return {
+    section,
+    selectedProviderId,
+    providers: providers.map((provider) => ({
+      ...provider,
+      selected: provider.provider_id === selectedProviderId,
+    })),
+  }
 }
 
 export const getTrendingSectionRequests = (window: TimeWindow, locale: Locale) => {
@@ -413,12 +601,24 @@ export const searchCatalog = (query: string, locale: Locale) => runCatalogSearch
 } : undefined)
 
 export const getMovieDetail = cache((id: number, locale: Locale) =>
-  tmdbFetch<MediaDetail>(`movie/${id}`, { append_to_response: 'videos' }, { locale }),
+  tmdbFetch<MediaDetail>(`movie/${id}`, {
+    append_to_response: 'videos,images,keywords',
+    include_image_language: locale === 'ko' ? 'ko,en,null' : 'en,null',
+  }, { locale }),
 )
 
 export const getTvDetail = cache((id: number, locale: Locale) =>
-  tmdbFetch<MediaDetail>(`tv/${id}`, { append_to_response: 'videos' }, { locale }),
+  tmdbFetch<MediaDetail>(`tv/${id}`, {
+    append_to_response: 'videos,images,keywords',
+    include_image_language: locale === 'ko' ? 'ko,en,null' : 'en,null',
+  }, { locale }),
 )
+
+export const getTvSeasonDetail = cache((
+  id: number,
+  seasonNumber: number,
+  locale: Locale,
+) => tmdbFetch<SeasonDetail>(`tv/${id}/season/${seasonNumber}`, {}, { locale }))
 
 export const getCredits = cache(async (mediaType: MediaType, id: number, locale: Locale) => {
   return tmdbFetch<MediaCredits>(

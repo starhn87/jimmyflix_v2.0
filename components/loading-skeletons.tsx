@@ -9,12 +9,19 @@ function LoadingAnnouncement({ label }: { label: string }) {
   return <span className="sr-only">{label}</span>
 }
 
-function MediaRailSkeletonVisual() {
+function MediaRailSkeletonVisual({ withToolbar = false }: { withToolbar?: boolean } = {}) {
   return (
     <section aria-hidden="true" className="render-later">
       <div className="mb-5 px-4 sm:px-8 lg:px-12">
         <Bone className="h-7 w-40 rounded-lg sm:w-52" />
         <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
+        {withToolbar ? (
+          <div className="mt-4 flex gap-2 overflow-hidden">
+            {['w-24', 'w-28', 'w-24', 'w-28', 'w-24'].map((width, index) => (
+              <Bone key={index} className={`h-10 shrink-0 rounded-full ${width}`} />
+            ))}
+          </div>
+        ) : null}
       </div>
       <ul className="flex gap-3 overflow-hidden px-4 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12">
         {cardPlaceholders.map((_, index) => (
@@ -30,6 +37,11 @@ function MediaRailSkeletonVisual() {
           </li>
         ))}
       </ul>
+      {withToolbar ? (
+        <div className="-mt-2 px-4 sm:px-8 lg:px-12">
+          <Bone className="h-3 w-48 rounded-md" />
+        </div>
+      ) : null}
     </section>
   )
 }
@@ -73,7 +85,13 @@ export function HeroSkeleton({ label }: { label: string }) {
   )
 }
 
-export function MediaSectionSkeleton({ label }: { label: string }) {
+export function MediaSectionSkeleton({
+  label,
+  withToolbar = false,
+}: {
+  label: string
+  withToolbar?: boolean
+}) {
   return (
     <div
       role="status"
@@ -83,7 +101,7 @@ export function MediaSectionSkeleton({ label }: { label: string }) {
       className="animate-pulse motion-reduce:animate-none"
     >
       <LoadingAnnouncement label={label} />
-      <MediaRailSkeletonVisual />
+      <MediaRailSkeletonVisual withToolbar={withToolbar} />
     </div>
   )
 }
@@ -95,7 +113,9 @@ export function CatalogSkeleton({ label }: { label: string }) {
       <div className="animate-pulse motion-reduce:animate-none">
         <HeroSkeletonVisual />
         <div className="relative z-10 -mt-8 space-y-10 pb-20 sm:space-y-14">
-          {Array.from({ length: 7 }, (_, index) => <MediaRailSkeletonVisual key={index} />)}
+          {Array.from({ length: 8 }, (_, index) => (
+            <MediaRailSkeletonVisual key={index} withToolbar={index === 1} />
+          ))}
         </div>
       </div>
     </main>

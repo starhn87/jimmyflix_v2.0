@@ -3,13 +3,13 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { DetailTabs, type DetailTab } from '@/components/detail-tabs'
 import {
-  SeasonsPanel,
+  GalleryPanel,
   TrailerPanel,
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
 import { RecentMediaTracker } from '@/components/recently-viewed'
 import { getDictionary } from '@/lib/dictionaries'
-import type { Locale } from '@/lib/i18n'
+import { getLocalePath, type Locale } from '@/lib/i18n'
 import {
   formatRating,
   getImageUrl,
@@ -26,6 +26,7 @@ interface DetailViewProps {
   creditsPanel: ReactNode
   productionPanel: ReactNode
   collectionPanel?: ReactNode
+  seasonsPanel?: ReactNode
   relatedSection?: ReactNode
   locale: Locale
 }
@@ -36,6 +37,7 @@ export function DetailView({
   creditsPanel,
   productionPanel,
   collectionPanel,
+  seasonsPanel,
   relatedSection,
   locale,
 }: DetailViewProps) {
@@ -43,9 +45,27 @@ export function DetailView({
   const title = getMediaTitle(detail, locale)
   const rating = formatRating(detail.vote_average, locale)
   const duration = detail.runtime || detail.episode_run_time?.find((time) => time > 0)
-  const backdrop = getImageUrl(detail.backdrop_path, 'w1280')
+  const backdrop = getImageUrl(detail.backdrop_path, 'original')
+  const keywords = (detail.keywords?.keywords || detail.keywords?.results || []).slice(0, 6)
+  const seenImages = new Set<string>()
+  const galleryImages = (detail.images?.backdrops || []).filter((image) => {
+    if (seenImages.has(image.file_path)) return false
+    seenImages.add(image.file_path)
+    return true
+  }).slice(0, 6)
   const tabs: DetailTab[] = [
     { id: 'trailer', label: dictionary.detail.trailer, content: <TrailerPanel detail={detail} locale={locale} /> },
+  ]
+
+  if (galleryImages.length > 0) {
+    tabs.push({
+      id: 'gallery',
+      label: dictionary.detail.gallery,
+      content: <GalleryPanel images={galleryImages} title={title} locale={locale} />,
+    })
+  }
+
+  tabs.push(
     {
       id: 'credits',
       label: dictionary.detail.credits,
@@ -56,7 +76,7 @@ export function DetailView({
       label: dictionary.detail.production,
       content: productionPanel,
     },
-  ]
+  )
 
   if (detail.belongs_to_collection && collectionPanel) {
     tabs.push({
@@ -66,11 +86,11 @@ export function DetailView({
     })
   }
 
-  if (mediaType === 'tv' && detail.seasons?.length) {
+  if (mediaType === 'tv' && seasonsPanel) {
     tabs.push({
       id: 'seasons',
       label: dictionary.detail.seasons,
-      content: <SeasonsPanel seasons={detail.seasons} locale={locale} />,
+      content: seasonsPanel,
     })
   }
 
@@ -100,7 +120,7 @@ export function DetailView({
             fetchPriority="high"
             placeholder={imageSkeletonPlaceholder}
             quality={90}
-            sizes="100vw"
+            sizes="(max-width: 767px) 1px, 100vw"
             className="object-cover object-center opacity-55"
           />
           <div className="detail-backdrop-fade absolute inset-0" />
@@ -166,9 +186,32 @@ export function DetailView({
           </ul>
         </header>
 
-        <p className="mt-6 max-w-[76ch] text-[0.95rem] leading-7 text-muted sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2 lg:text-base lg:leading-8">
-          {detail.overview || dictionary.detail.noOverview}
-        </p>
+        <div className="mt-6 min-w-0 sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2">
+          <p className="max-w-[76ch] text-[0.95rem] leading-7 text-muted lg:text-base lg:leading-8">
+            {detail.overview || dictionary.detail.noOverview}
+          </p>
+          {keywords.length > 0 ? (
+            <section className="mt-5" aria-labelledby="detail-themes-title">
+              <h2 id="detail-themes-title" className="text-xs font-bold tracking-[0.14em] text-faint uppercase">
+                {dictionary.detail.themes}
+              </h2>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {keywords.map((keyword) => (
+                  <li key={keyword.id}>
+                    <Link
+                      href={`${getLocalePath(locale, '/search')}?q=${encodeURIComponent(keyword.name)}`}
+                      prefetch={false}
+                      aria-label={dictionary.detail.searchTheme(keyword.name)}
+                      className="inline-flex min-h-8 items-center rounded-full border border-tone/10 bg-tone/5 px-3 text-xs text-subtle outline-none transition hover:border-accent/35 hover:bg-accent/10 hover:text-ink focus-visible:ring-3 focus-visible:ring-accent/40"
+                    >
+                      #{keyword.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+        </div>
 
         <div className="mt-6 min-w-0 pb-16 sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2">
           <DetailTabs

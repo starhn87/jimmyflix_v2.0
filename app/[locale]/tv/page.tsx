@@ -2,14 +2,21 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { AsyncMediaSection, CatalogHero } from '@/components/catalog-content'
 import { HeroSkeleton, MediaSectionSkeleton } from '@/components/loading-skeletons'
+import { StreamingProviderSection } from '@/components/streaming-provider-section'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale } from '@/lib/i18n'
-import { getTvSectionRequests } from '@/lib/tmdb'
+import { getStreamingDiscovery, getTvSectionRequests } from '@/lib/tmdb'
 
 export const revalidate = 1800
 
 interface TvPageProps {
   params: Promise<{ locale: string }>
+  searchParams: Promise<{ provider?: string | string[] }>
+}
+
+const parseProviderId = (value: string | string[] | undefined) => {
+  const id = Number(Array.isArray(value) ? value[0] : value)
+  return Number.isSafeInteger(id) && id > 0 ? id : null
 }
 
 export async function generateMetadata({ params }: TvPageProps): Promise<Metadata> {
@@ -22,11 +29,17 @@ export async function generateMetadata({ params }: TvPageProps): Promise<Metadat
   }
 }
 
-export default async function TvPage({ params }: TvPageProps) {
-  const { locale } = await params
+export default async function TvPage({ params, searchParams }: TvPageProps) {
+  const [{ locale }, query] = await Promise.all([params, searchParams])
   if (!isLocale(locale)) return null
   const dictionary = getDictionary(locale)
   const sections = getTvSectionRequests(locale)
+  const [leadSection, ...remainingSections] = sections
+  const streamingRequest = getStreamingDiscovery(
+    'tv',
+    parseProviderId(query.provider),
+    locale,
+  )
 
   return (
     <main>
@@ -41,7 +54,15 @@ export default async function TvPage({ params }: TvPageProps) {
         />
       </Suspense>
       <div className="relative z-10 -mt-8 space-y-10 pb-20 sm:space-y-14">
-        {sections.map((section) => (
+        <Suspense
+          fallback={<MediaSectionSkeleton label={locale === 'ko' ? `${leadSection.title} 불러오는 중` : `Loading ${leadSection.title}`} />}
+        >
+          <AsyncMediaSection request={leadSection.request} locale={locale} />
+        </Suspense>
+        <Suspense fallback={<MediaSectionSkeleton label={dictionary.sections.loadingStreaming} withToolbar />}>
+          <StreamingProviderSection request={streamingRequest} locale={locale} basePath="/tv" />
+        </Suspense>
+        {remainingSections.map((section) => (
           <Suspense
             key={section.id}
             fallback={<MediaSectionSkeleton label={locale === 'ko' ? `${section.title} 불러오는 중` : `Loading ${section.title}`} />}

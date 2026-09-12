@@ -4,15 +4,26 @@ import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 
 interface MediaRailProps {
+  id?: string
   title: string
   description: string
   children: ReactNode
   locale: Locale
+  toolbar?: ReactNode
+  footer?: ReactNode
 }
 
-export function MediaRail({ title, description, children, locale }: MediaRailProps) {
+export function MediaRail({
+  id,
+  title,
+  description,
+  children,
+  locale,
+  toolbar,
+  footer,
+}: MediaRailProps) {
   const dictionary = getDictionary(locale)
-  const slug = title.replaceAll(' ', '-').toLowerCase()
+  const slug = id || title.replaceAll(' ', '-').toLowerCase()
   const titleId = `${slug}-title`
   const railId = `${slug}-rail`
 
@@ -28,6 +39,7 @@ export function MediaRail({ title, description, children, locale }: MediaRailPro
           </h2>
           <p className="mt-1 text-sm text-faint">{description}</p>
         </div>
+        {toolbar ? <div className="mt-4">{toolbar}</div> : null}
       </div>
 
       <div className="relative">
@@ -51,6 +63,7 @@ export function MediaRail({ title, description, children, locale }: MediaRailPro
           forwardLabel={dictionary.common.scrollForward(title)}
         />
       </div>
+      {footer ? <div className="-mt-2 px-4 sm:px-8 lg:px-12">{footer}</div> : null}
     </section>
   )
 }

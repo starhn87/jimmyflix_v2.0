@@ -4,14 +4,23 @@ import { MediaRail } from '@/components/media-rail'
 import type { MediaSectionData } from '@/types/tmdb'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
+import type { ReactNode } from 'react'
 
 interface MediaSectionProps {
   section: MediaSectionData
   prioritizeFirst?: boolean
   locale: Locale
+  toolbar?: ReactNode
+  footer?: ReactNode
 }
 
-export function MediaSection({ section, prioritizeFirst = false, locale }: MediaSectionProps) {
+export function MediaSection({
+  section,
+  prioritizeFirst = false,
+  locale,
+  toolbar,
+  footer,
+}: MediaSectionProps) {
   const dictionary = getDictionary(locale)
   if (section.error) {
     return (
@@ -41,7 +50,14 @@ export function MediaSection({ section, prioritizeFirst = false, locale }: Media
   }
 
   return (
-    <MediaRail title={section.title} description={section.description} locale={locale}>
+    <MediaRail
+      id={section.id}
+      title={section.title}
+      description={section.description}
+      locale={locale}
+      toolbar={toolbar}
+      footer={footer}
+    >
       {section.items.map((item, index) => (
         <MediaCard
           key={item.id}

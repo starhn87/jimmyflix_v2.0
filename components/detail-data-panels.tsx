@@ -1,6 +1,11 @@
 import 'server-only'
 
-import { CollectionPanel, CreditsPanel, ProductionPanel } from '@/components/detail-panels'
+import {
+  CollectionPanel,
+  CreditsPanel,
+  ProductionPanel,
+  SeasonsPanel,
+} from '@/components/detail-panels'
 import { MediaSection } from '@/components/media-section'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
@@ -9,6 +14,9 @@ import type {
   MediaDetail,
   MediaItem,
   MediaType,
+  Episode,
+  Season,
+  SeasonDetail,
   WatchProviderRegion,
 } from '@/types/tmdb'
 
@@ -68,6 +76,37 @@ export async function CollectionDataPanel({ request, locale }: {
   }
 
   return <CollectionPanel items={items} error={error} locale={locale} />
+}
+
+export async function TvSeasonsDataPanel({
+  seasons,
+  featuredEpisode,
+  request,
+  locale,
+}: {
+  seasons: Season[]
+  featuredEpisode?: Episode | null
+  request?: Promise<SeasonDetail>
+  locale: Locale
+}) {
+  let latestSeason: SeasonDetail | null = null
+
+  if (request) {
+    try {
+      latestSeason = await request
+    } catch {
+      // The season overview remains useful when episode details cannot be loaded.
+    }
+  }
+
+  return (
+    <SeasonsPanel
+      seasons={seasons}
+      latestSeason={latestSeason}
+      featuredEpisode={featuredEpisode}
+      locale={locale}
+    />
+  )
 }
 
 export async function RelatedTitlesDataSection({

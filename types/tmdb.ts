@@ -116,12 +116,64 @@ export interface WatchProviderResponse {
   results: Record<string, WatchProviderRegion>
 }
 
+export interface WatchProviderListResponse {
+  results: WatchProvider[]
+}
+
+export interface StreamingProviderOption extends WatchProvider {
+  selected: boolean
+}
+
+export interface StreamingDiscoveryData {
+  section: MediaSectionData
+  providers: StreamingProviderOption[]
+  selectedProviderId: number
+}
+
 export interface Season {
   id: number
   name: string
   poster_path: string | null
   air_date?: string
+  episode_count?: number
   season_number: number
+}
+
+export interface Episode {
+  id: number
+  name: string
+  overview: string
+  air_date: string | null
+  episode_number: number
+  season_number: number
+  still_path: string | null
+  runtime?: number | null
+  vote_average?: number
+}
+
+export interface SeasonDetail extends Season {
+  overview: string
+  episodes: Episode[]
+}
+
+export interface TmdbImage {
+  aspect_ratio: number
+  file_path: string
+  height: number
+  iso_639_1: string | null
+  vote_average: number
+  width: number
+}
+
+export interface MediaImages {
+  backdrops: TmdbImage[]
+  logos: TmdbImage[]
+  posters: TmdbImage[]
+}
+
+export interface MediaKeywords {
+  keywords?: Keyword[]
+  results?: Keyword[]
 }
 
 export interface CollectionSummary {
@@ -139,9 +191,13 @@ export interface MediaDetail extends MediaItem {
   videos?: {
     results: Video[]
   }
+  images?: MediaImages
+  keywords?: MediaKeywords
   production_companies: ProductionCompany[]
   production_countries: ProductionCountry[]
   seasons?: Season[]
+  last_episode_to_air?: Episode | null
+  next_episode_to_air?: Episode | null
   belongs_to_collection?: CollectionSummary | null
 }
 

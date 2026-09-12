@@ -98,11 +98,17 @@ interface Dictionary {
     loadingProduction: string
     loadingCollection: string
     loadingRelated: string
+    loadingSeasons: string
     trailer: string
     credits: string
     production: string
     collection: string
     seasons: string
+    gallery: string
+    galleryHeading: string
+    galleryImageAlt: (title: string, index: number) => string
+    themes: string
+    searchTheme: (theme: string) => string
     titleDetails: string
     minutes: (duration: number) => string
     noOverview: string
@@ -130,6 +136,13 @@ interface Dictionary {
     productionCountries: string
     flagAlt: (country: string) => string
     noSeasons: string
+    latestSeason: string
+    allSeasons: string
+    upcomingEpisode: string
+    latestEpisode: string
+    episodeNumber: (season: number, episode: number) => string
+    episodeCount: (count: number) => string
+    noEpisodeOverview: string
     collectionErrorTitle: string
     collectionErrorMessage: string
     noCollection: string
@@ -181,6 +194,19 @@ interface Dictionary {
     countrySpotlightDescription: (country: string) => string
     genreSpotlight: (genre: string) => string
     genreSpotlightDescription: (genre: string) => string
+    themeSpotlight: (theme: string) => string
+    themeSpotlightDescription: (theme: string) => string
+    movieLensSpotlight: (lens: string) => string
+    movieLensSpotlightDescription: (lens: string) => string
+    tvFormatSpotlight: (format: string) => string
+    tvFormatSpotlightDescription: (format: string) => string
+    streamingMovies: (provider: string) => string
+    streamingShows: (provider: string) => string
+    streamingDescription: (provider: string) => string
+    providerPickerLabel: string
+    justWatchDiscoveryAttribution: string
+    loadingStreaming: string
+    releaseCalendarDescription: string
     recentlyViewed: string
     recentlyViewedDescription: string
     trendingMovies: string
@@ -247,7 +273,7 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     movies: {
       metadataTitle: 'Movies',
-      metadataDescription: 'Discover movies now playing, hidden gems, short watches, and rotating country and genre spotlights.',
+      metadataDescription: 'Discover movies through streaming services, daily themes, hidden gems, era collections, and upcoming releases.',
       featured: "Today's movie",
       heading: 'Movies',
       unavailable: 'Movies are temporarily unavailable',
@@ -256,7 +282,7 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     tv: {
       metadataTitle: 'TV shows',
-      metadataDescription: 'Discover currently airing shows, hidden gems, miniseries, and rotating country and genre spotlights.',
+      metadataDescription: 'Discover TV shows through streaming services, hidden gems, miniseries, and rotating country, genre, and format spotlights.',
       featured: "Today's series",
       heading: 'TV shows',
       unavailable: 'TV shows are temporarily unavailable',
@@ -314,11 +340,17 @@ const dictionaries: Record<Locale, Dictionary> = {
       loadingProduction: 'Loading production details',
       loadingCollection: 'Loading collection',
       loadingRelated: 'Loading related titles',
+      loadingSeasons: 'Loading season episodes',
       trailer: 'Trailer',
       credits: 'Credits',
       production: 'Production',
       collection: 'Collection',
       seasons: 'Seasons',
+      gallery: 'Gallery',
+      galleryHeading: 'Scenes and artwork',
+      galleryImageAlt: (title, index) => `${title} scene ${index}`,
+      themes: 'Themes',
+      searchTheme: (theme) => `Search for titles about ${theme}`,
       titleDetails: 'Title details',
       minutes: (duration) => `${duration} min`,
       noOverview: 'No overview is available for this title.',
@@ -346,6 +378,13 @@ const dictionaries: Record<Locale, Dictionary> = {
       productionCountries: 'Production countries',
       flagAlt: (country) => `${country} flag`,
       noSeasons: 'No season information is available.',
+      latestSeason: 'Latest season',
+      allSeasons: 'All seasons',
+      upcomingEpisode: 'Next episode',
+      latestEpisode: 'Latest episode',
+      episodeNumber: (season, episode) => `S${season} E${episode}`,
+      episodeCount: (count) => `${count} episode${count === 1 ? '' : 's'}`,
+      noEpisodeOverview: 'No episode summary is available.',
       collectionErrorTitle: "Couldn't load this collection",
       collectionErrorMessage: 'The collection titles are temporarily unavailable.',
       noCollection: 'No collection titles are available.',
@@ -407,6 +446,19 @@ const dictionaries: Record<Locale, Dictionary> = {
       countrySpotlightDescription: (country) => `Popular and acclaimed titles produced in ${country}`,
       genreSpotlight: (genre) => `${genre} spotlight`,
       genreSpotlightDescription: (genre) => `A fresh selection of ${genre.toLowerCase()} stories`,
+      themeSpotlight: (theme) => `${theme} stories`,
+      themeSpotlightDescription: (theme) => `Movies connected by today’s theme: ${theme.toLowerCase()}`,
+      movieLensSpotlight: (lens) => lens,
+      movieLensSpotlightDescription: (lens) => `A weekly collection focused on ${lens.toLowerCase()}`,
+      tvFormatSpotlight: (format) => `${format} spotlight`,
+      tvFormatSpotlightDescription: (format) => `A weekly selection of ${format.toLowerCase()} worth exploring`,
+      streamingMovies: (provider) => `Movies on ${provider}`,
+      streamingShows: (provider) => `Shows on ${provider}`,
+      streamingDescription: (provider) => `Popular subscription titles currently available on ${provider}`,
+      providerPickerLabel: 'Choose a streaming service',
+      justWatchDiscoveryAttribution: 'Availability data provided by JustWatch',
+      loadingStreaming: 'Loading streaming picks',
+      releaseCalendarDescription: 'Theatrical and digital releases arriving in your region over the next 45 days',
       recentlyViewed: 'Recently viewed',
       recentlyViewedDescription: 'Pick up where your browsing left off',
       trendingMovies: 'Trending movies',
@@ -465,7 +517,7 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     movies: {
       metadataTitle: '영화',
-      metadataDescription: '현재 상영작, 숨은 명작, 짧은 영화와 순환하는 국가·장르 특집을 둘러보세요.',
+      metadataDescription: 'OTT별 영화, 오늘의 주제, 숨은 명작, 시대 컬렉션과 공개 예정작을 둘러보세요.',
       featured: '오늘의 영화',
       heading: '영화',
       unavailable: '영화 목록을 일시적으로 이용할 수 없습니다',
@@ -474,7 +526,7 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     tv: {
       metadataTitle: 'TV 프로그램',
-      metadataDescription: '방영 중인 프로그램, 숨은 명작, 미니시리즈와 순환하는 국가·장르 특집을 둘러보세요.',
+      metadataDescription: 'OTT별 TV 프로그램, 숨은 명작, 미니시리즈와 순환하는 국가·장르·포맷 특집을 둘러보세요.',
       featured: '오늘의 시리즈',
       heading: 'TV 프로그램',
       unavailable: 'TV 프로그램 목록을 일시적으로 이용할 수 없습니다',
@@ -532,11 +584,17 @@ const dictionaries: Record<Locale, Dictionary> = {
       loadingProduction: '제작 정보 불러오는 중',
       loadingCollection: '컬렉션 불러오는 중',
       loadingRelated: '연관 작품 불러오는 중',
+      loadingSeasons: '시즌 에피소드 불러오는 중',
       trailer: '예고편',
       credits: '출연진',
       production: '제작',
       collection: '컬렉션',
       seasons: '시즌',
+      gallery: '갤러리',
+      galleryHeading: '장면과 아트워크',
+      galleryImageAlt: (title, index) => `${title} 장면 ${index}`,
+      themes: '작품 키워드',
+      searchTheme: (theme) => `${theme} 관련 작품 검색`,
       titleDetails: '콘텐츠 정보',
       minutes: (duration) => `${duration}분`,
       noOverview: '등록된 줄거리가 없습니다.',
@@ -564,6 +622,13 @@ const dictionaries: Record<Locale, Dictionary> = {
       productionCountries: '제작 국가',
       flagAlt: (country) => `${country} 국기`,
       noSeasons: '등록된 시즌 정보가 없습니다.',
+      latestSeason: '최신 시즌',
+      allSeasons: '전체 시즌',
+      upcomingEpisode: '다음 에피소드',
+      latestEpisode: '최근 에피소드',
+      episodeNumber: (season, episode) => `시즌 ${season} · 에피소드 ${episode}`,
+      episodeCount: (count) => `총 ${count}개 에피소드`,
+      noEpisodeOverview: '등록된 에피소드 줄거리가 없습니다.',
       collectionErrorTitle: '컬렉션을 불러오지 못했습니다',
       collectionErrorMessage: '컬렉션 콘텐츠를 일시적으로 이용할 수 없습니다.',
       noCollection: '등록된 컬렉션 콘텐츠가 없습니다.',
@@ -625,6 +690,19 @@ const dictionaries: Record<Locale, Dictionary> = {
       countrySpotlightDescription: (country) => `${country}에서 제작된 인기작과 숨은 명작`,
       genreSpotlight: (genre) => `${genre} 특집`,
       genreSpotlightDescription: (genre) => `${genre} 장르에서 새롭게 발견한 작품`,
+      themeSpotlight: (theme) => `${theme}로 보는 영화`,
+      themeSpotlightDescription: (theme) => `오늘의 주제 ${theme}로 이어지는 작품`,
+      movieLensSpotlight: (lens) => lens,
+      movieLensSpotlightDescription: (lens) => `${lens}를 중심으로 매주 새롭게 구성한 컬렉션`,
+      tvFormatSpotlight: (format) => `${format} 특집`,
+      tvFormatSpotlightDescription: (format) => `이번 주에 둘러보기 좋은 ${format} 프로그램`,
+      streamingMovies: (provider) => `${provider} 영화`,
+      streamingShows: (provider) => `${provider} 시리즈`,
+      streamingDescription: (provider) => `${provider} 구독으로 볼 수 있는 인기 작품`,
+      providerPickerLabel: '스트리밍 서비스 선택',
+      justWatchDiscoveryAttribution: '시청 가능 정보 제공: JustWatch',
+      loadingStreaming: '스트리밍 추천작 불러오는 중',
+      releaseCalendarDescription: '앞으로 45일 안에 국내 극장과 디지털로 공개되는 작품',
       recentlyViewed: '최근 본 작품',
       recentlyViewedDescription: '최근 둘러본 작품을 다시 확인해 보세요',
       trendingMovies: '인기 급상승 영화',

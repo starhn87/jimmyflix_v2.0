@@ -5,6 +5,7 @@ import {
   CreditsDataPanel,
   ProductionDataPanel,
   RelatedTitlesDataSection,
+  TvSeasonsDataPanel,
 } from '@/components/detail-data-panels'
 import { DetailView } from '@/components/detail-view'
 import { DetailPanelSkeleton, MediaSectionSkeleton } from '@/components/loading-skeletons'
@@ -12,6 +13,7 @@ import { getMediaTitle } from '@/lib/media'
 import {
   getCredits,
   getRelatedTitles,
+  getTvSeasonDetail,
   getTvDetail,
   getWatchProviders,
   TmdbNotFoundError,
@@ -64,6 +66,11 @@ export default async function TvDetailPage({ params }: TvDetailPageProps) {
   const creditsRequest = getCredits('tv', id, locale)
   const providersRequest = getWatchProviders('tv', id, locale)
   const relatedRequest = getRelatedTitles('tv', id, locale)
+  const regularSeasons = (detail.seasons || []).filter((season) => season.season_number > 0)
+  const latestSeason = regularSeasons.at(-1)
+  const latestSeasonRequest = latestSeason
+    ? getTvSeasonDetail(id, latestSeason.season_number, locale)
+    : undefined
 
   return (
     <DetailView
@@ -85,6 +92,16 @@ export default async function TvDetailPage({ params }: TvDetailPageProps) {
           />
         </Suspense>
       )}
+      seasonsPanel={detail.seasons?.length ? (
+        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingSeasons} />}>
+          <TvSeasonsDataPanel
+            seasons={detail.seasons}
+            featuredEpisode={detail.next_episode_to_air || detail.last_episode_to_air}
+            request={latestSeasonRequest}
+            locale={locale}
+          />
+        </Suspense>
+      ) : undefined}
       relatedSection={(
         <Suspense fallback={<MediaSectionSkeleton label={dictionary.detail.loadingRelated} />}>
           <RelatedTitlesDataSection
