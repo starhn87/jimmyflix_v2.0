@@ -13,6 +13,13 @@ export const BRAND_SHARE_IMAGE = {
   type: 'image/png',
 }
 
+export const getBrandShareImage = (locale: Locale) => ({
+  ...BRAND_SHARE_IMAGE,
+  alt: locale === 'ko'
+    ? 'Jimmyflix — 영화와 시리즈, 다음에 만날 이야기를 발견하세요'
+    : 'Jimmyflix — Discover your next great movie or series',
+})
+
 export const getLanguageAlternates = (path: string) => ({
   ...Object.fromEntries(locales.map((locale) => [
     tmdbLanguage[locale], absoluteUrl(getLocalePath(locale, path)),
@@ -42,12 +49,7 @@ export function createPageMetadata({
   const url = absoluteUrl(getLocalePath(locale, cleanPath))
   const summary = summarizeDescription(description)
   const shareTitle = `${title} | ${SITE_NAME}`
-  const shareImage = image ? { url: image, alt: title } : {
-    ...BRAND_SHARE_IMAGE,
-    alt: locale === 'ko'
-      ? 'Jimmyflix — 영화와 시리즈, 다음에 만날 이야기를 발견하세요'
-      : 'Jimmyflix — Discover your next great movie or series',
-  }
+  const shareImage = image ? { url: image, alt: title } : getBrandShareImage(locale)
 
   return {
     title,

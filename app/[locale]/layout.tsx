@@ -9,7 +9,7 @@ import { SiteHeader } from '@/components/site-header'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale, locales } from '@/lib/i18n'
 import { themeScript } from '@/lib/theme'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, getBrandShareImage } from '@/lib/seo'
 import { JsonLd } from '@/components/json-ld'
 import { websiteJsonLd } from '@/lib/structured-data'
 import '../globals.css'
@@ -49,6 +49,13 @@ export async function generateMetadata({
       type: 'website',
       siteName: 'Jimmyflix',
       locale: locale === 'ko' ? 'ko_KR' : 'en_US',
+      images: [getBrandShareImage(locale)],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Jimmyflix',
+      description: dictionary.metadata.openGraphDescription,
+      images: [getBrandShareImage(locale)],
     },
   }
 }
