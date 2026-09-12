@@ -1,95 +1,126 @@
-# Jimmyflix
+<p align="center">
+  <img src="app/icon.svg" width="88" alt="Jimmyflix 티켓 로고" />
+</p>
 
-TMDB 데이터를 이용해 영화와 TV 프로그램을 탐색하는 반응형 웹 애플리케이션입니다. 상영·방영 정보 외에도 숨은 명작, 짧은 영화, 미니시리즈, 국가·장르별 순환 특집, 작품별 추천과 인물 필모그래피를 제공합니다.
+<h1 align="center">Jimmyflix</h1>
 
-- 운영 주소: [jimmyflix.vercel.app](https://jimmyflix.vercel.app)
-- 구조 전환 기록: [App Router·Tailwind 전환 문서](docs/app-router-overhaul.md)
-- 기존 진단: [저장소 구조 및 개선점 진단](docs/repository-review.md)
-- UX 과제: [UI/UX 개선 백로그](docs/ui-ux-backlog.md)
-- 구현 기록: [개선 작업 진행 기록](docs/improvement-progress.md)
-- 언어 전환: [한국어·영어 현지화 구조](docs/localization.md)
-- 브랜드 컬러: [브랜드 컬러 제안](docs/brand-color-proposal.md)
+<p align="center">
+  오늘 볼 작품을 발견하고, 인물과 필모그래피까지 자연스럽게 이어서 탐색하는 영화·TV 웹 애플리케이션
+</p>
 
-## 현재 기술 구성
+<p align="center">
+  <a href="https://jimmyflix.vercel.app"><strong>서비스 바로가기 →</strong></a>
+</p>
+
+<p align="center">
+  <code>Next.js 16</code>
+  <code>React 19</code>
+  <code>TypeScript</code>
+  <code>Tailwind CSS 4</code>
+  <code>TMDB API</code>
+  <code>Vercel</code>
+</p>
+
+![Jimmyflix 영화 홈 화면](docs/screenshots/home-discovery.jpg)
+
+## 오늘 무엇을 볼지, 더 쉽게
+
+Jimmyflix는 인기 순위만 나열하는 대신 여러 관점의 큐레이션을 제공합니다. 영화와 TV를 각각 탐색하면서 현재 상영·방영작, 숨은 명작, 짧은 영화, 미니시리즈, 국가·장르 특집을 만날 수 있습니다. 상단 추천과 일부 특집은 날짜에 따라 바뀌어 다시 방문할 때마다 새로운 작품을 보여줍니다.
+
+| 발견 | 탐색 | 개인화 | 사용 환경 |
+| --- | --- | --- | --- |
+| 영화·TV별 다층 큐레이션 | 예고편, 출연진, 제작진, 시즌·컬렉션 | 최근 본 작품을 기기에 저장 | 한국어·영어 지원 |
+| 일간·주간 트렌드 | 시청 가능한 플랫폼과 추천작 | 평점이 있을 때만 배지 표시 | 시스템 기본 테마와 수동 전환 |
+| 국가·장르 순환 특집 | 인물 소개와 필모그래피 | 검색어와 트렌드 기간을 URL에 유지 | 모바일·데스크톱 반응형 UI |
+
+## 다양한 관점으로 발견하기
+
+익숙한 흥행작뿐 아니라 높은 평가를 받은 작품, 부담 없이 볼 수 있는 짧은 영화, 국가와 장르를 기준으로 고른 콘텐츠를 가로 슬라이드로 탐색할 수 있습니다. 데스크톱에서는 목록 가장자리에 포인터를 가져가면 이동 버튼이 나타나고, 모바일에서는 자연스러운 터치 스크롤을 사용합니다.
+
+![숨은 명작과 짧은 영화 큐레이션](docs/screenshots/curated-rails.jpg)
+
+## 한 작품에서 더 깊게
+
+상세 화면은 포스터와 고화질 배경, 줄거리, 장르, 러닝타임을 먼저 보여줍니다. 이어서 예고편, 출연진, 핵심 제작진, 제작사·국가, 시청 플랫폼, 컬렉션 또는 시즌, 관련 추천작을 한 화면에서 확인할 수 있습니다.
+
+![매트릭스 상세 화면의 제작 및 시청 플랫폼 정보](docs/screenshots/detail-production.jpg)
+
+## 인물에서 다시 작품으로
+
+배우와 제작진 이름을 선택하면 인물 소개와 기본 정보, 출연작, 제작 참여작으로 이동합니다. 작품 상세에서 인물로, 다시 필모그래피 속 다른 작품으로 이어지는 탐색 흐름을 제공합니다.
+
+![키아누 리브스의 출연작과 제작 참여작](docs/screenshots/person-credits.jpg)
+
+## 모바일에서도 같은 밀도
+
+모바일 상세는 포스터를 화면 너비로 크게 보여주고 그 아래에 제목과 핵심 정보를 배치합니다. 헤더의 설정 메뉴에서 언어와 테마를 함께 바꿀 수 있으며, 선택한 언어와 테마는 다음 방문에도 유지됩니다.
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/mobile-detail.jpg" alt="모바일 매트릭스 상세 화면" />
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/mobile-settings.jpg" alt="모바일 언어 및 테마 설정 메뉴" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><sub>화면을 채우는 포스터와 핵심 정보</sub></td>
+    <td align="center"><sub>언어와 테마를 모은 모바일 설정</sub></td>
+  </tr>
+</table>
+
+## 제목을 몰라도 검색
+
+하나의 검색창에서 영화·TV 제목, 배우 이름, 주제 키워드를 검색할 수 있습니다. 인물 이름은 해당 인물의 출연·제작 참여작으로, 주제 키워드는 관련 영화와 TV 프로그램으로 확장됩니다.
+
+```mermaid
+flowchart LR
+  A[오늘의 큐레이션] --> C[영화·TV 상세]
+  B[통합 검색] --> C
+  C --> D[예고편·출연진·제작·시청 플랫폼]
+  C --> E[배우·제작진]
+  E --> F[인물 소개·필모그래피]
+  F --> C
+```
+
+## 기술 구성
 
 | 영역 | 구성 |
 | --- | --- |
-| 프레임워크 | Next.js 16 App Router, React 19 |
-| 언어 | TypeScript 5 strict mode |
-| 스타일 | Tailwind CSS 4 |
-| 데이터 | React Server Components에서 TMDB API 직접 호출, Next.js Data Cache, 브라우저 최근 본 기록 |
-| 현지화 | 영어·한국어 URL, 서버 UI 사전, TMDB 언어별 응답 |
-| 이미지 | `next/image`, TMDB 크기별 이미지 URL |
-| 목록 탐색 | 브라우저 기본 가로 스크롤 + CSS scroll snap |
+| 프레임워크 | Next.js 16 App Router, React 19 Server Components |
+| 언어·스타일 | TypeScript strict mode, Tailwind CSS 4 |
+| 데이터 | 서버에서 TMDB API 호출, Next.js Data Cache |
+| 이미지 | `next/image`, 화면 크기와 용도에 맞춘 TMDB 이미지 소스 |
+| 현지화 | 한국어·영어 URL, 서버 UI 사전, 언어별 TMDB 응답 |
+| 상태 | 검색 조건은 URL, 최근 본 작품·언어·테마는 브라우저에 저장 |
 | 배포 | Vercel, Node.js 24 |
-| 패키지 관리 | Yarn 3.8.7, `node_modules` linker |
 
-Emotion, React Query, Recoil, Axios, react-slick과 전역 polyfill은 제거했습니다. 검색어와 트렌드 기간은 URL에 저장하고, 짧은 상호작용 상태만 클라이언트 컴포넌트가 관리합니다.
+데이터 요청은 Server Component에서 시작하고 독립된 목록을 병렬로 불러옵니다. 화면별 `Suspense` 경계와 실제 콘텐츠 크기에 맞춘 스켈레톤을 사용해 먼저 준비된 영역부터 보여주며 레이아웃 이동을 줄입니다. TMDB API 키는 브라우저에 전달하지 않습니다.
 
-## 주요 라우트
+## 로컬에서 실행하기
 
-| 경로 | 역할 |
-| --- | --- |
-| `/{locale}` | 오늘의 영화, 상영작, 숨은 명작, 100분 이하, 국가·장르 특집, 최근 본 작품 |
-| `/{locale}/tv` | 오늘의 시리즈, 방영작, 숨은 명작, 미니시리즈, 국가·장르 특집 |
-| `/{locale}/trend?window=day\|week` | 일간·주간 영화 및 TV 트렌드 |
-| `/{locale}/search?q=...` | 제목·배우·주제 키워드 영화·TV 통합 검색 |
-| `/{locale}/movies/[id]` | 영화 상세, 예고편·출연진·제작진·시청 플랫폼·컬렉션·추천작 |
-| `/{locale}/tv/[id]` | TV 상세, 예고편·출연진·제작진·시청 플랫폼·시즌·추천작 |
-| `/{locale}/people/[id]` | 배우·제작진 소개와 출연·제작 필모그래피 |
-
-`locale`은 영어 `en` 또는 한국어 `ko`다. 언어가 없는 기존 주소는 저장된 선택이나 브라우저 언어에 맞는 경로로 자동 이동한다.
-
-## 로컬 실행
-
-Node.js 24를 사용합니다.
+Node.js 24와 TMDB API 키가 필요합니다.
 
 ```bash
 corepack enable
 corepack yarn install
 ```
 
-루트에 `.env.local`을 만들고 TMDB API 키를 서버 전용 변수로 설정합니다.
+프로젝트 루트에 `.env.local`을 만듭니다.
 
 ```dotenv
 TMDB_API_KEY=your_tmdb_api_key
 ```
 
-기존 Vercel 설정과의 전환을 위해 `NEXT_PUBLIC_API_KEY`도 임시로 읽지만, 새 환경에서는 `TMDB_API_KEY`를 사용해야 합니다.
+개발 서버를 실행합니다.
 
 ```bash
 corepack yarn dev
 ```
 
-개발 서버는 기본적으로 `http://localhost:3000`에서 실행됩니다.
+`http://localhost:3000`에서 한국어 또는 영어로 Jimmyflix를 사용할 수 있습니다.
 
-## 검증
+## 데이터 출처
 
-```bash
-corepack yarn lint
-corepack yarn typecheck
-corepack yarn build
-```
-
-주요 화면 변경은 320·375·768·1440px에서 가로 넘침, 키보드 포커스, 탭 전환, 가로 목록 조작을 함께 확인합니다. 상세 예고편은 컨테이너 전체 너비의 16:9 비율을 유지하며, Credits·Production·Seasons·Collection 카드는 모바일의 홀수 항목까지 가운데 정렬합니다.
-
-## 디렉터리 구조
-
-```text
-app/[locale]/         언어별 App Router 페이지, 화면별 로딩·오류 경계
-components/           카드, 레일, 검색, 상세 탭·스켈레톤 등 재사용 UI
-lib/media.ts          제목·연도·이미지·라우트 표시 규칙
-lib/tmdb.ts           서버 전용 TMDB 요청과 캐시 정책
-lib/dictionaries.ts   영어·한국어 서버 전용 UI 사전
-lib/i18n.ts           지원 언어, 경로, TMDB 언어 코드
-proxy.ts              언어 없는 URL 감지와 리다이렉트
-types/tmdb.ts         TMDB 응답에 필요한 도메인 타입
-public/images/        로컬 대체 이미지와 404 자산
-docs/                 진단, UX 백로그, 전환 및 검증 기록
-```
-
-국가 특집은 주 단위, 장르 특집과 상단 추천은 일 단위로 후보가 바뀝니다. 작품 상세에서 최근 본 항목을 최대 16개까지 브라우저 `localStorage`에 저장하며 서버나 다른 기기로 전송하지 않습니다. 시청 플랫폼 정보는 사용자의 UI 언어에 따라 한국 또는 미국 지역 데이터를 사용하고, TMDB가 제공하는 확인 페이지로 연결합니다.
-
-TMDB 요청 키는 클라이언트 컴포넌트에 전달하지 않습니다. 상세 ID가 잘못되었거나 TMDB가 404를 반환하면 App Router의 `notFound()`로 연결하고, 목록과 검색의 독립 요청은 `Promise.allSettled`로 분리해 일부 실패에도 나머지 결과를 표시합니다.
-
-전역 고정 로더는 사용하지 않습니다. 목록과 상세는 실제 레이아웃에 맞는 가까운 라우트 스켈레톤을 사용하고, 검색·트렌드·상세 부가 정보는 `Suspense`로 나눠 이미 렌더된 검색창, 기간 선택, 핵심 상세 정보를 유지합니다.
+영화·TV·인물 데이터와 이미지는 [TMDB](https://www.themoviedb.org/) API를 사용합니다. 스트리밍 제공 정보는 TMDB의 Watch Providers 응답을 통해 제공되며 JustWatch 출처를 화면에 표시합니다. Jimmyflix는 TMDB의 공식 제품이 아니며 TMDB의 보증을 받지 않습니다.
