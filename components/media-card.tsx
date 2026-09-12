@@ -34,10 +34,10 @@ export function MediaCard({ item, mediaType, highPriority = false, locale }: Med
       href={getMediaHref(item, type, locale)}
       prefetch={false}
       aria-label={[title, typeLabel, year, rating?.label].filter(Boolean).join(', ')}
-      className="group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
+      className="media-card group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
     >
       <article className="min-w-0">
-        <div className="relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media">
+        <div className="media-card-poster relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media">
           <Image
             src={getPosterUrl(item.poster_path)}
             alt={locale === 'ko' ? `${title} 포스터` : `${title} poster`}
@@ -46,7 +46,7 @@ export function MediaCard({ item, mediaType, highPriority = false, locale }: Med
             placeholder={imageSkeletonPlaceholder}
             quality={85}
             sizes="(max-width: 480px) 42vw, (max-width: 768px) 27vw, (max-width: 1200px) 20vw, 190px"
-            className="object-cover object-center transition duration-300 ease-out group-hover:scale-[1.035] group-focus-visible:scale-[1.035] motion-reduce:transition-none"
+            className="object-cover object-center"
           />
           {rating ? (
             <>
