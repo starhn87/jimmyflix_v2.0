@@ -16,6 +16,7 @@ export interface GalleryMessages {
   viewAll: string
   loading: string
   error: string
+  swipeHint: string
 }
 
 export const GALLERY_PREVIEW_LIMIT = 12
@@ -34,3 +35,9 @@ export function getGalleryImages(images: TmdbImage[]): GalleryImage[] {
 export const getGalleryIndex = (index: number, count: number) => (
   count > 0 ? ((index % count) + count) % count : 0
 )
+
+export function getGallerySwipeDirection(x: number, y: number, width: number): -1 | 0 | 1 {
+  const threshold = Math.max(28, Math.min(56, width * 0.1))
+  if (Math.abs(x) < threshold || Math.abs(x) <= Math.abs(y) * 1.25) return 0
+  return x < 0 ? 1 : -1
+}

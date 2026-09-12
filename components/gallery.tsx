@@ -76,9 +76,9 @@ export function Gallery({ images, title, heading, messages }: GalleryProps) {
         ) : null}
       </div>
       <p className="mt-2 text-xs leading-5 text-subtle sm:text-sm">{messages.hint}</p>
-      <ul ref={track} id={`${id}-track`} className="no-scrollbar mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain rounded-xl pb-1 sm:gap-4">
+      <ul ref={track} id={`${id}-track`} className="no-scrollbar mt-4 flex touch-auto snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain rounded-xl pb-1 sm:gap-4">
         {previews.map((image, index) => (
-          <li key={image.file_path} className="w-[86%] shrink-0 snap-start sm:w-[calc(50%-0.5rem)]">
+          <li key={image.file_path} className="w-[86%] shrink-0 snap-start snap-always sm:w-[calc(50%-0.5rem)]">
             <button
               type="button"
               aria-label={`${messages.open}: ${title} · ${messages.photo} ${index + 1}`}
@@ -89,6 +89,7 @@ export function Gallery({ images, title, heading, messages }: GalleryProps) {
               <LoadingCardImage
                 src={getImageUrl(image.file_path, 'w780') || ''}
                 alt={`${title} · ${messages.photo} ${index + 1}`}
+                draggable={false}
                 sizes="(max-width: 639px) 85vw, (max-width: 1023px) 48vw, 440px"
                 imageClassName="object-cover transition-transform duration-300 group-hover:scale-[1.025] motion-reduce:transform-none"
                 containerClassName="relative aspect-video overflow-hidden rounded-xl border border-tone/10 bg-surface"
@@ -102,7 +103,7 @@ export function Gallery({ images, title, heading, messages }: GalleryProps) {
           </li>
         ))}
         {images.length > previews.length ? (
-          <li className="w-[86%] shrink-0 snap-start sm:w-[calc(50%-0.5rem)]">
+          <li className="w-[86%] shrink-0 snap-start snap-always sm:w-[calc(50%-0.5rem)]">
             <button
               type="button"
               aria-haspopup="dialog"

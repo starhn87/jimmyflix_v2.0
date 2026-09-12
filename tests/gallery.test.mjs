@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { getGalleryImages, getGalleryIndex, GALLERY_PREVIEW_LIMIT } from '../lib/gallery.ts'
+import { getGalleryImages, getGalleryIndex, getGallerySwipeDirection, GALLERY_PREVIEW_LIMIT } from '../lib/gallery.ts'
 
 const image = (id, overrides = {}) => ({
   file_path: `/scene-${id}.jpg`, width: 1920, height: 1080,
@@ -31,4 +31,17 @@ test('navigation wraps in both directions and handles single or empty galleries'
   assert.equal(getGalleryIndex(-1, 1), 0)
   assert.equal(getGalleryIndex(1, 1), 0)
   assert.equal(getGalleryIndex(1, 0), 0)
+})
+
+test('horizontal swipes advance in either direction, including a short intentional mobile swipe', () => {
+  assert.equal(getGallerySwipeDirection(-40, 5, 390), 1)
+  assert.equal(getGallerySwipeDirection(120, 20, 390), -1)
+  assert.equal(getGallerySwipeDirection(-100, 10, 1440), 1)
+})
+
+test('taps, vertical scrolling and ambiguous diagonal gestures do not change the photo', () => {
+  assert.equal(getGallerySwipeDirection(8, 2, 390), 0)
+  assert.equal(getGallerySwipeDirection(25, 1, 320), 0)
+  assert.equal(getGallerySwipeDirection(45, 110, 390), 0)
+  assert.equal(getGallerySwipeDirection(-80, 75, 390), 0)
 })

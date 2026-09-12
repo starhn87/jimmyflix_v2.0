@@ -10,6 +10,7 @@ interface LoadingCardImageProps {
   sizes: string
   imageClassName: string
   containerClassName: string
+  draggable?: boolean
 }
 
 export function LoadingCardImage({
@@ -18,6 +19,7 @@ export function LoadingCardImage({
   sizes,
   imageClassName,
   containerClassName,
+  draggable,
 }: LoadingCardImageProps) {
   const [loaded, setLoaded] = useState(false)
 
@@ -29,6 +31,7 @@ export function LoadingCardImage({
       <Image
         src={src}
         alt={alt}
+        draggable={draggable}
         fill
         placeholder={imageSkeletonPlaceholder}
         quality={85}

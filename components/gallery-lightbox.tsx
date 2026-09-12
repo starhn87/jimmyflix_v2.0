@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useId, useRef, useState, type RefObject } from 'react'
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon, ExpandIcon } from '@/components/icons'
-import type { GalleryImage, GalleryMessages } from '@/lib/gallery'
+import { getGallerySwipeDirection, type GalleryImage, type GalleryMessages } from '@/lib/gallery'
 import { getImageUrl } from '@/lib/media'
 
 interface GalleryLightboxProps {
@@ -24,8 +24,12 @@ function OriginalImage({ image, alt, messages }: { image: GalleryImage; alt: str
   return (
     <div className="relative h-full w-full" aria-busy={state === 'loading'}>
       {state === 'loading' ? (
-        <div role="status" className="absolute inset-0 grid animate-pulse place-items-center rounded-xl bg-white/5 text-sm text-white/65 motion-reduce:animate-none">
-          {messages.loading}
+        <div role="status" className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden rounded-xl">
+          <div aria-hidden="true" className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/15 via-violet-300/10 to-white/5 motion-reduce:animate-none" />
+          <div className="relative flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-[#0b0912]/80 px-6 py-5 text-sm text-white/85">
+            <span aria-hidden="true" className="size-10 animate-spin rounded-full border-3 border-white/15 border-t-violet-300 motion-reduce:animate-none" />
+            <span>{messages.loading}</span>
+          </div>
         </div>
       ) : null}
       {state === 'error' ? (
@@ -50,9 +54,18 @@ function OriginalImage({ image, alt, messages }: { image: GalleryImage; alt: str
 export function GalleryLightbox({ images, index, title, messages, returnFocus, onClose, onNavigate }: GalleryLightboxProps) {
   const dialog = useRef<HTMLDialogElement>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
-  const touchOrigin = useRef<{ x: number; y: number } | null>(null)
+  const swipeContent = useRef<HTMLDivElement>(null)
+  const swipe = useRef<{ pointerId: number; x: number; y: number; axis: 'pending' | 'horizontal' | 'vertical' } | null>(null)
   const id = useId()
   const image = images[index]
+
+  const resetSwipe = () => {
+    swipe.current = null
+    if (swipeContent.current) {
+      swipeContent.current.removeAttribute('data-dragging')
+      swipeContent.current.style.transform = ''
+    }
+  }
 
   useEffect(() => {
     const element = dialog.current
@@ -111,39 +124,61 @@ export function GalleryLightbox({ images, index, title, messages, returnFocus, o
           </div>
         </header>
         <div
-          className="min-h-0 flex-1 px-0 sm:px-6"
+          className="min-h-0 flex-1 overflow-hidden px-0 sm:px-6"
           style={{ touchAction: 'pan-y pinch-zoom' }}
-          onTouchStart={(event) => {
-            touchOrigin.current = event.touches.length === 1
-              ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null
+          onPointerDown={(event) => {
+            if (event.pointerType === 'mouse' || images.length < 2) return
+            if (!event.isPrimary || (window.visualViewport?.scale ?? 1) > 1) {
+              resetSwipe()
+              return
+            }
+            swipe.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, axis: 'pending' }
+            event.currentTarget.setPointerCapture(event.pointerId)
           }}
-          onTouchMove={(event) => { if (event.touches.length !== 1) touchOrigin.current = null }}
-          onTouchCancel={() => { touchOrigin.current = null }}
-          onTouchEnd={(event) => {
-            const origin = touchOrigin.current
-            touchOrigin.current = null
-            if (!origin || images.length < 2 || !event.changedTouches[0]) return
-            const x = event.changedTouches[0].clientX - origin.x
-            const y = event.changedTouches[0].clientY - origin.y
-            if (Math.abs(x) > 50 && Math.abs(x) > Math.abs(y) * 1.5) onNavigate(x < 0 ? 1 : -1)
+          onPointerMove={(event) => {
+            const origin = swipe.current
+            if (!origin || origin.pointerId !== event.pointerId) return
+            const x = event.clientX - origin.x
+            const y = event.clientY - origin.y
+            if (origin.axis === 'pending' && Math.max(Math.abs(x), Math.abs(y)) > 8) {
+              origin.axis = Math.abs(x) > Math.abs(y) * 1.25 ? 'horizontal' : 'vertical'
+            }
+            if (origin.axis === 'horizontal' && swipeContent.current && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+              swipeContent.current.dataset.dragging = ''
+              swipeContent.current.style.transform = `translateX(${Math.max(-100, Math.min(100, x * 0.35))}px)`
+            }
+          }}
+          onPointerCancel={resetSwipe}
+          onLostPointerCapture={resetSwipe}
+          onPointerUp={(event) => {
+            const origin = swipe.current
+            resetSwipe()
+            if (!origin || origin.pointerId !== event.pointerId || origin.axis === 'vertical') return
+            const direction = getGallerySwipeDirection(event.clientX - origin.x, event.clientY - origin.y, event.currentTarget.clientWidth)
+            if (direction) onNavigate(direction)
           }}
         >
-          <OriginalImage key={image.file_path} image={image} alt={`${title} · ${messages.photo} ${index + 1}`} messages={messages} />
+          <div ref={swipeContent} className="h-full w-full transition-transform duration-200 ease-out data-dragging:transition-none motion-reduce:transition-none">
+            <OriginalImage key={image.file_path} image={image} alt={`${title} · ${messages.photo} ${index + 1}`} messages={messages} />
+          </div>
         </div>
-        <footer className="flex shrink-0 items-center justify-center gap-6 px-4 py-4 sm:gap-8">
-          {images.length > 1 ? (
-            <button type="button" aria-label={messages.previous} onClick={() => onNavigate(-1)} className={control}>
-              <ArrowLeftIcon className="size-6" />
-            </button>
-          ) : null}
-          <p aria-live="polite" aria-atomic="true" className="min-w-20 text-center text-sm tabular-nums text-white/80">
-            <span className="sr-only">{messages.photo} </span>{index + 1} <span className="px-1 text-white/35">/</span> {images.length}
-          </p>
-          {images.length > 1 ? (
-            <button type="button" aria-label={messages.next} onClick={() => onNavigate(1)} className={control}>
-              <ArrowRightIcon className="size-6" />
-            </button>
-          ) : null}
+        <footer className="shrink-0 px-4 py-4">
+          {images.length > 1 ? <p className="mb-3 text-center text-xs text-white/55 sm:hidden">{messages.swipeHint}</p> : null}
+          <div className="flex items-center justify-center gap-6 sm:gap-8">
+            {images.length > 1 ? (
+              <button type="button" aria-label={messages.previous} onClick={() => onNavigate(-1)} className={control}>
+                <ArrowLeftIcon className="size-6" />
+              </button>
+            ) : null}
+            <p aria-live="polite" aria-atomic="true" className="min-w-20 text-center text-sm tabular-nums text-white/80">
+              <span className="sr-only">{messages.photo} </span>{index + 1} <span className="px-1 text-white/35">/</span> {images.length}
+            </p>
+            {images.length > 1 ? (
+              <button type="button" aria-label={messages.next} onClick={() => onNavigate(1)} className={control}>
+                <ArrowRightIcon className="size-6" />
+              </button>
+            ) : null}
+          </div>
         </footer>
       </div>
     </dialog>
