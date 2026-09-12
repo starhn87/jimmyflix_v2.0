@@ -3,12 +3,14 @@ import Link from 'next/link'
 import { ErrorState } from '@/components/error-state'
 import { SearchIcon } from '@/components/icons'
 import { LoadingCardImage } from '@/components/loading-card-image'
+import { Gallery } from '@/components/gallery'
 import { MediaCard } from '@/components/media-card'
 import { VideoEmbed } from '@/components/video-embed'
 import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
 import { getTrailer } from '@/lib/videos'
+import type { GalleryImage } from '@/lib/gallery'
 import type {
   CastMember,
   CrewMember,
@@ -19,7 +21,6 @@ import type {
   ProductionCountry,
   Season,
   SeasonDetail,
-  TmdbImage,
   WatchProvider,
   WatchProviderRegion,
 } from '@/types/tmdb'
@@ -102,31 +103,14 @@ export function GalleryPanel({
   title,
   locale,
 }: {
-  images: TmdbImage[]
+  images: GalleryImage[]
   title: string
   locale: Locale
 }) {
   const dictionary = getDictionary(locale)
 
   return (
-    <section className="pt-7" aria-labelledby="gallery-title">
-      <h2 id="gallery-title" className={panelHeading}>{dictionary.detail.galleryHeading}</h2>
-      <ul className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
-        {images.map((image, index) => (
-          <li key={image.file_path} className={index === 0 ? 'col-span-2' : ''}>
-            <LoadingCardImage
-              src={getImageUrl(image.file_path, index === 0 ? 'w1280' : 'w780') || ''}
-              alt={dictionary.detail.galleryImageAlt(title, index + 1)}
-              sizes={index === 0
-                ? '(max-width: 1023px) 100vw, 900px'
-                : '(max-width: 639px) 50vw, (max-width: 1023px) 45vw, 440px'}
-              imageClassName="object-cover object-center"
-              containerClassName="relative aspect-video overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-panel sm:rounded-2xl"
-            />
-          </li>
-        ))}
-      </ul>
-    </section>
+    <Gallery images={images} title={title} heading={dictionary.detail.galleryHeading} messages={dictionary.detail.galleryUi} />
   )
 }
 

@@ -1,6 +1,7 @@
 import 'server-only'
 
 import type { HeaderMessages, Locale } from '@/lib/i18n'
+import type { GalleryMessages } from '@/lib/gallery'
 
 interface Dictionary {
   metadata: {
@@ -106,7 +107,7 @@ interface Dictionary {
     seasons: string
     gallery: string
     galleryHeading: string
-    galleryImageAlt: (title: string, index: number) => string
+    galleryUi: GalleryMessages
     themes: string
     searchTheme: (theme: string) => string
     titleDetails: string
@@ -349,7 +350,15 @@ const dictionaries: Record<Locale, Dictionary> = {
       seasons: 'Seasons',
       gallery: 'Gallery',
       galleryHeading: 'Scenes and artwork',
-      galleryImageAlt: (title, index) => `${title} scene ${index}`,
+      galleryUi: {
+        photo: 'Photo', photos: 'Photos',
+        hint: 'Scroll to explore. Select a photo to view it full size.',
+        open: 'View full size', original: 'Open original', close: 'Close gallery',
+        previous: 'Previous photo', next: 'Next photo',
+        scrollPrevious: 'Scroll to previous photos', scrollNext: 'Scroll to more photos',
+        viewAll: 'View all photos', loading: 'Loading original image',
+        error: 'This photo could not be loaded. Try another photo or open the original.',
+      },
       themes: 'Themes',
       searchTheme: (theme) => `Search for titles about ${theme}`,
       titleDetails: 'Title details',
@@ -594,7 +603,15 @@ const dictionaries: Record<Locale, Dictionary> = {
       seasons: '시즌',
       gallery: '갤러리',
       galleryHeading: '장면과 아트워크',
-      galleryImageAlt: (title, index) => `${title} 장면 ${index}`,
+      galleryUi: {
+        photo: '사진', photos: '사진',
+        hint: '좌우로 넘겨보세요. 사진을 누르면 크게 볼 수 있어요.',
+        open: '크게 보기', original: '원본 열기', close: '갤러리 닫기',
+        previous: '이전 사진', next: '다음 사진',
+        scrollPrevious: '이전 사진 목록 보기', scrollNext: '다음 사진 목록 보기',
+        viewAll: '전체 사진 보기', loading: '원본 이미지 불러오는 중',
+        error: '사진을 불러오지 못했어요. 다른 사진을 보거나 원본을 열어보세요.',
+      },
       themes: '작품 키워드',
       searchTheme: (theme) => `${theme} 관련 작품 검색`,
       titleDetails: '콘텐츠 정보',

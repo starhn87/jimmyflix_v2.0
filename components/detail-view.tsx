@@ -12,6 +12,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs'
 import { JsonLd } from '@/components/json-ld'
 import { getMediaJsonLd } from '@/lib/structured-data'
 import { getDictionary } from '@/lib/dictionaries'
+import { getGalleryImages } from '@/lib/gallery'
 import { getLocalePath, type Locale } from '@/lib/i18n'
 import {
   formatRating,
@@ -50,12 +51,7 @@ export function DetailView({
   const duration = detail.runtime || detail.episode_run_time?.find((time) => time > 0)
   const backdrop = getImageUrl(detail.backdrop_path, 'original')
   const keywords = (detail.keywords?.keywords || detail.keywords?.results || []).slice(0, 6)
-  const seenImages = new Set<string>()
-  const galleryImages = (detail.images?.backdrops || []).filter((image) => {
-    if (seenImages.has(image.file_path)) return false
-    seenImages.add(image.file_path)
-    return true
-  }).slice(0, 6)
+  const galleryImages = getGalleryImages(detail.images?.backdrops || [])
   const tabs: DetailTab[] = [
     { id: 'trailer', label: dictionary.detail.trailer, content: <TrailerPanel detail={detail} locale={locale} /> },
   ]

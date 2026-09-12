@@ -150,6 +150,15 @@ input {
   contain-intrinsic-size: auto 420px;
 }
 
+@keyframes gallery-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gallery-lightbox[open] {
+  animation: gallery-enter 180ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
