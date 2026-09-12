@@ -14,6 +14,7 @@ interface MediaSectionProps {
   locale: Locale
   toolbar?: ReactNode
   description?: ReactNode
+  ranked?: boolean
 }
 
 export function MediaSection({
@@ -22,6 +23,7 @@ export function MediaSection({
   locale,
   toolbar,
   description,
+  ranked = false,
 }: MediaSectionProps) {
   const dictionary = getDictionary(locale)
   if (section.error) {
@@ -68,6 +70,7 @@ export function MediaSection({
             mediaType={section.mediaType}
             highPriority={prioritizeFirst && index < 4}
             locale={locale}
+            rank={ranked ? index + 1 : undefined}
           />
         ))}
       </MediaRail>

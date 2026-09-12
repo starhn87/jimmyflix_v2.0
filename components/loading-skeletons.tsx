@@ -16,17 +16,20 @@ function LoadingAnnouncement({ label }: { label: string }) {
   return <span className="sr-only">{label}</span>
 }
 
-function MediaRailSkeletonVisual({ withToolbar = false }: { withToolbar?: boolean } = {}) {
+function MediaRailSkeletonVisual({ withToolbar = false, withMediaTypeFilter = false }: { withToolbar?: boolean; withMediaTypeFilter?: boolean } = {}) {
   return (
     <section aria-hidden="true" className={withToolbar ? undefined : 'render-later'}>
       <div className={MEDIA_RAIL_HEADER_CLASS_NAME}>
         <Bone className="h-7 w-40 rounded-lg sm:h-8 sm:w-52" />
         <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
         {withToolbar ? (
-          <div className="mt-4 flex gap-2 overflow-hidden pb-1">
-            {['w-24', 'w-28', 'w-24', 'w-28', 'w-24'].map((width, index) => (
-              <Bone key={index} className={`h-10 shrink-0 rounded-full ${width}`} />
-            ))}
+          <div className="mt-4">
+            {withMediaTypeFilter ? <Bone className="mb-3 h-[50px] w-[202px] rounded-full" /> : null}
+            <div className="flex gap-2 overflow-hidden pb-1">
+              {['w-24', 'w-28', 'w-24', 'w-28', 'w-24'].map((width, index) => (
+                <Bone key={index} className={`h-10 shrink-0 rounded-full ${width}`} />
+              ))}
+            </div>
           </div>
         ) : null}
       </div>
@@ -90,9 +93,11 @@ export function HeroSkeleton({ label }: { label: string }) {
 export function MediaSectionSkeleton({
   label,
   withToolbar = false,
+  withMediaTypeFilter = false,
 }: {
   label: string
   withToolbar?: boolean
+  withMediaTypeFilter?: boolean
 }) {
   return (
     <div
@@ -103,7 +108,7 @@ export function MediaSectionSkeleton({
       className="animate-pulse motion-reduce:animate-none"
     >
       <LoadingAnnouncement label={label} />
-      <MediaRailSkeletonVisual withToolbar={withToolbar} />
+      <MediaRailSkeletonVisual withToolbar={withToolbar} withMediaTypeFilter={withMediaTypeFilter} />
     </div>
   )
 }
@@ -142,29 +147,6 @@ export function MediaSectionsSkeleton({
       <LoadingAnnouncement label={label} />
       {Array.from({ length: count }, (_, index) => <MediaRailSkeletonVisual key={index} />)}
     </div>
-  )
-}
-
-export function TrendSkeleton({ label }: { label: string }) {
-  return (
-    <main aria-busy="true" aria-live="polite" aria-label={label} className="pb-20">
-      <LoadingAnnouncement label={label} />
-      <div className="animate-pulse motion-reduce:animate-none">
-        <header className="mx-auto max-w-[1600px] px-4 pt-14 pb-10 sm:px-6 sm:pt-20 lg:px-10">
-          <Bone className="h-4 w-32 rounded-md" />
-          <Bone className="mt-3 h-10 w-64 max-w-[80vw] rounded-xl sm:h-15 sm:w-96" />
-          <div className="mt-4 max-w-2xl space-y-2">
-            <Bone className="h-6 w-full rounded-md" />
-            <Bone className="h-6 w-3/4 rounded-md sm:hidden" />
-          </div>
-          <Bone className="mt-7 h-[50px] w-[202px] rounded-full" />
-        </header>
-        <div className="space-y-10 sm:space-y-14">
-          <MediaRailSkeletonVisual />
-          <MediaRailSkeletonVisual />
-        </div>
-      </div>
-    </main>
   )
 }
 

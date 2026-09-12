@@ -8,12 +8,14 @@ export function TimeWindowSwitch({
   label,
   todayLabel,
   weekLabel,
+  query,
 }: {
   selected: TimeWindow
   locale: Locale
   label: string
   todayLabel: string
   weekLabel: string
+  query?: Record<string, string | number>
 }) {
   return (
     <nav aria-label={label} className="mt-7 inline-flex rounded-full border border-tone/10 bg-tone/5 p-1">
@@ -22,7 +24,7 @@ export function TimeWindowSwitch({
         return (
           <Link
             key={window}
-            href={`${getLocalePath(locale, '/trend')}?window=${window}`}
+            href={{ pathname: getLocalePath(locale, '/trend'), query: { ...query, window } }}
             prefetch={false}
             aria-current={active ? 'page' : undefined}
             className={`inline-flex min-h-10 min-w-24 items-center justify-center rounded-full px-5 text-sm font-semibold capitalize outline-none transition focus-visible:ring-3 focus-visible:ring-accent/40 ${

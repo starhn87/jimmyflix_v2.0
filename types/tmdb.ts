@@ -9,6 +9,8 @@ export interface MediaItem {
   backdrop_path?: string | null
   overview?: string
   vote_average: number
+  vote_count?: number
+  genre_ids?: number[]
   release_date?: string
   first_air_date?: string
   media_type?: MediaType | 'person'
@@ -21,6 +23,23 @@ export interface PersonSearchResult {
   name: string
   adult?: boolean
   known_for: MediaItem[]
+}
+
+export interface TrendingPerson {
+  id: number
+  name: string
+  adult?: boolean
+  profile_path: string | null
+  known_for_department: string
+}
+
+export interface TrendingPersonWithCredits extends TrendingPerson {
+  known_for: MediaItem[]
+}
+
+export interface TrendingPeopleData {
+  people: TrendingPersonWithCredits[]
+  error: boolean
 }
 
 export interface Keyword {

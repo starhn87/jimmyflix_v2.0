@@ -58,6 +58,14 @@ interface Dictionary {
     today: string
     week: string
     loading: string
+    topMovies: string
+    topShows: string
+    rankingDescription: (window: 'day' | 'week') => string
+    people: string
+    peopleDescription: (window: 'day' | 'week') => string
+    streamingTitle: (provider: string, mediaType: 'movie' | 'tv') => string
+    streamingAttribution: string
+    streamingTypeLabel: string
   }
   search: {
     metadataTitle: string
@@ -293,14 +301,22 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     trend: {
       metadataTitle: 'Trending',
-      metadataDescription: 'See the movies and TV shows gaining attention today and this week.',
-      eyebrow: 'Live discovery',
+      metadataDescription: 'Explore today’s and this week’s movie and TV Top 10, people in the spotlight, and popular titles on your streaming services.',
+      eyebrow: 'TMDB trending',
       heading: 'What’s trending',
-      description: 'Follow the movies and shows attracting the most attention right now.',
+      description: 'Explore the Top 10, discover the people behind the stories, and find your next streaming pick.',
       timeWindowLabel: 'Trending time window',
       today: 'Today',
       week: 'This week',
       loading: 'Loading trending movies and TV shows',
+      topMovies: 'Movie Top 10',
+      topShows: 'TV Top 10',
+      rankingDescription: (window) => `Global TMDB trends · ${window === 'day' ? 'Today' : 'This week'}`,
+      people: 'People in the spotlight',
+      peopleDescription: (window) => `${window === 'day' ? 'Today’s' : 'This week’s'} people and their work`,
+      streamingTitle: (provider, mediaType) => `${provider} ${mediaType === 'movie' ? 'movie' : 'TV'} Top 10`,
+      streamingAttribution: 'US availability: JustWatch · Popularity: TMDB',
+      streamingTypeLabel: 'Streaming ranking category',
     },
     search: {
       metadataTitle: 'Search',
@@ -547,14 +563,22 @@ const dictionaries: Record<Locale, Dictionary> = {
     },
     trend: {
       metadataTitle: '트렌드',
-      metadataDescription: '오늘과 이번 주에 주목받는 영화와 TV 프로그램을 확인하세요.',
-      eyebrow: '실시간 인기 콘텐츠',
+      metadataDescription: '오늘과 이번 주의 영화·TV TOP 10, 주목받는 인물과 대표작, OTT별 인기작을 만나보세요.',
+      eyebrow: 'TMDB 트렌드',
       heading: '지금 뜨는 콘텐츠',
-      description: '지금 가장 많은 관심을 받는 영화와 TV 프로그램을 만나보세요.',
+      description: '영화·TV TOP 10부터 주목받는 인물, OTT별 인기작까지 만나보세요.',
       timeWindowLabel: '트렌드 기간',
       today: '오늘',
       week: '이번 주',
       loading: '트렌드 영화와 TV 프로그램 불러오는 중',
+      topMovies: '영화 TOP 10',
+      topShows: 'TV TOP 10',
+      rankingDescription: (window) => `TMDB 글로벌 화제성 · ${window === 'day' ? '오늘' : '이번 주'} 기준`,
+      people: '지금 주목받는 인물',
+      peopleDescription: (window) => `${window === 'day' ? '오늘' : '이번 주'} 화제의 인물과 대표작`,
+      streamingTitle: (provider, mediaType) => `${provider} ${mediaType === 'movie' ? '영화' : 'TV'} TOP 10`,
+      streamingAttribution: '한국 시청 정보: JustWatch · 인기도: TMDB',
+      streamingTypeLabel: 'OTT 인기작 종류',
     },
     search: {
       metadataTitle: '검색',

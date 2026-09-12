@@ -26,12 +26,14 @@ import type {
   WatchProviderRegion,
   WatchProviderResponse,
   Video,
+  TrendingPerson,
+  TrendingPeopleData,
 } from '@/types/tmdb'
+import { selectRankedTitles, selectRepresentativeCredits, TREND_RANKING_LIMIT } from '@/lib/trending'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3/'
 const DEFAULT_REVALIDATE_SECONDS = 60 * 30
 const CATALOG_ITEM_LIMIT = 40
-const CATALOG_PAGE_COUNT = Math.ceil(CATALOG_ITEM_LIMIT / 20)
 
 type QueryValue = string | number | boolean | undefined
 
@@ -98,9 +100,10 @@ const getPagedMediaItems = async (
   path: string,
   query: Record<string, QueryValue>,
   options: TmdbFetchOptions,
+  limit = CATALOG_ITEM_LIMIT,
 ) => {
   const pages = await Promise.allSettled(
-    Array.from({ length: CATALOG_PAGE_COUNT }, (_, index) => tmdbFetch<TmdbListResponse<MediaItem>>(
+    Array.from({ length: Math.ceil(limit / 20) }, (_, index) => tmdbFetch<TmdbListResponse<MediaItem>>(
       path,
       { ...query, page: index + 1 },
       options,
@@ -117,7 +120,7 @@ const getPagedMediaItems = async (
       seen.add(item.id)
       return true
     })
-    .slice(0, CATALOG_ITEM_LIMIT)
+    .slice(0, limit)
 }
 
 const getList = (path: string, locale: Locale, revalidate?: number) =>
@@ -149,11 +152,13 @@ const getDiscoverList = async (
   mediaType: MediaType,
   query: Record<string, QueryValue>,
   locale: Locale,
+  limit = CATALOG_ITEM_LIMIT,
 ) => {
   return getPagedMediaItems(
     `discover/${mediaType}`,
     { include_adult: false, ...query },
     { locale },
+    limit,
   )
 }
 
@@ -557,6 +562,7 @@ export const getStreamingDiscovery = async (
   mediaType: MediaType,
   requestedProviderId: number | null,
   locale: Locale,
+  limit = CATALOG_ITEM_LIMIT,
 ): Promise<StreamingDiscoveryData> => {
   const dictionary = getDictionary(locale).sections
   const preferredIds = preferredProviderIds[locale][mediaType]
@@ -570,7 +576,7 @@ export const getStreamingDiscovery = async (
     watch_region: locale === 'ko' ? 'KR' : 'US',
     with_watch_providers: selectedProviderId,
     with_watch_monetization_types: 'flatrate',
-  }, locale)
+  }, locale, limit)
   const [providersResult, titlesResult] = await Promise.allSettled([
     providersRequest,
     titlesRequest,
@@ -620,6 +626,51 @@ export const getTrendingSectionRequests = (window: TimeWindow, locale: Locale) =
       load: () => getList(`trending/tv/${window}`, locale, 60 * 10),
     },
   ])
+}
+
+export const getTrendingRankingRequests = (window: TimeWindow, locale: Locale) => {
+  const dictionary = getDictionary(locale).trend
+  return createSectionRequests((['movie', 'tv'] as const).map((mediaType) => ({
+    id: `top-${mediaType}-${window}`,
+    title: mediaType === 'movie' ? dictionary.topMovies : dictionary.topShows,
+    description: dictionary.rankingDescription(window),
+    mediaType,
+    load: async () => {
+      const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
+        `trending/${mediaType}/${window}`, {}, { locale, revalidate: 600, timeoutMs: 8000 },
+      )
+      return selectRankedTitles(response.results, mediaType)
+    },
+  })))
+}
+
+export const getTrendingPeople = async (window: TimeWindow, locale: Locale): Promise<TrendingPeopleData> => {
+  try {
+    const response = await tmdbFetch<TmdbListResponse<TrendingPerson>>(
+      `trending/person/${window}`, {}, { locale, revalidate: 600, timeoutMs: 8000 },
+    )
+    const seen = new Set<number>()
+    const candidates = response.results.filter((person) => {
+      if (person.adult || seen.has(person.id)) return false
+      seen.add(person.id)
+      return true
+    })
+    // Trending people does not include known_for; fetch credits in parallel.
+    const credits = await Promise.allSettled(candidates.map((person) => tmdbFetch<PersonCredits>(
+      `person/${person.id}/combined_credits`, {}, { locale, revalidate: 86400, timeoutMs: 5000 },
+    )))
+    const people = candidates.map((person, index) => {
+      const result = credits[index]
+      return {
+        ...person,
+        known_for: result.status === 'fulfilled'
+          ? selectRepresentativeCredits([...result.value.cast, ...result.value.crew], person.known_for_department) : [],
+      }
+    }).filter((person) => person.known_for.length > 0).slice(0, TREND_RANKING_LIMIT)
+    return { people, error: candidates.length > 0 && credits.every((result) => result.status === 'rejected') }
+  } catch {
+    return { people: [], error: true }
+  }
 }
 
 const searchMovies = (query: string, locale: Locale) =>

@@ -18,9 +18,10 @@ interface MediaCardProps {
   mediaType?: MediaType
   highPriority?: boolean
   locale: Locale
+  rank?: number
 }
 
-export function MediaCard({ item, mediaType, highPriority = false, locale }: MediaCardProps) {
+export function MediaCard({ item, mediaType, highPriority = false, locale, rank }: MediaCardProps) {
   const title = getMediaTitle(item, locale)
   const type = getMediaType(item, mediaType)
   const year = getMediaYear(item, locale)
@@ -33,7 +34,7 @@ export function MediaCard({ item, mediaType, highPriority = false, locale }: Med
     <Link
       href={getMediaHref(item, type, locale)}
       prefetch={false}
-      aria-label={[title, typeLabel, year, rating?.label].filter(Boolean).join(', ')}
+      aria-label={[rank ? (locale === 'ko' ? `${rank}위` : `Rank ${rank}`) : null, title, typeLabel, year, rating?.label].filter(Boolean).join(', ')}
       className="media-card group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
     >
       <article className="min-w-0">
@@ -42,12 +43,22 @@ export function MediaCard({ item, mediaType, highPriority = false, locale }: Med
             src={getPosterUrl(item.poster_path)}
             alt={locale === 'ko' ? `${title} 포스터` : `${title} poster`}
             fill
+            loading={highPriority ? 'eager' : 'lazy'}
             fetchPriority={highPriority ? 'high' : undefined}
             placeholder={imageSkeletonPlaceholder}
             quality={85}
             sizes="(max-width: 480px) 42vw, (max-width: 768px) 27vw, (max-width: 1200px) 20vw, 190px"
             className="object-cover object-center"
           />
+          {rank ? (
+            <span aria-hidden="true" className={`absolute top-3 left-3 grid min-w-12 place-items-center rounded-xl border px-2 py-1 text-3xl leading-tight font-black tabular-nums shadow-lg backdrop-blur-sm sm:text-4xl ${
+              rank <= 3
+                ? 'border-white/35 bg-gradient-to-br from-violet-400 to-fuchsia-500 text-white'
+                : 'border-white/20 bg-black/75 text-white'
+            }`}>
+              {rank}
+            </span>
+          ) : null}
           {rating ? (
             <>
               <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/75 to-transparent" />

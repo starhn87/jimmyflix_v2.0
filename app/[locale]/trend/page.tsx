@@ -1,18 +1,17 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { AsyncMediaSection } from '@/components/catalog-content'
 import { MediaSectionSkeleton } from '@/components/loading-skeletons'
-import { TimeWindowSwitch } from '@/components/time-window-switch'
+import { TrendHeader, TrendingRankingSection, TrendingPeopleSection, TrendingStreamingSection, TREND_STACK_CLASS_NAME } from '@/components/trend-content'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale } from '@/lib/i18n'
-import { getFirstSearchParam } from '@/lib/params'
-import { getTrendingSectionRequests } from '@/lib/tmdb'
+import { getFirstSearchParam, parsePositiveInteger } from '@/lib/params'
+import { getStreamingDiscovery, getTrendingPeople, getTrendingRankingRequests } from '@/lib/tmdb'
 import type { TimeWindow } from '@/types/tmdb'
 import { createPageMetadata } from '@/lib/seo'
 
 interface TrendPageProps {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ window?: string | string[] }>
+  searchParams: Promise<{ window?: string | string[]; provider?: string | string[]; kind?: string | string[] }>
 }
 
 export async function generateMetadata({ params }: TrendPageProps): Promise<Metadata> {
@@ -33,37 +32,30 @@ export default async function TrendPage({ params, searchParams }: TrendPageProps
   const dictionary = getDictionary(locale)
   const rawWindow = getFirstSearchParam(query.window)
   const window: TimeWindow = rawWindow === 'week' ? 'week' : 'day'
-  const sections = getTrendingSectionRequests(window, locale)
+  const mediaType = getFirstSearchParam(query.kind) === 'tv' ? 'tv' : 'movie'
+  const provider = parsePositiveInteger(query.provider)
+  const sections = getTrendingRankingRequests(window, locale)
+  const peopleRequest = getTrendingPeople(window, locale)
+  const streamingRequest = getStreamingDiscovery(mediaType, provider, locale, 20)
 
   return (
     <main className="pb-20">
-      <header className="mx-auto max-w-[1600px] px-4 pt-14 pb-10 sm:px-6 sm:pt-20 lg:px-10">
-        <p className="text-xs font-semibold tracking-[0.24em] text-accent uppercase">
-          {dictionary.trend.eyebrow}
-        </p>
-        <h1 className="mt-3 text-4xl font-bold tracking-[-0.035em] text-ink sm:text-6xl">
-          {dictionary.trend.heading}
-        </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-6 text-subtle sm:text-base">
-          {dictionary.trend.description}
-        </p>
-        <TimeWindowSwitch
-          selected={window}
-          locale={locale}
-          label={dictionary.trend.timeWindowLabel}
-          todayLabel={dictionary.trend.today}
-          weekLabel={dictionary.trend.week}
-        />
-      </header>
-      <div className="space-y-10 sm:space-y-14">
-        {sections.map((section) => (
+      <TrendHeader locale={locale} window={window} query={{ kind: mediaType, ...(provider ? { provider } : {}) }} />
+      <div className={TREND_STACK_CLASS_NAME}>
+        {sections.map((section, index) => (
           <Suspense
             key={`${window}-${section.id}`}
             fallback={<MediaSectionSkeleton label={locale === 'ko' ? `${section.title} 불러오는 중` : `Loading ${section.title}`} />}
           >
-            <AsyncMediaSection request={section.request} locale={locale} />
+            <TrendingRankingSection request={section.request} locale={locale} prioritizeFirst={index === 0} />
           </Suspense>
         ))}
+        <Suspense key={`people-${window}`} fallback={<MediaSectionSkeleton label={dictionary.trend.people} />}>
+          <TrendingPeopleSection request={peopleRequest} locale={locale} window={window} />
+        </Suspense>
+        <Suspense key={`streaming-${mediaType}-${provider}`} fallback={<MediaSectionSkeleton label={dictionary.sections.loadingStreaming} withToolbar withMediaTypeFilter />}>
+          <TrendingStreamingSection request={streamingRequest} locale={locale} window={window} mediaType={mediaType} />
+        </Suspense>
       </div>
     </main>
   )
