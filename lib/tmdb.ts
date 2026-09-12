@@ -130,6 +130,21 @@ const getRegionalMovieList = (path: string, locale: Locale) =>
     { locale },
   )
 
+export const getCatalogFeaturedItem = cache(async (mediaType: MediaType, locale: Locale) => {
+  try {
+    // Share the first catalog fetch; the hero does not need to wait for page two.
+    const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
+      mediaType === 'movie' ? 'movie/now_playing' : 'tv/on_the_air',
+      { ...(mediaType === 'movie' ? { region: locale === 'ko' ? 'KR' : 'US' } : {}), page: 1 },
+      { locale },
+    )
+    const candidates = response.results.filter((item) => item.backdrop_path).slice(0, 12)
+    return candidates[getDailyRotationIndex(candidates.length)] || null
+  } catch {
+    return null
+  }
+})
+
 const getDiscoverList = async (
   mediaType: MediaType,
   query: Record<string, QueryValue>,

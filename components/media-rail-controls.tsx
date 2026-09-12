@@ -7,6 +7,7 @@ interface MediaRailControlsProps {
   railId: string
   backwardLabel: string
   forwardLabel: string
+  loopCopyCount?: number
 }
 
 interface LoopBounds {
@@ -77,7 +78,7 @@ const normalizeLoopPosition = (rail: HTMLElement, loop: LoopBounds | null) => {
   }
 }
 
-function useMediaRailNavigation(railId: string) {
+function useMediaRailNavigation(railId: string, loopCopyCount: number) {
   const [navigation, setNavigation] = useState<NavigationState>(DISABLED_NAVIGATION)
 
   useEffect(() => {
@@ -85,7 +86,8 @@ function useMediaRailNavigation(railId: string) {
     if (!rail) return
 
     let normalizeTimer = 0
-    let loopBounds = getLoopBounds(rail)
+    let frame = 0
+    let loopBounds: LoopBounds | null = null
 
     const updateNavigation = () => {
       const nextNavigation = getNavigationState(rail, loopBounds)
@@ -102,22 +104,36 @@ function useMediaRailNavigation(railId: string) {
     }
 
     const handleResize = () => {
-      loopBounds = getLoopBounds(rail)
-      updateNavigation()
+      window.cancelAnimationFrame(frame)
+      frame = window.requestAnimationFrame(() => {
+        loopBounds = getLoopBounds(rail)
+        updateNavigation()
+      })
     }
 
-    updateNavigation()
     rail.addEventListener('scroll', handleScroll, { passive: true })
 
     const resizeObserver = new ResizeObserver(handleResize)
-    resizeObserver.observe(rail)
+    // Measuring every offscreen rail would force layout inside content-visibility.
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        resizeObserver.observe(rail)
+        handleResize()
+      } else {
+        resizeObserver.disconnect()
+        window.cancelAnimationFrame(frame)
+      }
+    }, { rootMargin: '400px 0px' })
+    visibilityObserver.observe(rail.closest('section') || rail)
 
     return () => {
       window.clearTimeout(normalizeTimer)
+      window.cancelAnimationFrame(frame)
       rail.removeEventListener('scroll', handleScroll)
       resizeObserver.disconnect()
+      visibilityObserver.disconnect()
     }
-  }, [railId])
+  }, [railId, loopCopyCount])
 
   return navigation
 }
@@ -148,8 +164,8 @@ const scrollRail = (railId: string, direction: ScrollDirection) => {
   rail.scrollTo({ left, behavior: 'smooth' })
 }
 
-export function MediaRailControls({ railId, backwardLabel, forwardLabel }: MediaRailControlsProps) {
-  const navigation = useMediaRailNavigation(railId)
+export function MediaRailControls({ railId, backwardLabel, forwardLabel, loopCopyCount = 0 }: MediaRailControlsProps) {
+  const navigation = useMediaRailNavigation(railId, loopCopyCount)
 
   return (
     <>

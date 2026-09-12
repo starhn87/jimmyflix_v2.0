@@ -1,10 +1,6 @@
 import { Children, type ReactNode } from 'react'
-import { MediaRailControls } from '@/components/media-rail-controls'
-import {
-  MEDIA_RAIL_HEADER_CLASS_NAME,
-  MEDIA_RAIL_ITEM_CLASS_NAME,
-  MEDIA_RAIL_LIST_CLASS_NAME,
-} from '@/components/media-rail-styles'
+import { MediaRailTrack } from '@/components/media-rail-track'
+import { MEDIA_RAIL_HEADER_CLASS_NAME } from '@/components/media-rail-styles'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 
@@ -16,8 +12,6 @@ interface MediaRailProps {
   locale: Locale
   toolbar?: ReactNode
 }
-
-const LOOP_COPY_ITEM_COUNT = 24
 
 export function MediaRail({
   id,
@@ -32,8 +26,6 @@ export function MediaRail({
   const titleId = `${slug}-title`
   const railId = `${slug}-rail`
   const items = Children.toArray(children)
-  const shouldLoop = items.length >= 20
-  const loopCopy = items.slice(0, LOOP_COPY_ITEM_COUNT)
 
   return (
     <section
@@ -53,39 +45,13 @@ export function MediaRail({
         {toolbar ? <div className="mt-4">{toolbar}</div> : null}
       </div>
 
-      <div className="relative">
-        <ul
-          id={railId}
-          aria-label={dictionary.common.carouselLabel(title)}
-          className={MEDIA_RAIL_LIST_CLASS_NAME}
-        >
-          {items.map((child, index) => (
-            <li
-              key={`original-${index}`}
-              data-loop-origin={index === 0 ? '' : undefined}
-              className={MEDIA_RAIL_ITEM_CLASS_NAME}
-            >
-              {child}
-            </li>
-          ))}
-          {shouldLoop ? loopCopy.map((child, index) => (
-            <li
-              key={`copy-${index}`}
-              data-loop-copy={index === 0 ? '' : undefined}
-              aria-hidden="true"
-              inert
-              className={MEDIA_RAIL_ITEM_CLASS_NAME}
-            >
-              {child}
-            </li>
-          )) : null}
-        </ul>
-        <MediaRailControls
-          railId={railId}
-          backwardLabel={dictionary.common.scrollBackward(title)}
-          forwardLabel={dictionary.common.scrollForward(title)}
-        />
-      </div>
+      <MediaRailTrack
+        railId={railId}
+        label={dictionary.common.carouselLabel(title)}
+        items={items}
+        backwardLabel={dictionary.common.scrollBackward(title)}
+        forwardLabel={dictionary.common.scrollForward(title)}
+      />
     </section>
   )
 }
