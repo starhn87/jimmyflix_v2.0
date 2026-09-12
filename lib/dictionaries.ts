@@ -637,7 +637,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       collectionErrorMessage: '컬렉션 콘텐츠를 일시적으로 이용할 수 없습니다.',
       noCollection: '등록된 컬렉션 콘텐츠가 없습니다.',
       collectionTitles: '컬렉션 작품',
-      moreLikeThis: '이 작품 다음에는',
+      moreLikeThis: '비슷한 콘텐츠',
       moreLikeThisDescription: '추천 작품과 비슷한 이야기를 이어서 만나보세요',
     },
     person: {
