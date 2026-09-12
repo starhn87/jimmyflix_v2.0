@@ -37,11 +37,6 @@ function MediaRailSkeletonVisual({ withToolbar = false }: { withToolbar?: boolea
           </li>
         ))}
       </ul>
-      {withToolbar ? (
-        <div className="-mt-2 h-6 px-4 sm:px-8 lg:px-12">
-          <Bone className="h-4 w-48 rounded-md" />
-        </div>
-      ) : null}
     </section>
   )
 }
@@ -112,7 +107,7 @@ export function CatalogSkeleton({ label }: { label: string }) {
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
         <HeroSkeletonVisual />
-        <div className="relative z-10 mt-6 space-y-10 pb-20 sm:-mt-8 sm:space-y-14">
+        <div className="relative z-10 mt-6 space-y-10 pb-20 sm:-mt-8 lg:space-y-16">
           {Array.from({ length: 8 }, (_, index) => (
             <MediaRailSkeletonVisual key={index} withToolbar={index === 1} />
           ))}

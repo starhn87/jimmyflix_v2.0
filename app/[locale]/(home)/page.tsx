@@ -54,7 +54,7 @@ export default async function MoviesPage({ params, searchParams }: MoviesPagePro
           locale={locale}
         />
       </Suspense>
-      <div className="relative z-10 mt-6 space-y-10 pb-20 sm:-mt-8 sm:space-y-14">
+      <div className="relative z-10 mt-6 space-y-10 pb-20 sm:-mt-8 lg:space-y-16">
         <Suspense
           fallback={<MediaSectionSkeleton label={locale === 'ko' ? `${leadSection.title} 불러오는 중` : `Loading ${leadSection.title}`} />}
         >

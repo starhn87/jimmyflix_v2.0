@@ -116,6 +116,9 @@ interface Dictionary {
     scrollTabsBackward: string
     scrollTabsForward: string
     noTrailer: string
+    trailerSearchHint: string
+    searchTrailer: string
+    searchTrailerLabel: (title: string) => string
     trailerFrameTitle: (title: string) => string
     playTrailer: (title: string) => string
     creditsErrorTitle: string
@@ -201,7 +204,6 @@ interface Dictionary {
     tvFormatSpotlightDescription: (format: string) => string
     streamingMovies: (provider: string) => string
     streamingShows: (provider: string) => string
-    streamingDescription: (provider: string) => string
     providerPickerLabel: string
     justWatchDiscoveryAttribution: string
     loadingStreaming: string
@@ -356,7 +358,10 @@ const dictionaries: Record<Locale, Dictionary> = {
       tabListLabel: 'Title information',
       scrollTabsBackward: 'Show previous information tabs',
       scrollTabsForward: 'Show more information tabs',
-      noTrailer: 'No trailer is available for this title.',
+      noTrailer: 'No trailer is available yet.',
+      trailerSearchHint: 'Try YouTube for an official upload from the studio or distributor.',
+      searchTrailer: 'Search YouTube',
+      searchTrailerLabel: (title) => `Search YouTube for a ${title} trailer (opens in a new tab)`,
       trailerFrameTitle: (title) => `${title} official trailer`,
       playTrailer: (title) => `Play ${title} official trailer`,
       creditsErrorTitle: "Couldn't load credits",
@@ -452,7 +457,6 @@ const dictionaries: Record<Locale, Dictionary> = {
       tvFormatSpotlightDescription: (format) => `A weekly selection of ${format.toLowerCase()} worth exploring`,
       streamingMovies: (provider) => `Movies on ${provider}`,
       streamingShows: (provider) => `Shows on ${provider}`,
-      streamingDescription: (provider) => `Popular subscription titles currently available on ${provider}`,
       providerPickerLabel: 'Choose a streaming service',
       justWatchDiscoveryAttribution: 'Availability data provided by JustWatch',
       loadingStreaming: 'Loading streaming picks',
@@ -599,7 +603,10 @@ const dictionaries: Record<Locale, Dictionary> = {
       tabListLabel: '콘텐츠 상세 정보',
       scrollTabsBackward: '이전 상세 메뉴 보기',
       scrollTabsForward: '다음 상세 메뉴 더 보기',
-      noTrailer: '등록된 예고편이 없습니다.',
+      noTrailer: '아직 등록된 예고편이 없습니다.',
+      trailerSearchHint: 'YouTube에서 배급사나 공식 채널이 공개한 예고편을 찾아볼 수 있어요.',
+      searchTrailer: 'YouTube에서 찾아보기',
+      searchTrailerLabel: (title) => `YouTube에서 ${title} 예고편 찾기(새 탭에서 열림)`,
       trailerFrameTitle: (title) => `${title} 공식 예고편`,
       playTrailer: (title) => `${title} 공식 예고편 재생`,
       creditsErrorTitle: '출연진을 불러오지 못했습니다',
@@ -695,7 +702,6 @@ const dictionaries: Record<Locale, Dictionary> = {
       tvFormatSpotlightDescription: (format) => `이번 주에 둘러보기 좋은 ${format} 프로그램`,
       streamingMovies: (provider) => `${provider} 영화`,
       streamingShows: (provider) => `${provider} 시리즈`,
-      streamingDescription: (provider) => `${provider} 구독으로 볼 수 있는 인기 작품`,
       providerPickerLabel: '스트리밍 서비스 선택',
       justWatchDiscoveryAttribution: '시청 가능 정보 제공: JustWatch',
       loadingStreaming: '스트리밍 추천작 불러오는 중',

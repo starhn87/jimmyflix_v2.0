@@ -23,10 +23,13 @@ import type {
   WatchProviderListResponse,
   WatchProviderRegion,
   WatchProviderResponse,
+  Video,
 } from '@/types/tmdb'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3/'
 const DEFAULT_REVALIDATE_SECONDS = 60 * 30
+const CATALOG_ITEM_LIMIT = 40
+const CATALOG_PAGE_COUNT = Math.ceil(CATALOG_ITEM_LIMIT / 20)
 
 type QueryValue = string | number | boolean | undefined
 
@@ -89,35 +92,52 @@ async function tmdbFetch<T>(
   return (await response.json()) as T
 }
 
-const getList = async (path: string, locale: Locale, revalidate?: number) => {
-  const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
-    path,
-    {},
-    { revalidate, locale },
+const getPagedMediaItems = async (
+  path: string,
+  query: Record<string, QueryValue>,
+  options: TmdbFetchOptions,
+) => {
+  const pages = await Promise.allSettled(
+    Array.from({ length: CATALOG_PAGE_COUNT }, (_, index) => tmdbFetch<TmdbListResponse<MediaItem>>(
+      path,
+      { ...query, page: index + 1 },
+      options,
+    )),
   )
-  return response.results
+
+  if (pages[0].status === 'rejected') throw pages[0].reason
+
+  const seen = new Set<number>()
+  return pages
+    .flatMap((page) => page.status === 'fulfilled' ? page.value.results : [])
+    .filter((item) => {
+      if (seen.has(item.id)) return false
+      seen.add(item.id)
+      return true
+    })
+    .slice(0, CATALOG_ITEM_LIMIT)
 }
 
-const getRegionalMovieList = async (path: string, locale: Locale) => {
-  const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
+const getList = (path: string, locale: Locale, revalidate?: number) =>
+  getPagedMediaItems(path, {}, { revalidate, locale })
+
+const getRegionalMovieList = (path: string, locale: Locale) =>
+  getPagedMediaItems(
     path,
     { region: locale === 'ko' ? 'KR' : 'US' },
     { locale },
   )
-  return response.results
-}
 
 const getDiscoverList = async (
   mediaType: MediaType,
   query: Record<string, QueryValue>,
   locale: Locale,
 ) => {
-  const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
+  return getPagedMediaItems(
     `discover/${mediaType}`,
     { include_adult: false, ...query },
     { locale },
   )
-  return response.results
 }
 
 interface LocalizedSpotlight {
@@ -548,7 +568,7 @@ export const getStreamingDiscovery = async (
   const section: MediaSectionData = {
     id: `streaming-${mediaType}`,
     title: mediaLabel(selected.provider_name),
-    description: dictionary.streamingDescription(selected.provider_name),
+    description: '',
     mediaType,
     items: titlesResult.status === 'fulfilled' ? titlesResult.value : [],
     error: titlesResult.status === 'rejected',
@@ -632,18 +652,38 @@ export const searchCatalog = (query: string, locale: Locale) => runCatalogSearch
   tvByTopic: '주제별 TV 프로그램',
 } : undefined)
 
-export const getMovieDetail = cache((id: number, locale: Locale) =>
-  tmdbFetch<MediaDetail>(`movie/${id}`, {
+const getMediaDetail = async (mediaType: MediaType, id: number, locale: Locale) => {
+  const detailRequest = tmdbFetch<MediaDetail>(`${mediaType}/${id}`, {
     append_to_response: 'videos,images,keywords',
     include_image_language: locale === 'ko' ? 'ko,en,null' : 'en,null',
-  }, { locale }),
+  }, { locale })
+  const englishVideosRequest = locale === 'ko'
+    ? tmdbFetch<{ results: Video[] }>(`${mediaType}/${id}/videos`, {}, { locale: 'en' })
+      .catch(() => null)
+    : Promise.resolve(null)
+  const [detail, englishVideos] = await Promise.all([detailRequest, englishVideosRequest])
+  const seenVideos = new Set<string>()
+  const videos = [
+    ...(detail.videos?.results || []),
+    ...(englishVideos?.results || []),
+  ].filter((video) => {
+    if (seenVideos.has(video.id)) return false
+    seenVideos.add(video.id)
+    return true
+  })
+
+  return {
+    ...detail,
+    videos: { results: videos },
+  }
+}
+
+export const getMovieDetail = cache((id: number, locale: Locale) =>
+  getMediaDetail('movie', id, locale),
 )
 
 export const getTvDetail = cache((id: number, locale: Locale) =>
-  tmdbFetch<MediaDetail>(`tv/${id}`, {
-    append_to_response: 'videos,images,keywords',
-    include_image_language: locale === 'ko' ? 'ko,en,null' : 'en,null',
-  }, { locale }),
+  getMediaDetail('tv', id, locale),
 )
 
 export const getTvSeasonDetail = cache((
@@ -682,7 +722,7 @@ export const getRelatedTitles = cache(async (
       seen.add(item.id)
       return true
     })
-    .slice(0, 20)
+    .slice(0, CATALOG_ITEM_LIMIT)
 })
 
 export const getWatchProviders = cache(async (

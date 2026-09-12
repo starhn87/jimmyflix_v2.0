@@ -6,11 +6,10 @@ import type { Locale } from '@/lib/i18n'
 interface MediaRailProps {
   id?: string
   title: string
-  description: string
+  description: ReactNode
   children: ReactNode
   locale: Locale
   toolbar?: ReactNode
-  footer?: ReactNode
 }
 
 export function MediaRail({
@@ -20,7 +19,6 @@ export function MediaRail({
   children,
   locale,
   toolbar,
-  footer,
 }: MediaRailProps) {
   const dictionary = getDictionary(locale)
   const slug = id || title.replaceAll(' ', '-').toLowerCase()
@@ -30,7 +28,7 @@ export function MediaRail({
   return (
     <section
       aria-labelledby={titleId}
-      className={toolbar || footer ? undefined : 'render-later'}
+      className={toolbar ? undefined : 'render-later'}
     >
       <div className="mb-5 px-4 sm:px-8 lg:px-12">
         <div>
@@ -40,7 +38,7 @@ export function MediaRail({
           >
             {title}
           </h2>
-          <p className="mt-1 text-sm text-faint">{description}</p>
+          {description ? <div className="mt-1 text-sm text-faint">{description}</div> : null}
         </div>
         {toolbar ? <div className="mt-4">{toolbar}</div> : null}
       </div>
@@ -66,7 +64,6 @@ export function MediaRail({
           forwardLabel={dictionary.common.scrollForward(title)}
         />
       </div>
-      {footer ? <div className="-mt-2 px-4 sm:px-8 lg:px-12">{footer}</div> : null}
     </section>
   )
 }

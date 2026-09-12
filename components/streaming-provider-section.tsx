@@ -80,7 +80,7 @@ export async function StreamingProviderSection({
       section={data.section}
       locale={locale}
       toolbar={providerPicker}
-      footer={attribution}
+      description={attribution}
     />
   )
 }

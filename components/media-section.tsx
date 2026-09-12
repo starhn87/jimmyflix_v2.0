@@ -11,7 +11,7 @@ interface MediaSectionProps {
   prioritizeFirst?: boolean
   locale: Locale
   toolbar?: ReactNode
-  footer?: ReactNode
+  description?: ReactNode
 }
 
 export function MediaSection({
@@ -19,7 +19,7 @@ export function MediaSection({
   prioritizeFirst = false,
   locale,
   toolbar,
-  footer,
+  description,
 }: MediaSectionProps) {
   const dictionary = getDictionary(locale)
   if (section.error) {
@@ -53,10 +53,9 @@ export function MediaSection({
     <MediaRail
       id={section.id}
       title={section.title}
-      description={section.description}
+      description={description ?? section.description}
       locale={locale}
       toolbar={toolbar}
-      footer={footer}
     >
       {section.items.map((item, index) => (
         <MediaCard
