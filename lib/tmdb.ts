@@ -1,10 +1,12 @@
 import 'server-only'
 
+import { AsyncLocalStorage } from 'node:async_hooks'
 import { cache } from 'react'
 import { getDictionary } from '@/lib/dictionaries'
 import { locales, tmdbLanguage, type Locale } from '@/lib/i18n'
 import { getImageUrl } from '@/lib/media'
 import type { SitemapPath } from '@/lib/sitemap'
+import { isSitemapDetailPath, type SitemapCheck } from '@/lib/sitemap-registry'
 import { runCatalogSearch } from '@/lib/search'
 import type {
   CollectionDetail,
@@ -34,6 +36,7 @@ import { selectRankedTitles, selectRediscoveredTitles, selectRepresentativeCredi
 const API_BASE_URL = 'https://api.themoviedb.org/3/'
 const DEFAULT_REVALIDATE_SECONDS = 60 * 30
 const CATALOG_ITEM_LIMIT = 40
+const sitemapFetchScope = new AsyncLocalStorage<boolean>()
 
 type QueryValue = string | number | boolean | undefined
 
@@ -81,8 +84,8 @@ async function tmdbFetch<T>(
 
   const response = await fetch(url, {
     headers: { Accept: 'application/json' },
-    next: { revalidate },
-    signal: timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined,
+    ...(sitemapFetchScope.getStore() ? { cache: 'no-store' as const } : { next: { revalidate } }),
+    signal: timeoutMs || sitemapFetchScope.getStore() ? AbortSignal.timeout(timeoutMs || 8000) : undefined,
   })
 
   if (response.status === 404) {
@@ -843,7 +846,22 @@ export const getPersonDetail = cache((id: number, locale: Locale) =>
   ),
 )
 
-export async function getSitemapPaths(): Promise<SitemapPath[]> {
+// The daily collector needs fresh data; this request-local scope does not change page caches.
+export const getSitemapDiscoveries = () => sitemapFetchScope.run(true, collectSitemapPaths)
+
+export async function checkSitemapDetail(path: string): Promise<SitemapCheck['status']> {
+  if (!isSitemapDetailPath(path)) return 'unknown'
+  const [, kind, id] = path.split('/')
+  const endpoint = `${kind === 'movies' ? 'movie' : kind === 'people' ? 'person' : 'tv'}/${id}`
+  try {
+    await sitemapFetchScope.run(true, () => tmdbFetch(endpoint, {}, { timeoutMs: 5000 }))
+    return 'available'
+  } catch (error) {
+    return error instanceof TmdbNotFoundError ? 'missing' : 'unknown'
+  }
+}
+
+async function collectSitemapPaths(): Promise<SitemapPath[]> {
   const paths = await Promise.all(locales.map(async (locale) => {
     const sections = [
       ...getMovieSectionRequests(locale), ...getTvSectionRequests(locale),
