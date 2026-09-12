@@ -12,6 +12,8 @@ interface MediaRailProps {
   toolbar?: ReactNode
 }
 
+const LOOP_COPY_ITEM_COUNT = 24
+
 export function MediaRail({
   id,
   title,
@@ -24,6 +26,10 @@ export function MediaRail({
   const slug = id || title.replaceAll(' ', '-').toLowerCase()
   const titleId = `${slug}-title`
   const railId = `${slug}-rail`
+  const items = Children.toArray(children)
+  const shouldLoop = items.length >= 20
+  const loopCopy = items.slice(0, LOOP_COPY_ITEM_COUNT)
+  const itemClassName = 'w-[42vw] min-w-[136px] max-w-[190px] shrink-0 snap-start sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]'
 
   return (
     <section
@@ -49,14 +55,26 @@ export function MediaRail({
           aria-label={dictionary.common.carouselLabel(title)}
           className="no-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-7 sm:scroll-px-8 sm:gap-4 sm:px-8 lg:scroll-px-12 lg:gap-5 lg:px-12"
         >
-          {Children.toArray(children).map((child, index) => (
+          {items.map((child, index) => (
             <li
-              key={index}
-              className="w-[42vw] min-w-[136px] max-w-[190px] shrink-0 snap-start sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]"
+              key={`original-${index}`}
+              data-loop-origin={index === 0 ? '' : undefined}
+              className={itemClassName}
             >
               {child}
             </li>
           ))}
+          {shouldLoop ? loopCopy.map((child, index) => (
+            <li
+              key={`copy-${index}`}
+              data-loop-copy={index === 0 ? '' : undefined}
+              aria-hidden="true"
+              inert
+              className={itemClassName}
+            >
+              {child}
+            </li>
+          )) : null}
         </ul>
         <MediaRailControls
           railId={railId}
