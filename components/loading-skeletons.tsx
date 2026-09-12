@@ -112,7 +112,7 @@ export function CatalogSkeleton({ label }: { label: string }) {
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
         <HeroSkeletonVisual />
-        <div className="relative z-10 -mt-8 space-y-10 pb-20 sm:space-y-14">
+        <div className="relative z-10 mt-6 space-y-10 pb-20 sm:-mt-8 sm:space-y-14">
           {Array.from({ length: 8 }, (_, index) => (
             <MediaRailSkeletonVisual key={index} withToolbar={index === 1} />
           ))}
