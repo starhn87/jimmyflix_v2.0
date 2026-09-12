@@ -3,22 +3,18 @@ import { notFound } from 'next/navigation'
 import { PersonView } from '@/components/person-view'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale } from '@/lib/i18n'
+import { parsePositiveInteger } from '@/lib/params'
 import { getPersonDetail, TmdbNotFoundError } from '@/lib/tmdb'
 
 interface PersonPageProps {
   params: Promise<{ locale: string; id: string }>
 }
 
-const parseId = (value: string) => {
-  const id = Number(value)
-  return Number.isSafeInteger(id) && id > 0 ? id : null
-}
-
 export async function generateMetadata({ params }: PersonPageProps): Promise<Metadata> {
   const { locale, id: rawId } = await params
   if (!isLocale(locale)) return {}
   const dictionary = getDictionary(locale)
-  const id = parseId(rawId)
+  const id = parsePositiveInteger(rawId)
   if (!id) return { title: dictionary.person.notFound }
 
   try {
@@ -35,7 +31,7 @@ export async function generateMetadata({ params }: PersonPageProps): Promise<Met
 export default async function PersonPage({ params }: PersonPageProps) {
   const { locale, id: rawId } = await params
   if (!isLocale(locale)) notFound()
-  const id = parseId(rawId)
+  const id = parsePositiveInteger(rawId)
   if (!id) notFound()
 
   let person

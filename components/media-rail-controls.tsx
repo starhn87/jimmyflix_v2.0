@@ -15,6 +15,19 @@ interface LoopBounds {
   width: number
 }
 
+interface NavigationState {
+  backward: boolean
+  forward: boolean
+}
+
+type ScrollDirection = -1 | 1
+
+const EDGE_TOLERANCE = 2
+const LOOP_NORMALIZE_DELAY_MS = 160
+const MIN_SCROLL_DISTANCE = 280
+const VIEWPORT_SCROLL_RATIO = 0.82
+const DISABLED_NAVIGATION: NavigationState = { backward: false, forward: false }
+
 const getLoopBounds = (rail: HTMLElement): LoopBounds | null => {
   const origin = rail.querySelector<HTMLElement>('[data-loop-origin]')
   const copy = rail.querySelector<HTMLElement>('[data-loop-copy]')
@@ -32,8 +45,40 @@ const getLoopBounds = (rail: HTMLElement): LoopBounds | null => {
   return width > 0 ? { start, end, width } : null
 }
 
-export function MediaRailControls({ railId, backwardLabel, forwardLabel }: MediaRailControlsProps) {
-  const [navigation, setNavigation] = useState({ backward: false, forward: false })
+const isLoopEnabled = (rail: HTMLElement, loop: LoopBounds | null) => (
+  Boolean(loop && loop.width - rail.clientWidth > EDGE_TOLERANCE)
+)
+
+const getNavigationState = (
+  rail: HTMLElement,
+  loop: LoopBounds | null,
+): NavigationState => {
+  if (loop) {
+    const enabled = isLoopEnabled(rail, loop)
+    return { backward: enabled, forward: enabled }
+  }
+
+  const maxScrollLeft = Math.max(rail.scrollWidth - rail.clientWidth, 0)
+  return {
+    backward: rail.scrollLeft > EDGE_TOLERANCE,
+    forward: rail.scrollLeft < maxScrollLeft - EDGE_TOLERANCE,
+  }
+}
+
+const navigationMatches = (left: NavigationState, right: NavigationState) => (
+  left.backward === right.backward && left.forward === right.forward
+)
+
+const normalizeLoopPosition = (rail: HTMLElement, loop: LoopBounds | null) => {
+  if (!isLoopEnabled(rail, loop) || !loop) return
+
+  if (rail.scrollLeft >= loop.end - EDGE_TOLERANCE) {
+    rail.scrollTo({ left: rail.scrollLeft - loop.width, behavior: 'auto' })
+  }
+}
+
+function useMediaRailNavigation(railId: string) {
+  const [navigation, setNavigation] = useState<NavigationState>(DISABLED_NAVIGATION)
 
   useEffect(() => {
     const rail = document.getElementById(railId)
@@ -43,39 +88,17 @@ export function MediaRailControls({ railId, backwardLabel, forwardLabel }: Media
     let loopBounds = getLoopBounds(rail)
 
     const updateNavigation = () => {
-      const loop = loopBounds
-      const loops = Boolean(loop && loop.width - rail.clientWidth > 2)
-      const maxScrollLeft = Math.max(rail.scrollWidth - rail.clientWidth, 0)
-      const nextNavigation = loop
-        ? {
-            backward: loops,
-            forward: loops,
-          }
-        : {
-            backward: rail.scrollLeft > 2,
-            forward: rail.scrollLeft < maxScrollLeft - 2,
-          }
-
-      setNavigation((current) => (
-        current.backward === nextNavigation.backward && current.forward === nextNavigation.forward
-          ? current
-          : nextNavigation
-      ))
-    }
-
-    const normalizeLoopPosition = () => {
-      const loop = loopBounds
-      if (!loop || loop.width - rail.clientWidth <= 2) return
-
-      if (rail.scrollLeft >= loop.end - 2) {
-        rail.scrollTo({ left: rail.scrollLeft - loop.width, behavior: 'auto' })
-      }
+      const nextNavigation = getNavigationState(rail, loopBounds)
+      setNavigation((current) => navigationMatches(current, nextNavigation) ? current : nextNavigation)
     }
 
     const handleScroll = () => {
       if (!loopBounds) updateNavigation()
       window.clearTimeout(normalizeTimer)
-      normalizeTimer = window.setTimeout(normalizeLoopPosition, 160)
+      normalizeTimer = window.setTimeout(
+        () => normalizeLoopPosition(rail, loopBounds),
+        LOOP_NORMALIZE_DELAY_MS,
+      )
     }
 
     const handleResize = () => {
@@ -96,41 +119,43 @@ export function MediaRailControls({ railId, backwardLabel, forwardLabel }: Media
     }
   }, [railId])
 
-  const scroll = (direction: -1 | 1) => {
-    const rail = document.getElementById(railId)
-    if (!rail) return
+  return navigation
+}
 
-    const distance = Math.max(rail.clientWidth * 0.82, 280)
-    const loop = getLoopBounds(rail)
+const scrollRail = (railId: string, direction: ScrollDirection) => {
+  const rail = document.getElementById(railId)
+  if (!rail) return
 
-    if (loop && loop.width - rail.clientWidth > 2) {
-      if (rail.scrollLeft >= loop.end - 2) {
-        rail.scrollTo({ left: rail.scrollLeft - loop.width, behavior: 'auto' })
-      }
-      if (direction === -1 && rail.scrollLeft - distance < loop.start) {
-        rail.scrollTo({ left: rail.scrollLeft + loop.width, behavior: 'auto' })
-      }
+  const distance = Math.max(rail.clientWidth * VIEWPORT_SCROLL_RATIO, MIN_SCROLL_DISTANCE)
+  const loop = getLoopBounds(rail)
 
-      rail.scrollBy({ left: direction * distance, behavior: 'smooth' })
-      return
+  if (isLoopEnabled(rail, loop) && loop) {
+    if (rail.scrollLeft >= loop.end - EDGE_TOLERANCE) {
+      rail.scrollTo({ left: rail.scrollLeft - loop.width, behavior: 'auto' })
+    }
+    if (direction === -1 && rail.scrollLeft - distance < loop.start) {
+      rail.scrollTo({ left: rail.scrollLeft + loop.width, behavior: 'auto' })
     }
 
-    if (loop) return
-
-    const maxScrollLeft = Math.max(rail.scrollWidth - rail.clientWidth, 0)
-    const left = Math.min(Math.max(rail.scrollLeft + direction * distance, 0), maxScrollLeft)
-
-    rail.scrollTo({
-      left,
-      behavior: 'smooth',
-    })
+    rail.scrollBy({ left: direction * distance, behavior: 'smooth' })
+    return
   }
+
+  if (loop) return
+
+  const maxScrollLeft = Math.max(rail.scrollWidth - rail.clientWidth, 0)
+  const left = Math.min(Math.max(rail.scrollLeft + direction * distance, 0), maxScrollLeft)
+  rail.scrollTo({ left, behavior: 'smooth' })
+}
+
+export function MediaRailControls({ railId, backwardLabel, forwardLabel }: MediaRailControlsProps) {
+  const navigation = useMediaRailNavigation(railId)
 
   return (
     <>
       <button
         type="button"
-        onClick={() => scroll(-1)}
+        onClick={() => scrollRail(railId, -1)}
         disabled={!navigation.backward}
         aria-controls={railId}
         aria-label={backwardLabel}
@@ -140,7 +165,7 @@ export function MediaRailControls({ railId, backwardLabel, forwardLabel }: Media
       </button>
       <button
         type="button"
-        onClick={() => scroll(1)}
+        onClick={() => scrollRail(railId, 1)}
         disabled={!navigation.forward}
         aria-controls={railId}
         aria-label={forwardLabel}

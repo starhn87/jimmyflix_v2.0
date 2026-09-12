@@ -1,5 +1,10 @@
 import { Children, type ReactNode } from 'react'
 import { MediaRailControls } from '@/components/media-rail-controls'
+import {
+  MEDIA_RAIL_HEADER_CLASS_NAME,
+  MEDIA_RAIL_ITEM_CLASS_NAME,
+  MEDIA_RAIL_LIST_CLASS_NAME,
+} from '@/components/media-rail-styles'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 
@@ -29,14 +34,13 @@ export function MediaRail({
   const items = Children.toArray(children)
   const shouldLoop = items.length >= 20
   const loopCopy = items.slice(0, LOOP_COPY_ITEM_COUNT)
-  const itemClassName = 'w-[42vw] min-w-[136px] max-w-[190px] shrink-0 snap-start sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]'
 
   return (
     <section
       aria-labelledby={titleId}
       className={toolbar ? undefined : 'render-later'}
     >
-      <div className="mb-5 px-4 sm:px-8 lg:px-12">
+      <div className={MEDIA_RAIL_HEADER_CLASS_NAME}>
         <div>
           <h2
             id={titleId}
@@ -53,13 +57,13 @@ export function MediaRail({
         <ul
           id={railId}
           aria-label={dictionary.common.carouselLabel(title)}
-          className="no-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-7 sm:scroll-px-8 sm:gap-4 sm:px-8 lg:scroll-px-12 lg:gap-5 lg:px-12"
+          className={MEDIA_RAIL_LIST_CLASS_NAME}
         >
           {items.map((child, index) => (
             <li
               key={`original-${index}`}
               data-loop-origin={index === 0 ? '' : undefined}
-              className={itemClassName}
+              className={MEDIA_RAIL_ITEM_CLASS_NAME}
             >
               {child}
             </li>
@@ -70,7 +74,7 @@ export function MediaRail({
               data-loop-copy={index === 0 ? '' : undefined}
               aria-hidden="true"
               inert
-              className={itemClassName}
+              className={MEDIA_RAIL_ITEM_CLASS_NAME}
             >
               {child}
             </li>

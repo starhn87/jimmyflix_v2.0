@@ -6,6 +6,7 @@ import { SearchResultsSkeleton } from '@/components/loading-skeletons'
 import { MediaGrid } from '@/components/media-grid'
 import { getDictionary, type Dictionary } from '@/lib/dictionaries'
 import { getLocalePath, isLocale, type Locale } from '@/lib/i18n'
+import { getFirstSearchParam } from '@/lib/params'
 import { MAX_SEARCH_LENGTH } from '@/lib/search'
 import { searchCatalog } from '@/lib/tmdb'
 
@@ -111,7 +112,7 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
   const [{ locale }, queryParams] = await Promise.all([params, searchParams])
   if (!isLocale(locale)) return null
   const dictionary = getDictionary(locale)
-  const rawQuery = Array.isArray(queryParams.q) ? queryParams.q[0] : queryParams.q
+  const rawQuery = getFirstSearchParam(queryParams.q)
   const query = rawQuery?.trim() || ''
 
   if (!query) {

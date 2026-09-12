@@ -1,117 +1,18 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import {
-  CreditsDataPanel,
-  ProductionDataPanel,
-  RelatedTitlesDataSection,
-  TvSeasonsDataPanel,
-} from '@/components/detail-data-panels'
-import { DetailView } from '@/components/detail-view'
-import { DetailPanelSkeleton, MediaSectionSkeleton } from '@/components/loading-skeletons'
-import { getMediaTitle } from '@/lib/media'
-import {
-  getCredits,
-  getRelatedTitles,
-  getTvSeasonDetail,
-  getTvDetail,
-  getWatchProviders,
-  TmdbNotFoundError,
-} from '@/lib/tmdb'
-import { getDictionary } from '@/lib/dictionaries'
-import { isLocale } from '@/lib/i18n'
+  getMediaDetailMetadata,
+  MediaDetailPage,
+  type MediaDetailRouteParams,
+} from '@/components/media-detail-page'
 
 interface TvDetailPageProps {
-  params: Promise<{ locale: string; id: string }>
-}
-
-const parseId = (value: string) => {
-  const id = Number(value)
-  return Number.isSafeInteger(id) && id > 0 ? id : null
+  params: Promise<MediaDetailRouteParams>
 }
 
 export async function generateMetadata({ params }: TvDetailPageProps): Promise<Metadata> {
-  const { locale, id: rawId } = await params
-  if (!isLocale(locale)) return {}
-  const dictionary = getDictionary(locale)
-  const id = parseId(rawId)
-  if (!id) return { title: dictionary.detail.tvNotFound }
-
-  try {
-    const detail = await getTvDetail(id, locale)
-    return {
-      title: getMediaTitle(detail, locale),
-      description: detail.overview || dictionary.detail.tvDescriptionFallback,
-    }
-  } catch {
-    return { title: dictionary.detail.tvMetadataFallback }
-  }
+  return getMediaDetailMetadata(params, 'tv')
 }
 
-export default async function TvDetailPage({ params }: TvDetailPageProps) {
-  const { locale, id: rawId } = await params
-  if (!isLocale(locale)) notFound()
-  const dictionary = getDictionary(locale)
-  const id = parseId(rawId)
-  if (!id) notFound()
-
-  let detail
-  try {
-    detail = await getTvDetail(id, locale)
-  } catch (error) {
-    if (error instanceof TmdbNotFoundError) notFound()
-    throw error
-  }
-
-  const creditsRequest = getCredits('tv', id, locale)
-  const providersRequest = getWatchProviders('tv', id, locale)
-  const relatedRequest = getRelatedTitles('tv', id, locale)
-  const regularSeasons = (detail.seasons || []).filter((season) => season.season_number > 0)
-  const latestSeason = regularSeasons.at(-1)
-  const latestSeasonRequest = latestSeason
-    ? getTvSeasonDetail(id, latestSeason.season_number, locale)
-    : undefined
-
-  return (
-    <DetailView
-      detail={detail}
-      mediaType="tv"
-      locale={locale}
-      creditsPanel={(
-        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingCredits} />}>
-          <CreditsDataPanel request={creditsRequest} locale={locale} />
-        </Suspense>
-      )}
-      productionPanel={(
-        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingProduction} />}>
-          <ProductionDataPanel
-            detail={detail}
-            creditsRequest={creditsRequest}
-            providersRequest={providersRequest}
-            locale={locale}
-          />
-        </Suspense>
-      )}
-      seasonsPanel={detail.seasons?.length ? (
-        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingSeasons} />}>
-          <TvSeasonsDataPanel
-            seasons={detail.seasons}
-            featuredEpisode={detail.next_episode_to_air || detail.last_episode_to_air}
-            request={latestSeasonRequest}
-            locale={locale}
-          />
-        </Suspense>
-      ) : undefined}
-      relatedSection={(
-        <Suspense fallback={<MediaSectionSkeleton label={dictionary.detail.loadingRelated} />}>
-          <RelatedTitlesDataSection
-            request={relatedRequest}
-            mediaType="tv"
-            id={id}
-            locale={locale}
-          />
-        </Suspense>
-      )}
-    />
-  )
+export default function TvDetailPage({ params }: TvDetailPageProps) {
+  return <MediaDetailPage params={params} mediaType="tv" />
 }

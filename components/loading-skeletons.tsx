@@ -1,3 +1,10 @@
+import {
+  CATALOG_RAIL_STACK_CLASS_NAME,
+  MEDIA_RAIL_HEADER_CLASS_NAME,
+  MEDIA_RAIL_ITEM_CLASS_NAME,
+  MEDIA_RAIL_SKELETON_LIST_CLASS_NAME,
+} from '@/components/media-rail-styles'
+
 const cardPlaceholders = Array.from({ length: 8 })
 const linePlaceholders = Array.from({ length: 3 })
 
@@ -12,7 +19,7 @@ function LoadingAnnouncement({ label }: { label: string }) {
 function MediaRailSkeletonVisual({ withToolbar = false }: { withToolbar?: boolean } = {}) {
   return (
     <section aria-hidden="true" className={withToolbar ? undefined : 'render-later'}>
-      <div className="mb-5 px-4 sm:px-8 lg:px-12">
+      <div className={MEDIA_RAIL_HEADER_CLASS_NAME}>
         <Bone className="h-7 w-40 rounded-lg sm:h-8 sm:w-52" />
         <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />
         {withToolbar ? (
@@ -23,11 +30,11 @@ function MediaRailSkeletonVisual({ withToolbar = false }: { withToolbar?: boolea
           </div>
         ) : null}
       </div>
-      <ul className="flex gap-3 overflow-hidden px-4 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12">
+      <ul className={MEDIA_RAIL_SKELETON_LIST_CLASS_NAME}>
         {cardPlaceholders.map((_, index) => (
           <li
             key={index}
-            className="w-[42vw] min-w-[136px] max-w-[190px] shrink-0 sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]"
+            className={MEDIA_RAIL_ITEM_CLASS_NAME}
           >
             <Bone className="aspect-2/3 w-full rounded-xl" />
             <div className="mt-3 min-h-15">
@@ -107,7 +114,7 @@ export function CatalogSkeleton({ label }: { label: string }) {
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
         <HeroSkeletonVisual />
-        <div className="relative z-10 mt-6 space-y-3 pb-20 sm:-mt-8 lg:space-y-9">
+        <div className={CATALOG_RAIL_STACK_CLASS_NAME}>
           {Array.from({ length: 8 }, (_, index) => (
             <MediaRailSkeletonVisual key={index} withToolbar={index === 1} />
           ))}

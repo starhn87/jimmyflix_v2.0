@@ -5,6 +5,7 @@ import { MediaSectionSkeleton } from '@/components/loading-skeletons'
 import { TimeWindowSwitch } from '@/components/time-window-switch'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale } from '@/lib/i18n'
+import { getFirstSearchParam } from '@/lib/params'
 import { getTrendingSectionRequests } from '@/lib/tmdb'
 import type { TimeWindow } from '@/types/tmdb'
 
@@ -27,7 +28,7 @@ export default async function TrendPage({ params, searchParams }: TrendPageProps
   const [{ locale }, query] = await Promise.all([params, searchParams])
   if (!isLocale(locale)) return null
   const dictionary = getDictionary(locale)
-  const rawWindow = Array.isArray(query.window) ? query.window[0] : query.window
+  const rawWindow = getFirstSearchParam(query.window)
   const window: TimeWindow = rawWindow === 'week' ? 'week' : 'day'
   const sections = getTrendingSectionRequests(window, locale)
 

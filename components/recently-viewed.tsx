@@ -3,6 +3,11 @@
 import { useEffect, useState } from 'react'
 import { MediaCard } from '@/components/media-card'
 import { MediaRailControls } from '@/components/media-rail-controls'
+import {
+  MEDIA_RAIL_HEADER_CLASS_NAME,
+  MEDIA_RAIL_ITEM_CLASS_NAME,
+  MEDIA_RAIL_LIST_CLASS_NAME,
+} from '@/components/media-rail-styles'
 import type { Locale } from '@/lib/i18n'
 import type { MediaItem, MediaType } from '@/types/tmdb'
 
@@ -93,7 +98,7 @@ export function RecentlyViewedSection({
 
   return (
     <section aria-labelledby="recently-viewed-title" className="render-later">
-      <div className="mb-5 px-4 sm:px-8 lg:px-12">
+      <div className={MEDIA_RAIL_HEADER_CLASS_NAME}>
         <h2 id="recently-viewed-title" className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
           {title}
         </h2>
@@ -103,12 +108,12 @@ export function RecentlyViewedSection({
         <ul
           id="recently-viewed-rail"
           aria-label={title}
-          className="no-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-7 sm:scroll-px-8 sm:gap-4 sm:px-8 lg:scroll-px-12 lg:gap-5 lg:px-12"
+          className={MEDIA_RAIL_LIST_CLASS_NAME}
         >
           {items.map((item) => (
             <li
               key={`${item.media_type}-${item.id}`}
-              className="w-[42vw] min-w-[136px] max-w-[190px] shrink-0 snap-start sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]"
+              className={MEDIA_RAIL_ITEM_CLASS_NAME}
             >
               <MediaCard item={item} mediaType={item.media_type} locale={locale} />
             </li>
