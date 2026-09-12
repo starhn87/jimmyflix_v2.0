@@ -98,6 +98,15 @@ const getList = async (path: string, locale: Locale, revalidate?: number) => {
   return response.results
 }
 
+const getRegionalMovieList = async (path: string, locale: Locale) => {
+  const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
+    path,
+    { region: locale === 'ko' ? 'KR' : 'US' },
+    { locale },
+  )
+  return response.results
+}
+
 const getDiscoverList = async (
   mediaType: MediaType,
   query: Record<string, QueryValue>,
@@ -293,18 +302,41 @@ const createSectionRequests = (
     request: loadSection(definition),
   }))
 
-const getRegionalReleaseCalendar = (locale: Locale) => {
-  const start = new Date()
-  const end = new Date(start)
+const getRegionalReleaseCalendar = async (locale: Locale) => {
+  const timeZone = locale === 'ko' ? 'Asia/Seoul' : 'America/New_York'
+  const dateParts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date())
+  const dateValues = Object.fromEntries(dateParts.map(({ type, value }) => [type, value]))
+  const today = new Date(Date.UTC(
+    Number(dateValues.year),
+    Number(dateValues.month) - 1,
+    Number(dateValues.day),
+  ))
+  const start = new Date(today)
+  const end = new Date(today)
+  start.setUTCDate(start.getUTCDate() + 1)
   end.setUTCDate(end.getUTCDate() + 45)
+  const from = start.toISOString().slice(0, 10)
+  const to = end.toISOString().slice(0, 10)
 
-  return getDiscoverList('movie', {
-    sort_by: 'primary_release_date.asc',
+  const items = await getDiscoverList('movie', {
+    sort_by: 'popularity.desc',
     region: locale === 'ko' ? 'KR' : 'US',
     with_release_type: '2|3',
-    'primary_release_date.gte': start.toISOString().slice(0, 10),
-    'primary_release_date.lte': end.toISOString().slice(0, 10),
+    'release_date.gte': from,
+    'release_date.lte': to,
   }, locale)
+
+  return items
+    .filter(({ release_date }) => release_date && release_date >= from && release_date <= to)
+    .sort((left, right) => {
+      const dateOrder = String(left.release_date).localeCompare(String(right.release_date))
+      return dateOrder || Number(right.popularity || 0) - Number(left.popularity || 0)
+    })
 }
 
 export const getMovieSectionRequests = (locale: Locale) => {
@@ -321,7 +353,7 @@ export const getMovieSectionRequests = (locale: Locale) => {
     {
       ...nowPlaying,
       mediaType: 'movie',
-      load: () => getList('movie/now_playing', locale),
+      load: () => getRegionalMovieList('movie/now_playing', locale),
     },
     {
       id: 'hidden-gem-movies',

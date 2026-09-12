@@ -112,7 +112,6 @@ interface Dictionary {
     titleDetails: string
     minutes: (duration: number) => string
     noOverview: string
-    imdbLabel: (title: string) => string
     tabListLabel: string
     scrollTabsBackward: string
     scrollTabsForward: string
@@ -354,7 +353,6 @@ const dictionaries: Record<Locale, Dictionary> = {
       titleDetails: 'Title details',
       minutes: (duration) => `${duration} min`,
       noOverview: 'No overview is available for this title.',
-      imdbLabel: (title) => `View ${title} on IMDb (opens in a new tab)`,
       tabListLabel: 'Title information',
       scrollTabsBackward: 'Show previous information tabs',
       scrollTabsForward: 'Show more information tabs',
@@ -458,7 +456,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       providerPickerLabel: 'Choose a streaming service',
       justWatchDiscoveryAttribution: 'Availability data provided by JustWatch',
       loadingStreaming: 'Loading streaming picks',
-      releaseCalendarDescription: 'Theatrical and digital releases arriving in your region over the next 45 days',
+      releaseCalendarDescription: 'Theatrical releases arriving in your region over the next 45 days',
       recentlyViewed: 'Recently viewed',
       recentlyViewedDescription: 'Pick up where your browsing left off',
       trendingMovies: 'Trending movies',
@@ -598,7 +596,6 @@ const dictionaries: Record<Locale, Dictionary> = {
       titleDetails: '콘텐츠 정보',
       minutes: (duration) => `${duration}분`,
       noOverview: '등록된 줄거리가 없습니다.',
-      imdbLabel: (title) => `IMDb에서 ${title} 보기(새 탭에서 열림)`,
       tabListLabel: '콘텐츠 상세 정보',
       scrollTabsBackward: '이전 상세 메뉴 보기',
       scrollTabsForward: '다음 상세 메뉴 더 보기',
@@ -702,7 +699,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       providerPickerLabel: '스트리밍 서비스 선택',
       justWatchDiscoveryAttribution: '시청 가능 정보 제공: JustWatch',
       loadingStreaming: '스트리밍 추천작 불러오는 중',
-      releaseCalendarDescription: '앞으로 45일 안에 국내 극장과 디지털로 공개되는 작품',
+      releaseCalendarDescription: '앞으로 45일 안에 국내 극장에서 개봉하는 작품',
       recentlyViewed: '최근 본 작품',
       recentlyViewedDescription: '최근 둘러본 작품을 다시 확인해 보세요',
       trendingMovies: '인기 급상승 영화',
