@@ -1,7 +1,6 @@
 import 'server-only'
 
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import {
   CollectionDataPanel,
@@ -13,20 +12,17 @@ import {
 import { DetailView } from '@/components/detail-view'
 import { DetailPanelSkeleton, MediaSectionSkeleton } from '@/components/loading-skeletons'
 import { getDictionary } from '@/lib/dictionaries'
-import { isLocale, type Locale } from '@/lib/i18n'
-import { getMediaTitle } from '@/lib/media'
-import { parsePositiveInteger } from '@/lib/params'
+import { getImageUrl, getMediaTitle } from '@/lib/media'
+import { getMediaDetailRoute, parseDetailRoute } from '@/lib/detail-route'
+import { createPageMetadata } from '@/lib/seo'
 import {
   getCollection,
   getCredits,
-  getMovieDetail,
   getRelatedTitles,
-  getTvDetail,
   getTvSeasonDetail,
   getWatchProviders,
-  TmdbNotFoundError,
 } from '@/lib/tmdb'
-import type { MediaDetail, MediaType } from '@/types/tmdb'
+import type { MediaType } from '@/types/tmdb'
 
 export interface MediaDetailRouteParams {
   locale: string
@@ -38,67 +34,36 @@ interface MediaDetailPageProps {
   mediaType: MediaType
 }
 
-const loadDetail = (mediaType: MediaType, id: number, locale: Locale) => (
-  mediaType === 'movie' ? getMovieDetail(id, locale) : getTvDetail(id, locale)
-)
-
 export async function getMediaDetailMetadata(
   params: Promise<MediaDetailRouteParams>,
   mediaType: MediaType,
 ): Promise<Metadata> {
-  const { locale, id: rawId } = await params
-  if (!isLocale(locale)) return {}
-
+  const { locale: rawLocale, id: rawId } = await params
+  const { locale, detail } = await getMediaDetailRoute(rawLocale, rawId, mediaType)
   const dictionary = getDictionary(locale)
-  const id = parsePositiveInteger(rawId)
-  const notFoundTitle = mediaType === 'movie'
-    ? dictionary.detail.movieNotFound
-    : dictionary.detail.tvNotFound
-  if (!id) return { title: notFoundTitle }
-
-  try {
-    const detail = await loadDetail(mediaType, id, locale)
-    return {
-      title: getMediaTitle(detail, locale),
-      description: detail.overview || (
-        mediaType === 'movie'
-          ? dictionary.detail.movieDescriptionFallback
-          : dictionary.detail.tvDescriptionFallback
-      ),
-    }
-  } catch {
-    return {
-      title: mediaType === 'movie'
-        ? dictionary.detail.movieMetadataFallback
-        : dictionary.detail.tvMetadataFallback,
-    }
-  }
+  return createPageMetadata({
+    locale,
+    path: `/${mediaType === 'movie' ? 'movies' : 'tv'}/${detail.id}`,
+    title: getMediaTitle(detail, locale),
+    description: detail.overview || (mediaType === 'movie'
+      ? dictionary.detail.movieDescriptionFallback : dictionary.detail.tvDescriptionFallback),
+    image: getImageUrl(detail.backdrop_path || detail.poster_path, 'original'),
+    type: mediaType === 'movie' ? 'video.movie' : 'video.tv_show',
+  })
 }
 
 export async function MediaDetailPage({ params, mediaType }: MediaDetailPageProps) {
-  const { locale, id: rawId } = await params
-  if (!isLocale(locale)) notFound()
-
-  const id = parsePositiveInteger(rawId)
-  if (!id) notFound()
-
+  const { locale: rawLocale, id: rawId } = await params
+  const { locale, id } = parseDetailRoute(rawLocale, rawId)
+  const detailRequest = getMediaDetailRoute(rawLocale, rawId, mediaType)
   const dictionary = getDictionary(locale)
-  const detailRequest = loadDetail(mediaType, id, locale)
   const creditsRequest = getCredits(mediaType, id, locale)
   const providersRequest = getWatchProviders(mediaType, id, locale)
   const relatedRequest = getRelatedTitles(mediaType, id, locale)
   // The panels consume these promises through separate Suspense boundaries.
   // Observe failures immediately in case the primary detail request returns 404.
   void Promise.allSettled([creditsRequest, providersRequest, relatedRequest])
-  let detail: MediaDetail
-
-  try {
-    detail = await detailRequest
-  } catch (error) {
-    if (error instanceof TmdbNotFoundError) notFound()
-    throw error
-  }
-
+  const { detail } = await detailRequest
   const collectionRequest = mediaType === 'movie' && detail.belongs_to_collection
     ? getCollection(detail.belongs_to_collection.id, locale)
     : undefined

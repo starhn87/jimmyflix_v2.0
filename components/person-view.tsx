@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { BackButton } from '@/components/back-button'
+import { Breadcrumbs } from '@/components/breadcrumbs'
+import { JsonLd } from '@/components/json-ld'
+import { getPersonJsonLd } from '@/lib/structured-data'
 import { MediaSection } from '@/components/media-section'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
@@ -60,6 +63,7 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
 
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-canvas pb-20">
+      <JsonLd data={getPersonJsonLd(person, locale)} />
       <div className="mx-auto grid max-w-[1480px] gap-8 px-4 py-8 sm:px-6 md:grid-cols-[minmax(240px,340px)_minmax(0,1fr)] md:gap-12 md:py-14 lg:px-10">
         <div className="mx-auto w-full max-w-[340px] md:mx-0">
           <div className="relative aspect-2/3 overflow-hidden rounded-2xl border border-tone/10 bg-surface shadow-media">
@@ -80,6 +84,10 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
         <div className="min-w-0 md:pt-3">
           <BackButton fallbackHref={getLocalePath(locale)} label={dictionary.common.goBack} />
           <div className="mt-7 flex flex-wrap items-start gap-3">
+            <Breadcrumbs locale={locale} items={[
+              { name: 'Jimmyflix', href: getLocalePath(locale) },
+              { name: person.name, href: getLocalePath(locale, `/people/${person.id}`) },
+            ]} />
             <h1 className="text-4xl leading-[1.05] font-bold tracking-[-0.035em] text-balance text-ink sm:text-5xl lg:text-6xl">
               {person.name}
             </h1>

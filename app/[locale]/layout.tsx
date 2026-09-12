@@ -9,6 +9,9 @@ import { SiteHeader } from '@/components/site-header'
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale, locales } from '@/lib/i18n'
 import { themeScript } from '@/lib/theme'
+import { SITE_URL } from '@/lib/seo'
+import { JsonLd } from '@/components/json-ld'
+import { websiteJsonLd } from '@/lib/structured-data'
 import '../globals.css'
 
 const geist = Geist({
@@ -32,7 +35,8 @@ export async function generateMetadata({
   const dictionary = getDictionary(locale)
 
   return {
-    metadataBase: new URL('https://jimmyflix.vercel.app'),
+    metadataBase: new URL(SITE_URL),
+    verification: { google: 'rhTLU7aq4Rp0mAYmzdArwov9G1AeJf3BuE94DE5KLKU' },
     title: {
       default: dictionary.metadata.title,
       template: '%s | Jimmyflix',
@@ -69,6 +73,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={geist.variable} suppressHydrationWarning>
       <body>
+        <JsonLd data={websiteJsonLd} />
         <SiteHeader locale={locale} messages={dictionary.header} />
         {children}
         <Script

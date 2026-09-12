@@ -9,6 +9,7 @@ import { getLocalePath, isLocale, type Locale } from '@/lib/i18n'
 import { getFirstSearchParam } from '@/lib/params'
 import { MAX_SEARCH_LENGTH } from '@/lib/search'
 import { searchCatalog } from '@/lib/tmdb'
+import { createPageMetadata } from '@/lib/seo'
 
 interface SearchPageProps {
   params: Promise<{ locale: string }>
@@ -19,10 +20,13 @@ export async function generateMetadata({ params }: SearchPageProps): Promise<Met
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const dictionary = getDictionary(locale)
-  return {
+  return createPageMetadata({
+    locale,
+    path: '/search',
+    noIndex: true,
     title: dictionary.search.metadataTitle,
     description: dictionary.search.metadataDescription,
-  }
+  })
 }
 
 function EmptyResults({ query, dictionary }: { query: string; dictionary: Dictionary }) {

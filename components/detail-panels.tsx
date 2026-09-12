@@ -8,6 +8,7 @@ import { VideoEmbed } from '@/components/video-embed'
 import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
+import { getTrailer } from '@/lib/videos'
 import type {
   CastMember,
   CrewMember,
@@ -19,7 +20,6 @@ import type {
   Season,
   SeasonDetail,
   TmdbImage,
-  Video,
   WatchProvider,
   WatchProviderRegion,
 } from '@/types/tmdb'
@@ -36,15 +36,6 @@ function EmptyPanel({ message }: { message: string }) {
     </p>
   )
 }
-
-const getTrailer = (videos: Video[] | undefined) =>
-  videos?.find(
-    (video) => video.site === 'YouTube' && video.type === 'Trailer' && video.official,
-  ) || videos?.find(
-    (video) => video.site === 'YouTube' && video.type === 'Trailer',
-  ) || videos?.find(
-    (video) => video.site === 'YouTube' && video.type === 'Teaser' && video.official,
-  ) || videos?.find((video) => video.site === 'YouTube' && video.type === 'Teaser')
 
 export function TrailerPanel({ detail, locale }: { detail: MediaDetail; locale: Locale }) {
   const dictionary = getDictionary(locale)

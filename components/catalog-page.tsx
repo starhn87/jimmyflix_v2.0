@@ -15,6 +15,7 @@ import {
   getTvSectionRequests,
 } from '@/lib/tmdb'
 import type { MediaType } from '@/types/tmdb'
+import { createPageMetadata } from '@/lib/seo'
 
 interface CatalogPageProps {
   locale: Locale
@@ -30,10 +31,12 @@ export function getCatalogMetadata(locale: Locale, mediaType: MediaType): Metada
   const dictionary = getDictionary(locale)
   const catalog = mediaType === 'movie' ? dictionary.movies : dictionary.tv
 
-  return {
+  return createPageMetadata({
+    locale,
+    path: mediaType === 'movie' ? '/' : '/tv',
     title: catalog.metadataTitle,
     description: catalog.metadataDescription,
-  }
+  })
 }
 
 export function CatalogPage({ locale, mediaType, requestedProviderId }: CatalogPageProps) {

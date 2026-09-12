@@ -8,6 +8,9 @@ import {
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
 import { RecentMediaTracker } from '@/components/recently-viewed'
+import { Breadcrumbs } from '@/components/breadcrumbs'
+import { JsonLd } from '@/components/json-ld'
+import { getMediaJsonLd } from '@/lib/structured-data'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
 import {
@@ -96,6 +99,7 @@ export function DetailView({
 
   return (
     <main aria-labelledby="detail-title" className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden bg-canvas">
+      <JsonLd data={getMediaJsonLd(detail, mediaType, locale)} />
       <RecentMediaTracker
         locale={locale}
         item={{
@@ -143,6 +147,11 @@ export function DetailView({
         </div>
 
         <header className="min-w-0 pt-6 sm:pt-1 lg:pt-4">
+          <Breadcrumbs locale={locale} items={[
+            { name: 'Jimmyflix', href: getLocalePath(locale) },
+            ...(mediaType === 'tv' ? [{ name: 'TV', href: getLocalePath(locale, '/tv') }] : []),
+            { name: title, href: getLocalePath(locale, `/${mediaType === 'movie' ? 'movies' : 'tv'}/${detail.id}`) },
+          ]} />
           <h1 id="detail-title" className="min-w-0 text-3xl leading-[1.1] font-bold tracking-[-0.03em] text-balance text-ink sm:text-4xl lg:text-6xl">
             {title}
           </h1>

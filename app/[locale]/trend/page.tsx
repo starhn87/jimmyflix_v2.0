@@ -8,6 +8,7 @@ import { isLocale } from '@/lib/i18n'
 import { getFirstSearchParam } from '@/lib/params'
 import { getTrendingSectionRequests } from '@/lib/tmdb'
 import type { TimeWindow } from '@/types/tmdb'
+import { createPageMetadata } from '@/lib/seo'
 
 interface TrendPageProps {
   params: Promise<{ locale: string }>
@@ -18,10 +19,12 @@ export async function generateMetadata({ params }: TrendPageProps): Promise<Meta
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const dictionary = getDictionary(locale)
-  return {
+  return createPageMetadata({
+    locale,
+    path: '/trend',
     title: dictionary.trend.metadataTitle,
     description: dictionary.trend.metadataDescription,
-  }
+  })
 }
 
 export default async function TrendPage({ params, searchParams }: TrendPageProps) {

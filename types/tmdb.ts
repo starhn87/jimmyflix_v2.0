@@ -68,6 +68,7 @@ export interface Video {
   official?: boolean
   site: string
   type: string
+  published_at?: string
 }
 
 export interface ProductionCompany {

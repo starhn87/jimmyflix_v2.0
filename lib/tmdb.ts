@@ -2,7 +2,9 @@ import 'server-only'
 
 import { cache } from 'react'
 import { getDictionary } from '@/lib/dictionaries'
-import { tmdbLanguage, type Locale } from '@/lib/i18n'
+import { locales, tmdbLanguage, type Locale } from '@/lib/i18n'
+import { getImageUrl } from '@/lib/media'
+import type { SitemapPath } from '@/lib/sitemap'
 import { runCatalogSearch } from '@/lib/search'
 import type {
   CollectionDetail,
@@ -746,3 +748,31 @@ export const getPersonDetail = cache((id: number, locale: Locale) =>
     { locale },
   ),
 )
+
+export async function getSitemapPaths(): Promise<SitemapPath[]> {
+  const paths = await Promise.all(locales.map(async (locale) => {
+    const sections = [
+      ...getMovieSectionRequests(locale), ...getTvSectionRequests(locale),
+      ...getTrendingSectionRequests('week', locale),
+    ]
+    const [catalog, people] = await Promise.all([
+      Promise.all(sections.map(({ request }) => request)),
+      tmdbFetch<TmdbListResponse<PersonDetail & { adult?: boolean }>>(
+        'person/popular', {}, { locale, revalidate: 3600, timeoutMs: 8000 },
+      ),
+    ])
+    // A failed refresh must preserve the previous sitemap in the ISR cache.
+    if (catalog.some((section) => section.error)) throw new Error('Sitemap catalog is unavailable.')
+    return [
+      ...catalog.flatMap((section) => section.items.filter((item) => !item.adult).map((item) => ({
+        path: `/${section.mediaType === 'movie' ? 'movies' : 'tv'}/${item.id}`,
+        images: { [locale]: getImageUrl(item.poster_path, 'original') || undefined },
+      }))),
+      ...people.results.filter((person) => !person.adult).map((person) => ({
+        path: `/people/${person.id}`,
+        images: { [locale]: getImageUrl(person.profile_path, 'original') || undefined },
+      })),
+    ]
+  }))
+  return paths.flat()
+}

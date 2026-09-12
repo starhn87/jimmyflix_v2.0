@@ -16,6 +16,7 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "eslint . --max-warnings=0",
+    "test": "node --import ./tests/register-ts.mjs --test tests/*.test.mjs",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit --incremental false"
   },
