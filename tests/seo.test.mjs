@@ -30,9 +30,24 @@ test('share metadata has a brand image fallback and compact whitespace-normalize
   const result = metadata({ description: 'One\n\n two   three' })
   assert.equal(result.description, 'One two three')
   assert.equal(result.twitter.card, 'summary_large_image')
-  assert.equal(result.openGraph.images[0].url, 'https://jimmyflix.vercel.app/social-image')
+  assert.equal(result.openGraph.images[0].url, 'https://jimmyflix.vercel.app/social-image?v=2')
   assert.equal(summarizeDescription('x'.repeat(300)).length, 170)
   assert.ok(summarizeDescription('x'.repeat(300)).endsWith('…'))
+})
+
+test('both home locales advertise a full-size brand card without overriding title-specific images', () => {
+  for (const locale of ['ko', 'en']) {
+    const home = metadata({ path: '/', locale })
+    const image = home.openGraph.images[0]
+    assert.equal(image.width, 1200)
+    assert.equal(image.height, 630)
+    assert.equal(image.type, 'image/png')
+    assert.match(image.alt, /Jimmyflix/)
+    assert.deepEqual(home.twitter.images, [{ url: image.url, alt: image.alt }])
+  }
+  const detail = metadata({ path: '/movies/42', image: 'https://image.tmdb.org/t/p/original/poster.jpg' })
+  assert.equal(detail.openGraph.images[0].url, 'https://image.tmdb.org/t/p/original/poster.jpg')
+  assert.equal(detail.openGraph.images[0].width, undefined)
 })
 
 test('sitemap merges repeated titles and preserves both localized images without inventing lastmod', () => {
