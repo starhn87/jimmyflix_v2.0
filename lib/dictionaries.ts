@@ -349,7 +349,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       collection: 'Collection',
       seasons: 'Seasons',
       gallery: 'Gallery',
-      galleryHeading: 'Scenes and artwork',
+      galleryHeading: 'Photos',
       galleryUi: {
         photo: 'Photo', photos: 'Photos',
         hint: 'Scroll to explore. Select a photo to view it full size.',
@@ -603,7 +603,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       collection: '컬렉션',
       seasons: '시즌',
       gallery: '갤러리',
-      galleryHeading: '장면과 아트워크',
+      galleryHeading: '작품 사진',
       galleryUi: {
         photo: '사진', photos: '사진',
         hint: '좌우로 넘겨보세요. 사진을 누르면 크게 볼 수 있어요.',
