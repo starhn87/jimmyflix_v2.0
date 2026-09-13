@@ -21,23 +21,32 @@ export function LoadingCardImage({
   containerClassName,
   draggable,
 }: LoadingCardImageProps) {
-  const [loaded, setLoaded] = useState(false)
+  const [settledSrc, setSettledSrc] = useState<string | null>(null)
+  const loaded = settledSrc === src
 
   return (
     <div
       aria-busy={!loaded}
-      className={`${containerClassName} ${loaded ? '' : 'animate-pulse motion-reduce:animate-none'}`}
+      className={containerClassName}
     >
+      {!loaded ? (
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 animate-pulse bg-tone/7 motion-reduce:animate-none">
+          <span
+            className="absolute inset-0 motion-reduce:hidden"
+            style={{ backgroundImage: `url("${imageSkeletonPlaceholder}")`, backgroundSize: '100% 100%' }}
+          />
+        </span>
+      ) : null}
       <Image
+        key={src}
         src={src}
         alt={alt}
         draggable={draggable}
         fill
-        placeholder={imageSkeletonPlaceholder}
         quality={85}
         sizes={sizes}
-        onLoad={() => setLoaded(true)}
-        onError={() => setLoaded(true)}
+        onLoad={() => setSettledSrc(src)}
+        onError={() => setSettledSrc(src)}
         className={`${imageClassName} transition-opacity duration-300 motion-reduce:transition-none ${loaded ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
