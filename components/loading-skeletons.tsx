@@ -7,6 +7,7 @@ import {
   MEDIA_RAIL_SKELETON_LIST_CLASS_NAME,
   STREAMING_PROVIDER_LIST_CLASS_NAME,
 } from '@/components/media-rail-styles'
+import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME } from '@/components/person-view-styles'
 
 const searchPlaceholders = Array.from({ length: 14 })
 const linePlaceholders = Array.from({ length: 3 })
@@ -270,8 +271,8 @@ export function PersonSkeleton({ label }: { label: string }) {
     >
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
-        <div className="mx-auto grid max-w-[1480px] gap-8 px-4 py-8 sm:px-6 md:grid-cols-[minmax(240px,340px)_minmax(0,1fr)] md:gap-12 md:py-14 lg:px-10">
-          <Bone className="mx-auto aspect-2/3 w-full max-w-[340px] rounded-2xl md:mx-0" />
+        <div className={PERSON_LAYOUT_CLASS_NAME}>
+          <Bone className={`aspect-2/3 sm:rounded-2xl ${PERSON_PORTRAIT_CLASS_NAME}`} />
           <div className="md:pt-3">
             <Bone className="h-11 w-32 rounded-full" />
             <Bone className="mt-7 h-12 w-4/5 max-w-xl rounded-xl sm:h-16" />

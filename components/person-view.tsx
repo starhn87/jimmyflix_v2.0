@@ -2,9 +2,10 @@ import Image from 'next/image'
 import { JsonLd } from '@/components/json-ld'
 import { getBreadcrumbJsonLd, getPersonJsonLd } from '@/lib/structured-data'
 import { MediaSection } from '@/components/media-section'
+import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME } from '@/components/person-view-styles'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
-import { getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
+import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
 import type { MediaItem, PersonCredit, PersonDetail } from '@/types/tmdb'
 
 const departmentLabels: Record<Locale, Record<string, string>> = {
@@ -65,18 +66,18 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
         { name: 'Jimmyflix', href: getLocalePath(locale) },
         { name: person.name, href: getLocalePath(locale, `/people/${person.id}`) },
       ])} />
-      <div className="mx-auto grid max-w-[1480px] gap-8 px-4 py-8 sm:px-6 md:grid-cols-[minmax(240px,340px)_minmax(0,1fr)] md:gap-12 md:py-14 lg:px-10">
-        <div className="mx-auto w-full max-w-[340px] md:mx-0">
-          <div className="relative aspect-2/3 overflow-hidden rounded-2xl border border-tone/10 bg-surface shadow-media">
+      <div className={PERSON_LAYOUT_CLASS_NAME}>
+        <div className={PERSON_PORTRAIT_CLASS_NAME}>
+          <div className="relative aspect-2/3 overflow-hidden bg-surface shadow-media sm:rounded-2xl sm:border sm:border-tone/10">
             <Image
-              src={getProfileUrl(person.profile_path)}
+              src={getImageUrl(person.profile_path, 'original') || getProfileUrl(null)}
               alt={dictionary.person.profileAlt(person.name)}
               fill
               loading="eager"
               fetchPriority="high"
               placeholder={imageSkeletonPlaceholder}
               quality={85}
-              sizes="(max-width: 767px) min(87vw, 340px), 340px"
+              sizes="(max-width: 639px) 100vw, 340px"
               className="object-cover object-center"
             />
           </div>
