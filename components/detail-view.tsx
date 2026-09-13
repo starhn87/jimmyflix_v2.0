@@ -8,9 +8,8 @@ import {
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
 import { RecentMediaTracker } from '@/components/recently-viewed'
-import { Breadcrumbs } from '@/components/breadcrumbs'
 import { JsonLd } from '@/components/json-ld'
-import { getMediaJsonLd } from '@/lib/structured-data'
+import { getBreadcrumbJsonLd, getMediaJsonLd } from '@/lib/structured-data'
 import { getDictionary } from '@/lib/dictionaries'
 import { getGalleryImages } from '@/lib/gallery'
 import { getLocalePath, type Locale } from '@/lib/i18n'
@@ -96,6 +95,11 @@ export function DetailView({
   return (
     <main aria-labelledby="detail-title" className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden bg-canvas">
       <JsonLd data={getMediaJsonLd(detail, mediaType, locale)} />
+      <JsonLd data={getBreadcrumbJsonLd([
+        { name: 'Jimmyflix', href: getLocalePath(locale) },
+        ...(mediaType === 'tv' ? [{ name: 'TV', href: getLocalePath(locale, '/tv') }] : []),
+        { name: title, href: getLocalePath(locale, `/${mediaType === 'movie' ? 'movies' : 'tv'}/${detail.id}`) },
+      ])} />
       <RecentMediaTracker
         locale={locale}
         item={{
@@ -128,7 +132,7 @@ export function DetailView({
       ) : null}
 
       <div className="mx-auto grid max-w-[1480px] grid-cols-1 items-start gap-y-0 px-4 pt-0 pb-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-x-4 sm:gap-y-6 sm:px-6 sm:py-8 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
-        <div className="relative -mx-4 aspect-2/3 w-[calc(100%+2rem)] overflow-hidden border-b border-tone/10 bg-surface shadow-media sm:mx-0 sm:w-full sm:rounded-2xl sm:border lg:row-span-3">
+        <div className="relative -mx-4 aspect-2/3 w-[calc(100%+2rem)] overflow-hidden border-tone/10 bg-surface shadow-media sm:mx-0 sm:w-full sm:rounded-2xl sm:border-x sm:border-t lg:row-span-3">
           <Image
             src={getImageUrl(detail.poster_path, 'w780') || getPosterUrl(detail.poster_path)}
             alt={dictionary.common.posterAlt(title)}
@@ -143,11 +147,6 @@ export function DetailView({
         </div>
 
         <header className="min-w-0 pt-6 sm:pt-1 lg:pt-4">
-          <Breadcrumbs locale={locale} items={[
-            { name: 'Jimmyflix', href: getLocalePath(locale) },
-            ...(mediaType === 'tv' ? [{ name: 'TV', href: getLocalePath(locale, '/tv') }] : []),
-            { name: title, href: getLocalePath(locale, `/${mediaType === 'movie' ? 'movies' : 'tv'}/${detail.id}`) },
-          ]} />
           <h1 id="detail-title" className="min-w-0 text-3xl leading-[1.1] font-bold tracking-[-0.03em] text-balance text-ink sm:text-4xl lg:text-6xl">
             {title}
           </h1>
