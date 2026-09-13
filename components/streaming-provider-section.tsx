@@ -3,6 +3,7 @@ import 'server-only'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MediaSection } from '@/components/media-section'
+import { STREAMING_PROVIDER_LIST_CLASS_NAME } from '@/components/media-rail-styles'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
 import { getImageUrl } from '@/lib/media'
@@ -26,7 +27,7 @@ export async function StreamingProviderSection({
   const providerPicker = (
     <div className="space-y-3">
       <nav aria-label={dictionary.sections.providerPickerLabel}>
-        <ul className="no-scrollbar flex max-w-full gap-2 overflow-x-auto pb-1">
+        <ul className={`no-scrollbar scroll-px-4 overflow-x-auto sm:scroll-px-0 ${STREAMING_PROVIDER_LIST_CLASS_NAME}`}>
           {data.providers.map((provider) => {
             const logo = getImageUrl(provider.logo_path, 'w185')
 

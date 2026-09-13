@@ -5,6 +5,7 @@ import {
   MEDIA_RAIL_DESCRIPTION_CLASS_NAME,
   MEDIA_RAIL_ITEM_CLASS_NAME,
   MEDIA_RAIL_SKELETON_LIST_CLASS_NAME,
+  STREAMING_PROVIDER_LIST_CLASS_NAME,
 } from '@/components/media-rail-styles'
 
 const searchPlaceholders = Array.from({ length: 14 })
@@ -28,7 +29,7 @@ function MediaRailSkeletonVisual({ withToolbar = false, itemCount = 40, title, d
         {description ? <div className={MEDIA_RAIL_DESCRIPTION_CLASS_NAME}>{description}</div> : <Bone className="mt-2 h-4 w-56 max-w-[70vw] rounded-md" />}
         {withToolbar ? (
           <div className="mt-4">
-            <div className="flex gap-2 overflow-hidden pb-1">
+            <div className={`overflow-hidden ${STREAMING_PROVIDER_LIST_CLASS_NAME}`}>
               {['w-24', 'w-28', 'w-24', 'w-28', 'w-24'].map((width, index) => (
                 <Bone key={index} className={`h-10 shrink-0 rounded-full ${width}`} />
               ))}
