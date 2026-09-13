@@ -1,0 +1,5 @@
+export const DETAIL_RAIL_HEADER = 'flex min-h-11 items-center justify-between gap-3'
+export const DETAIL_RAIL_TRACK = 'no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pb-1 sm:mx-0 sm:gap-4 sm:scroll-px-0 sm:px-0'
+export const PERSON_RAIL_ITEM = 'w-32 shrink-0 snap-start sm:w-40'
+export const PERSON_CARD_NAME = 'mt-3 h-5 truncate text-sm leading-5 font-semibold text-ink'
+export const PERSON_CARD_ROLE = 'mt-1 line-clamp-2 h-10 text-xs leading-5 text-faint'

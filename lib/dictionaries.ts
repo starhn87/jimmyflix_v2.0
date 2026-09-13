@@ -2,6 +2,7 @@ import 'server-only'
 
 import type { HeaderMessages, Locale } from '@/lib/i18n'
 import type { GalleryMessages } from '@/lib/gallery'
+import type { PeopleMessages } from '@/lib/detail-people'
 
 interface Dictionary {
   metadata: {
@@ -115,6 +116,7 @@ interface Dictionary {
     gallery: string
     galleryHeading: string
     galleryUi: GalleryMessages
+    peopleUi: PeopleMessages
     themes: string
     searchTheme: (theme: string) => string
     titleDetails: string
@@ -394,7 +396,14 @@ const dictionaries: Record<Locale, Dictionary> = {
       cast: 'Cast',
       castMember: 'Cast member',
       noProduction: 'No production information is available.',
-      keyCrew: 'Key crew',
+      keyCrew: 'Crew',
+      peopleUi: {
+        viewAll: 'View all', close: 'Close people list',
+        searchCast: 'Search names or characters', searchCrew: 'Search names or roles',
+        filterRole: 'Filter by role', allRoles: 'All roles',
+        noResults: 'No matching people found.', clearFilters: 'Clear filters',
+        results: 'Results', loadMore: 'Show more', previous: 'Previous cards', next: 'Next cards',
+      },
       streamingAvailability: 'Where to watch',
       stream: 'Stream',
       rent: 'Rent',
@@ -655,7 +664,14 @@ const dictionaries: Record<Locale, Dictionary> = {
       cast: '출연진',
       castMember: '출연',
       noProduction: '등록된 제작 정보가 없습니다.',
-      keyCrew: '주요 제작진',
+      keyCrew: '제작진',
+      peopleUi: {
+        viewAll: '전체 보기', close: '인물 목록 닫기',
+        searchCast: '이름 또는 배역 검색', searchCrew: '이름 또는 역할 검색',
+        filterRole: '역할별 필터', allRoles: '모든 역할',
+        noResults: '일치하는 인물이 없습니다.', clearFilters: '검색·필터 초기화',
+        results: '검색 결과', loadMore: '더 보기', previous: '이전 카드', next: '다음 카드',
+      },
       streamingAvailability: '시청 가능한 곳',
       stream: '스트리밍',
       rent: '대여',

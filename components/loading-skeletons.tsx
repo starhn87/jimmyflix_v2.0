@@ -8,6 +8,8 @@ import {
   STREAMING_PROVIDER_LIST_CLASS_NAME,
 } from '@/components/media-rail-styles'
 import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME } from '@/components/person-view-styles'
+import { DETAIL_RAIL_HEADER, DETAIL_RAIL_TRACK, PERSON_RAIL_ITEM, PERSON_CARD_NAME, PERSON_CARD_ROLE } from '@/components/detail-rail-styles'
+import { PEOPLE_PREVIEW_LIMIT } from '@/lib/detail-people'
 
 const searchPlaceholders = Array.from({ length: 14 })
 const linePlaceholders = Array.from({ length: 3 })
@@ -234,6 +236,52 @@ export function DetailSkeleton({ label }: { label: string }) {
         </div>
       </div>
     </main>
+  )
+}
+
+export function PeopleSectionSkeleton({ label, title }: { label: string; title: string }) {
+  return (
+    <section role="status" aria-busy="true" aria-label={label} className="min-w-0 animate-pulse motion-reduce:animate-none">
+      <LoadingAnnouncement label={label} />
+      <div aria-hidden="true">
+        <div className={DETAIL_RAIL_HEADER}>
+          <h2 className="text-lg font-semibold tracking-tight text-ink sm:text-xl">{title}</h2>
+          <Bone className="h-4 w-20 rounded-md" />
+        </div>
+        <div className={DETAIL_RAIL_TRACK.replace('overflow-x-auto', 'overflow-hidden')}>
+          {Array.from({ length: PEOPLE_PREVIEW_LIMIT }, (_, index) => (
+            <div key={index} className={PERSON_RAIL_ITEM}>
+              <Bone className="aspect-2/3 w-full rounded-xl" />
+              <div className={PERSON_CARD_NAME}><Bone className="mx-auto h-4 w-3/4 rounded-md" /></div>
+              <div className={PERSON_CARD_ROLE}><Bone className="mx-auto h-3 w-1/2 rounded-md" /></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function WatchProvidersSkeleton({ label, title }: { label: string; title: string }) {
+  return (
+    <section role="status" aria-busy="true" aria-label={label} className="animate-pulse motion-reduce:animate-none">
+      <LoadingAnnouncement label={label} />
+      <div aria-hidden="true">
+        <h2 className="text-lg font-semibold tracking-tight text-ink sm:text-xl">{title}</h2>
+        <div className="mt-5">
+          <Bone className="h-5 w-20 rounded-md" />
+          <div className="mt-3 flex gap-3">
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className="w-20 sm:w-24">
+                <Bone className="size-16 rounded-2xl sm:size-20" />
+                <Bone className="mt-2 h-4 w-16 rounded-md" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <Bone className="mt-5 h-4 w-56 max-w-full rounded-md" />
+      </div>
+    </section>
   )
 }
 

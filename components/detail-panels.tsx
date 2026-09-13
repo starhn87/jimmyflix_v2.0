@@ -1,14 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { ErrorState } from '@/components/error-state'
 import { SearchIcon } from '@/components/icons'
 import { LoadingCardImage } from '@/components/loading-card-image'
 import { Gallery } from '@/components/gallery'
+import { DetailCardRail } from '@/components/detail-card-rail'
+import { PeopleSection } from '@/components/people-section'
+import { getCastPeople, getCrewPeople } from '@/lib/detail-people'
 import { MediaCard } from '@/components/media-card'
 import { VideoEmbed } from '@/components/video-embed'
-import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
+import { getImageUrl, imageSkeletonPlaceholder } from '@/lib/media'
 import { getDictionary } from '@/lib/dictionaries'
-import { getLocalePath, type Locale } from '@/lib/i18n'
+import type { Locale } from '@/lib/i18n'
 import { getTrailer } from '@/lib/videos'
 import type { GalleryImage } from '@/lib/gallery'
 import type {
@@ -136,142 +140,51 @@ export function CreditsPanel({
     )
   }
 
-  if (cast.length === 0) return <EmptyPanel message={dictionary.detail.noCast} />
+  const people = getCastPeople(cast, dictionary.detail.castMember)
+  if (people.length === 0) return <EmptyPanel message={dictionary.detail.noCast} />
 
   return (
-    <section className="pt-7" aria-labelledby="cast-title">
-      <h2 id="cast-title" className={panelHeading}>{dictionary.detail.cast}</h2>
-      <ul className={responsiveCardGrid}>
-        {cast.slice(0, 30).map((person) => (
-          <li key={`${person.id}-${person.character || person.name}`} className={centeredItem}>
-            <Link
-              href={getLocalePath(locale, `/people/${person.id}`)}
-              prefetch={false}
-              className="group block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/50"
-            >
-              <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-lg shadow-black/25">
-                <Image
-                  src={getProfileUrl(person.profile_path)}
-                  alt={person.name || person.original_name}
-                  fill
-                  placeholder={imageSkeletonPlaceholder}
-                  quality={85}
-                  sizes="(max-width: 480px) 42vw, 180px"
-                  className="object-cover object-center transition duration-300 group-hover:scale-[1.035] motion-reduce:transition-none"
-                />
-              </div>
-              <p className="mt-3 text-sm font-semibold text-ink transition-colors group-hover:text-accent-strong">
-                {person.name || person.original_name}
-              </p>
-              <p className="mt-1 text-xs leading-5 text-faint">
-                {person.character || dictionary.detail.castMember}
-              </p>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <div className="pt-7">
+      <PeopleSection people={people} title={dictionary.detail.cast} kind="cast" locale={locale} messages={dictionary.detail.peopleUi} />
+    </div>
   )
+}
+
+export function CrewPanel({ crew, locale }: { crew: CrewMember[]; locale: Locale }) {
+  const dictionary = getDictionary(locale)
+  const people = getCrewPeople(crew, locale)
+  if (!people.length) return null
+  return <PeopleSection people={people} title={dictionary.detail.keyCrew} kind="crew" locale={locale} messages={dictionary.detail.peopleUi} />
 }
 
 function CompanyCard({ company }: { company: ProductionCompany }) {
-  const logo = getImageUrl(company.logo_path, 'w300') || '/images/defaultProduction.png'
   return (
-    <li className={centeredItem}>
-      <LoadingCardImage
-        src={logo}
-        alt={company.name}
-        sizes="180px"
-        imageClassName="object-contain object-center p-4"
-        containerClassName="relative mx-auto aspect-square w-full overflow-hidden rounded-xl border border-tone/10 bg-slate-100 shadow-panel"
-      />
-      <p className="mt-3 text-sm leading-5 font-medium text-muted">{company.name}</p>
+    <li className="w-60 shrink-0 snap-start">
+      <div className="flex h-24 items-center gap-3 rounded-xl border border-tone/10 bg-tone/3 p-3">
+        <LoadingCardImage
+          src={getImageUrl(company.logo_path, 'w300') || '/images/defaultProduction.png'}
+          alt={company.name}
+          sizes="64px"
+          imageClassName="object-contain object-center p-2"
+          containerClassName="relative aspect-square w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100"
+        />
+        <p className="line-clamp-3 text-sm leading-5 font-medium text-muted" title={company.name}>{company.name}</p>
+      </div>
     </li>
   )
 }
 
-function CountryCard({ country, flagAlt }: {
-  country: ProductionCountry
-  flagAlt: string
-}) {
+function CountryCard({ country, flagAlt }: { country: ProductionCountry; flagAlt: string }) {
   return (
-    <li className={centeredItem}>
+    <li className="inline-flex min-h-10 items-center gap-2 rounded-full border border-tone/10 bg-tone/3 px-3 py-2">
       <LoadingCardImage
-        src={`https://flagcdn.com/w640/${country.iso_3166_1.toLowerCase()}.png`}
+        src={`https://flagcdn.com/w80/${country.iso_3166_1.toLowerCase()}.png`}
         alt={flagAlt}
-        sizes="180px"
-        imageClassName="object-cover object-center"
-        containerClassName="relative mx-auto aspect-5/3 w-full overflow-hidden rounded-xl border border-tone/10 bg-surface shadow-panel"
+        sizes="24px"
+        imageClassName="object-contain object-center"
+        containerClassName="relative aspect-5/3 w-6 shrink-0 overflow-hidden rounded-xs bg-surface"
       />
-      <p className="mt-3 text-sm leading-5 font-medium text-muted">{country.name}</p>
-    </li>
-  )
-}
-
-const crewJobOrder = [
-  'Director',
-  'Creator',
-  'Screenplay',
-  'Writer',
-  'Executive Producer',
-  'Producer',
-  'Director of Photography',
-  'Original Music Composer',
-]
-
-const localizedCrewJobs: Record<Locale, Record<string, string>> = {
-  en: {},
-  ko: {
-    Director: '감독',
-    Creator: '크리에이터',
-    Screenplay: '각본',
-    Writer: '작가',
-    'Executive Producer': '총괄 프로듀서',
-    Producer: '프로듀서',
-    'Director of Photography': '촬영 감독',
-    'Original Music Composer': '음악 감독',
-  },
-}
-
-const getKeyCrew = (crew: CrewMember[]) => {
-  const seen = new Set<number>()
-  return [...crew]
-    .filter((person) => crewJobOrder.includes(person.job))
-    .sort((a, b) => crewJobOrder.indexOf(a.job) - crewJobOrder.indexOf(b.job))
-    .filter((person) => {
-      if (seen.has(person.id)) return false
-      seen.add(person.id)
-      return true
-    })
-    .slice(0, 12)
-}
-
-function CrewCard({ person, locale }: { person: CrewMember; locale: Locale }) {
-  return (
-    <li className={centeredItem}>
-      <Link
-        href={getLocalePath(locale, `/people/${person.id}`)}
-        prefetch={false}
-        className="group block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/50"
-      >
-        <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-panel">
-          <Image
-            src={getProfileUrl(person.profile_path)}
-            alt={person.name || person.original_name || ''}
-            fill
-            placeholder={imageSkeletonPlaceholder}
-            quality={85}
-            sizes="(max-width: 480px) 42vw, 180px"
-            className="object-cover object-center transition duration-300 group-hover:scale-[1.035] motion-reduce:transition-none"
-          />
-        </div>
-        <p className="mt-3 text-sm font-semibold text-ink transition-colors group-hover:text-accent-strong">
-          {person.name || person.original_name}
-        </p>
-        <p className="mt-1 text-xs leading-5 text-faint">
-          {localizedCrewJobs[locale][person.job] || person.job}
-        </p>
-      </Link>
+      <span className="text-sm leading-5 text-muted">{country.name}</span>
     </li>
   )
 }
@@ -328,22 +241,9 @@ function ProviderGroup({
   )
 }
 
-export function ProductionPanel({
-  detail,
-  crew = [],
-  providers,
-  locale,
-}: {
-  detail: MediaDetail
-  crew?: CrewMember[]
-  providers?: WatchProviderRegion | null
-  locale: Locale
-}) {
+export function WatchProvidersPanel({ providers, locale }: { providers?: WatchProviderRegion | null; locale: Locale }) {
   const dictionary = getDictionary(locale)
-  const companies = detail.production_companies || []
-  const countries = detail.production_countries || []
-  const keyCrew = getKeyCrew(crew)
-  const providerGroups = providers ? [
+  const groups = providers ? [
     {
       title: dictionary.detail.stream,
       providers: [...(providers.flatrate || []), ...(providers.free || []), ...(providers.ads || [])],
@@ -352,66 +252,52 @@ export function ProductionPanel({
     { title: dictionary.detail.buy, providers: providers.buy || [] },
   ].filter((group) => group.providers.length > 0) : []
 
-  if (companies.length === 0 && countries.length === 0 && keyCrew.length === 0 && providerGroups.length === 0) {
-    return <EmptyPanel message={dictionary.detail.noProduction} />
-  }
-
+  if (!providers || !groups.length) return null
   return (
-    <div className="space-y-10 pt-7">
-      {providerGroups.length > 0 && providers ? (
-        <section aria-labelledby="watch-providers-title">
-          <h2 id="watch-providers-title" className={panelHeading}>{dictionary.detail.streamingAvailability}</h2>
-          <div className="mt-5 grid gap-7 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {providerGroups.map((group) => (
-              <ProviderGroup
-                key={group.title}
-                title={group.title}
-                providers={group.providers}
-                link={providers.link}
-                locale={locale}
-              />
-            ))}
-          </div>
-          <Link
-            href="https://www.justwatch.com/"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-5 inline-flex text-xs text-faint underline decoration-tone/30 underline-offset-4 transition hover:text-ink"
-          >
-            {dictionary.detail.justWatchAttribution}
-          </Link>
-        </section>
-      ) : null}
-      {keyCrew.length > 0 ? (
-        <section aria-labelledby="key-crew-title">
-          <h2 id="key-crew-title" className={panelHeading}>{dictionary.detail.keyCrew}</h2>
-          <ul className={responsiveCardGrid}>
-            {keyCrew.map((person) => <CrewCard key={`${person.id}-${person.job}`} person={person} locale={locale} />)}
-          </ul>
-        </section>
-      ) : null}
+    <section aria-labelledby="watch-providers-title">
+      <h2 id="watch-providers-title" className={panelHeading}>{dictionary.detail.streamingAvailability}</h2>
+      <div className="mt-5 grid gap-7 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        {groups.map((group) => <ProviderGroup key={group.title} title={group.title} providers={group.providers} link={providers.link} locale={locale} />)}
+      </div>
+      <Link href="https://www.justwatch.com/" target="_blank" rel="noreferrer" className="mt-5 inline-flex text-xs text-faint underline decoration-tone/30 underline-offset-4 transition hover:text-ink">
+        {dictionary.detail.justWatchAttribution}
+      </Link>
+    </section>
+  )
+}
+
+export function ProductionEmptyPanel({ locale }: { locale: Locale }) {
+  return <EmptyPanel message={getDictionary(locale).detail.noProduction} />
+}
+
+export function ProductionPanel({ detail, crewPanel, providersPanel, emptyPanel, locale }: {
+  detail: MediaDetail
+  crewPanel: ReactNode
+  providersPanel: ReactNode
+  emptyPanel: ReactNode
+  locale: Locale
+}) {
+  const dictionary = getDictionary(locale)
+  const companies = detail.production_companies || []
+  const countries = detail.production_countries || []
+  return (
+    <div className="min-w-0 space-y-8 pt-7">
+      {crewPanel}
       {companies.length > 0 ? (
-        <section aria-labelledby="companies-title">
-          <h2 id="companies-title" className={panelHeading}>{dictionary.detail.productionCompanies}</h2>
-          <ul className={responsiveCardGrid}>
-            {companies.map((company) => <CompanyCard key={company.id} company={company} />)}
-          </ul>
-        </section>
+        <DetailCardRail title={dictionary.detail.productionCompanies} count={companies.length} previousLabel={`${dictionary.detail.productionCompanies}: ${dictionary.detail.peopleUi.previous}`} nextLabel={`${dictionary.detail.productionCompanies}: ${dictionary.detail.peopleUi.next}`}>
+          {companies.map((company) => <CompanyCard key={company.id} company={company} />)}
+        </DetailCardRail>
       ) : null}
       {countries.length > 0 ? (
         <section aria-labelledby="countries-title">
           <h2 id="countries-title" className={panelHeading}>{dictionary.detail.productionCountries}</h2>
-          <ul className={responsiveCardGrid}>
-            {countries.map((country) => (
-              <CountryCard
-                key={country.iso_3166_1}
-                country={country}
-                flagAlt={dictionary.detail.flagAlt(country.name)}
-              />
-            ))}
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {countries.map((country) => <CountryCard key={country.iso_3166_1} country={country} flagAlt={dictionary.detail.flagAlt(country.name)} />)}
           </ul>
         </section>
       ) : null}
+      {providersPanel}
+      {emptyPanel}
     </div>
   )
 }

@@ -10,7 +10,7 @@ import {
   TvSeasonsDataPanel,
 } from '@/components/detail-data-panels'
 import { DetailView } from '@/components/detail-view'
-import { DetailPanelSkeleton, MediaSectionSkeleton } from '@/components/loading-skeletons'
+import { DetailPanelSkeleton, MediaSectionSkeleton, PeopleSectionSkeleton } from '@/components/loading-skeletons'
 import { getDictionary } from '@/lib/dictionaries'
 import { getImageUrl, getMediaTitle } from '@/lib/media'
 import { getMediaDetailRoute, parseDetailRoute } from '@/lib/detail-route'
@@ -81,19 +81,17 @@ export async function MediaDetailPage({ params, mediaType }: MediaDetailPageProp
       mediaType={mediaType}
       locale={locale}
       creditsPanel={(
-        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingCredits} />}>
+        <Suspense fallback={<div className="pt-7"><PeopleSectionSkeleton label={dictionary.detail.loadingCredits} title={dictionary.detail.cast} /></div>}>
           <CreditsDataPanel request={creditsRequest} locale={locale} />
         </Suspense>
       )}
       productionPanel={(
-        <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingProduction} />}>
-          <ProductionDataPanel
-            detail={detail}
-            creditsRequest={creditsRequest}
-            providersRequest={providersRequest}
-            locale={locale}
-          />
-        </Suspense>
+        <ProductionDataPanel
+          detail={detail}
+          creditsRequest={creditsRequest}
+          providersRequest={providersRequest}
+          locale={locale}
+        />
       )}
       collectionPanel={collectionRequest ? (
         <Suspense fallback={<DetailPanelSkeleton label={dictionary.detail.loadingCollection} />}>

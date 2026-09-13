@@ -1,11 +1,16 @@
 import 'server-only'
 
+import { Suspense } from 'react'
 import {
   CollectionPanel,
   CreditsPanel,
+  CrewPanel,
+  ProductionEmptyPanel,
   ProductionPanel,
   SeasonsPanel,
+  WatchProvidersPanel,
 } from '@/components/detail-panels'
+import { PeopleSectionSkeleton, WatchProvidersSkeleton } from '@/components/loading-skeletons'
 import { MediaSection } from '@/components/media-section'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
@@ -36,7 +41,7 @@ export async function CreditsDataPanel({ request, locale }: {
   return <CreditsPanel cast={cast} error={error} locale={locale} />
 }
 
-export async function ProductionDataPanel({
+export function ProductionDataPanel({
   detail,
   creditsRequest,
   providersRequest,
@@ -47,19 +52,60 @@ export async function ProductionDataPanel({
   providersRequest: Promise<WatchProviderRegion | null>
   locale: Locale
 }) {
-  const [credits, providers] = await Promise.allSettled([
-    creditsRequest,
-    providersRequest,
-  ])
-
+  const dictionary = getDictionary(locale)
   return (
     <ProductionPanel
       detail={detail}
-      crew={credits.status === 'fulfilled' ? credits.value.crew : []}
-      providers={providers.status === 'fulfilled' ? providers.value : null}
+      crewPanel={(
+        <Suspense fallback={<PeopleSectionSkeleton label={dictionary.detail.loadingProduction} title={dictionary.detail.keyCrew} />}>
+          <CrewDataPanel request={creditsRequest} locale={locale} />
+        </Suspense>
+      )}
+      providersPanel={(
+        <Suspense fallback={<WatchProvidersSkeleton label={dictionary.detail.loadingProduction} title={dictionary.detail.streamingAvailability} />}>
+          <WatchProvidersDataPanel request={providersRequest} locale={locale} />
+        </Suspense>
+      )}
+      emptyPanel={!detail.production_companies?.length && !detail.production_countries?.length ? (
+        <Suspense fallback={null}>
+          <EmptyProductionDataPanel creditsRequest={creditsRequest} providersRequest={providersRequest} locale={locale} />
+        </Suspense>
+      ) : null}
       locale={locale}
     />
   )
+}
+
+async function EmptyProductionDataPanel({ creditsRequest, providersRequest, locale }: {
+  creditsRequest: Promise<MediaCredits>
+  providersRequest: Promise<WatchProviderRegion | null>
+  locale: Locale
+}) {
+  const [credits, providers] = await Promise.allSettled([creditsRequest, providersRequest])
+  const hasCrew = credits.status === 'fulfilled' && credits.value.crew.length > 0
+  const region = providers.status === 'fulfilled' ? providers.value : null
+  const hasProviders = region && [region.flatrate, region.free, region.ads, region.rent, region.buy].some((items) => items?.length)
+  return hasCrew || hasProviders ? null : <ProductionEmptyPanel locale={locale} />
+}
+
+async function CrewDataPanel({ request, locale }: { request: Promise<MediaCredits>; locale: Locale }) {
+  let crew: MediaCredits['crew'] = []
+  try {
+    crew = (await request).crew
+  } catch {
+    return null
+  }
+  return <CrewPanel crew={crew} locale={locale} />
+}
+
+async function WatchProvidersDataPanel({ request, locale }: { request: Promise<WatchProviderRegion | null>; locale: Locale }) {
+  let providers: WatchProviderRegion | null = null
+  try {
+    providers = await request
+  } catch {
+    return null
+  }
+  return <WatchProvidersPanel providers={providers} locale={locale} />
 }
 
 export async function CollectionDataPanel({ request, locale }: {
