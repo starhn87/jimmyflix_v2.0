@@ -583,11 +583,11 @@ const dictionaries: Record<Locale, Dictionary> = {
       loading: '트렌드 영화와 TV 프로그램 불러오는 중',
       topMovies: '영화 TOP 20',
       topShows: 'TV TOP 20',
-      rankingDescription: (window) => `TMDB 글로벌 화제성 · ${window === 'day' ? '오늘' : '이번 주'} 기준`,
+      rankingDescription: (window) => `TMDB 글로벌 화제성 (${window === 'day' ? '오늘' : '이번 주'} 기준)`,
       people: '지금 주목받는 인물',
       peopleDescription: (window) => `${window === 'day' ? '오늘' : '이번 주'} 화제의 인물과 대표작`,
       rediscovery: '다시 주목받는 작품',
-      rediscoveryDescription: (window) => `첫 공개 후 5년 이상 · ${window === 'day' ? '오늘' : '이번 주'} TMDB 트렌드에 오른 작품`,
+      rediscoveryDescription: (window) => `개봉 후 5년 이상 & ${window === 'day' ? '오늘' : '이번 주'} TMDB 트렌드에 오른 작품`,
     },
     search: {
       metadataTitle: '검색',
