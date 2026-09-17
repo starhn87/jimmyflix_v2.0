@@ -3,6 +3,8 @@ import type { MediaItem, MediaType, PersonCredit, PersonCredits, TrendingPerson,
 export const TREND_RANKING_LIMIT = 20
 export const TREND_PEOPLE_LIMIT = 20
 export const TREND_REDISCOVERY_LIMIT = 40
+const BREAKOUT_CREDIT_VOTE_THRESHOLD = 500
+const ESTABLISHED_CREDIT_COUNT = 2
 
 // Fill in billing order and only expand further candidates when needed.
 export async function loadTrendingPeople(candidates: TrendingPerson[], load: (id: number) => Promise<PersonCredits>) {
@@ -18,7 +20,9 @@ export async function loadTrendingPeople(candidates: TrendingPerson[], load: (id
       if (result.status === 'rejected') { failed++; return }
       const person = batch[index]
       const known_for = selectRepresentativeCredits([...result.value.cast, ...result.value.crew], person.known_for_department)
-      if (known_for.length) people.push({ ...person, known_for })
+      const hasMainstreamRecognition = known_for.length >= ESTABLISHED_CREDIT_COUNT
+        || (known_for[0]?.vote_count || 0) >= BREAKOUT_CREDIT_VOTE_THRESHOLD
+      if (hasMainstreamRecognition) people.push({ ...person, known_for })
     })
   }
   return { people, error: requested > 0 && failed === requested, partial: failed > 0 }

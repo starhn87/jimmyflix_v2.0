@@ -53,13 +53,26 @@ test('a director is represented by directed films rather than popular cameo appe
   assert.deepEqual(selectRepresentativeCredits(credits, 'Directing').map(({ id }) => id), [2])
 })
 
+test('trending people require two established works or one breakout work', async () => {
+  const candidates = Array.from({ length: 3 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
+  const result = await loadTrendingPeople(candidates, async (id) => ({
+    cast: id === 1
+      ? [movie(1, { vote_count: 499 })]
+      : id === 2
+        ? [movie(2, { vote_count: 100 }), movie(20, { vote_count: 100 })]
+        : [movie(3, { vote_count: 500 })],
+    crew: [],
+  }))
+  assert.deepEqual(result.people.map(({ id }) => id), [2, 3])
+  assert.deepEqual(result.people.map(({ known_for }) => known_for.length), [2, 1])
+})
 
 test('trending people fetch only enough credits to fill twenty people without fetching all forty candidates', async () => {
   const candidates = Array.from({ length: 40 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
   const requests = []
   const result = await loadTrendingPeople(candidates, async (id) => {
     requests.push(id)
-    return { cast: [movie(id)], crew: [] }
+    return { cast: [movie(id, { vote_count: 500 })], crew: [] }
   })
   assert.deepEqual(requests, Array.from({ length: 20 }, (_, i) => i + 1))
   assert.equal(result.people.length, 20)
@@ -72,7 +85,7 @@ test('trending credits backfill missing works or failed requests without changin
   const result = await loadTrendingPeople(candidates, async (id) => {
     requests.push(id)
     if (id === 2) throw new Error('Unavailable')
-    return { cast: id === 1 ? [] : [movie(id)], crew: [] }
+    return { cast: id === 1 ? [] : [movie(id, { vote_count: 500 })], crew: [] }
   })
   assert.deepEqual(result.people.map(({ id }) => id), Array.from({ length: 20 }, (_, i) => i + 3))
   assert.equal(requests.length, 22)

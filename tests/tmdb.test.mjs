@@ -170,8 +170,9 @@ test('rediscovery retains one successful category and respects the available pag
   assert.equal(fetch.mock.callCount(), 2)
 })
 
-test('people backfill missing profiles from page two without requesting their filmographies', async (t) => {
+test('people search five trend pages but request only enough filmographies to fill the rail', async (t) => {
   const requested = []
+  const trendPages = []
   t.mock.method(globalThis, 'fetch', async (url) => {
     if (url.pathname.endsWith('/combined_credits')) {
       const id = Number(url.pathname.split('/')[3])
@@ -179,6 +180,7 @@ test('people backfill missing profiles from page two without requesting their fi
       return Response.json({ cast: [{ ...movie(id), poster_path: '/poster.jpg', vote_count: 1000, media_type: 'movie' }], crew: [] })
     }
     const page = Number(url.searchParams.get('page'))
+    trendPages.push(page)
     return Response.json({ results: Array.from({ length: 20 }, (_, i) => ({
       id: (page - 1) * 20 + i + 1, name: `Person ${i}`, adult: page === 1 && i < 2,
       profile_path: page === 1 && i >= 2 && i < 6 ? [null, '', undefined, '  '][i - 2] : '/profile.jpg',
@@ -188,5 +190,6 @@ test('people backfill missing profiles from page two without requesting their fi
   const result = await getTrendingPeople('day', 'en')
   assert.deepEqual(result.people.map(({ id }) => id), Array.from({ length: 20 }, (_, i) => i + 7))
   assert.deepEqual(requested, Array.from({ length: 20 }, (_, i) => i + 7))
+  assert.deepEqual(trendPages, [1, 2, 3, 4, 5])
   assert.equal(result.partial, false)
 })

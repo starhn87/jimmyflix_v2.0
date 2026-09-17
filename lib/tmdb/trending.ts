@@ -10,6 +10,7 @@ import { CATALOG_ITEM_LIMIT } from '@/lib/tmdb/lists'
 import { createSectionRequests } from '@/lib/tmdb/sections'
 
 const REDISCOVERY_CANDIDATE_PAGES = 5
+const TRENDING_PEOPLE_CANDIDATE_PAGES = 5
 
 const getTrendingPage = cache((mediaType: MediaType, window: TimeWindow, locale: Locale, page: number) =>
   tmdbFetch<TmdbListResponse<MediaItem>>(`trending/${mediaType}/${window}`, { page }, {
@@ -96,7 +97,9 @@ export const getTrendingPersonList = cache((window: TimeWindow, locale: Locale, 
 
 export const getTrendingPeople = async (window: TimeWindow, locale: Locale): Promise<TrendingPeopleData> => {
   try {
-    const pages = await Promise.allSettled([1, 2].map((page) => getTrendingPersonList(window, locale, page)))
+    const pages = await Promise.allSettled(
+      Array.from({ length: TRENDING_PEOPLE_CANDIDATE_PAGES }, (_, index) => getTrendingPersonList(window, locale, index + 1)),
+    )
     if (pages.every((page) => page.status === 'rejected')) return { people: [], error: true }
     const seen = new Set<number>()
     const candidates = pages.flatMap((page) => page.status === 'fulfilled' ? page.value.results : []).filter((person) => {
