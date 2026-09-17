@@ -314,11 +314,11 @@ const dictionaries: Record<Locale, Dictionary> = {
       loading: 'Loading trending movies and TV shows',
       topMovies: 'Movie Top 20',
       topShows: 'TV Top 20',
-      rankingDescription: (window) => `Global TMDB trends · ${window === 'day' ? 'Today' : 'This week'}`,
+      rankingDescription: (window) => `Global TMDB trends (${window === 'day' ? 'Today' : 'This week'} based)`,
       people: 'People in the spotlight',
       peopleDescription: (window) => `${window === 'day' ? 'Today’s' : 'This week’s'} people and their work`,
       rediscovery: 'Back in the conversation',
-      rediscoveryDescription: (window) => `First released 5+ years ago · ${window === 'day' ? 'Today’s' : 'This week’s'} TMDB trends`,
+      rediscoveryDescription: (window) => `Released 5+ years ago & ${window === 'day' ? 'Today’s' : 'This week’s'} TMDB trends`,
     },
     search: {
       metadataTitle: 'Search',
