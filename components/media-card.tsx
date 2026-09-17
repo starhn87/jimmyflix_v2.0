@@ -51,11 +51,12 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank 
             className="object-cover object-center"
           />
           {rank ? (
-            <span aria-hidden="true" className={`absolute top-3 left-3 grid min-w-12 place-items-center rounded-xl border px-2 py-1 text-3xl leading-tight font-black tabular-nums shadow-lg backdrop-blur-sm sm:text-4xl ${
+            <span aria-hidden="true" className={`absolute top-2 left-2 inline-flex h-6 min-w-8 items-center justify-center gap-0.5 rounded-md border bg-black/75 px-1.5 text-xs leading-none font-semibold tabular-nums backdrop-blur-sm ${
               rank <= 3
-                ? 'border-white/35 bg-gradient-to-br from-violet-400 to-fuchsia-500 text-white'
-                : 'border-white/20 bg-black/75 text-white'
+                ? 'border-violet-300/30 text-violet-200'
+                : 'border-white/15 text-white/90'
             }`}>
+              <span className="text-[10px] font-normal opacity-60">#</span>
               {rank}
             </span>
           ) : null}

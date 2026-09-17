@@ -40,7 +40,7 @@ globalThis.fetch = async (input, options) => {
     return Response.json(videos)
   }
   if (parts[0] === 'person' && Number.isFinite(id)) return Response.json({ id, name: `Actor ${id - 999}`, profile_path: poster(id), biography: 'An actor with an extensive filmography.', known_for_department: 'Acting', birthday: '1980-01-01', deathday: null, place_of_birth: 'Seoul', also_known_as: [], combined_credits: { cast: [item(1), item(2)], crew: [] } })
-  if (parts[0] === 'trending' && parts[1] === 'person') return Response.json({ results: [{ id: 1000, name: 'Actor 1', profile_path: poster(1000), known_for_department: 'Acting' }] })
+  if (parts[0] === 'trending' && parts[1] === 'person') return Response.json({ total_pages: 2, results: Array.from({ length: 20 }, (_, i) => { const offset = (Number(url.searchParams.get('page') || 1) - 1) * 20 + i; return { id: 1000 + offset, name: `Actor ${offset + 1}`, profile_path: poster(1000 + offset), known_for_department: 'Acting' } }) })
   if (parts[2] === 'season') return Response.json({ id: 1, name: 'Season 1', episodes: [] })
   if (parts.length === 2 && ['movie','tv'].includes(parts[0]) && Number.isFinite(id)) return Response.json(detail(id, parts[0]))
   return Response.json(list(url, parts.includes('tv') ? 'tv' : 'movie'))

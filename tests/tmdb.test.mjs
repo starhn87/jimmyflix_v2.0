@@ -3,6 +3,7 @@ import test from 'node:test'
 import { tmdbFetch, sitemapFetchScope, TmdbNotFoundError, TmdbRequestError } from '../lib/tmdb/client.ts'
 import { getMovieDetail, getRelatedTitles } from '../lib/tmdb/detail.ts'
 import { getPagedMediaItems } from '../lib/tmdb/lists.ts'
+import { getTrendingPeople, getTrendingRankingRequests, getTrendingRediscovery } from '../lib/tmdb/trending.ts'
 
 process.env.TMDB_API_KEY = 'test-credential-do-not-log'
 const movie = (id) => ({ id, title: `Movie ${id}`, poster_path: null, vote_average: 7 })
@@ -70,4 +71,56 @@ test('a successful empty catalog and a missing second page have different result
   assert.deepEqual(await getPagedMediaItems('movie/popular', {}, {}), { items: [], partial: false })
   failSecond = true
   assert.deepEqual(await getPagedMediaItems('movie/popular', {}, {}), { items: [], partial: true })
+})
+
+test('Top 20 rankings load just the first page independently of supplemental sections', async (t) => {
+  const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json({ results: Array.from({ length: 20 }, (_, i) => movie(i + 1)) }))
+  const sections = await Promise.all(getTrendingRankingRequests('day', 'en').map(({ request }) => request))
+  assert.deepEqual(sections.map(({ items }) => items.length), [20, 20])
+  assert.equal(fetch.mock.callCount(), 2)
+  assert.ok(fetch.mock.calls.every(({ arguments: [url] }) => url.searchParams.get('page') === '1'))
+})
+
+test('rediscovery reaches older titles beyond page two and caps the mixed selection at forty', async (t) => {
+  const fetch = t.mock.method(globalThis, 'fetch', async (url) => {
+    const page = Number(url.searchParams.get('page'))
+    const date = page <= 2 ? '2099-01-01' : '2000-01-01'
+    return Response.json({ total_pages: 10, results: Array.from({ length: 20 }, (_, i) => ({ ...movie((page - 1) * 20 + i + 1), release_date: date, first_air_date: date })) })
+  })
+  const result = await getTrendingRediscovery('week', 'ko')
+  assert.equal(result.items.length, 40)
+  assert.deepEqual(result.items.slice(0, 4).map(({ id, media_type }) => [id, media_type]), [[41, 'movie'], [41, 'tv'], [42, 'movie'], [42, 'tv']])
+  assert.equal(result.partial, false)
+  assert.equal(fetch.mock.callCount(), 10)
+  assert.ok(fetch.mock.calls.every(({ arguments: [url] }) => Number(url.searchParams.get('page')) <= 5))
+})
+
+test('rediscovery retains one successful category and respects the available page count', async (t) => {
+  t.mock.method(console, 'warn', () => {})
+  const fetch = t.mock.method(globalThis, 'fetch', async (url) => url.pathname.includes('/movie/')
+    ? new Response('', { status: 503 })
+    : Response.json({ total_pages: 1, results: [{ ...movie(1), first_air_date: '2000-01-01' }] }))
+  const result = await getTrendingRediscovery('day', 'en')
+  assert.equal(result.items.length, 1)
+  assert.equal(result.items[0].media_type, 'tv')
+  assert.equal(result.partial, true)
+  assert.equal(result.error, false)
+  assert.equal(fetch.mock.callCount(), 2)
+})
+
+test('people use page two to backfill filtered candidates without loading forty filmographies', async (t) => {
+  const requested = []
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    if (url.pathname.endsWith('/combined_credits')) {
+      const id = Number(url.pathname.split('/')[3])
+      requested.push(id)
+      return Response.json({ cast: [{ ...movie(id), poster_path: '/poster.jpg', vote_count: 1000, media_type: 'movie' }], crew: [] })
+    }
+    const page = Number(url.searchParams.get('page'))
+    return Response.json({ results: Array.from({ length: 20 }, (_, i) => ({ id: (page - 1) * 20 + i + 1, name: `Person ${i}`, adult: page === 1 && i < 2, known_for_department: 'Acting' })) })
+  })
+  const result = await getTrendingPeople('day', 'en')
+  assert.deepEqual(result.people.map(({ id }) => id), Array.from({ length: 20 }, (_, i) => i + 3))
+  assert.equal(requested.length, 20)
+  assert.equal(result.partial, false)
 })

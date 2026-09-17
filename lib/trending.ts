@@ -1,15 +1,16 @@
 import type { MediaItem, MediaType, PersonCredit, PersonCredits, TrendingPerson, TrendingPersonWithCredits } from '@/types/tmdb'
 
-export const TREND_RANKING_LIMIT = 10
-export const TREND_REDISCOVERY_LIMIT = 20
+export const TREND_RANKING_LIMIT = 20
+export const TREND_PEOPLE_LIMIT = 20
+export const TREND_REDISCOVERY_LIMIT = 40
 
 // Fill in billing order and only expand further candidates when needed.
 export async function loadTrendingPeople(candidates: TrendingPerson[], load: (id: number) => Promise<PersonCredits>) {
   const people: TrendingPersonWithCredits[] = []
   let requested = 0
   let failed = 0
-  for (let offset = 0; offset < candidates.length && people.length < TREND_RANKING_LIMIT;) {
-    const batch = candidates.slice(offset, offset + TREND_RANKING_LIMIT - people.length)
+  for (let offset = 0; offset < candidates.length && people.length < TREND_PEOPLE_LIMIT;) {
+    const batch = candidates.slice(offset, offset + TREND_PEOPLE_LIMIT - people.length)
     const credits = await Promise.allSettled(batch.map(({ id }) => load(id)))
     offset += batch.length
     requested += batch.length

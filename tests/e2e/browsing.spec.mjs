@@ -151,3 +151,24 @@ test('failed production and related requests display errors instead of an empty 
   await expect(page.getByRole('main').getByRole('alert')).toHaveCount(3)
   await expect(page.getByText('No production information is available.')).toHaveCount(0)
 })
+
+test('trends show twenty ranked titles and people, forty rediscoveries and compact rank markers', async ({ page }) => {
+  await page.goto('/en/trend')
+  for (const window of ['day', 'week']) {
+    if (window === 'week') await page.getByRole('link', { name: 'This week', exact: true }).click()
+    for (const kind of ['movie', 'tv']) {
+      const rail = page.locator(`#top-${kind}-${window}-rail`)
+      await expect(rail.locator('[data-loop-origin]')).toHaveCount(20)
+      const last = rail.locator('[data-loop-origin="19"] a')
+      await expect(last).toHaveAttribute('aria-label', /^Rank 20,/)
+      const marker = rail.locator('[data-loop-origin="0"] .media-card-poster > span[aria-hidden]')
+      await expect(marker).toHaveText('#1')
+      await expect(marker).toHaveCSS('height', '24px')
+      await expect(marker).toHaveCSS('font-size', '12px')
+    }
+    await expect(page.locator('#trending-people-rail [data-loop-origin]')).toHaveCount(20)
+    await expect(page.locator(`#rediscovery-${window}-rail [data-loop-origin]`)).toHaveCount(40)
+  }
+  await page.locator('#top-movie-week-rail [data-loop-origin="19"] a').click()
+  await expect(page).toHaveURL(/\/en\/movies\/20$/)
+})

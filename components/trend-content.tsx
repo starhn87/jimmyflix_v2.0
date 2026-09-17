@@ -1,3 +1,4 @@
+import { TREND_RANKING_LIMIT, TREND_PEOPLE_LIMIT, TREND_REDISCOVERY_LIMIT } from '@/lib/trending'
 import Link from 'next/link'
 import { DataNotice } from '@/components/data-notice'
 import { ErrorState } from '@/components/error-state'
@@ -91,10 +92,10 @@ export function TrendSkeleton({ locale }: { locale: Locale }) {
     <main aria-busy="true" aria-label={dictionary.trend.loading} className="pb-20">
       <TrendHeader locale={locale} />
       <div className={TREND_STACK_CLASS_NAME}>
-        <MediaSectionSkeleton label={dictionary.trend.topMovies} title={dictionary.trend.topMovies} description={dictionary.trend.rankingDescription('day')} itemCount={10} />
-        <MediaSectionSkeleton label={dictionary.trend.topShows} title={dictionary.trend.topShows} description={dictionary.trend.rankingDescription('day')} itemCount={10} />
-        <MediaSectionSkeleton label={dictionary.trend.people} title={dictionary.trend.people} description={dictionary.trend.peopleDescription('day')} itemCount={10} />
-        <MediaSectionSkeleton label={dictionary.trend.rediscovery} title={dictionary.trend.rediscovery} description={dictionary.trend.rediscoveryDescription('day')} itemCount={20} />
+        <MediaSectionSkeleton label={dictionary.trend.topMovies} title={dictionary.trend.topMovies} description={dictionary.trend.rankingDescription('day')} itemCount={TREND_RANKING_LIMIT} />
+        <MediaSectionSkeleton label={dictionary.trend.topShows} title={dictionary.trend.topShows} description={dictionary.trend.rankingDescription('day')} itemCount={TREND_RANKING_LIMIT} />
+        <MediaSectionSkeleton label={dictionary.trend.people} title={dictionary.trend.people} description={dictionary.trend.peopleDescription('day')} itemCount={TREND_PEOPLE_LIMIT} />
+        <MediaSectionSkeleton label={dictionary.trend.rediscovery} title={dictionary.trend.rediscovery} description={dictionary.trend.rediscoveryDescription('day')} itemCount={TREND_REDISCOVERY_LIMIT} />
       </div>
     </main>
   )

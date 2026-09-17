@@ -18,11 +18,11 @@ test('rediscovery uses the five-year cutoff, valid dates and actual trends, pres
   assert.deepEqual(selectRediscoveredTitles([], [], new Date('2026-09-13T00:00:00Z')), [])
 })
 
-test('Top 10 preserves the trend response order rather than re-sorting by popularity or rating', () => {
-  const source = Array.from({ length: 20 }, (_, index) => movie(index + 1))
+test('Top 20 preserves the trend response order rather than re-sorting by popularity or rating', () => {
+  const source = Array.from({ length: 30 }, (_, index) => movie(index + 1))
   const ranked = selectRankedTitles(source, 'movie')
-  assert.deepEqual(ranked.map(({ id }) => id), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-  assert.equal(source.length, 20)
+  assert.deepEqual(ranked.map(({ id }) => id), Array.from({ length: 20 }, (_, i) => i + 1))
+  assert.equal(source.length, 30)
 })
 
 test('rankings remove duplicates, adult entries and wrong media types without excluding missing artwork', () => {
@@ -54,28 +54,28 @@ test('a director is represented by directed films rather than popular cameo appe
 })
 
 
-test('trending people fetch only enough credits to fill the ten visible people', async () => {
-  const candidates = Array.from({ length: 20 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
+test('trending people fetch only enough credits to fill twenty people without fetching all forty candidates', async () => {
+  const candidates = Array.from({ length: 40 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
   const requests = []
   const result = await loadTrendingPeople(candidates, async (id) => {
     requests.push(id)
     return { cast: [movie(id)], crew: [] }
   })
-  assert.deepEqual(requests, [1,2,3,4,5,6,7,8,9,10])
-  assert.equal(result.people.length, 10)
+  assert.deepEqual(requests, Array.from({ length: 20 }, (_, i) => i + 1))
+  assert.equal(result.people.length, 20)
   assert.equal(result.partial, false)
 })
 
 test('trending credits backfill missing works or failed requests without changing rank order', async () => {
-  const candidates = Array.from({ length: 20 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
+  const candidates = Array.from({ length: 40 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
   const requests = []
   const result = await loadTrendingPeople(candidates, async (id) => {
     requests.push(id)
     if (id === 2) throw new Error('Unavailable')
     return { cast: id === 1 ? [] : [movie(id)], crew: [] }
   })
-  assert.deepEqual(result.people.map(({ id }) => id), [3,4,5,6,7,8,9,10,11,12])
-  assert.equal(requests.length, 12)
+  assert.deepEqual(result.people.map(({ id }) => id), Array.from({ length: 20 }, (_, i) => i + 3))
+  assert.equal(requests.length, 22)
   assert.equal(result.partial, true)
   assert.equal(result.error, false)
   const failed = await loadTrendingPeople(candidates.slice(0, 2), async () => { throw new Error('Unavailable') })
