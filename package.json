@@ -19,10 +19,12 @@
     "lint": "eslint . --max-warnings=0",
     "test": "node --import ./tests/register-ts.mjs --test tests/*.test.mjs",
     "start": "next start",
-    "typecheck": "next typegen && tsc --noEmit --incremental false"
+    "typecheck": "next typegen && tsc --noEmit --incremental false",
+    "test:e2e": "playwright test"
   },
   "packageManager": "yarn@3.8.7",
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "22.20.2",
     "@types/react": "19.3.0",

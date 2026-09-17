@@ -36,3 +36,7 @@ next-env.d.ts
 .vercel
 .env*.local
 .env*
+
+# Browser test artifacts
+/test-results
+/playwright-report
