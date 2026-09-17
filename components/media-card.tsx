@@ -54,10 +54,10 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank 
             className="object-cover object-center"
           />
           {rank ? (
-            <span aria-hidden="true" className={`absolute top-2 left-2 inline-flex h-6 min-w-8 items-center justify-center gap-0.5 rounded-md border bg-black/75 px-1.5 text-xs leading-none font-semibold tabular-nums backdrop-blur-sm ${
+            <span aria-hidden="true" className={`absolute top-2 left-2 inline-flex h-6 min-w-8 items-center justify-center gap-0.5 rounded-md border px-1.5 text-xs leading-none font-semibold tabular-nums ${
               rank <= 3
-                ? 'border-violet-300/30 text-violet-200'
-                : 'border-white/15 text-white/90'
+                ? 'border-violet-400 bg-violet-600 text-white shadow-sm shadow-black/25'
+                : 'border-white/15 bg-black/75 text-white/90 backdrop-blur-sm'
             }`}>
               {rank}
               <span className="text-[10px] font-normal opacity-70">
