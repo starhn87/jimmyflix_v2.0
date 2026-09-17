@@ -46,6 +46,8 @@ function subscribe(onChange: () => void) {
   window.addEventListener(THEME_CHANGE_EVENT, onChange)
   window.addEventListener('storage', onStorage)
   systemTheme.addEventListener('change', syncPreference)
+  // The system may change between the first-paint script and hydration.
+  syncPreference()
 
   return () => {
     window.removeEventListener(THEME_CHANGE_EVENT, onChange)

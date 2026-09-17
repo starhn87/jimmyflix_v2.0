@@ -1,11 +1,16 @@
 'use client'
 
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useId, useRef, useState } from 'react'
 import { ArrowLeftIcon, ArrowRightIcon, ExpandIcon } from '@/components/icons'
 import { LoadingCardImage } from '@/components/loading-card-image'
-import { GalleryLightbox } from '@/components/gallery-lightbox'
+import dynamic from 'next/dynamic'
+import { useHorizontalScroll } from '@/components/use-horizontal-scroll'
+
 import { GALLERY_PREVIEW_LIMIT, getGalleryIndex, type GalleryImage, type GalleryMessages } from '@/lib/gallery'
 import { getImageUrl } from '@/lib/media'
+
+const loadLightbox = () => import('@/components/gallery-lightbox').then((module) => module.GalleryLightbox)
+const GalleryLightbox = dynamic(loadLightbox)
 
 interface GalleryProps {
   images: GalleryImage[]
@@ -18,40 +23,14 @@ const navigationButton = 'grid size-11 shrink-0 place-items-center rounded-full 
 
 export function Gallery({ images, title, heading, messages }: GalleryProps) {
   const id = useId()
-  const track = useRef<HTMLUListElement>(null)
+  const { track, edges, scroll } = useHorizontalScroll<HTMLUListElement>(images.length)
   const opener = useRef<HTMLButtonElement>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const [edges, setEdges] = useState({ previous: false, next: false })
   const previews = images.slice(0, GALLERY_PREVIEW_LIMIT)
   const close = useCallback(() => setActiveIndex(null), [])
   const navigate = useCallback((direction: number) => {
     setActiveIndex((current) => getGalleryIndex((current ?? 0) + direction, images.length))
   }, [images.length])
-
-  useEffect(() => {
-    const element = track.current
-    if (!element) return
-    const update = () => {
-      const previous = element.scrollLeft > 2
-      const next = element.scrollLeft + element.clientWidth < element.scrollWidth - 2
-      setEdges((current) => current.previous === previous && current.next === next ? current : { previous, next })
-    }
-    const observer = new ResizeObserver(update)
-    observer.observe(element)
-    element.addEventListener('scroll', update, { passive: true })
-    return () => {
-      observer.disconnect()
-      element.removeEventListener('scroll', update)
-    }
-  }, [images.length])
-
-  const scroll = (direction: number) => {
-    const element = track.current
-    element?.scrollBy({
-      left: direction * element.clientWidth * 0.85,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-    })
-  }
 
   if (images.length === 0) return null
 
@@ -83,6 +62,8 @@ export function Gallery({ images, title, heading, messages }: GalleryProps) {
               type="button"
               aria-label={`${messages.open}: ${title} · ${messages.photo} ${index + 1}`}
               aria-haspopup="dialog"
+              onPointerEnter={() => { void loadLightbox() }}
+              onFocus={() => { void loadLightbox() }}
               onClick={(event) => { opener.current = event.currentTarget; setActiveIndex(index) }}
               className="group relative block w-full overflow-hidden rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-accent"
             >
@@ -107,6 +88,8 @@ export function Gallery({ images, title, heading, messages }: GalleryProps) {
             <button
               type="button"
               aria-haspopup="dialog"
+              onPointerEnter={() => { void loadLightbox() }}
+              onFocus={() => { void loadLightbox() }}
               onClick={(event) => { opener.current = event.currentTarget; setActiveIndex(previews.length) }}
               className="flex aspect-video w-full flex-col items-center justify-center gap-3 rounded-xl border border-accent/25 bg-gradient-to-br from-accent/15 to-surface text-accent-strong outline-none transition-colors hover:border-accent/60 focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-accent"
             >

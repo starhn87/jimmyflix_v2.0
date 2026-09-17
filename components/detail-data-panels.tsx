@@ -1,16 +1,11 @@
 import 'server-only'
 
 import { Suspense } from 'react'
-import {
-  CollectionPanel,
-  CreditsPanel,
-  CrewPanel,
-  ProductionEmptyPanel,
-  ProductionPanel,
-  SeasonsPanel,
-  WatchProvidersPanel,
-  TrailerPanel,
-} from '@/components/detail-panels'
+import { CollectionPanel } from '@/components/detail/collection-panel'
+import { CreditsPanel, CrewPanel } from '@/components/detail/credits-panel'
+import { ProductionEmptyPanel, ProductionPanel, WatchProvidersPanel } from '@/components/detail/production-panel'
+import { SeasonsPanel } from '@/components/detail/seasons-panel'
+import { TrailerPanel } from '@/components/detail/trailer-panel'
 import { ErrorState } from '@/components/error-state'
 import { JsonLd } from '@/components/json-ld'
 import { getMediaJsonLd } from '@/lib/structured-data'

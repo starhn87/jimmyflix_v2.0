@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
+import { useHorizontalScroll } from '@/components/use-horizontal-scroll'
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
 import { DETAIL_RAIL_HEADER, DETAIL_RAIL_TRACK } from '@/components/detail-rail-styles'
 
@@ -17,35 +18,7 @@ const control = 'grid size-11 cursor-pointer place-items-center rounded-full bor
 
 export function DetailCardRail({ title, count, previousLabel, nextLabel, action, children }: DetailCardRailProps) {
   const id = useId()
-  const track = useRef<HTMLUListElement>(null)
-  const [edges, setEdges] = useState({ previous: false, next: false })
-
-  useEffect(() => {
-    const element = track.current
-    if (!element) return
-    const update = () => {
-      const previous = element.scrollLeft > 2
-      const next = element.scrollLeft + element.clientWidth < element.scrollWidth - 2
-      setEdges((current) => current.previous === previous && current.next === next ? current : { previous, next })
-    }
-    update()
-    const observer = new ResizeObserver(update)
-    observer.observe(element)
-    if (element.firstElementChild) observer.observe(element.firstElementChild)
-    element.addEventListener('scroll', update, { passive: true })
-    return () => {
-      observer.disconnect()
-      element.removeEventListener('scroll', update)
-    }
-  }, [count])
-
-  const scroll = (direction: number) => {
-    const element = track.current
-    element?.scrollBy({
-      left: direction * element.clientWidth * 0.85,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-    })
-  }
+  const { track, edges, scroll } = useHorizontalScroll<HTMLUListElement>(count)
 
   return (
     <section className="min-w-0" aria-labelledby={`${id}-title`}>

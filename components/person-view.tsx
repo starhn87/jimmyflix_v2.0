@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { JsonLd } from '@/components/json-ld'
 import { getBreadcrumbJsonLd, getPersonJsonLd } from '@/lib/structured-data'
 import { MediaSection } from '@/components/media-section'
-import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME } from '@/components/person-view-styles'
+import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME, PERSON_TITLE_CLASS_NAME } from '@/components/person-view-styles'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
 import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
@@ -84,7 +84,7 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
         </div>
 
         <div className="min-w-0 md:pt-3">
-          <h1 className="text-4xl leading-[1.05] font-bold tracking-[-0.035em] text-balance text-ink sm:text-5xl lg:text-6xl">
+          <h1 className={PERSON_TITLE_CLASS_NAME}>
             {person.name}
           </h1>
           {department ? (

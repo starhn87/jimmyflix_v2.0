@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useId, useRef, useState, type RefObject } from 'react'
+import { useModalDialog } from '@/components/use-modal-dialog'
+import { useId, useRef, useState, type RefObject } from 'react'
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon, ExpandIcon } from '@/components/icons'
 import { getGallerySwipeDirection, type GalleryImage, type GalleryMessages } from '@/lib/gallery'
 import { getImageUrl } from '@/lib/media'
@@ -52,8 +53,7 @@ function OriginalImage({ image, alt, messages }: { image: GalleryImage; alt: str
 }
 
 export function GalleryLightbox({ images, index, title, messages, returnFocus, onClose, onNavigate }: GalleryLightboxProps) {
-  const dialog = useRef<HTMLDialogElement>(null)
-  const closeButton = useRef<HTMLButtonElement>(null)
+  const { dialog, closeButton, close, trapFocus, handleClose } = useModalDialog(returnFocus, onClose)
   const swipeContent = useRef<HTMLDivElement>(null)
   const swipe = useRef<{ pointerId: number; x: number; y: number; axis: 'pending' | 'horizontal' | 'vertical' } | null>(null)
   const id = useId()
@@ -67,32 +67,13 @@ export function GalleryLightbox({ images, index, title, messages, returnFocus, o
     }
   }
 
-  useEffect(() => {
-    const element = dialog.current
-    if (!element) return
-    const trigger = returnFocus.current
-    const root = document.documentElement
-    const overflow = root.style.overflow
-    const gutter = root.style.scrollbarGutter
-    root.style.scrollbarGutter = 'stable'
-    root.style.overflow = 'hidden'
-    element.showModal()
-    closeButton.current?.focus({ preventScroll: true })
-
-    return () => {
-      element.close()
-      root.style.overflow = overflow
-      root.style.scrollbarGutter = gutter
-      if (trigger?.isConnected) trigger.focus({ preventScroll: true })
-    }
-  }, [returnFocus])
-
   return (
     <dialog
       ref={dialog}
       aria-labelledby={`${id}-title`}
-      onClose={onClose}
-      onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close() }}
+      onClose={handleClose}
+      onClick={(event) => { if (event.target === event.currentTarget) close() }}
+      onKeyDownCapture={trapFocus}
       onKeyDown={(event) => {
         if (images.length < 2) return
         if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -118,7 +99,7 @@ export function GalleryLightbox({ images, index, title, messages, returnFocus, o
             >
               <ExpandIcon className="size-4" />{messages.original}
             </a>
-            <button ref={closeButton} type="button" aria-label={messages.close} onClick={() => dialog.current?.close()} className={control}>
+            <button ref={closeButton} type="button" aria-label={messages.close} onClick={() => close()} className={control}>
               <CloseIcon className="size-5" />
             </button>
           </div>

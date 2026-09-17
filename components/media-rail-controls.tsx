@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { getScrollBehavior } from '@/lib/browser-motion'
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
 
 interface MediaRailControlsProps {
@@ -161,7 +162,7 @@ const scrollRail = (railId: string, direction: ScrollDirection) => {
       rail.scrollTo({ left: rail.scrollLeft + loop.width, behavior: 'auto' })
     }
 
-    rail.scrollBy({ left: direction * distance, behavior: 'smooth' })
+    rail.scrollBy({ left: direction * distance, behavior: getScrollBehavior() })
     return
   }
 
@@ -169,7 +170,7 @@ const scrollRail = (railId: string, direction: ScrollDirection) => {
 
   const maxScrollLeft = Math.max(rail.scrollWidth - rail.clientWidth, 0)
   const left = Math.min(Math.max(rail.scrollLeft + direction * distance, 0), maxScrollLeft)
-  rail.scrollTo({ left, behavior: 'smooth' })
+  rail.scrollTo({ left, behavior: getScrollBehavior() })
 }
 
 export function MediaRailControls({ railId, backwardLabel, forwardLabel, loopCopyCount = 0 }: MediaRailControlsProps) {

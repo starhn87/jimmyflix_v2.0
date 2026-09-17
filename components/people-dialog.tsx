@@ -1,6 +1,7 @@
 'use client'
 
 import { useDeferredValue, useEffect, useId, useRef, useState, type RefObject } from 'react'
+import { useModalDialog } from '@/components/use-modal-dialog'
 import { CloseIcon, SearchIcon } from '@/components/icons'
 import { DetailPersonCard } from '@/components/detail-person-card'
 import { filterDetailPeople, PEOPLE_PAGE_SIZE, type DetailPerson, type PeopleMessages } from '@/lib/detail-people'
@@ -47,8 +48,7 @@ function PeopleResults({ people, locale, messages, onNavigate }: {
 
 export function PeopleDialog({ people, title, kind, locale, messages, returnFocus, onClose }: PeopleDialogProps) {
   const id = useId()
-  const dialog = useRef<HTMLDialogElement>(null)
-  const closeButton = useRef<HTMLButtonElement>(null)
+  const { dialog, closeButton, close, trapFocus, handleClose } = useModalDialog(returnFocus, onClose)
   const resultsPanel = useRef<HTMLDivElement>(null)
   const [query, setQuery] = useState('')
   const [role, setRole] = useState('')
@@ -56,50 +56,15 @@ export function PeopleDialog({ people, title, kind, locale, messages, returnFocu
   const results = filterDetailPeople(people, deferredQuery, role)
   const roles = kind === 'crew' ? [...new Map(people.flatMap((person) => person.roles.map((item) => [item.key, item] as const))).values()] : []
   const searchLabel = kind === 'cast' ? messages.searchCast : messages.searchCrew
-  const close = () => dialog.current?.close()
-
-  useEffect(() => {
-    const element = dialog.current
-    if (!element) return
-    const trigger = returnFocus.current
-    const root = document.documentElement
-    const overflow = root.style.overflow
-    const gutter = root.style.scrollbarGutter
-    root.style.scrollbarGutter = 'stable'
-    root.style.overflow = 'hidden'
-    element.showModal()
-    closeButton.current?.focus({ preventScroll: true })
-    return () => {
-      element.close()
-      root.style.overflow = overflow
-      root.style.scrollbarGutter = gutter
-      if (trigger?.isConnected) trigger.focus({ preventScroll: true })
-    }
-  }, [returnFocus])
-
   useEffect(() => { resultsPanel.current?.scrollTo({ top: 0 }) }, [deferredQuery, role])
 
   return (
     <dialog
       ref={dialog}
       aria-labelledby={`${id}-title`}
-      onClose={onClose}
+      onClose={handleClose}
       onClick={(event) => { if (event.target === event.currentTarget) close() }}
-      onKeyDown={(event) => {
-        if (event.key !== 'Tab') return
-        const elements = [...event.currentTarget.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex="0"]',
-        )].filter((element) => element.getClientRects().length > 0)
-        const first = elements[0]
-        const last = elements.at(-1)
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault()
-          last?.focus()
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault()
-          first?.focus()
-        }
-      }}
+      onKeyDown={trapFocus}
       className="fixed inset-0 m-auto h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-canvas p-0 text-ink outline-none backdrop:bg-black/65 sm:h-[min(85dvh,900px)] sm:w-[calc(100%-3rem)] sm:max-w-3xl sm:rounded-2xl sm:border sm:border-tone/15 sm:shadow-media"
     >
       <div className="flex h-full flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">

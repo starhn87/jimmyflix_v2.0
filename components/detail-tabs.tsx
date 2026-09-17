@@ -1,14 +1,14 @@
 'use client'
 
 import {
-  useCallback,
-  useEffect,
   type KeyboardEvent,
   type ReactNode,
   useId,
   useRef,
   useState,
 } from 'react'
+import { useHorizontalScroll } from '@/components/use-horizontal-scroll'
+import { getScrollBehavior } from '@/lib/browser-motion'
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
 
 export interface DetailTab {
@@ -32,52 +32,10 @@ export function DetailTabs({
 }: DetailTabsProps) {
   const instanceId = useId().replaceAll(':', '')
   const [selectedId, setSelectedId] = useState(tabs[0]?.id || '')
-  const [scrollState, setScrollState] = useState({ backward: false, forward: false })
-  const scroller = useRef<HTMLDivElement>(null)
+  const { track: scroller, edges, scroll } = useHorizontalScroll<HTMLDivElement>(tabs.length)
   const buttons = useRef<Array<HTMLButtonElement | null>>([])
   const selected = tabs.find((tab) => tab.id === selectedId) || tabs[0]
   const tabListId = `${instanceId}-tab-list`
-
-  const updateScrollState = useCallback(() => {
-    const element = scroller.current
-    if (!element) return
-
-    const next = {
-      backward: element.scrollLeft > 2,
-      forward: element.scrollLeft + element.clientWidth < element.scrollWidth - 2,
-    }
-    setScrollState((current) => (
-      current.backward === next.backward && current.forward === next.forward ? current : next
-    ))
-  }, [])
-
-  useEffect(() => {
-    const element = scroller.current
-    if (!element) return
-
-    updateScrollState()
-    const observer = new ResizeObserver(updateScrollState)
-    observer.observe(element)
-    element.addEventListener('scroll', updateScrollState, { passive: true })
-
-    return () => {
-      observer.disconnect()
-      element.removeEventListener('scroll', updateScrollState)
-    }
-  }, [tabs.length, updateScrollState])
-
-  const scrollTabs = (direction: -1 | 1) => {
-    const element = scroller.current
-    if (!element) return
-    const distance = Math.max(element.clientWidth * 0.72, 160)
-    const maxScrollLeft = Math.max(element.scrollWidth - element.clientWidth, 0)
-    const left = Math.min(Math.max(element.scrollLeft + direction * distance, 0), maxScrollLeft)
-
-    element.scrollTo({
-      left,
-      behavior: 'smooth',
-    })
-  }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     let nextIndex = index
@@ -124,7 +82,7 @@ export function DetailTabs({
                   tabIndex={active ? 0 : -1}
                   onClick={(event) => {
                     setSelectedId(tab.id)
-                    event.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+                    event.currentTarget.scrollIntoView({ behavior: getScrollBehavior(), block: 'nearest', inline: 'center' })
                   }}
                   onKeyDown={(event) => handleKeyDown(event, index)}
                   className={`min-h-11 min-w-28 rounded-xl px-5 text-sm font-semibold outline-none transition focus-visible:ring-3 focus-visible:ring-accent/40 ${
@@ -140,14 +98,14 @@ export function DetailTabs({
           </div>
         </div>
 
-        {scrollState.backward ? (
+        {edges.previous ? (
           <>
             <span aria-hidden="true" className="pointer-events-none absolute inset-y-px left-px w-16 rounded-l-2xl bg-gradient-to-r from-canvas via-canvas/85 to-transparent sm:hidden" />
             <button
               type="button"
               aria-label={scrollBackwardLabel}
               aria-controls={tabListId}
-              onClick={() => scrollTabs(-1)}
+              onClick={() => scroll(-1, 0.72, 160)}
               className="absolute top-1/2 left-2 grid size-9 -translate-y-1/2 place-items-center rounded-full border border-tone/15 bg-canvas/92 text-ink shadow-panel outline-none transition hover:bg-surface focus-visible:ring-3 focus-visible:ring-accent/40 sm:hidden"
             >
               <ArrowLeftIcon className="size-5" />
@@ -155,14 +113,14 @@ export function DetailTabs({
           </>
         ) : null}
 
-        {scrollState.forward ? (
+        {edges.next ? (
           <>
             <span aria-hidden="true" className="pointer-events-none absolute inset-y-px right-px w-16 rounded-r-2xl bg-gradient-to-l from-canvas via-canvas/85 to-transparent sm:hidden" />
             <button
               type="button"
               aria-label={scrollForwardLabel}
               aria-controls={tabListId}
-              onClick={() => scrollTabs(1)}
+              onClick={() => scroll(1, 0.72, 160)}
               className="absolute top-1/2 right-2 grid size-9 -translate-y-1/2 place-items-center rounded-full border border-tone/15 bg-canvas/92 text-ink shadow-panel outline-none transition hover:bg-surface focus-visible:ring-3 focus-visible:ring-accent/40 sm:hidden"
             >
               <ArrowRightIcon className="size-5" />

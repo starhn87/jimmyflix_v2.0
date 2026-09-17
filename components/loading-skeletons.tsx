@@ -1,3 +1,4 @@
+import { DETAIL_LAYOUT, DETAIL_TITLE_HEADER, DETAIL_TITLE } from '@/components/detail-view-styles'
 import {
   CATALOG_RAIL_STACK_CLASS_NAME,
   MEDIA_RAIL_HEADER_CLASS_NAME,
@@ -7,7 +8,7 @@ import {
   MEDIA_RAIL_SKELETON_LIST_CLASS_NAME,
   STREAMING_PROVIDER_LIST_CLASS_NAME,
 } from '@/components/media-rail-styles'
-import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME } from '@/components/person-view-styles'
+import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME, PERSON_TITLE_CLASS_NAME } from '@/components/person-view-styles'
 import { DETAIL_RAIL_HEADER, DETAIL_RAIL_TRACK, PERSON_RAIL_ITEM, PERSON_CARD_NAME, PERSON_CARD_ROLE } from '@/components/detail-rail-styles'
 import { PEOPLE_PREVIEW_LIMIT } from '@/lib/detail-people'
 
@@ -210,11 +211,11 @@ export function DetailSkeleton({ label }: { label: string }) {
       <LoadingAnnouncement label={label} />
       <div className="animate-pulse motion-reduce:animate-none">
         <div aria-hidden="true" className="absolute inset-x-0 top-0 hidden aspect-video bg-gradient-to-b from-surface/80 to-canvas md:block" />
-        <div aria-hidden="true" className="relative mx-auto grid max-w-[1480px] grid-cols-1 items-start gap-y-0 px-4 pt-0 pb-8 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-x-4 sm:gap-y-6 sm:px-6 sm:py-8 md:py-12 lg:grid-cols-[minmax(340px,min(40vw,480px))_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8 lg:px-10">
+        <div aria-hidden="true" className={`relative ${DETAIL_LAYOUT}`}>
           <Bone className="-mx-4 aspect-2/3 w-[calc(100%+2rem)] rounded-none sm:mx-0 sm:w-full sm:rounded-2xl lg:row-span-3" />
 
-          <header className="min-w-0 pt-6 sm:pt-1 lg:pt-4">
-            <Bone className="h-8 w-4/5 max-w-xl rounded-lg sm:h-11 lg:h-16" />
+          <header className={DETAIL_TITLE_HEADER}>
+            <div className={DETAIL_TITLE}><Bone className="h-[1.1em] w-4/5 max-w-xl rounded-lg" /></div>
             <div className="mt-4 flex flex-wrap gap-2">
               <Bone className="h-8 w-24 rounded-full" />
               <Bone className="h-8 w-16 rounded-full" />
@@ -322,8 +323,7 @@ export function PersonSkeleton({ label }: { label: string }) {
         <div className={PERSON_LAYOUT_CLASS_NAME}>
           <Bone className={`aspect-2/3 sm:rounded-2xl ${PERSON_PORTRAIT_CLASS_NAME}`} />
           <div className="md:pt-3">
-            <Bone className="h-11 w-32 rounded-full" />
-            <Bone className="mt-7 h-12 w-4/5 max-w-xl rounded-xl sm:h-16" />
+            <div className={PERSON_TITLE_CLASS_NAME}><Bone className="h-[1.05em] w-4/5 max-w-xl rounded-xl" /></div>
             <Bone className="mt-4 h-8 w-24 rounded-full" />
             <Bone className="mt-9 h-7 w-32 rounded-lg" />
             <div className="mt-4 max-w-3xl space-y-3">

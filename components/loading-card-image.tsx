@@ -21,15 +21,16 @@ export function LoadingCardImage({
   containerClassName,
   draggable,
 }: LoadingCardImageProps) {
-  const [settledSrc, setSettledSrc] = useState<string | null>(null)
-  const loaded = settledSrc === src
+  const [settled, setSettled] = useState<{ src: string; status: 'loaded' | 'error' } | null>(null)
+  const state = settled?.src === src ? settled.status : 'loading'
 
   return (
     <div
-      aria-busy={!loaded}
+      aria-busy={state === 'loading'}
+      data-image-state={state}
       className={containerClassName}
     >
-      {!loaded ? (
+      {state === 'loading' ? (
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 animate-pulse bg-tone/7 motion-reduce:animate-none">
           <span
             className="absolute inset-0 motion-reduce:hidden"
@@ -37,7 +38,14 @@ export function LoadingCardImage({
           />
         </span>
       ) : null}
-      <Image
+      {state === 'error' ? (
+        <span role={alt ? 'img' : undefined} aria-label={alt || undefined} className="absolute inset-0 grid place-items-center bg-surface text-faint">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-1/3 max-w-12 opacity-60">
+            <rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8" cy="8" r="1.5" />
+            <path d="m3 17 5-5 4 4 3-3 6 6" />
+          </svg>
+        </span>
+      ) : <Image
         key={src}
         src={src}
         alt={alt}
@@ -45,10 +53,10 @@ export function LoadingCardImage({
         fill
         quality={85}
         sizes={sizes}
-        onLoad={() => setSettledSrc(src)}
-        onError={() => setSettledSrc(src)}
-        className={`${imageClassName} transition-opacity duration-300 motion-reduce:transition-none ${loaded ? 'opacity-100' : 'opacity-0'}`}
-      />
+        onLoad={() => setSettled({ src, status: 'loaded' })}
+        onError={() => setSettled({ src, status: 'error' })}
+        className={`${imageClassName} transition-opacity duration-300 motion-reduce:transition-none ${state === 'loaded' ? 'opacity-100' : 'opacity-0'}`}
+      />}
     </div>
   )
 }
