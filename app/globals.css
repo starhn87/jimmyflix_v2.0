@@ -183,6 +183,15 @@ input {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes trend-window-content-enter {
+  from { opacity: 0.72; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.trend-window-content {
+  animation: trend-window-content-enter 180ms ease-out both;
+}
+
 .gallery-lightbox[open] {
   animation: gallery-enter 180ms ease-out;
 }

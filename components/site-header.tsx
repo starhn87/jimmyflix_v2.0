@@ -52,6 +52,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                 <li key={item.href}>
                   <Link
                     href={getLocalePath(locale, item.href)}
+                    prefetch
                     aria-current={current ? 'page' : undefined}
                     className={`relative flex min-h-11 min-w-12 items-center justify-center rounded-lg px-1 text-[0.85rem] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent sm:min-w-20 sm:px-4 sm:text-sm lg:min-w-24 lg:text-base ${
                       current

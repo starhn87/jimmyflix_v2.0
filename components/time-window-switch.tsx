@@ -30,7 +30,7 @@ export function TimeWindowSwitch({
     >
       <span
         aria-hidden="true"
-        className={`absolute inset-y-0 left-0 z-0 w-1/2 rounded-full bg-action shadow-lg shadow-black/30 transition-transform duration-300 ease-out motion-reduce:transition-none ${
+        className={`absolute inset-y-0 left-0 z-0 w-1/2 transform-gpu rounded-full bg-action shadow-lg shadow-black/30 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none ${
           displayedWindow === 'week' ? 'translate-x-full' : 'translate-x-0'
         }`}
       />
