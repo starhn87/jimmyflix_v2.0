@@ -1,4 +1,5 @@
 import { ErrorState } from '@/components/error-state'
+import { DataNotice } from '@/components/data-notice'
 import { MediaCard } from '@/components/media-card'
 import { MediaRail } from '@/components/media-rail'
 import { JsonLd } from '@/components/json-ld'
@@ -26,7 +27,7 @@ export function MediaSection({
   ranked = false,
 }: MediaSectionProps) {
   const dictionary = getDictionary(locale)
-  if (section.error) {
+  if (section.error || (section.partial && section.items.length === 0)) {
     return (
       <div className="px-4 sm:px-6 lg:px-10">
         <ErrorState
@@ -55,6 +56,7 @@ export function MediaSection({
 
   return (
     <>
+      {section.partial ? <div className="px-4 sm:px-8 lg:px-12"><DataNotice locale={locale} /></div> : null}
       <JsonLd data={getItemListJsonLd(section.items, section.mediaType, section.title, locale)} />
       <MediaRail
         id={section.id}

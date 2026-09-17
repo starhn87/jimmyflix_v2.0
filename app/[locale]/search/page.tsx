@@ -8,7 +8,7 @@ import { getDictionary, type Dictionary } from '@/lib/dictionaries'
 import { getLocalePath, isLocale, type Locale } from '@/lib/i18n'
 import { getFirstSearchParam } from '@/lib/params'
 import { MAX_SEARCH_LENGTH } from '@/lib/search'
-import { searchCatalog } from '@/lib/tmdb'
+import { searchCatalog } from '@/lib/tmdb/search'
 import { createPageMetadata } from '@/lib/seo'
 
 interface SearchPageProps {

@@ -2,7 +2,8 @@ import 'server-only'
 
 import { notFound } from 'next/navigation'
 import { isLocale } from '@/lib/i18n'
-import { getMovieDetail, getPersonDetail, getTvDetail, TmdbNotFoundError } from '@/lib/tmdb'
+import { getMovieDetail, getPersonDetail, getTvDetail } from '@/lib/tmdb/detail'
+import { TmdbNotFoundError } from '@/lib/tmdb/client'
 import type { MediaType } from '@/types/tmdb'
 
 export function parseDetailRoute(locale: string, rawId: string) {

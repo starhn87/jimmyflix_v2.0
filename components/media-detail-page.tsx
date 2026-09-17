@@ -8,6 +8,7 @@ import {
   ProductionDataPanel,
   RelatedTitlesDataSection,
   TvSeasonsDataPanel,
+  TrailerDataPanel,
 } from '@/components/detail-data-panels'
 import { DetailView } from '@/components/detail-view'
 import { DetailPanelSkeleton, MediaSectionSkeleton, PeopleSectionSkeleton } from '@/components/loading-skeletons'
@@ -15,13 +16,7 @@ import { getDictionary } from '@/lib/dictionaries'
 import { getImageUrl, getMediaTitle } from '@/lib/media'
 import { getMediaDetailRoute, parseDetailRoute } from '@/lib/detail-route'
 import { createPageMetadata } from '@/lib/seo'
-import {
-  getCollection,
-  getCredits,
-  getRelatedTitles,
-  getTvSeasonDetail,
-  getWatchProviders,
-} from '@/lib/tmdb'
+import { getCollection, getCredits, getRelatedTitles, getTvSeasonDetail, getWatchProviders } from '@/lib/tmdb/detail'
 import type { MediaType } from '@/types/tmdb'
 
 export interface MediaDetailRouteParams {
@@ -80,6 +75,11 @@ export async function MediaDetailPage({ params, mediaType }: MediaDetailPageProp
       detail={detail}
       mediaType={mediaType}
       locale={locale}
+      trailerPanel={(
+        <Suspense fallback={<div role="status" aria-label={dictionary.detail.trailer} className="mt-7 aspect-video w-full animate-pulse rounded-2xl bg-tone/7 motion-reduce:animate-none" />}>
+          <TrailerDataPanel detail={detail} mediaType={mediaType} locale={locale} />
+        </Suspense>
+      )}
       creditsPanel={(
         <Suspense fallback={<div className="pt-7"><PeopleSectionSkeleton label={dictionary.detail.loadingCredits} title={dictionary.detail.cast} /></div>}>
           <CreditsDataPanel request={creditsRequest} locale={locale} />

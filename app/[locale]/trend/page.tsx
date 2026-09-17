@@ -6,7 +6,7 @@ import { TrendHeader, TrendingRankingSection, TrendingPeopleSection, TREND_STACK
 import { getDictionary } from '@/lib/dictionaries'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { getFirstSearchParam } from '@/lib/params'
-import { getTrendingRediscovery, getTrendingPeople, getTrendingRankingRequests } from '@/lib/tmdb'
+import { getTrendingRediscovery, getTrendingPeople, getTrendingRankingRequests } from '@/lib/tmdb/trending'
 import type { TimeWindow } from '@/types/tmdb'
 import { createPageMetadata } from '@/lib/seo'
 

@@ -9,11 +9,8 @@ import { RecentlyViewedSection } from '@/components/recently-viewed'
 import { StreamingProviderSection } from '@/components/streaming-provider-section'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
-import {
-  getMovieSectionRequests,
-  getStreamingDiscovery,
-  getTvSectionRequests,
-} from '@/lib/tmdb'
+import { getMovieSectionRequests, getTvSectionRequests } from '@/lib/tmdb/catalog'
+import { getStreamingDiscovery } from '@/lib/tmdb/streaming'
 import type { MediaType } from '@/types/tmdb'
 import { createPageMetadata } from '@/lib/seo'
 

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { DataNotice } from '@/components/data-notice'
 import { ErrorState } from '@/components/error-state'
 import { LoadingCardImage } from '@/components/loading-card-image'
 import { MediaSectionSkeleton } from '@/components/loading-skeletons'
@@ -8,7 +9,7 @@ import { TimeWindowSwitch } from '@/components/time-window-switch'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
 import { getMediaHref, getMediaTitle, getProfileUrl } from '@/lib/media'
-import type { MediaSectionRequest } from '@/lib/tmdb'
+import type { MediaSectionRequest } from '@/lib/tmdb/sections'
 import type { TimeWindow, TrendingPeopleData } from '@/types/tmdb'
 
 // The rail itself includes 28px of bottom clearance: 12 + 28 = 40, 36 + 28 = 64.
@@ -45,7 +46,7 @@ export async function TrendingPeopleSection({ request, locale, window }: {
 }) {
   const data = await request
   const dictionary = getDictionary(locale)
-  if (data.error) return (
+  if (data.error || (data.partial && data.people.length === 0)) return (
     <div className="px-4 sm:px-8 lg:px-12">
       <ErrorState compact title={dictionary.common.sectionUnavailableTitle(dictionary.trend.people)}
         message={dictionary.common.sectionUnavailableMessage} retryLabel={dictionary.common.retry} retryingLabel={dictionary.common.retrying} />
@@ -58,6 +59,8 @@ export async function TrendingPeopleSection({ request, locale, window }: {
     </section>
   )
   return (
+    <>
+    {data.partial ? <div className="px-4 sm:px-8 lg:px-12"><DataNotice locale={locale} /></div> : null}
     <MediaRail id="trending-people" title={dictionary.trend.people}
       description={dictionary.trend.peopleDescription(window)} locale={locale}>
       {data.people.map((person) => (
@@ -78,6 +81,7 @@ export async function TrendingPeopleSection({ request, locale, window }: {
         </article>
       ))}
     </MediaRail>
+    </>
   )
 }
 

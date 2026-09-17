@@ -1,7 +1,27 @@
-import type { MediaItem, MediaType, PersonCredit } from '@/types/tmdb'
+import type { MediaItem, MediaType, PersonCredit, PersonCredits, TrendingPerson, TrendingPersonWithCredits } from '@/types/tmdb'
 
 export const TREND_RANKING_LIMIT = 10
 export const TREND_REDISCOVERY_LIMIT = 20
+
+// Fill in billing order and only expand further candidates when needed.
+export async function loadTrendingPeople(candidates: TrendingPerson[], load: (id: number) => Promise<PersonCredits>) {
+  const people: TrendingPersonWithCredits[] = []
+  let requested = 0
+  let failed = 0
+  for (let offset = 0; offset < candidates.length && people.length < TREND_RANKING_LIMIT;) {
+    const batch = candidates.slice(offset, offset + TREND_RANKING_LIMIT - people.length)
+    const credits = await Promise.allSettled(batch.map(({ id }) => load(id)))
+    offset += batch.length
+    requested += batch.length
+    credits.forEach((result, index) => {
+      if (result.status === 'rejected') { failed++; return }
+      const person = batch[index]
+      const known_for = selectRepresentativeCredits([...result.value.cast, ...result.value.crew], person.known_for_department)
+      if (known_for.length) people.push({ ...person, known_for })
+    })
+  }
+  return { people, error: requested > 0 && failed === requested, partial: failed > 0 }
+}
 
 // This is a selection from the actual trend response, not a historical ranking.
 export function selectRediscoveredTitles(movies: MediaItem[], shows: MediaItem[], now = new Date()) {

@@ -5,7 +5,8 @@ import { Hero } from '@/components/hero'
 import { MediaSection } from '@/components/media-section'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
-import { getCatalogFeaturedItem, getDailyRotationIndex, type MediaSectionRequest } from '@/lib/tmdb'
+import { getCatalogFeaturedItem, getDailyRotationIndex } from '@/lib/tmdb/catalog'
+import type { MediaSectionRequest } from '@/lib/tmdb/sections'
 import type { MediaType } from '@/types/tmdb'
 
 interface CatalogHeroProps {

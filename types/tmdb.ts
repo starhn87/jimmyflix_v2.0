@@ -40,6 +40,7 @@ export interface TrendingPersonWithCredits extends TrendingPerson {
 export interface TrendingPeopleData {
   people: TrendingPersonWithCredits[]
   error: boolean
+  partial?: boolean
 }
 
 export interface Keyword {
@@ -244,6 +245,7 @@ export interface CollectionDetail {
 }
 
 export interface MediaSectionData {
+  partial?: boolean
   id: string
   title: string
   description: string

@@ -1,0 +1,98 @@
+import 'server-only'
+
+import { getDictionary } from '@/lib/dictionaries'
+import type { Locale } from '@/lib/i18n'
+import type { MediaSectionData, MediaType, StreamingDiscoveryData, WatchProvider, WatchProviderListResponse } from '@/types/tmdb'
+import { tmdbFetch, CACHE_SECONDS } from '@/lib/tmdb/client'
+import { getDiscoverList, CATALOG_ITEM_LIMIT } from '@/lib/tmdb/lists'
+
+const preferredProviderIds: Record<Locale, Record<MediaType, number[]>> = {
+  ko: {
+    movie: [8, 337, 356, 97, 119],
+    tv: [8, 337, 356, 97, 119],
+  },
+  en: {
+    movie: [8, 337, 15, 9, 350],
+    tv: [8, 337, 15, 9, 350],
+  },
+}
+
+const providerFallbacks: Record<number, Pick<WatchProvider, 'provider_id' | 'provider_name' | 'logo_path' | 'display_priority'>> = {
+  8: { provider_id: 8, provider_name: 'Netflix', logo_path: null, display_priority: 0 },
+  9: { provider_id: 9, provider_name: 'Prime Video', logo_path: null, display_priority: 0 },
+  15: { provider_id: 15, provider_name: 'Hulu', logo_path: null, display_priority: 0 },
+  97: { provider_id: 97, provider_name: 'Watcha', logo_path: null, display_priority: 0 },
+  119: { provider_id: 119, provider_name: 'Prime Video', logo_path: null, display_priority: 0 },
+  337: { provider_id: 337, provider_name: 'Disney+', logo_path: null, display_priority: 0 },
+  350: { provider_id: 350, provider_name: 'Apple TV+', logo_path: null, display_priority: 0 },
+  356: { provider_id: 356, provider_name: 'Wavve', logo_path: null, display_priority: 0 },
+}
+const getPreferredProviders = async (mediaType: MediaType, locale: Locale) => {
+  const ids = preferredProviderIds[locale][mediaType]
+  let availableProviders: WatchProvider[] = []
+
+  try {
+    const response = await tmdbFetch<WatchProviderListResponse>(
+      `watch/providers/${mediaType}`,
+      { watch_region: locale === 'ko' ? 'KR' : 'US' },
+      { locale, revalidate: CACHE_SECONDS.reference },
+    )
+    availableProviders = response.results
+  } catch {
+    // Keep the selector usable if provider metadata is temporarily unavailable.
+  }
+
+  return ids.map((id) => (
+    availableProviders.find((provider) => provider.provider_id === id) || providerFallbacks[id]
+  )).filter((provider): provider is WatchProvider => Boolean(provider))
+}
+
+export const getStreamingDiscovery = async (
+  mediaType: MediaType,
+  requestedProviderId: number | null,
+  locale: Locale,
+  limit = CATALOG_ITEM_LIMIT,
+): Promise<StreamingDiscoveryData> => {
+  const dictionary = getDictionary(locale).sections
+  const preferredIds = preferredProviderIds[locale][mediaType]
+  const selectedProviderId = requestedProviderId && preferredIds.includes(requestedProviderId)
+    ? requestedProviderId
+    : preferredIds[0]
+  const providersRequest = getPreferredProviders(mediaType, locale)
+  const titlesRequest = getDiscoverList(mediaType, {
+    sort_by: 'popularity.desc',
+    'vote_count.gte': mediaType === 'movie' ? 50 : 25,
+    watch_region: locale === 'ko' ? 'KR' : 'US',
+    with_watch_providers: selectedProviderId,
+    with_watch_monetization_types: 'flatrate',
+  }, locale, limit)
+  const [providersResult, titlesResult] = await Promise.allSettled([
+    providersRequest,
+    titlesRequest,
+  ])
+  const providers = providersResult.status === 'fulfilled'
+    ? providersResult.value
+    : preferredIds.map((id) => providerFallbacks[id]).filter(Boolean)
+  const selected = providers.find((provider) => provider.provider_id === selectedProviderId) || providers[0]
+  const mediaLabel = mediaType === 'movie'
+    ? dictionary.streamingMovies
+    : dictionary.streamingShows
+  const section: MediaSectionData = {
+    id: `streaming-${mediaType}`,
+    title: mediaLabel(selected.provider_name),
+    description: '',
+    mediaType,
+    items: titlesResult.status === 'fulfilled' ? titlesResult.value.items : [],
+    partial: titlesResult.status === 'fulfilled' && titlesResult.value.partial,
+    error: titlesResult.status === 'rejected',
+  }
+
+  return {
+    section,
+    selectedProviderId,
+    providers: providers.map((provider) => ({
+      ...provider,
+      selected: provider.provider_id === selectedProviderId,
+    })),
+  }
+}

@@ -22,6 +22,7 @@ interface Dictionary {
     catalogUnavailable: string
     sectionUnavailableTitle: (title: string) => string
     sectionUnavailableMessage: string
+    partialResults: string
     sectionEmpty: string
     carouselLabel: (title: string) => string
     scrollBackward: (title: string) => string
@@ -273,6 +274,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       catalogUnavailable: "We couldn't load the catalog right now.",
       sectionUnavailableTitle: (title) => `Couldn't load ${title.toLowerCase()}`,
       sectionUnavailableMessage: 'This section is temporarily unavailable.',
+      partialResults: 'Some content could not be loaded. Available results are shown below.',
       sectionEmpty: 'No titles are available in this section yet.',
       carouselLabel: (title) => `${title} carousel`,
       scrollBackward: (title) => `Scroll ${title} backward`,
@@ -541,6 +543,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       catalogUnavailable: '지금은 콘텐츠 목록을 불러올 수 없습니다.',
       sectionUnavailableTitle: (title) => `${withKoreanObjectParticle(title)} 불러오지 못했습니다`,
       sectionUnavailableMessage: '이 섹션을 일시적으로 이용할 수 없습니다.',
+      partialResults: '일부 콘텐츠를 불러오지 못했습니다. 확인된 결과를 먼저 보여드립니다.',
       sectionEmpty: '이 섹션에 표시할 콘텐츠가 아직 없습니다.',
       carouselLabel: (title) => `${title} 슬라이드`,
       scrollBackward: (title) => `${title} 이전 항목 보기`,

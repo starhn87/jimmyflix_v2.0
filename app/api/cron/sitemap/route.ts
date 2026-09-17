@@ -2,7 +2,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { isCronAuthorized } from '@/lib/cron-auth'
 import { collectSitemap } from '@/lib/sitemap-collector'
 import { readSitemapSnapshot, writeSitemapSnapshot, SITEMAP_CACHE_TAG } from '@/lib/sitemap-store'
-import { getSitemapDiscoveries, checkSitemapDetail } from '@/lib/tmdb'
+import { getSitemapDiscoveries, checkSitemapDetail } from '@/lib/tmdb/sitemap'
 import { sitemapPageCount } from '@/lib/sitemap-registry'
 
 export const maxDuration = 60

@@ -9,7 +9,14 @@ import {
   ProductionPanel,
   SeasonsPanel,
   WatchProvidersPanel,
+  TrailerPanel,
 } from '@/components/detail-panels'
+import { ErrorState } from '@/components/error-state'
+import { JsonLd } from '@/components/json-ld'
+import { getMediaJsonLd } from '@/lib/structured-data'
+import { getTrailer } from '@/lib/videos'
+import { getEnglishVideos } from '@/lib/tmdb/detail'
+import type { MediaListResult } from '@/lib/tmdb/lists'
 import { PeopleSectionSkeleton, WatchProvidersSkeleton } from '@/components/loading-skeletons'
 import { MediaSection } from '@/components/media-section'
 import { getDictionary } from '@/lib/dictionaries'
@@ -24,6 +31,29 @@ import type {
   SeasonDetail,
   WatchProviderRegion,
 } from '@/types/tmdb'
+
+function PanelError({ title, locale }: { title: string; locale: Locale }) {
+  const dictionary = getDictionary(locale).common
+  return <ErrorState compact title={dictionary.sectionUnavailableTitle(title)} message={dictionary.sectionUnavailableMessage} retryLabel={dictionary.retry} retryingLabel={dictionary.retrying} />
+}
+
+export async function TrailerDataPanel({ detail, mediaType, locale }: { detail: MediaDetail; mediaType: MediaType; locale: Locale }) {
+  if (locale !== 'ko' || getTrailer(detail.videos?.results)) return <TrailerPanel detail={detail} locale={locale} />
+  let videos = detail.videos?.results || []
+  let unavailable = false
+  try {
+    const english = await getEnglishVideos(mediaType, detail.id)
+    const seen = new Set(videos.map(({ id }) => id))
+    videos = [...videos, ...english.filter(({ id }) => !seen.has(id))]
+  } catch { unavailable = true }
+  const supplemented = { ...detail, videos: { results: videos } }
+  const videoSchema = getMediaJsonLd(supplemented, mediaType, locale).trailer
+  return <>
+    {unavailable ? <div className="pt-7"><PanelError title={getDictionary(locale).detail.trailer} locale={locale} /></div> : null}
+    <TrailerPanel detail={supplemented} locale={locale} />
+    {videoSchema ? <JsonLd data={{ '@context': 'https://schema.org', ...videoSchema }} /> : null}
+  </>
+}
 
 export async function CreditsDataPanel({ request, locale }: {
   request: Promise<MediaCredits>
@@ -82,6 +112,7 @@ async function EmptyProductionDataPanel({ creditsRequest, providersRequest, loca
   locale: Locale
 }) {
   const [credits, providers] = await Promise.allSettled([creditsRequest, providersRequest])
+  if (credits.status === 'rejected' || providers.status === 'rejected') return null
   const hasCrew = credits.status === 'fulfilled' && credits.value.crew.length > 0
   const region = providers.status === 'fulfilled' ? providers.value : null
   const hasProviders = region && [region.flatrate, region.free, region.ads, region.rent, region.buy].some((items) => items?.length)
@@ -93,7 +124,7 @@ async function CrewDataPanel({ request, locale }: { request: Promise<MediaCredit
   try {
     crew = (await request).crew
   } catch {
-    return null
+    return <PanelError title={getDictionary(locale).detail.keyCrew} locale={locale} />
   }
   return <CrewPanel crew={crew} locale={locale} />
 }
@@ -103,7 +134,7 @@ async function WatchProvidersDataPanel({ request, locale }: { request: Promise<W
   try {
     providers = await request
   } catch {
-    return null
+    return <PanelError title={getDictionary(locale).detail.streamingAvailability} locale={locale} />
   }
   return <WatchProvidersPanel providers={providers} locale={locale} />
 }
@@ -161,7 +192,7 @@ export async function RelatedTitlesDataSection({
   id,
   locale,
 }: {
-  request: Promise<MediaItem[]>
+  request: Promise<MediaListResult>
   mediaType: MediaType
   id: number
   locale: Locale
@@ -169,9 +200,10 @@ export async function RelatedTitlesDataSection({
   const dictionary = getDictionary(locale)
   let items: MediaItem[] = []
   let error = false
+  let partial = false
 
   try {
-    items = await request
+    ;({ items, partial } = await request)
   } catch {
     error = true
   }
@@ -186,6 +218,7 @@ export async function RelatedTitlesDataSection({
         mediaType,
         items,
         error,
+        partial,
       }}
     />
   )

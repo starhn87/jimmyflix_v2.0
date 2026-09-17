@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { selectRankedTitles, selectRediscoveredTitles, selectRepresentativeCredits } from '../lib/trending.ts'
+import { selectRankedTitles, selectRediscoveredTitles, selectRepresentativeCredits, loadTrendingPeople } from '../lib/trending.ts'
 
 const movie = (id, overrides = {}) => ({
   id, title: `Movie ${id}`, media_type: 'movie', poster_path: `/${id}.jpg`,
@@ -51,4 +51,33 @@ test('a director is represented by directed films rather than popular cameo appe
   const credits = [movie(1, { character: 'Passenger', vote_count: 10000 }),
     movie(2, { job: 'Director', vote_count: 5000 }), movie(3, { job: 'Thanks', vote_count: 8000 })]
   assert.deepEqual(selectRepresentativeCredits(credits, 'Directing').map(({ id }) => id), [2])
+})
+
+
+test('trending people fetch only enough credits to fill the ten visible people', async () => {
+  const candidates = Array.from({ length: 20 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
+  const requests = []
+  const result = await loadTrendingPeople(candidates, async (id) => {
+    requests.push(id)
+    return { cast: [movie(id)], crew: [] }
+  })
+  assert.deepEqual(requests, [1,2,3,4,5,6,7,8,9,10])
+  assert.equal(result.people.length, 10)
+  assert.equal(result.partial, false)
+})
+
+test('trending credits backfill missing works or failed requests without changing rank order', async () => {
+  const candidates = Array.from({ length: 20 }, (_, i) => ({ id: i + 1, name: `Person ${i + 1}`, known_for_department: 'Acting' }))
+  const requests = []
+  const result = await loadTrendingPeople(candidates, async (id) => {
+    requests.push(id)
+    if (id === 2) throw new Error('Unavailable')
+    return { cast: id === 1 ? [] : [movie(id)], crew: [] }
+  })
+  assert.deepEqual(result.people.map(({ id }) => id), [3,4,5,6,7,8,9,10,11,12])
+  assert.equal(requests.length, 12)
+  assert.equal(result.partial, true)
+  assert.equal(result.error, false)
+  const failed = await loadTrendingPeople(candidates.slice(0, 2), async () => { throw new Error('Unavailable') })
+  assert.equal(failed.error, true)
 })

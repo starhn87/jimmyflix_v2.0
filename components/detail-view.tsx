@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 import { DetailTabs, type DetailTab } from '@/components/detail-tabs'
 import {
   GalleryPanel,
-  TrailerPanel,
 } from '@/components/detail-panels'
 import { StarIcon } from '@/components/icons'
 import { RecentMediaTracker } from '@/components/recently-viewed'
@@ -25,6 +24,7 @@ import type { MediaDetail, MediaType } from '@/types/tmdb'
 
 interface DetailViewProps {
   detail: MediaDetail
+  trailerPanel: ReactNode
   mediaType: MediaType
   creditsPanel: ReactNode
   productionPanel: ReactNode
@@ -36,6 +36,7 @@ interface DetailViewProps {
 
 export function DetailView({
   detail,
+  trailerPanel,
   mediaType,
   creditsPanel,
   productionPanel,
@@ -52,7 +53,7 @@ export function DetailView({
   const keywords = (detail.keywords?.keywords || detail.keywords?.results || []).slice(0, 6)
   const galleryImages = getGalleryImages(detail.images?.backdrops || [])
   const tabs: DetailTab[] = [
-    { id: 'trailer', label: dictionary.detail.trailer, content: <TrailerPanel detail={detail} locale={locale} /> },
+    { id: 'trailer', label: dictionary.detail.trailer, content: trailerPanel },
   ]
 
   if (galleryImages.length > 0) {
