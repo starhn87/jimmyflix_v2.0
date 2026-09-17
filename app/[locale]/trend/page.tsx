@@ -1,6 +1,6 @@
 import { TREND_RANKING_LIMIT, TREND_PEOPLE_LIMIT, TREND_REDISCOVERY_LIMIT } from '@/lib/trending'
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
+import { Suspense, ViewTransition } from 'react'
 import { MediaSection } from '@/components/media-section'
 import { MediaSectionSkeleton } from '@/components/loading-skeletons'
 import { TrendHeader, TrendingRankingSection, TrendingPeopleSection, TREND_STACK_CLASS_NAME } from '@/components/trend-content'
@@ -41,22 +41,24 @@ export default async function TrendPage({ params, searchParams }: TrendPageProps
   return (
     <main className="pb-20">
       <TrendHeader locale={locale} window={window} />
-      <div className={TREND_STACK_CLASS_NAME}>
-        {sections.map((section, index) => (
-          <Suspense
-            key={`${window}-${section.id}`}
-            fallback={<MediaSectionSkeleton label={locale === 'ko' ? `${section.title} 불러오는 중` : `Loading ${section.title}`} title={section.title} description={dictionary.trend.rankingDescription(window)} itemCount={TREND_RANKING_LIMIT} />}
-          >
-            <TrendingRankingSection request={section.request} locale={locale} prioritizeFirst={index === 0} />
+      <ViewTransition key={window} name="trend-window-content" share="auto" enter="auto" default="none">
+        <div className={TREND_STACK_CLASS_NAME}>
+          {sections.map((section, index) => (
+            <Suspense
+              key={`${window}-${section.id}`}
+              fallback={<MediaSectionSkeleton label={locale === 'ko' ? `${section.title} 불러오는 중` : `Loading ${section.title}`} title={section.title} description={dictionary.trend.rankingDescription(window)} itemCount={TREND_RANKING_LIMIT} />}
+            >
+              <TrendingRankingSection request={section.request} locale={locale} prioritizeFirst={index === 0} />
+            </Suspense>
+          ))}
+          <Suspense key={`people-${window}`} fallback={<MediaSectionSkeleton label={dictionary.trend.people} title={dictionary.trend.people} description={dictionary.trend.peopleDescription(window)} itemCount={TREND_PEOPLE_LIMIT} />}>
+            <TrendingPeopleSection request={peopleRequest} locale={locale} window={window} />
           </Suspense>
-        ))}
-        <Suspense key={`people-${window}`} fallback={<MediaSectionSkeleton label={dictionary.trend.people} title={dictionary.trend.people} description={dictionary.trend.peopleDescription(window)} itemCount={TREND_PEOPLE_LIMIT} />}>
-          <TrendingPeopleSection request={peopleRequest} locale={locale} window={window} />
-        </Suspense>
-        <Suspense key={`rediscovery-${window}`} fallback={<MediaSectionSkeleton label={dictionary.trend.rediscovery} title={dictionary.trend.rediscovery} description={dictionary.trend.rediscoveryDescription(window)} itemCount={TREND_REDISCOVERY_LIMIT} />}>
-          <RediscoverySection request={rediscoveryRequest} locale={locale} />
-        </Suspense>
-      </div>
+          <Suspense key={`rediscovery-${window}`} fallback={<MediaSectionSkeleton label={dictionary.trend.rediscovery} title={dictionary.trend.rediscovery} description={dictionary.trend.rediscoveryDescription(window)} itemCount={TREND_REDISCOVERY_LIMIT} />}>
+            <RediscoverySection request={rediscoveryRequest} locale={locale} />
+          </Suspense>
+        </div>
+      </ViewTransition>
     </main>
   )
 }

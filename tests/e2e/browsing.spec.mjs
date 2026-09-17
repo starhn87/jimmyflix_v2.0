@@ -181,6 +181,39 @@ test('failed production and related requests display errors instead of an empty 
   await expect(page.getByText('No production information is available.')).toHaveCount(0)
 })
 
+test('trend window switch fills its track and moves before delayed content arrives', async ({ page }) => {
+  let releaseWeek
+  const weekGate = new Promise((resolve) => { releaseWeek = resolve })
+  await page.route(/\/en\/trend\?window=week/, async (route) => {
+    if (route.request().headers().rsc === '1') await weekGate
+    await route.continue()
+  })
+  await page.goto('/en/trend')
+
+  const control = page.getByRole('navigation', { name: 'Trending time window' })
+  const indicator = control.locator(':scope > span[aria-hidden="true"]')
+  const initialTrack = await control.boundingBox()
+  const initialIndicator = await indicator.boundingBox()
+  expect(Math.abs(initialIndicator.x - initialTrack.x)).toBeLessThanOrEqual(2)
+  expect(Math.abs(initialIndicator.height - initialTrack.height)).toBeLessThanOrEqual(2)
+
+  try {
+    await control.getByRole('link', { name: 'This week', exact: true }).click()
+    await expect(control).toHaveAttribute('data-selected', 'week')
+    await expect.poll(async () => {
+      const track = await control.boundingBox()
+      const thumb = await indicator.boundingBox()
+      return Math.abs(thumb.x - (track.x + track.width / 2))
+    }).toBeLessThanOrEqual(2)
+    await expect(page.getByText('Global TMDB trends (This week based)', { exact: true })).toHaveCount(0)
+  } finally {
+    releaseWeek()
+  }
+
+  await expect(page).toHaveURL(/\/en\/trend\?window=week$/)
+  await expect(page.getByText('Global TMDB trends (This week based)', { exact: true }).first()).toBeVisible()
+})
+
 test('trends show twenty ranked titles and people, forty rediscoveries and compact rank markers', async ({ page }) => {
   await page.goto('/en/trend')
   for (const window of ['day', 'week']) {

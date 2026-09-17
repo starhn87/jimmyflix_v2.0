@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Suspense } from 'react'
+import { Suspense, ViewTransition } from 'react'
 import { HeaderSearch, HeaderSearchControl } from '@/components/header-search'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MobilePreferences } from '@/components/mobile-preferences'
@@ -52,7 +52,6 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                 <li key={item.href}>
                   <Link
                     href={getLocalePath(locale, item.href)}
-                    prefetch={false}
                     aria-current={current ? 'page' : undefined}
                     className={`relative flex min-h-11 min-w-12 items-center justify-center rounded-lg px-1 text-[0.85rem] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent sm:min-w-20 sm:px-4 sm:text-sm lg:min-w-24 lg:text-base ${
                       current
@@ -63,7 +62,9 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
                     <span className="relative">
                       {item.label}
                       {current ? (
-                        <span aria-hidden="true" className="absolute -bottom-3 left-1/2 h-0.5 w-[calc(100%+0.5rem)] min-w-10 -translate-x-1/2 rounded-full bg-action shadow-[0_0_12px_rgba(167,139,250,0.72)] sm:min-w-12" />
+                        <ViewTransition name="primary-navigation-indicator" share="auto" default="none">
+                          <span aria-hidden="true" className="absolute -bottom-3 left-1/2 h-0.5 w-[calc(100%+0.5rem)] min-w-10 -translate-x-1/2 rounded-full bg-action shadow-[0_0_12px_rgba(167,139,250,0.72)] sm:min-w-12" />
+                        </ViewTransition>
                       ) : null}
                     </span>
                   </Link>
