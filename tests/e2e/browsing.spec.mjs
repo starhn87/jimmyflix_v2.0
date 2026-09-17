@@ -162,13 +162,20 @@ test('trends show twenty ranked titles and people, forty rediscoveries and compa
       const last = rail.locator('[data-loop-origin="19"] a')
       await expect(last).toHaveAttribute('aria-label', /^Rank 20,/)
       const marker = rail.locator('[data-loop-origin="0"] .media-card-poster > span[aria-hidden]')
-      await expect(marker).toHaveText('#1')
+      await expect(marker).toHaveText('1st')
       await expect(marker).toHaveCSS('height', '24px')
       await expect(marker).toHaveCSS('font-size', '12px')
+      for (const [rank, label] of [[2, '2nd'], [3, '3rd'], [4, '4th'], [11, '11th'], [12, '12th'], [13, '13th'], [20, '20th']]) {
+        await expect(rail.locator(`[data-loop-origin="${rank - 1}"] .media-card-poster > span[aria-hidden]`)).toHaveText(label)
+      }
     }
     await expect(page.locator('#trending-people-rail [data-loop-origin]')).toHaveCount(20)
     await expect(page.locator(`#rediscovery-${window}-rail [data-loop-origin]`)).toHaveCount(40)
   }
   await page.locator('#top-movie-week-rail [data-loop-origin="19"] a').click()
   await expect(page).toHaveURL(/\/en\/movies\/20$/)
+  await page.goto('/ko/trend')
+  for (const rank of [1, 3, 11, 20]) {
+    await expect(page.locator(`#top-movie-day-rail [data-loop-origin="${rank - 1}"] .media-card-poster > span[aria-hidden]`)).toHaveText(`${rank}위`)
+  }
 })

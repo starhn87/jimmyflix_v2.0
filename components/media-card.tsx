@@ -13,6 +13,9 @@ import {
 import type { MediaItem, MediaType } from '@/types/tmdb'
 import type { Locale } from '@/lib/i18n'
 
+const englishOrdinalRules = new Intl.PluralRules('en', { type: 'ordinal' })
+const ordinalSuffixes: Record<string, string> = { one: 'st', two: 'nd', few: 'rd' }
+
 interface MediaCardProps {
   item: MediaItem
   mediaType?: MediaType
@@ -56,8 +59,10 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank 
                 ? 'border-violet-300/30 text-violet-200'
                 : 'border-white/15 text-white/90'
             }`}>
-              <span className="text-[10px] font-normal opacity-60">#</span>
               {rank}
+              <span className="text-[10px] font-normal opacity-70">
+                {locale === 'ko' ? '위' : (ordinalSuffixes[englishOrdinalRules.select(rank)] ?? 'th')}
+              </span>
             </span>
           ) : null}
           {rating ? (
