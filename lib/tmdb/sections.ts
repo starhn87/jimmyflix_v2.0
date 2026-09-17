@@ -50,4 +50,3 @@ export const createSectionRequests = (
     title: definition.title,
     request: loadSection(definition),
   }))
-
