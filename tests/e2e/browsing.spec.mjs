@@ -170,6 +170,8 @@ test('trends show twenty ranked titles and people, forty rediscoveries and compa
       }
     }
     await expect(page.locator('#trending-people-rail [data-loop-origin]')).toHaveCount(20)
+    await expect(page.locator('#trending-people-rail [data-loop-origin="0"] h3')).toHaveText('Actor 3')
+    await expect(page.locator('#trending-people-rail [data-loop-origin="19"] h3')).toHaveText('Actor 22')
     await expect(page.locator(`#rediscovery-${window}-rail [data-loop-origin]`)).toHaveCount(40)
   }
   await page.locator('#top-movie-week-rail [data-loop-origin="19"] a').click()

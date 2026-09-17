@@ -100,7 +100,7 @@ export const getTrendingPeople = async (window: TimeWindow, locale: Locale): Pro
     if (pages.every((page) => page.status === 'rejected')) return { people: [], error: true }
     const seen = new Set<number>()
     const candidates = pages.flatMap((page) => page.status === 'fulfilled' ? page.value.results : []).filter((person) => {
-      if (person.adult || !Number.isInteger(person.id) || person.id <= 0 || seen.has(person.id)) return false
+      if (person.adult || !person.profile_path?.trim() || !Number.isInteger(person.id) || person.id <= 0 || seen.has(person.id)) return false
       seen.add(person.id)
       return true
     })
