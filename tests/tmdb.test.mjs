@@ -3,6 +3,7 @@ import test from 'node:test'
 import { tmdbFetch, sitemapFetchScope, TmdbNotFoundError, TmdbRequestError } from '../lib/tmdb/client.ts'
 import { getMovieDetail, getRelatedTitles } from '../lib/tmdb/detail.ts'
 import { getPagedMediaItems } from '../lib/tmdb/lists.ts'
+import { getStreamingDiscovery } from '../lib/tmdb/streaming.ts'
 import { getTrendingPeople, getTrendingRankingRequests, getTrendingRediscovery } from '../lib/tmdb/trending.ts'
 
 process.env.TMDB_API_KEY = 'test-credential-do-not-log'
@@ -71,6 +72,67 @@ test('a successful empty catalog and a missing second page have different result
   assert.deepEqual(await getPagedMediaItems('movie/popular', {}, {}), { items: [], partial: false })
   failSecond = true
   assert.deepEqual(await getPagedMediaItems('movie/popular', {}, {}), { items: [], partial: true })
+})
+
+test('streaming choices keep Korean movie and TV availability separate from US services', async (t) => {
+  const requests = []
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    if (url.pathname.includes('/discover/')) requests.push(url)
+    return Response.json({ results: url.pathname.includes('/discover/') ? [movie(1)] : [] })
+  })
+  for (const [kind, provider, expected] of [['movie', 350, 350], ['movie', 1883, 1883], ['tv', 1881, 1881], ['movie', 1881, 8], ['tv', 2303, 8]]) {
+    const result = await getStreamingDiscovery(kind, provider, 'ko', 20)
+    assert.equal(result.selectedProviderId, expected)
+    assert.equal(result.section.items.length, 1)
+    assert.ok(!result.providers.some(({ provider_id }) => provider_id === 2303))
+    assert.equal(result.providers.some(({ provider_id }) => provider_id === 1881), kind === 'tv')
+    const request = requests.at(-1)
+    assert.equal(request.pathname, `/3/discover/${kind}`)
+    assert.equal(request.searchParams.get('watch_region'), 'KR')
+    assert.equal(request.searchParams.get('with_watch_providers'), String(expected))
+    assert.equal(request.searchParams.get('with_watch_monetization_types'), 'flatrate')
+  }
+})
+
+test('US subscription tiers share one tab and use OR discovery without channel add-ons', async (t) => {
+  const requests = []
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    if (url.pathname.includes('/discover/')) {
+      requests.push(url)
+      return Response.json({ results: [movie(1)] })
+    }
+    // If the primary tier's metadata is absent, use the sibling tier's logo.
+    return Response.json({ results: [
+      { provider_id: 2616, provider_name: 'Paramount Plus Essential', logo_path: '/paramount.jpg', display_priority: 1 },
+      { provider_id: 387, provider_name: 'Peacock Premium Plus', logo_path: '/peacock.jpg', display_priority: 2 },
+    ] })
+  })
+  for (const kind of ['movie', 'tv']) {
+    for (const [id, name, tiers, logo] of [[2303, 'Paramount+', '2303|2616', '/paramount.jpg'], [386, 'Peacock', '386|387', '/peacock.jpg']]) {
+      const result = await getStreamingDiscovery(kind, id, 'en', 20)
+      const selected = result.providers.filter(({ selected }) => selected)
+      assert.equal(selected.length, 1)
+      assert.equal(selected[0].provider_id, id)
+      assert.equal(selected[0].provider_name, name)
+      assert.equal(selected[0].logo_path, logo)
+      assert.ok(!result.providers.some(({ provider_id }) => [2616, 387].includes(provider_id)))
+      assert.equal(requests.at(-1).searchParams.get('watch_region'), 'US')
+      assert.equal(requests.at(-1).searchParams.get('with_watch_providers'), tiers)
+      assert.match(result.section.title, new RegExp(name.replace('+', '\\+')))
+    }
+  }
+})
+
+test('new streaming tabs and title results survive unavailable provider metadata', async (t) => {
+  t.mock.method(console, 'warn', () => {})
+  t.mock.method(globalThis, 'fetch', async (url) => url.pathname.includes('/watch/providers/')
+    ? new Response('', { status: 503 }) : Response.json({ results: [movie(1)] }))
+  for (const [locale, id, name] of [['ko', 350, 'Apple TV'], ['en', 2303, 'Paramount+']]) {
+    const result = await getStreamingDiscovery('movie', id, locale, 20)
+    assert.equal(result.providers.find(({ selected }) => selected).provider_name, name)
+    assert.deepEqual(result.section.items, [movie(1)])
+    assert.equal(result.section.error, false)
+  }
 })
 
 test('Top 20 rankings load just the first page independently of supplemental sections', async (t) => {

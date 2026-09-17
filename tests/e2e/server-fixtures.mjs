@@ -22,6 +22,12 @@ const detail = (id, kind) => ({
   seasons: kind === 'tv' ? [{ id: 1, season_number: 1, name: 'Season 1', poster_path: poster(1), episode_count: 12 }] : [],
 })
 const list = (url, kind) => ({ results: Array.from({ length: 20 }, (_, i) => item((Number(url.searchParams.get('page') || 1) - 1) * 20 + i + 1, kind)) })
+const providerNames = {
+  8: 'Netflix', 9: 'Prime Video', 15: 'Hulu', 97: 'Watcha', 119: 'Prime Video',
+  337: 'Disney+', 350: 'Apple TV', 356: 'Wavve', 386: 'Peacock Premium',
+  387: 'Peacock Premium Plus', 1881: 'Coupang Play', 1883: 'TVING', 1899: 'HBO Max',
+  2303: 'Paramount Plus Premium', 2616: 'Paramount Plus Essential',
+}
 
 globalThis.fetch = async (input, options) => {
   const url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url)
@@ -31,7 +37,7 @@ globalThis.fetch = async (input, options) => {
   const parts = path.split('/')
   const id = Number(parts[1])
   if (id === 999 && /credits|recommendations|similar|watch\/providers/.test(path)) return new Response('', { status: 503 })
-  if (path.startsWith('watch/providers/')) return Response.json({ results: [8,337,356,97,119,15,9,350].map((provider_id) => ({ provider_id, provider_name: ({8:'Netflix',337:'Disney+'})[provider_id] || `Provider ${provider_id}`, logo_path: '/provider.jpg', display_priority: 1 })) })
+  if (path.startsWith('watch/providers/')) return Response.json({ results: Object.entries(providerNames).map(([id, provider_name]) => ({ provider_id: Number(id), provider_name, logo_path: '/provider.jpg', display_priority: 1 })) })
   if (path.endsWith('/watch/providers')) return Response.json({ results: {} })
   if (path.endsWith('/combined_credits')) return Response.json({ cast: [item(1), item(2, 'tv')], crew: [] })
   if (path.endsWith('/credits')) return Response.json(credits)

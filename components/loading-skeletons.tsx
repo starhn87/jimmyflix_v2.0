@@ -34,7 +34,7 @@ function MediaRailSkeletonVisual({ withToolbar = false, itemCount = 40, title, d
         {withToolbar ? (
           <div className="mt-4">
             <div className={`overflow-hidden ${STREAMING_PROVIDER_LIST_CLASS_NAME}`}>
-              {['w-24', 'w-28', 'w-24', 'w-28', 'w-24'].map((width, index) => (
+              {['w-24', 'w-28', 'w-24', 'w-28', 'w-24', 'w-28', 'w-24', 'w-28'].map((width, index) => (
                 <Bone key={index} className={`h-10 shrink-0 rounded-full ${width}`} />
               ))}
             </div>

@@ -41,6 +41,35 @@ test('system theme is the default, explicit theme and locale survive a return vi
   expect((await context.cookies()).find(({ name }) => name === 'jimmyflix-locale-v1')?.value).toBe('ko')
 })
 
+test('regional streaming tabs include new services and navigate without duplicate subscription tiers', async ({ page }) => {
+  await page.goto('/ko')
+  let picker = page.getByRole('navigation', { name: '스트리밍 서비스 선택' })
+  await expect(picker.getByRole('link', { name: 'Apple TV', exact: true })).toBeVisible()
+  await expect(picker.getByRole('link', { name: 'TVING', exact: true })).toHaveCount(1)
+  await expect(picker.getByRole('link', { name: /Paramount|Coupang/ })).toHaveCount(0)
+  await picker.getByRole('link', { name: 'Apple TV', exact: true }).click()
+  await expect(page).toHaveURL(/\/ko\?provider=350#streaming-movie$/)
+  await expect(page.locator('#streaming-movie-title')).toHaveText('Apple TV 영화')
+  await expect(picker.getByRole('link', { name: 'Apple TV', exact: true })).toHaveAttribute('aria-current', 'true')
+
+  await page.goto('/ko/tv')
+  await picker.getByRole('link', { name: 'Coupang Play', exact: true }).click()
+  await expect(page.locator('#streaming-tv-title')).toHaveText('Coupang Play 시리즈')
+  await expect(picker.getByRole('link', { name: 'Coupang Play', exact: true })).toHaveAttribute('aria-current', 'true')
+
+  await page.goto('/en')
+  picker = page.getByRole('navigation', { name: 'Choose a streaming service' })
+  await expect(picker.getByRole('link', { name: /Premium|Essential/ })).toHaveCount(0)
+  for (const name of ['Paramount+', 'HBO Max', 'Peacock']) {
+    const link = picker.getByRole('link', { name, exact: true })
+    await expect(link).toHaveCount(1)
+    await link.click()
+    await expect(page.locator('#streaming-movie-title')).toHaveText(`Movies on ${name}`)
+    await expect(link).toHaveAttribute('aria-current', 'true')
+    await expect(page.locator('#streaming-movie-rail [data-loop-origin]')).toHaveCount(40)
+  }
+})
+
 test('looped cards remain real links after reaching the end of the rail', async ({ page }) => {
   await page.goto('/en')
   const rail = page.locator('#now-playing-rail')
