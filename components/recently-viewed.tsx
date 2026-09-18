@@ -11,7 +11,8 @@ import {
 import type { Locale } from '@/lib/i18n'
 import type { MediaItem, MediaType } from '@/types/tmdb'
 
-const storageKey = 'jimmyflix-recently-viewed-v1'
+const storageKey = 'jimmyflix-recently-viewed-v2'
+const legacyStorageKey = 'jimmyflix-recently-viewed-v1'
 const updateEvent = 'jimmyflix:recently-viewed'
 const maximumItems = 16
 
@@ -39,31 +40,46 @@ const isRecentMediaItem = (value: unknown): value is RecentMediaItem => {
   )
 }
 
-const readItems = (locale: Locale) => {
+const readItems = () => {
   try {
-    const value = JSON.parse(window.localStorage.getItem(`${storageKey}-${locale}`) || '[]') as unknown
-    return Array.isArray(value) ? value.filter(isRecentMediaItem).slice(0, maximumItems) : []
+    const saved = window.localStorage.getItem(storageKey)
+    if (saved) {
+      const value = JSON.parse(saved) as unknown
+      return Array.isArray(value) ? value.filter(isRecentMediaItem).slice(0, maximumItems) : []
+    }
+
+    const migrated = ['ko', 'en']
+      .flatMap((locale) => {
+        const value = JSON.parse(window.localStorage.getItem(`${legacyStorageKey}-${locale}`) || '[]') as unknown
+        return Array.isArray(value) ? value.filter(isRecentMediaItem) : []
+      })
+      .filter((item, index, items) => items.findIndex((candidate) => (
+        candidate.id === item.id && candidate.media_type === item.media_type
+      )) === index)
+      .slice(0, maximumItems)
+    if (migrated.length) window.localStorage.setItem(storageKey, JSON.stringify(migrated))
+    return migrated
   } catch {
     return []
   }
 }
 
-export function RecentMediaTracker({ item, locale }: { item: RecentMediaItem; locale: Locale }) {
+export function RecentMediaTracker({ item }: { item: RecentMediaItem; locale: Locale }) {
   useEffect(() => {
     const next = [
       item,
-      ...readItems(locale).filter((entry) => (
+      ...readItems().filter((entry) => (
         entry.id !== item.id || entry.media_type !== item.media_type
       )),
     ].slice(0, maximumItems)
 
     try {
-      window.localStorage.setItem(`${storageKey}-${locale}`, JSON.stringify(next))
+      window.localStorage.setItem(storageKey, JSON.stringify(next))
       window.dispatchEvent(new Event(updateEvent))
     } catch {
       // Browsing still works when storage is unavailable.
     }
-  }, [item, locale])
+  }, [item])
 
   return null
 }
@@ -84,7 +100,7 @@ export function RecentlyViewedSection({
   const [items, setItems] = useState<RecentMediaItem[]>([])
 
   useEffect(() => {
-    const update = () => setItems(readItems(locale))
+    const update = () => setItems(readItems())
     update()
     window.addEventListener('storage', update)
     window.addEventListener(updateEvent, update)

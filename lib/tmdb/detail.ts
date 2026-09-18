@@ -2,6 +2,7 @@ import 'server-only'
 
 import { cache } from 'react'
 import type { Locale } from '@/lib/i18n'
+import { getDefaultRegion, type Region } from '@/lib/region'
 import type { CollectionDetail, MediaCredits, MediaDetail, MediaType, PersonDetail, SeasonDetail, WatchProviderRegion, WatchProviderResponse, Video } from '@/types/tmdb'
 import { tmdbFetch, REQUEST_TIMEOUT_MS } from '@/lib/tmdb/client'
 import { getList, CATALOG_ITEM_LIMIT } from '@/lib/tmdb/lists'
@@ -72,13 +73,13 @@ export const getWatchProviders = cache(async (
   mediaType: MediaType,
   id: number,
   locale: Locale,
+  region: Region = getDefaultRegion(locale),
 ): Promise<WatchProviderRegion | null> => {
   const response = await tmdbFetch<WatchProviderResponse>(
     `${mediaType}/${id}/watch/providers`,
     {},
     { locale },
   )
-  const region = locale === 'ko' ? 'KR' : 'US'
   return response.results[region] || null
 })
 

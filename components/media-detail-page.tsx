@@ -18,6 +18,7 @@ import { getMediaDetailRoute, parseDetailRoute } from '@/lib/detail-route'
 import { createPageMetadata } from '@/lib/seo'
 import { getCollection, getCredits, getRelatedTitles, getTvSeasonDetail, getWatchProviders } from '@/lib/tmdb/detail'
 import type { MediaType } from '@/types/tmdb'
+import { getRequestRegion } from '@/lib/server-region'
 
 export interface MediaDetailRouteParams {
   locale: string
@@ -51,9 +52,10 @@ export async function MediaDetailPage({ params, mediaType }: MediaDetailPageProp
   const { locale: rawLocale, id: rawId } = await params
   const { locale, id } = parseDetailRoute(rawLocale, rawId)
   const detailRequest = getMediaDetailRoute(rawLocale, rawId, mediaType)
+  const regionRequest = getRequestRegion(locale)
   const dictionary = getDictionary(locale)
   const creditsRequest = getCredits(mediaType, id, locale)
-  const providersRequest = getWatchProviders(mediaType, id, locale)
+  const providersRequest = regionRequest.then((region) => getWatchProviders(mediaType, id, locale, region))
   const relatedRequest = getRelatedTitles(mediaType, id, locale)
   // The panels consume these promises through separate Suspense boundaries.
   // Observe failures immediately in case the primary detail request returns 404.

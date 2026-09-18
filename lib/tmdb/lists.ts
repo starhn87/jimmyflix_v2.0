@@ -2,6 +2,7 @@ import 'server-only'
 
 import { tmdbFetch, type QueryValue, type TmdbFetchOptions } from '@/lib/tmdb/client'
 import type { Locale } from '@/lib/i18n'
+import { getDefaultRegion, type Region } from '@/lib/region'
 import type { MediaItem, MediaType, TmdbListResponse } from '@/types/tmdb'
 export const CATALOG_ITEM_LIMIT = 40
 export interface MediaListResult { items: MediaItem[]; partial: boolean }
@@ -37,10 +38,14 @@ export const getPagedMediaItems = async (
 export const getList = (path: string, locale: Locale, revalidate?: number) =>
   getPagedMediaItems(path, {}, { revalidate, locale })
 
-export const getRegionalMovieList = (path: string, locale: Locale) =>
+export const getRegionalMovieList = (
+  path: string,
+  locale: Locale,
+  region: Region = getDefaultRegion(locale),
+) =>
   getPagedMediaItems(
     path,
-    { region: locale === 'ko' ? 'KR' : 'US' },
+    { region },
     { locale },
   )
 export const getDiscoverList = async (

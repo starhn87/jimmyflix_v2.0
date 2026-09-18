@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { MenuIcon } from '@/components/icons'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { RegionSwitcher } from '@/components/region-switcher'
 import type { HeaderMessages, Locale } from '@/lib/i18n'
 
 export function MobilePreferences({
@@ -74,6 +75,10 @@ export function MobilePreferences({
           <div className="flex min-h-14 items-center justify-between rounded-xl px-2 hover:bg-tone/5">
             <span className="text-sm font-medium text-muted">{messages.theme}</span>
             <ThemeToggle messages={messages} />
+          </div>
+          <div className="flex min-h-14 items-center justify-between rounded-xl px-2 hover:bg-tone/5">
+            <span className="text-sm font-medium text-muted">{messages.region}</span>
+            <RegionSwitcher locale={locale} messages={messages} />
           </div>
         </div>
       ) : null}

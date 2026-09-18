@@ -111,3 +111,38 @@ export function CloseIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function BookmarkIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} {...props}>
+      <path d="M6.5 3.5h11v17L12 17l-5.5 3.5z" />
+    </svg>
+  )
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} {...props}>
+      <path d="m5 12.5 4.3 4.3L19 7" />
+    </svg>
+  )
+}
+
+export function EyeOffIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} {...props}>
+      <path d="m3 3 18 18M10.6 10.7a2 2 0 0 0 2.7 2.7M9.9 4.2A10.8 10.8 0 0 1 12 4c5.5 0 9 5.2 9 5.2a14.8 14.8 0 0 1-2.2 2.8M6.2 6.2A15.2 15.2 0 0 0 3 9.2s3.5 5.2 9 5.2c.8 0 1.6-.1 2.3-.3" />
+    </svg>
+  )
+}
+
+export function SlidersIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} {...props}>
+      <path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h8M16 18h4" />
+      <circle cx="16" cy="6" r="2" />
+      <circle cx="9" cy="12" r="2" />
+      <circle cx="14" cy="18" r="2" />
+    </svg>
+  )
+}

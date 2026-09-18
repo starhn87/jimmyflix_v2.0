@@ -2,16 +2,17 @@ import 'server-only'
 
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
+import { getDefaultRegion, type Region } from '@/lib/region'
 import type { MediaSectionData, MediaType, StreamingDiscoveryData, WatchProvider, WatchProviderListResponse } from '@/types/tmdb'
 import { tmdbFetch, CACHE_SECONDS } from '@/lib/tmdb/client'
 import { getDiscoverList, CATALOG_ITEM_LIMIT } from '@/lib/tmdb/lists'
 
-const preferredProviderIds: Record<Locale, Record<MediaType, number[]>> = {
-  ko: {
+const preferredProviderIds: Record<Region, Record<MediaType, number[]>> = {
+  KR: {
     movie: [8, 337, 350, 1883, 356, 97, 119],
     tv: [8, 337, 350, 1883, 1881, 356, 97, 119],
   },
-  en: {
+  US: {
     movie: [8, 337, 15, 9, 350, 2303, 1899, 386],
     tv: [8, 337, 15, 9, 350, 2303, 1899, 386],
   },
@@ -39,14 +40,14 @@ const groupedProviderIds: Record<number, number[]> = {
   2303: [2303, 2616],
 }
 
-const getPreferredProviders = async (mediaType: MediaType, locale: Locale) => {
-  const ids = preferredProviderIds[locale][mediaType]
+const getPreferredProviders = async (mediaType: MediaType, locale: Locale, region: Region) => {
+  const ids = preferredProviderIds[region][mediaType]
   let availableProviders: WatchProvider[] = []
 
   try {
     const response = await tmdbFetch<WatchProviderListResponse>(
       `watch/providers/${mediaType}`,
-      { watch_region: locale === 'ko' ? 'KR' : 'US' },
+      { watch_region: region },
       { locale, revalidate: CACHE_SECONDS.reference },
     )
     availableProviders = response.results
@@ -72,17 +73,18 @@ export const getStreamingDiscovery = async (
   requestedProviderId: number | null,
   locale: Locale,
   limit = CATALOG_ITEM_LIMIT,
+  region: Region = getDefaultRegion(locale),
 ): Promise<StreamingDiscoveryData> => {
   const dictionary = getDictionary(locale).sections
-  const preferredIds = preferredProviderIds[locale][mediaType]
+  const preferredIds = preferredProviderIds[region][mediaType]
   const selectedProviderId = requestedProviderId && preferredIds.includes(requestedProviderId)
     ? requestedProviderId
     : preferredIds[0]
-  const providersRequest = getPreferredProviders(mediaType, locale)
+  const providersRequest = getPreferredProviders(mediaType, locale, region)
   const titlesRequest = getDiscoverList(mediaType, {
     sort_by: 'popularity.desc',
     'vote_count.gte': mediaType === 'movie' ? 50 : 25,
-    watch_region: locale === 'ko' ? 'KR' : 'US',
+    watch_region: region,
     with_watch_providers: groupedProviderIds[selectedProviderId]?.join('|') || selectedProviderId,
     with_watch_monetization_types: 'flatrate',
   }, locale, limit)

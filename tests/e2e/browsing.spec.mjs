@@ -70,6 +70,59 @@ test('regional streaming tabs include new services and navigate without duplicat
   }
 })
 
+test('watch region is independent from language and updates regional catalogs', async ({ page, context, isMobile }) => {
+  await page.goto('/en?provider=2303')
+  await preferences(page, isMobile)
+  await page.getByRole('button', { name: 'Switch watch region to South Korea', exact: true }).click()
+
+  await expect.poll(async () => (
+    (await context.cookies()).find(({ name }) => name === 'jimmyflix-region-v1')?.value
+  )).toBe('KR')
+  await expect(page).toHaveURL(/\/en$/)
+  await expect(page.getByRole('navigation', { name: 'Choose a streaming service' })
+    .getByRole('link', { name: 'TVING', exact: true })).toBeVisible()
+
+  await page.goto('/en/discover?kind=movie&provider=8')
+  await expect(page.getByText('Watch region: South Korea', { exact: true })).toBeVisible()
+  await expect(page.getByRole('combobox', { name: 'Streaming service' })
+    .getByRole('option', { name: 'Coupang Play', exact: true })).toHaveCount(1)
+})
+
+test('library actions persist across languages and move titles between statuses', async ({ page }) => {
+  await page.goto('/en')
+  const quickSave = page.locator('#now-playing-rail [data-loop-origin="0"] button').first()
+  await expect(quickSave).toHaveAccessibleName('Add Movie 1 to watchlist')
+  await quickSave.scrollIntoViewIfNeeded()
+  await quickSave.click()
+  await expect(quickSave).toHaveAttribute('aria-pressed', 'true')
+  await expect(quickSave).toHaveAccessibleName('Remove Movie 1 from watchlist')
+
+  await page.goto('/ko/library')
+  await expect(page.getByRole('link', { name: /Movie 1, 영화/ })).toBeVisible()
+  await page.getByRole('link', { name: /Movie 1, 영화/ }).click()
+  await page.getByRole('button', { name: 'Movie 1: 봤어요', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Movie 1: 봤어요 취소', exact: true }))
+    .toHaveAttribute('aria-pressed', 'true')
+
+  await page.getByRole('link', { name: '보관함', exact: true }).click()
+  await page.getByRole('tab', { name: /봤어요 1$/ }).click()
+  await expect(page.getByRole('link', { name: /Movie 1, 영화/ })).toBeVisible()
+  await page.getByRole('tab', { name: /찜 0$/ }).click()
+  await expect(page.getByText('찜 작품이 없습니다.', { exact: true })).toBeVisible()
+})
+
+test('preference finder returns a short list and forty matching titles', async ({ page }) => {
+  await page.goto('/en/discover?kind=movie&genre=28&runtime=120&provider=8&rating=7&sort=popular')
+
+  const picks = page.getByRole('list', { name: 'Three picks to start with', exact: true })
+  const matches = page.getByRole('list', { name: 'All matching titles', exact: true })
+  await expect(picks.locator(':scope > li')).toHaveCount(3)
+  await expect(matches.locator(':scope > li')).toHaveCount(40)
+  await expect(picks.getByRole('link').first()).toHaveAttribute('aria-label', /Movie 1/)
+  await page.getByRole('button', { name: 'Show different picks', exact: true }).click()
+  await expect(picks.getByRole('link').first()).toHaveAttribute('aria-label', /Movie 4/)
+})
+
 test('recycled cards remain real links when moving backward through the start', async ({ page }) => {
   await page.goto('/en')
   const rail = page.locator('#now-playing-rail')

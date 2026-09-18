@@ -8,6 +8,7 @@ import { HeaderSearch, HeaderSearchControl } from '@/components/header-search'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MobilePreferences } from '@/components/mobile-preferences'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { RegionSwitcher } from '@/components/region-switcher'
 import { getLocalePath, type HeaderMessages, type Locale } from '@/lib/i18n'
 
 export function SiteHeader({ locale, messages }: { locale: Locale; messages: HeaderMessages }) {
@@ -17,6 +18,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
     { href: '/', label: messages.movies, match: routePath === '/' || routePath.startsWith('/movies') },
     { href: '/tv', label: messages.tv, match: routePath.startsWith('/tv') },
     { href: '/trend', label: messages.trend, match: routePath.startsWith('/trend') },
+    { href: '/library', label: messages.library, match: routePath.startsWith('/library') || routePath.startsWith('/discover') },
   ]
 
   return (
@@ -81,6 +83,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
         <div className="order-4 flex items-center">
           <MobilePreferences locale={locale} messages={messages} />
           <div className="hidden items-center gap-2 sm:flex">
+            <RegionSwitcher locale={locale} messages={messages} />
             <LocaleSwitcher
               locale={locale}
               label={messages.switchLanguage}

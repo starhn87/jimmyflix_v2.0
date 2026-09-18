@@ -9,6 +9,7 @@ import { RecentlyViewedSection } from '@/components/recently-viewed'
 import { StreamingProviderSection } from '@/components/streaming-provider-section'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
+import type { Region } from '@/lib/region'
 import { getMovieSectionRequests, getTvSectionRequests } from '@/lib/tmdb/catalog'
 import { getStreamingDiscovery } from '@/lib/tmdb/streaming'
 import type { MediaType } from '@/types/tmdb'
@@ -18,6 +19,7 @@ interface CatalogPageProps {
   locale: Locale
   mediaType: MediaType
   requestedProviderId: number | null
+  region: Region
 }
 
 const getSectionLoadingLabel = (title: string, locale: Locale) => (
@@ -36,14 +38,14 @@ export function getCatalogMetadata(locale: Locale, mediaType: MediaType): Metada
   })
 }
 
-export function CatalogPage({ locale, mediaType, requestedProviderId }: CatalogPageProps) {
+export function CatalogPage({ locale, mediaType, requestedProviderId, region }: CatalogPageProps) {
   const dictionary = getDictionary(locale)
   const catalog = mediaType === 'movie' ? dictionary.movies : dictionary.tv
   const sections = mediaType === 'movie'
-    ? getMovieSectionRequests(locale)
-    : getTvSectionRequests(locale)
+    ? getMovieSectionRequests(locale, region)
+    : getTvSectionRequests(locale, region)
   const [leadSection, ...remainingSections] = sections
-  const streamingRequest = getStreamingDiscovery(mediaType, requestedProviderId, locale)
+  const streamingRequest = getStreamingDiscovery(mediaType, requestedProviderId, locale, undefined, region)
   const basePath = mediaType === 'movie' ? '/' : '/tv'
 
   return (
@@ -56,6 +58,7 @@ export function CatalogPage({ locale, mediaType, requestedProviderId }: CatalogP
           heading={catalog.heading}
           errorTitle={catalog.unavailable}
           locale={locale}
+          region={region}
         />
       </Suspense>
       <div className={CATALOG_RAIL_STACK_CLASS_NAME}>

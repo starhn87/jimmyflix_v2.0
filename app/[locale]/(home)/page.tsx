@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { CatalogPage, getCatalogMetadata } from '@/components/catalog-page'
 import { isLocale } from '@/lib/i18n'
 import { parsePositiveInteger } from '@/lib/params'
+import { getRequestRegion } from '@/lib/server-region'
 
 export const revalidate = 1800
 
@@ -19,11 +20,13 @@ export async function generateMetadata({ params }: MoviesPageProps): Promise<Met
 export default async function MoviesPage({ params, searchParams }: MoviesPageProps) {
   const [{ locale }, query] = await Promise.all([params, searchParams])
   if (!isLocale(locale)) return null
+  const region = await getRequestRegion(locale)
   return (
     <CatalogPage
       locale={locale}
       mediaType="movie"
       requestedProviderId={parsePositiveInteger(query.provider)}
+      region={region}
     />
   )
 }

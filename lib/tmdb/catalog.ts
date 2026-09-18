@@ -3,6 +3,7 @@ import 'server-only'
 import { cache } from 'react'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
+import { getDefaultRegion, getRegionTimeZone, type Region } from '@/lib/region'
 import type { MediaImages, MediaItem, MediaType, TmdbListResponse, TmdbImage } from '@/types/tmdb'
 import { CACHE_SECONDS, REQUEST_TIMEOUT_MS, tmdbFetch, type QueryValue } from '@/lib/tmdb/client'
 import { createSectionRequests } from '@/lib/tmdb/sections'
@@ -53,12 +54,16 @@ const resolveCatalogHeroBackdrop = cache(async (item: MediaItem, mediaType: Medi
   }
 })
 
-export const getCatalogFeaturedItem = cache(async (mediaType: MediaType, locale: Locale) => {
+export const getCatalogFeaturedItem = cache(async (
+  mediaType: MediaType,
+  locale: Locale,
+  region: Region = getDefaultRegion(locale),
+) => {
   try {
     // Share the first catalog fetch; the hero does not need to wait for page two.
     const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
       mediaType === 'movie' ? 'movie/now_playing' : 'tv/on_the_air',
-      { ...(mediaType === 'movie' ? { region: locale === 'ko' ? 'KR' : 'US' } : {}), page: 1 },
+      { ...(mediaType === 'movie' ? { region } : {}), page: 1 },
       { locale },
     )
     const candidates = response.results.filter((item) => item.backdrop_path).slice(0, 12)
@@ -104,20 +109,20 @@ const movieThemeSpotlights: LocalizedSpotlight[] = [
 interface DiscoverySpotlight {
   id: string
   name: Record<Locale, string>
-  query: (locale: Locale) => Record<string, QueryValue>
+  query: (locale: Locale, region: Region) => Record<string, QueryValue>
 }
 
 const movieLensSpotlights: DiscoverySpotlight[] = [
   {
     id: 'family-night',
     name: { en: 'Family movie night', ko: '온 가족 영화' },
-    query: (locale) => ({
+    query: (_locale, region) => ({
       sort_by: 'popularity.desc',
       'vote_average.gte': 6,
       'vote_count.gte': 100,
-      region: locale === 'ko' ? 'KR' : 'US',
-      certification_country: locale === 'ko' ? 'KR' : 'US',
-      certification: locale === 'ko' ? 'ALL' : 'G|PG',
+      region,
+      certification_country: region,
+      certification: region === 'KR' ? 'ALL' : 'G|PG',
     }),
   },
   ...[
@@ -179,8 +184,8 @@ export const getDailyRotationIndex = (itemCount: number, cadenceDays = 1) => {
 const getRotatingSpotlight = <T,>(items: T[], cadenceDays = 1) =>
   items[getDailyRotationIndex(items.length, cadenceDays)]
 
-const getRegionalReleaseCalendar = async (locale: Locale) => {
-  const timeZone = locale === 'ko' ? 'Asia/Seoul' : 'America/New_York'
+const getRegionalReleaseCalendar = async (locale: Locale, region: Region) => {
+  const timeZone = getRegionTimeZone(region)
   const dateParts = new Intl.DateTimeFormat('en-US', {
     timeZone,
     year: 'numeric',
@@ -202,7 +207,7 @@ const getRegionalReleaseCalendar = async (locale: Locale) => {
 
   const result = await getDiscoverList('movie', {
     sort_by: 'popularity.desc',
-    region: locale === 'ko' ? 'KR' : 'US',
+    region,
     with_release_type: '2|3',
     'release_date.gte': from,
     'release_date.lte': to,
@@ -217,7 +222,10 @@ const getRegionalReleaseCalendar = async (locale: Locale) => {
   return { ...result, items }
 }
 
-export const getMovieSectionRequests = (locale: Locale) => {
+export const getMovieSectionRequests = (
+  locale: Locale,
+  region: Region = getDefaultRegion(locale),
+) => {
   const dictionary = getDictionary(locale).sections
   const [nowPlaying, , upcoming] = dictionary.movie
   const country = getRotatingSpotlight(countrySpotlights, 7)
@@ -231,7 +239,7 @@ export const getMovieSectionRequests = (locale: Locale) => {
     {
       ...nowPlaying,
       mediaType: 'movie',
-      load: () => getRegionalMovieList('movie/now_playing', locale),
+      load: () => getRegionalMovieList('movie/now_playing', locale, region),
     },
     {
       id: 'hidden-gem-movies',
@@ -285,18 +293,21 @@ export const getMovieSectionRequests = (locale: Locale) => {
       title: dictionary.movieLensSpotlight(lensName),
       description: dictionary.movieLensSpotlightDescription(lensName),
       mediaType: 'movie',
-      load: () => getDiscoverList('movie', lens.query(locale), locale),
+      load: () => getDiscoverList('movie', lens.query(locale, region), locale),
     },
     {
       ...upcoming,
       description: dictionary.releaseCalendarDescription,
       mediaType: 'movie',
-      load: () => getRegionalReleaseCalendar(locale),
+      load: () => getRegionalReleaseCalendar(locale, region),
     },
   ])
 }
 
-export const getTvSectionRequests = (locale: Locale) => {
+export const getTvSectionRequests = (
+  locale: Locale,
+  region: Region = getDefaultRegion(locale),
+) => {
   const dictionary = getDictionary(locale).sections
   const [, , onTheAir, airingToday] = dictionary.tv
   const country = getRotatingSpotlight(countrySpotlights, 7)
@@ -364,7 +375,7 @@ export const getTvSectionRequests = (locale: Locale) => {
       title: dictionary.tvFormatSpotlight(formatName),
       description: dictionary.tvFormatSpotlightDescription(formatName),
       mediaType: 'tv',
-      load: () => getDiscoverList('tv', format.query(locale), locale),
+      load: () => getDiscoverList('tv', format.query(locale, region), locale),
     },
     {
       ...airingToday,

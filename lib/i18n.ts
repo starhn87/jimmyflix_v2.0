@@ -32,6 +32,7 @@ export interface HeaderMessages {
   movies: string
   tv: string
   trend: string
+  library: string
   openSearch: string
   closeSearch: string
   searchLabel: string
@@ -47,4 +48,7 @@ export interface HeaderMessages {
   closeSettings: string
   language: string
   theme: string
+  region: string
+  switchRegionKorea: string
+  switchRegionUnitedStates: string
 }

@@ -6,6 +6,7 @@ import { DetailTabs, type DetailTab } from '@/components/detail-tabs'
 import { GalleryPanel } from '@/components/detail/gallery-panel'
 import { StarIcon } from '@/components/icons'
 import { RecentMediaTracker } from '@/components/recently-viewed'
+import { LibraryActions } from '@/components/library-actions'
 import { JsonLd } from '@/components/json-ld'
 import { getBreadcrumbJsonLd, getMediaJsonLd } from '@/lib/structured-data'
 import { getDictionary } from '@/lib/dictionaries'
@@ -115,7 +116,7 @@ export function DetailView({
         }}
       />
       {backdrop ? (
-        <div className="absolute inset-x-0 top-0 -z-30 hidden aspect-video overflow-hidden bg-surface md:block">
+        <div className="absolute inset-x-0 top-0 -z-30 h-px overflow-hidden bg-surface opacity-0 md:aspect-video md:h-auto md:opacity-100">
           <Image
             src={backdrop}
             alt=""
@@ -175,6 +176,7 @@ export function DetailView({
               </li>
             ) : null}
           </ul>
+          <LibraryActions item={detail} mediaType={mediaType} locale={locale} />
         </header>
 
         <div className="mt-6 min-w-0 sm:col-span-2 sm:mt-0 lg:col-span-1 lg:col-start-2">

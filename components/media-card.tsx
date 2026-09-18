@@ -12,6 +12,7 @@ import {
 } from '@/lib/media'
 import type { MediaItem, MediaType } from '@/types/tmdb'
 import type { Locale } from '@/lib/i18n'
+import { LibraryQuickAction } from '@/components/library-actions'
 
 const englishOrdinalRules = new Intl.PluralRules('en', { type: 'ordinal' })
 const ordinalSuffixes: Record<string, string> = { one: 'st', two: 'nd', few: 'rd' }
@@ -34,13 +35,13 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank 
     : (locale === 'ko' ? 'TV 프로그램' : 'TV show')
 
   return (
-    <Link
-      href={getMediaHref(item, type, locale)}
-      prefetch={false}
-      aria-label={[rank ? (locale === 'ko' ? `${rank}위` : `Rank ${rank}`) : null, title, typeLabel, year, rating?.label].filter(Boolean).join(', ')}
-      className="media-card group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
-    >
-      <article className="min-w-0">
+    <article className="group/library relative min-w-0">
+      <Link
+        href={getMediaHref(item, type, locale)}
+        prefetch={false}
+        aria-label={[rank ? (locale === 'ko' ? `${rank}위` : `Rank ${rank}`) : null, title, typeLabel, year, rating?.label].filter(Boolean).join(', ')}
+        className="media-card group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
+      >
         <div className="media-card-poster relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media">
           <Image
             src={getPosterUrl(item.poster_path)}
@@ -84,7 +85,8 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank 
           </h3>
           <p className="mt-1 truncate text-xs text-faint">{year}</p>
         </div>
-      </article>
-    </Link>
+      </Link>
+      <LibraryQuickAction item={item} mediaType={type} locale={locale} />
+    </article>
   )
 }
