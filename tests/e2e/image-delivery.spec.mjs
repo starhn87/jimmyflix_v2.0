@@ -9,8 +9,12 @@ async function expectCdnImage(image) {
   ))).toBe(true)
 }
 
-test('an unavailable image optimizer falls back to CDN sources across media views', async ({ page, isMobile }) => {
-  await page.route('**/_next/image?**', (route) => route.fulfill({ status: 402, body: 'OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED' }))
+test('external media loads directly without exposing an unavailable image optimizer', async ({ page, isMobile }) => {
+  const optimizerRequests = []
+  await page.route('**/_next/image?**', (route) => {
+    optimizerRequests.push(route.request().url())
+    return route.fulfill({ status: 402, body: 'OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED' })
+  })
   await page.route(/^https:\/\/(image\.tmdb\.org|i\.ytimg\.com)\//, (route) => route.fulfill({ contentType: 'image/svg+xml', body: picture }))
 
   await page.goto('/en')
@@ -33,10 +37,24 @@ test('an unavailable image optimizer falls back to CDN sources across media view
   const placeholder = page.getByAltText('Movie 996 poster', { exact: true }).first()
   await expect(placeholder).toHaveAttribute('src', '/images/defaultPoster.png')
   await expect.poll(() => placeholder.evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true)
+  expect(optimizerRequests).toEqual([])
 })
 
-test('a failed CDN fallback settles on the existing error UI without repeated requests', async ({ page }) => {
+test('a failed CDN image settles on the existing error UI without repeated requests', async ({ page }) => {
   let sourceRequests = 0
+  await page.addInitScript(() => {
+    window.__failedImagePresentation = []
+    document.addEventListener('error', (event) => {
+      if (!(event.target instanceof HTMLImageElement)) return
+      const image = event.target
+      setTimeout(() => {
+        window.__failedImagePresentation.push({
+          color: image.style.color,
+          visibility: image.style.visibility,
+        })
+      }, 0)
+    }, true)
+  })
   await page.route('**/_next/image?**', (route) => route.fulfill({ status: 402, body: 'OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED' }))
   await page.route(/^https:\/\/(image\.tmdb\.org|i\.ytimg\.com)\//, (route) => {
     if (route.request().url().endsWith('/fixture-1000.jpg')) {
@@ -52,9 +70,11 @@ test('a failed CDN fallback settles on the existing error UI without repeated re
   await expect(fallback).toBeVisible()
   await expect(fallback.locator('..')).toHaveAttribute('aria-busy', 'false')
   expect(sourceRequests).toBe(1)
+  const failedPresentation = await page.evaluate(() => window.__failedImagePresentation)
+  expect(failedPresentation).toContainEqual({ color: 'transparent', visibility: 'hidden' })
 })
 
-test('detail images match their columns and hidden mobile backdrops make no image request', async ({ browser, isMobile }) => {
+test('detail media bypasses transformations and hidden mobile backdrops make no image request', async ({ browser, isMobile }) => {
   const context = await browser.newContext({ viewport: { width: isMobile ? 390 : 1440, height: 1000 }, deviceScaleFactor: isMobile ? 3 : 2 })
   const page = await context.newPage()
   const requests = []
@@ -66,14 +86,16 @@ test('detail images match their columns and hidden mobile backdrops make no imag
     await page.goto('http://localhost:3100/en/tv/1')
     const trailer = page.locator('img[src*="ytimg"]')
     await trailer.scrollIntoViewIfNeeded()
-    await expect.poll(async () => trailer.evaluate((image) => new URL(image.currentSrc).searchParams.get('w'))).toBe(isMobile ? '1280' : '1920')
+    await expect.poll(async () => trailer.evaluate((image) => image.currentSrc)).toBe('https://i.ytimg.com/vi/abcdefghijk/maxresdefault.jpg')
     if (isMobile) {
       await expect.poll(() => page.locator('main picture img').evaluate((image) => image.currentSrc.startsWith('data:image/svg+xml'))).toBe(true)
       expect(requests.some((url) => url.includes('/backdrop-1.jpg'))).toBe(false)
+    } else {
+      await expect.poll(() => page.locator('main picture img').evaluate((image) => image.currentSrc)).toBe('https://image.tmdb.org/t/p/original/backdrop-1.jpg')
     }
     await page.getByRole('tab', { name: 'Production', exact: true }).click()
     await expect(page.getByAltText('Studio One')).toHaveAttribute('src', 'https://image.tmdb.org/t/p/w185/studio.jpg')
-    expect(requests.filter((url) => url.includes('/_next/image')).every((url) => !url.includes('flagcdn.com') && !url.includes('/studio.jpg'))).toBe(true)
+    expect(requests.some((url) => url.includes('/_next/image'))).toBe(false)
   } finally {
     await context.close()
   }

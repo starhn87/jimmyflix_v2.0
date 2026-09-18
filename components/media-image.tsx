@@ -1,26 +1,26 @@
 'use client'
 
 import Image, { type ImageProps } from 'next/image'
-import { useState } from 'react'
 
-export function MediaImage({ src, alt, unoptimized, onError, ...props }: ImageProps) {
-  const [failedSource, setFailedSource] = useState<ImageProps['src'] | null>(null)
-  // Local fallback artwork is only a few KB and needs no transformation.
-  const useSource = unoptimized || (typeof src === 'string' && src.startsWith('/images/')) || failedSource === src
+export function MediaImage({ src, alt, unoptimized, onError, style, ...props }: ImageProps) {
+  const isDirectSource = typeof src === 'string' && (
+    src.startsWith('/images/') ||
+    /^https:\/\/(image\.tmdb\.org|i\.ytimg\.com)\//.test(src)
+  )
 
   return (
     <Image
       {...props}
       src={src}
       alt={alt}
-      unoptimized={useSource}
+      // These CDNs already provide stable, long-lived media URLs. Going direct
+      // also prevents an exhausted optimizer quota from flashing a broken URL
+      // before client-side error handling is available.
+      unoptimized={unoptimized || isDirectSource}
+      style={{ ...style, color: 'transparent' }}
       onError={(event) => {
-        // An optimizer outage or quota limit should not hide a working CDN image.
-        // Retry the source once, then let the caller show its usual error state.
-        if (!useSource && typeof src === 'string' && /^https:\/\/(image\.tmdb\.org|i\.ytimg\.com)\//.test(src)) {
-          setFailedSource(src)
-          return
-        }
+        // Keep a missing source from painting the browser's broken-image UI.
+        event.currentTarget.style.visibility = 'hidden'
         onError?.(event)
       }}
     />
