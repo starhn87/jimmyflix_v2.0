@@ -125,6 +125,9 @@ export function createLoopingRail(rail: HTMLElement, onLoopChange: (enabled: boo
 
   const pointerEnd = (event: PointerEvent) => {
     if (!pointer || pointer.id !== event.pointerId) return
+    // Touch starts with implicit capture on the image. Its bubbling loss of capture
+    // when we take over is not the end of the drag on the rail.
+    if (event.type === 'lostpointercapture' && event.target !== rail) return
     const dragged = pointer.dragging
     if (event.type === 'pointercancel' || event.timeStamp - pointer.time > 100) velocity = 0
     releasePointer()

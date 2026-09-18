@@ -118,12 +118,19 @@ test('touch swipes cross both seams repeatedly without blank frames or opening a
     await auditMotion(rail, direction)
     for (let swipe = 0; swipe < 26; swipe++) {
       const start = direction === 1 ? box.width - 30 : 30
+      const trackFinger = direction === -1 && swipe === 0
+      const firstCard = rail.locator('[data-loop-origin="0"]')
+      const startX = trackFinger ? (await firstCard.boundingBox()).x : 0
       await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: start, y }] })
       for (let step = 1; step <= 6; step++) {
         await page.waitForTimeout(16)
         await client.send('Input.dispatchTouchEvent', {
           type: 'touchMove', touchPoints: [{ x: start - direction * step * (box.width - 60) / 6, y }],
         })
+        if (trackFinger) {
+          const expectedX = startX - direction * step * (box.width - 60) / 6
+          await expect.poll(async () => Math.abs((await firstCard.boundingBox()).x - expectedX)).toBeLessThan(1)
+        }
       }
       await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
       await page.waitForTimeout(700)
