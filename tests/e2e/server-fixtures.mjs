@@ -15,7 +15,7 @@ const credits = {
   crew: Array.from({ length: 45 }, (_, i) => ({ id: 2000 + i, name: `Crew ${i + 1}`, original_name: `Crew ${i + 1}`, job: i % 2 ? 'Producer' : 'Director', department: i % 2 ? 'Production' : 'Directing', profile_path: poster(2000 + i) })),
 }
 const detail = (id, kind) => ({
-  ...item(id, kind), runtime: 120, genres: [{ id: 12, name: 'Adventure' }], videos: id === 997 ? { results: [] } : videos,
+  ...item(id, kind), poster_path: id === 996 ? null : poster(id), runtime: 120, genres: [{ id: 12, name: 'Adventure' }], videos: id === 997 ? { results: [] } : videos,
   images: { backdrops: Array.from({ length: 20 }, (_, i) => ({ file_path: `/gallery-${i + 1}.jpg`, width: 1920, height: 1080 })) },
   keywords: { keywords: [] }, production_companies: [{ id: 1, name: 'Studio One', logo_path: '/studio.jpg' }],
   production_countries: [{ iso_3166_1: 'KR', name: 'South Korea' }],

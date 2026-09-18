@@ -28,6 +28,11 @@ test('an unavailable image optimizer falls back to CDN sources across media view
 
   await page.goto('/en/people/1000')
   await expectCdnImage(page.locator('main img').first())
+
+  await page.goto('/en/movies/996')
+  const placeholder = page.getByAltText('Movie 996 poster', { exact: true }).first()
+  await expect(placeholder).toHaveAttribute('src', '/images/defaultPoster.png')
+  await expect.poll(() => placeholder.evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true)
 })
 
 test('a failed CDN fallback settles on the existing error UI without repeated requests', async ({ page }) => {

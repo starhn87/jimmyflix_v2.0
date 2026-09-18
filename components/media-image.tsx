@@ -5,7 +5,8 @@ import { useState } from 'react'
 
 export function MediaImage({ src, alt, unoptimized, onError, ...props }: ImageProps) {
   const [failedSource, setFailedSource] = useState<ImageProps['src'] | null>(null)
-  const useSource = unoptimized || failedSource === src
+  // Local fallback artwork is only a few KB and needs no transformation.
+  const useSource = unoptimized || (typeof src === 'string' && src.startsWith('/images/')) || failedSource === src
 
   return (
     <Image
