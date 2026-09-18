@@ -149,6 +149,7 @@ export interface StreamingDiscoveryData {
   section: MediaSectionData
   providers: StreamingProviderOption[]
   selectedProviderId: number
+  fetchedAt: number
 }
 
 export interface Season {

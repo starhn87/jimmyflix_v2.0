@@ -6,17 +6,7 @@ import { getDefaultRegion, type Region } from '@/lib/region'
 import type { MediaSectionData, MediaType, StreamingDiscoveryData, WatchProvider, WatchProviderListResponse } from '@/types/tmdb'
 import { tmdbFetch, CACHE_SECONDS } from '@/lib/tmdb/client'
 import { getDiscoverList, CATALOG_ITEM_LIMIT } from '@/lib/tmdb/lists'
-
-const preferredProviderIds: Record<Region, Record<MediaType, number[]>> = {
-  KR: {
-    movie: [8, 337, 350, 1883, 356, 97, 119],
-    tv: [8, 337, 350, 1883, 1881, 356, 97, 119],
-  },
-  US: {
-    movie: [8, 337, 15, 9, 350, 2303, 1899, 386],
-    tv: [8, 337, 15, 9, 350, 2303, 1899, 386],
-  },
-}
+import { streamingProviderIds } from '@/lib/streaming'
 
 const providerFallbacks: Record<number, Pick<WatchProvider, 'provider_id' | 'provider_name' | 'logo_path' | 'display_priority'>> = {
   8: { provider_id: 8, provider_name: 'Netflix', logo_path: null, display_priority: 0 },
@@ -41,7 +31,7 @@ const groupedProviderIds: Record<number, number[]> = {
 }
 
 const getPreferredProviders = async (mediaType: MediaType, locale: Locale, region: Region) => {
-  const ids = preferredProviderIds[region][mediaType]
+  const ids = streamingProviderIds[region][mediaType]
   let availableProviders: WatchProvider[] = []
 
   try {
@@ -76,7 +66,7 @@ export const getStreamingDiscovery = async (
   region: Region = getDefaultRegion(locale),
 ): Promise<StreamingDiscoveryData> => {
   const dictionary = getDictionary(locale).sections
-  const preferredIds = preferredProviderIds[region][mediaType]
+  const preferredIds = streamingProviderIds[region][mediaType]
   const selectedProviderId = requestedProviderId && preferredIds.includes(requestedProviderId)
     ? requestedProviderId
     : preferredIds[0]
@@ -112,6 +102,7 @@ export const getStreamingDiscovery = async (
   return {
     section,
     selectedProviderId,
+    fetchedAt: Date.now(),
     providers: providers.map((provider) => ({
       ...provider,
       selected: provider.provider_id === selectedProviderId,

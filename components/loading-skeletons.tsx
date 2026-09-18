@@ -4,13 +4,12 @@ import {
   MEDIA_RAIL_HEADER_CLASS_NAME,
   MEDIA_RAIL_TITLE_CLASS_NAME,
   MEDIA_RAIL_DESCRIPTION_CLASS_NAME,
-  MEDIA_RAIL_ITEM_CLASS_NAME,
-  MEDIA_RAIL_SKELETON_LIST_CLASS_NAME,
   STREAMING_PROVIDER_LIST_CLASS_NAME,
 } from '@/components/media-rail-styles'
 import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME, PERSON_TITLE_CLASS_NAME } from '@/components/person-view-styles'
 import { DETAIL_RAIL_HEADER, DETAIL_RAIL_TRACK, PERSON_RAIL_ITEM, PERSON_CARD_NAME, PERSON_CARD_ROLE } from '@/components/detail-rail-styles'
 import { PEOPLE_PREVIEW_LIMIT } from '@/lib/detail-people'
+import { MediaRailSkeletonCards } from '@/components/media-rail-skeleton'
 
 const searchPlaceholders = Array.from({ length: 14 })
 const linePlaceholders = Array.from({ length: 3 })
@@ -41,20 +40,7 @@ function MediaRailSkeletonVisual({ withToolbar = false, itemCount = 40, title, d
           </div>
         ) : null}
       </div>
-      <ul className={MEDIA_RAIL_SKELETON_LIST_CLASS_NAME}>
-        {Array.from({ length: itemCount }, (_, index) => (
-          <li
-            key={index}
-            className={MEDIA_RAIL_ITEM_CLASS_NAME}
-          >
-            <Bone className="aspect-2/3 w-full rounded-xl" />
-            <div className="mt-3 min-h-15">
-              <Bone className="h-4 w-4/5 rounded-md" />
-              <Bone className="mt-1 h-4 w-2/5 rounded-md" />
-            </div>
-          </li>
-        ))}
-      </ul>
+      <MediaRailSkeletonCards itemCount={itemCount} />
     </section>
   )
 }

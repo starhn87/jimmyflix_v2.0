@@ -18,12 +18,12 @@ async function expectAligned(picker, link) {
 }
 
 for (const kind of ['movie', 'tv']) {
-  test(`${kind} provider selection animates before delayed results without replacing the current cards`, async ({ page }) => {
+  test(`${kind} provider selection shows matching skeletons once and reuses visited lists`, async ({ page }) => {
     const path = kind === 'movie' ? '/en' : '/en/tv'
     let releaseResults
     const gate = new Promise((resolve) => { releaseResults = resolve })
-    await page.route((url) => url.pathname === path && url.searchParams.get('provider') === '350', async (route) => {
-      if (route.request().headers().rsc === '1') await gate
+    await page.route((url) => url.pathname === '/api/streaming' && url.searchParams.get('kind') === kind && url.searchParams.get('provider') === '350', async (route) => {
+      await gate
       await route.continue()
     })
     await page.goto(path)
@@ -34,7 +34,8 @@ for (const kind of ['movie', 'tv']) {
     await expect(track.locator('[data-loop-origin]')).toHaveCount(40)
     await picker.scrollIntoViewIfNeeded()
     await expectAligned(picker, picker.getByRole('link', { name: 'Netflix', exact: true }))
-    await track.evaluate((element) => { window.streamingTrackBeforeNavigation = element })
+    const before = await track.boundingBox()
+    const skeleton = page.locator('[data-streaming-skeleton]')
 
     try {
       await target.click()
@@ -42,10 +43,13 @@ for (const kind of ['movie', 'tv']) {
       await expect(picker).toHaveAttribute('aria-busy', 'true')
       await expect(target).toHaveAttribute('aria-current', 'true')
       await expectAligned(picker, target)
-      await expect(title).toContainText('Netflix')
-      await expect(track).toBeVisible()
-      expect(await track.evaluate((element) => element === window.streamingTrackBeforeNavigation)).toBe(true)
-      await expect(page.locator('.media-rail-transition')).toHaveCSS('opacity', '0.65')
+      await expect(title).toContainText('Apple TV')
+      await expect(track).toHaveCount(0)
+      await expect(skeleton).toBeVisible()
+      const after = await skeleton.locator('ul').boundingBox()
+      expect(Math.abs(before.height - after.height)).toBeLessThanOrEqual(1)
+      expect(Math.abs(before.width - after.width)).toBeLessThanOrEqual(1)
+      await expect(skeleton.locator('li')).toHaveCount(40)
     } finally {
       releaseResults()
     }
@@ -61,14 +65,27 @@ for (const kind of ['movie', 'tv']) {
     await expect(title).toContainText('Netflix')
     await expect(picker).toHaveAttribute('data-selected', '8')
     await expectAligned(picker, picker.getByRole('link', { name: 'Netflix', exact: true }))
+
+    let duplicateRequests = 0
+    page.on('request', (request) => { if (request.url().includes('/api/streaming')) duplicateRequests++ })
+    await page.evaluate(() => {
+      window.streamingSkeletonFlashes = 0
+      new MutationObserver(() => { if (document.querySelector('[data-streaming-skeleton]')) window.streamingSkeletonFlashes++ }).observe(document.querySelector('.streaming-provider-section'), { childList: true, subtree: true })
+    })
+    await target.click()
+    await expect(title).toContainText('Apple TV')
+    await expect(track.locator('[data-loop-origin]')).toHaveCount(40)
+    await expect(skeleton).toHaveCount(0)
+    expect(await page.evaluate(() => window.streamingSkeletonFlashes)).toBe(0)
+    expect(duplicateRequests).toBe(0)
   })
 }
 
 test('the latest provider choice wins when requests complete out of order', async ({ page }) => {
   let releaseApple
   const appleGate = new Promise((resolve) => { releaseApple = resolve })
-  await page.route((url) => url.pathname === '/en' && url.searchParams.get('provider') === '350', async (route) => {
-    if (route.request().headers().rsc === '1') await appleGate
+  await page.route((url) => url.pathname === '/api/streaming' && url.searchParams.get('provider') === '350', async (route) => {
+    await appleGate
     await route.continue()
   })
   await page.goto('/en')
@@ -107,4 +124,23 @@ test('the provider highlight follows horizontally scrolled tabs and respects red
   expect(durations.split(',').every((duration) => parseFloat(duration) < 0.001)).toBe(true)
   const viewport = await page.evaluate(() => ({ width: innerWidth, content: document.documentElement.scrollWidth }))
   expect(viewport.content).toBeLessThanOrEqual(viewport.width)
+})
+
+test('a failed list keeps its tabs usable and retries instead of caching the error', async ({ page }) => {
+  let fail = true
+  await page.route((url) => url.pathname === '/api/streaming' && url.searchParams.get('provider') === '350', (route) => (
+    fail ? route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"Unavailable"}' }) : route.continue()
+  ))
+  await page.goto('/en')
+  const picker = page.getByRole('navigation', { name: 'Choose a streaming service' })
+  await expect(picker.locator('ul')).toHaveAttribute('data-indicator-ready', '')
+  await picker.getByRole('link', { name: 'Apple TV', exact: true }).click()
+  const section = page.locator('.streaming-provider-section')
+  await expect(section.getByRole('alert')).toBeVisible()
+  await expect(picker).toBeVisible()
+  fail = false
+  await section.getByRole('button', { name: 'Try again', exact: true }).click()
+  await expect(section.getByRole('alert')).toHaveCount(0)
+  await expect(section.locator('[data-loop-origin]')).toHaveCount(40)
+  await expect(picker).toHaveAttribute('aria-busy', 'false')
 })

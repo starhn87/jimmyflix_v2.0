@@ -66,7 +66,7 @@ export function CatalogPage({ locale, mediaType, requestedProviderId, region }: 
           <AsyncMediaSection request={leadSection.request} locale={locale} />
         </Suspense>
         <Suspense fallback={<MediaSectionSkeleton label={dictionary.sections.loadingStreaming} withToolbar />}>
-          <StreamingProviderSection request={streamingRequest} locale={locale} basePath={basePath} />
+          <StreamingProviderSection request={streamingRequest} locale={locale} region={region} basePath={basePath} />
         </Suspense>
         {remainingSections.map((section) => (
           <Suspense

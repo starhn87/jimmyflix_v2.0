@@ -1,57 +1,37 @@
 import 'server-only'
 
-import Link from 'next/link'
-import { MediaSection } from '@/components/media-section'
-import { StreamingProviderPicker } from '@/components/streaming-provider-picker'
+import { StreamingProviderContent } from '@/components/streaming-provider-content'
 import { getDictionary } from '@/lib/dictionaries'
-import { getLocalePath, type Locale } from '@/lib/i18n'
+import type { Locale } from '@/lib/i18n'
+import type { Region } from '@/lib/region'
 import type { StreamingDiscoveryData } from '@/types/tmdb'
 
-interface StreamingProviderSectionProps {
+export async function StreamingProviderSection({ request, locale, region, basePath }: {
   request: Promise<StreamingDiscoveryData>
   locale: Locale
+  region: Region
   basePath: '/' | '/tv'
-}
-
-export async function StreamingProviderSection({
-  request,
-  locale,
-  basePath,
-}: StreamingProviderSectionProps) {
-  const dictionary = getDictionary(locale)
+}) {
   const data = await request
-  const section = data.section
-
-  const providerPicker = (
-    <StreamingProviderPicker
-      providers={data.providers}
-      selectedProviderId={data.selectedProviderId}
-      pathname={getLocalePath(locale, basePath)}
-      sectionId={section.id}
-      label={dictionary.sections.providerPickerLabel}
-    />
-  )
-
-  const attribution = (
-    <Link
-      href="https://www.justwatch.com/"
-      target="_blank"
-      rel="noreferrer"
-      className="text-xs text-faint underline decoration-tone/25 underline-offset-4 transition hover:text-ink"
-    >
-      {dictionary.sections.justWatchDiscoveryAttribution}
-    </Link>
-  )
-
-  return (
-    <div className="streaming-provider-section">
-      <MediaSection
-        section={section}
-        locale={locale}
-        toolbar={providerPicker}
-        description={attribution}
-        transitionKey={data.selectedProviderId}
-      />
-    </div>
-  )
+  const dictionary = getDictionary(locale)
+  const titleFor = data.section.mediaType === 'movie' ? dictionary.sections.streamingMovies : dictionary.sections.streamingShows
+  const messages = {
+    picker: dictionary.sections.providerPickerLabel,
+    attribution: dictionary.sections.justWatchDiscoveryAttribution,
+    loading: dictionary.sections.loadingStreaming,
+    empty: dictionary.common.sectionEmpty,
+    unavailable: dictionary.common.sectionUnavailableMessage,
+    retry: dictionary.common.retry,
+    partial: dictionary.common.partialResults,
+    providers: Object.fromEntries(data.providers.map((provider) => {
+      const title = titleFor(provider.provider_name)
+      return [provider.provider_id, {
+        title,
+        carousel: dictionary.common.carouselLabel(title),
+        previous: dictionary.common.scrollBackward(title),
+        next: dictionary.common.scrollForward(title),
+      }]
+    })),
+  }
+  return <StreamingProviderContent key={`${locale}:${region}:${basePath}`} initialData={data} locale={locale} region={region} basePath={basePath} messages={messages} />
 }

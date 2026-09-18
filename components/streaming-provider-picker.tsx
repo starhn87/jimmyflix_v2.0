@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useLayoutEffect, useOptimistic, useRef, useTransition } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { STREAMING_PROVIDER_LIST_CLASS_NAME } from '@/components/media-rail-styles'
 import { getImageUrl } from '@/lib/media'
 import type { StreamingProviderOption } from '@/types/tmdb'
@@ -14,6 +13,9 @@ interface StreamingProviderPickerProps {
   pathname: string
   sectionId: string
   label: string
+  pending: boolean
+  onSelect: (id: number, href: string) => void
+  onPrefetch: (id: number) => void
 }
 
 export function StreamingProviderPicker({
@@ -22,17 +24,17 @@ export function StreamingProviderPicker({
   pathname,
   sectionId,
   label,
+  pending,
+  onSelect,
+  onPrefetch,
 }: StreamingProviderPickerProps) {
-  const router = useRouter()
-  const [displayedProviderId, selectProvider] = useOptimistic(selectedProviderId)
-  const [pending, startTransition] = useTransition()
   const listRef = useRef<HTMLUListElement>(null)
   const indicatorRef = useRef<HTMLLIElement>(null)
 
   useLayoutEffect(() => {
     const list = listRef.current
     const indicator = indicatorRef.current
-    const selected = list?.querySelector<HTMLElement>(`[data-provider-id="${displayedProviderId}"]`)
+    const selected = list?.querySelector<HTMLElement>(`[data-provider-id="${selectedProviderId}"]`)
     if (!list || !indicator || !selected) return
 
     const positionIndicator = () => {
@@ -55,18 +57,18 @@ export function StreamingProviderPicker({
     observer.observe(list)
     for (const item of list.querySelectorAll<HTMLElement>('[data-provider-id]')) observer.observe(item)
     return () => observer.disconnect()
-  }, [displayedProviderId, providers])
+  }, [selectedProviderId, providers])
 
   return (
-    <nav aria-label={label} aria-busy={pending} data-selected={displayedProviderId}>
+    <nav aria-label={label} aria-busy={pending} data-selected={selectedProviderId}>
       <ul ref={listRef} className={`streaming-provider-tabs relative isolate no-scrollbar scroll-px-4 overflow-x-auto sm:scroll-px-0 ${STREAMING_PROVIDER_LIST_CLASS_NAME}`}>
         <li ref={indicatorRef} aria-hidden="true" className="streaming-provider-indicator pointer-events-none absolute top-0 left-0 rounded-full border border-accent/55 bg-accent/18 shadow-panel" />
         {providers.map((provider) => {
-          const active = provider.provider_id === displayedProviderId
+          const active = provider.provider_id === selectedProviderId
           const href = `${pathname}?provider=${provider.provider_id}#${sectionId}`
           const logo = getImageUrl(provider.logo_path, 'w185')
           const prefetch = () => {
-            if (provider.provider_id !== selectedProviderId) router.prefetch(href)
+            if (!active) onPrefetch(provider.provider_id)
           }
 
           return (
@@ -81,10 +83,7 @@ export function StreamingProviderPicker({
                 onNavigate={(event) => {
                   event.preventDefault()
                   if (active) return
-                  startTransition(() => {
-                    selectProvider(provider.provider_id)
-                    router.push(href, { scroll: false })
-                  })
+                  onSelect(provider.provider_id, href)
                 }}
                 aria-current={active ? 'true' : undefined}
                 className={`streaming-provider-tab inline-flex min-h-10 items-center gap-2 rounded-full border px-3 text-sm font-semibold outline-none transition-colors focus-visible:ring-3 focus-visible:ring-accent/40 ${

@@ -211,10 +211,6 @@ input {
   transition: opacity 180ms ease-out;
 }
 
-.streaming-provider-section:has(nav[aria-busy='true']) .media-rail-transition {
-  opacity: 0.65;
-}
-
 @keyframes media-rail-enter {
   from { opacity: 0.65; }
   to { opacity: 1; }
