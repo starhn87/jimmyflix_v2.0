@@ -70,20 +70,18 @@ test('regional streaming tabs include new services and navigate without duplicat
   }
 })
 
-test('looped cards remain real links after reaching the end of the rail', async ({ page }) => {
+test('recycled cards remain real links when moving backward through the start', async ({ page }) => {
   await page.goto('/en')
   const rail = page.locator('#now-playing-rail')
   await rail.scrollIntoViewIfNeeded()
-  await expect(rail.locator('[data-loop-copy="0"]')).toBeAttached()
-  await rail.evaluate((element) => {
-    const copy = element.querySelector('[data-loop-copy="0"]')
-    element.scrollLeft = copy.offsetLeft - element.offsetLeft - element.clientWidth / 2
-  })
-  const link = rail.locator('[data-loop-copy="0"] a')
-  await expect(link).toBeInViewport()
+  await expect(rail).toHaveAttribute('data-looping', 'true')
+  await rail.locator('[data-loop-origin="0"] a').focus()
+  await page.keyboard.press('ArrowLeft')
+  const link = rail.locator('[data-loop-origin="39"] a')
+  await expect(link).toBeInViewport({ ratio: 0.99 })
   await link.click()
-  await expect(page).toHaveURL(/\/en\/movies\/1$/)
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Movie 1')
+  await expect(page).toHaveURL(/\/en\/movies\/40$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Movie 40')
 })
 
 test('people modal supports search, pagination, focus restoration and navigation', async ({ page }) => {
@@ -236,7 +234,9 @@ test('trends show twenty ranked titles and people, forty rediscoveries and compa
     await expect(page.locator('#trending-people-rail [data-loop-origin="19"] h3')).toHaveText('Actor 22')
     await expect(page.locator(`#rediscovery-${window}-rail [data-loop-origin]`)).toHaveCount(40)
   }
-  await page.locator('#top-movie-week-rail [data-loop-origin="19"] a').click()
+  const lastRankedMovie = page.locator('#top-movie-week-rail [data-loop-origin="19"] a')
+  await lastRankedMovie.focus()
+  await lastRankedMovie.click()
   await expect(page).toHaveURL(/\/en\/movies\/20$/)
   await page.goto('/ko/trend')
   for (const rank of [1, 3, 11, 20]) {
