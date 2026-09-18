@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import Link from 'next/link'
 import { StarIcon } from '@/components/icons'
 import {
@@ -45,7 +45,7 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank,
         className="media-card group block min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60 focus-visible:ring-offset-4 focus-visible:ring-offset-canvas"
       >
         <div className="media-card-poster relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media">
-          <Image
+          <MediaImage
             src={getPosterUrl(item.poster_path)}
             alt={locale === 'ko' ? `${title} 포스터` : `${title} poster`}
             fill

@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import { DETAIL_LAYOUT, DETAIL_TITLE_HEADER, DETAIL_TITLE } from '@/components/detail-view-styles'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
@@ -120,7 +120,7 @@ export function DetailView({
         <div className="absolute inset-x-0 top-0 -z-30 h-px overflow-hidden bg-surface opacity-0 md:aspect-video md:h-auto md:opacity-100">
           <picture className="absolute inset-0 block">
             <source media="(max-width: 767px)" srcSet={transparentImage} />
-            <Image
+            <MediaImage
               src={backdrop}
               alt=""
               fill
@@ -138,7 +138,7 @@ export function DetailView({
 
       <div className={DETAIL_LAYOUT}>
         <div className="relative -mx-4 aspect-2/3 w-[calc(100%+2rem)] overflow-hidden border-tone/10 bg-surface shadow-media sm:mx-0 sm:w-full sm:rounded-2xl sm:border-x sm:border-t lg:row-span-3">
-          <Image
+          <MediaImage
             src={getPosterUrl(detail.poster_path)}
             alt={dictionary.common.posterAlt(title)}
             fill

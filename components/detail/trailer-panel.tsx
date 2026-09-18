@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import Link from 'next/link'
 import { SearchIcon } from '@/components/icons'
 import { VideoEmbed } from '@/components/video-embed'
@@ -25,7 +25,7 @@ export function TrailerPanel({ detail, locale }: { detail: MediaDetail; locale: 
         className="relative mx-auto mt-7 flex min-h-[280px] w-full max-w-[1100px] items-center justify-center overflow-hidden rounded-2xl border border-tone/10 bg-surface px-6 py-10 text-center shadow-media sm:aspect-video sm:min-h-0"
       >
         {artwork ? (
-          <Image
+          <MediaImage
             src={artwork}
             alt=""
             fill

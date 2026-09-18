@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import Link from 'next/link'
 import { PlayIcon, StarIcon } from '@/components/icons'
 import {
@@ -29,7 +29,7 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
       {backdrop ? (
         <picture className="absolute inset-0 -z-30 block">
           <source media="(min-width: 2560px)" srcSet={backdrop} />
-          <Image
+          <MediaImage
             src={backdrop}
             alt=""
             fill

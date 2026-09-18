@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import { LoadingCardImage } from '@/components/loading-card-image'
 import { panelHeading, responsiveCardGrid, centeredItem, EmptyPanel } from '@/components/detail/panel-primitives'
 import { getImageUrl, getPosterUrl, imageSkeletonPlaceholder } from '@/lib/media'
@@ -128,7 +128,7 @@ export function SeasonsPanel({
             {regularSeasons.map((season) => (
               <li key={season.id} className={centeredItem}>
                 <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface">
-                  <Image
+                  <MediaImage
                     src={getPosterUrl(season.poster_path)}
                     alt={dictionary.common.posterAlt(season.name)}
                     fill

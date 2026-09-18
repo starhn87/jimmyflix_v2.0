@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import { useState } from 'react'
 import { PlayIcon } from '@/components/icons'
 import { imageSkeletonPlaceholder } from '@/lib/media'
@@ -33,7 +33,7 @@ export function VideoEmbed({ videoKey, frameTitle, playLabel }: VideoEmbedProps)
           aria-label={playLabel}
           className="group relative block size-full overflow-hidden text-left outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-accent/70"
         >
-          <Image
+          <MediaImage
             src={`https://i.ytimg.com/vi/${videoKey}/maxresdefault.jpg`}
             alt=""
             fill

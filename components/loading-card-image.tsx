@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import { useState } from 'react'
 import { imageSkeletonPlaceholder } from '@/lib/media'
 
@@ -47,7 +47,7 @@ export function LoadingCardImage({
             <path d="m3 17 5-5 4 4 3-3 6 6" />
           </svg>
         </span>
-      ) : <Image
+      ) : <MediaImage
         key={src}
         src={src}
         alt={alt}

@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { MediaImage } from '@/components/media-image'
 import { JsonLd } from '@/components/json-ld'
 import { getBreadcrumbJsonLd, getPersonJsonLd } from '@/lib/structured-data'
 import { MediaSection } from '@/components/media-section'
@@ -69,7 +69,7 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
       <div className={PERSON_LAYOUT_CLASS_NAME}>
         <div className={PERSON_PORTRAIT_CLASS_NAME}>
           <div className="relative aspect-2/3 overflow-hidden bg-surface shadow-media sm:rounded-2xl sm:border sm:border-tone/10">
-            <Image
+            <MediaImage
               src={getProfileUrl(person.profile_path)}
               alt={dictionary.person.profileAlt(person.name)}
               fill
