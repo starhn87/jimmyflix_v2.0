@@ -11,9 +11,10 @@ interface MediaRailTrackProps {
   items: ReactNode[]
   backwardLabel: string
   forwardLabel: string
+  animateEntry?: boolean
 }
 
-export function MediaRailTrack({ railId, label, items, backwardLabel, forwardLabel }: MediaRailTrackProps) {
+export function MediaRailTrack({ railId, label, items, backwardLabel, forwardLabel, animateEntry = false }: MediaRailTrackProps) {
   const railRef = useRef<HTMLUListElement>(null)
   const loopRef = useRef<ReturnType<typeof createLoopingRail> | null>(null)
   const [looping, setLooping] = useState(false)
@@ -31,7 +32,7 @@ export function MediaRailTrack({ railId, label, items, backwardLabel, forwardLab
   }, [items])
 
   return (
-    <div className="relative">
+    <div className={`relative ${animateEntry ? 'media-rail-transition' : ''}`}>
       <ul ref={railRef} id={railId} aria-label={label} className={MEDIA_RAIL_LIST_CLASS_NAME}>
         {items.map((child, index) => (
           <li

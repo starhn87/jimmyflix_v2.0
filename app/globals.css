@@ -192,6 +192,34 @@ input {
   animation: trend-window-content-enter 180ms ease-out both;
 }
 
+.streaming-provider-indicator {
+  opacity: 0;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.streaming-provider-tabs[data-indicator-ready] .streaming-provider-indicator {
+  opacity: 1;
+}
+
+.streaming-provider-tabs:not([data-indicator-ready]) .streaming-provider-tab[aria-current] {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.media-rail-transition {
+  animation: media-rail-enter 180ms ease-out;
+  transition: opacity 180ms ease-out;
+}
+
+.streaming-provider-section:has(nav[aria-busy='true']) .media-rail-transition {
+  opacity: 0.65;
+}
+
+@keyframes media-rail-enter {
+  from { opacity: 0.65; }
+  to { opacity: 1; }
+}
+
 .gallery-lightbox[open] {
   animation: gallery-enter 180ms ease-out;
 }

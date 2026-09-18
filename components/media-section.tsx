@@ -16,6 +16,7 @@ interface MediaSectionProps {
   toolbar?: ReactNode
   description?: ReactNode
   ranked?: boolean
+  transitionKey?: number
 }
 
 export function MediaSection({
@@ -25,6 +26,7 @@ export function MediaSection({
   toolbar,
   description,
   ranked = false,
+  transitionKey,
 }: MediaSectionProps) {
   const dictionary = getDictionary(locale)
   if (section.error || (section.partial && section.items.length === 0)) {
@@ -64,6 +66,7 @@ export function MediaSection({
         description={description ?? section.description}
         locale={locale}
         toolbar={toolbar}
+        transitionKey={transitionKey}
       >
         {section.items.map((item, index) => (
           <MediaCard

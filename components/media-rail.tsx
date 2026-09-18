@@ -11,6 +11,7 @@ interface MediaRailProps {
   children: ReactNode
   locale: Locale
   toolbar?: ReactNode
+  transitionKey?: number
 }
 
 export function MediaRail({
@@ -20,6 +21,7 @@ export function MediaRail({
   children,
   locale,
   toolbar,
+  transitionKey,
 }: MediaRailProps) {
   const dictionary = getDictionary(locale)
   const slug = id || title.replaceAll(' ', '-').toLowerCase()
@@ -46,6 +48,8 @@ export function MediaRail({
       </div>
 
       <MediaRailTrack
+        key={transitionKey}
+        animateEntry={transitionKey !== undefined}
         railId={railId}
         label={dictionary.common.carouselLabel(title)}
         items={items}
