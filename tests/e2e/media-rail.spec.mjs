@@ -161,6 +161,32 @@ test('touch swipes cross both seams repeatedly without blank frames or opening a
   await expect(page).toHaveURL(new RegExp(`${href}$`))
 })
 
+test('diagonal carousel swipes lock horizontally without moving the page', async ({ page, context, isMobile }) => {
+  test.skip(!isMobile, 'Touch gestures')
+  const rail = await openRail(page)
+  const client = await context.newCDPSession(page)
+  const box = await rail.boundingBox()
+  const firstCard = rail.locator('[data-loop-origin="0"]')
+  const initialCardX = (await firstCard.boundingBox()).x
+  const initialScrollY = await page.evaluate(() => window.scrollY)
+  const start = { x: box.width - 30, y: box.y + 100 }
+
+  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [start] })
+  for (let step = 1; step <= 7; step++) {
+    await page.waitForTimeout(20)
+    await client.send('Input.dispatchTouchEvent', {
+      type: 'touchMove',
+      touchPoints: [{ x: start.x - step * 35, y: start.y - step * 40 }],
+    })
+  }
+  await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  await page.waitForTimeout(500)
+
+  expect(await page.evaluate(() => window.scrollY)).toBe(initialScrollY)
+  expect(Math.abs((await firstCard.boundingBox()).x - initialCardX)).toBeGreaterThan(100)
+  await client.detach()
+})
+
 test('resizing and reduced motion preserve the visible cards and keyboard navigation', async ({ page, isMobile }) => {
   test.skip(isMobile, 'Viewport and keyboard checks')
   const rail = await openRail(page)

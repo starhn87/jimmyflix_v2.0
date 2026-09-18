@@ -1,6 +1,12 @@
 type Direction = -1 | 1
+type TouchDirection = 'pending' | 'horizontal' | 'vertical'
 
 const modulo = (value: number, length: number) => ((value % length) + length) % length
+const GESTURE_START_DISTANCE = 6
+const HORIZONTAL_INTENT_RATIO = 0.8
+const isHorizontalIntent = (horizontal: number, vertical: number) => (
+  horizontal >= vertical * HORIZONTAL_INTENT_RATIO
+)
 
 /** Recycle the original cards offscreen; never reset an in-flight native scroll. */
 export function createLoopingRail(rail: HTMLElement, onLoopChange: (enabled: boolean) => void) {
@@ -20,6 +26,9 @@ export function createLoopingRail(rail: HTMLElement, onLoopChange: (enabled: boo
   let suppressClickUntil = 0
   let pointer: {
     id: number; startX: number; startY: number; x: number; time: number; dragging: boolean
+  } | null = null
+  let touch: {
+    id: number; startX: number; startY: number; direction: TouchDirection
   } | null = null
 
   const render = () => {
@@ -103,8 +112,8 @@ export function createLoopingRail(rail: HTMLElement, onLoopChange: (enabled: boo
     if (!pointer.dragging) {
       const horizontal = Math.abs(event.clientX - pointer.startX)
       const vertical = Math.abs(event.clientY - pointer.startY)
-      if (Math.max(horizontal, vertical) < 6) return
-      if (vertical > horizontal) {
+      if (Math.max(horizontal, vertical) < GESTURE_START_DISTANCE) return
+      if (!isHorizontalIntent(horizontal, vertical)) {
         releasePointer()
         snap()
         return
@@ -147,6 +156,40 @@ export function createLoopingRail(rail: HTMLElement, onLoopChange: (enabled: boo
   }
 
   const dragStart = (event: DragEvent) => { if (enabled) event.preventDefault() }
+
+  const touchStart = (event: TouchEvent) => {
+    if (!enabled || event.touches.length !== 1) {
+      touch = null
+      return
+    }
+    const finger = event.touches[0]
+    touch = {
+      id: finger.identifier,
+      startX: finger.clientX,
+      startY: finger.clientY,
+      direction: 'pending',
+    }
+  }
+
+  const touchMove = (event: TouchEvent) => {
+    if (!touch) return
+    const finger = Array.from(event.touches).find(({ identifier }) => identifier === touch?.id)
+    if (!finger) return
+    if (touch.direction === 'pending') {
+      const horizontal = Math.abs(finger.clientX - touch.startX)
+      const vertical = Math.abs(finger.clientY - touch.startY)
+      if (Math.max(horizontal, vertical) < GESTURE_START_DISTANCE) return
+      touch.direction = isHorizontalIntent(horizontal, vertical) ? 'horizontal' : 'vertical'
+    }
+    // Lock the document once this gesture is recognized as a carousel swipe.
+    if (touch.direction === 'horizontal') event.preventDefault()
+  }
+
+  const touchEnd = (event: TouchEvent) => {
+    if (!touch) return
+    const stillActive = Array.from(event.touches).some(({ identifier }) => identifier === touch?.id)
+    if (!stillActive) touch = null
+  }
 
   const wheel = (event: WheelEvent) => {
     if (!enabled || event.ctrlKey) return
@@ -249,6 +292,10 @@ export function createLoopingRail(rail: HTMLElement, onLoopChange: (enabled: boo
   rail.addEventListener('lostpointercapture', pointerEnd)
   rail.addEventListener('click', click, true)
   rail.addEventListener('dragstart', dragStart)
+  rail.addEventListener('touchstart', touchStart, { passive: true })
+  rail.addEventListener('touchmove', touchMove, { passive: false })
+  rail.addEventListener('touchend', touchEnd, { passive: true })
+  rail.addEventListener('touchcancel', touchEnd, { passive: true })
   rail.addEventListener('wheel', wheel, { passive: false })
   rail.addEventListener('focusin', focus)
   rail.addEventListener('keydown', keyDown)
@@ -280,6 +327,10 @@ export function createLoopingRail(rail: HTMLElement, onLoopChange: (enabled: boo
       rail.removeEventListener('lostpointercapture', pointerEnd)
       rail.removeEventListener('click', click, true)
       rail.removeEventListener('dragstart', dragStart)
+      rail.removeEventListener('touchstart', touchStart)
+      rail.removeEventListener('touchmove', touchMove)
+      rail.removeEventListener('touchend', touchEnd)
+      rail.removeEventListener('touchcancel', touchEnd)
       rail.removeEventListener('wheel', wheel)
       rail.removeEventListener('focusin', focus)
       rail.removeEventListener('keydown', keyDown)
