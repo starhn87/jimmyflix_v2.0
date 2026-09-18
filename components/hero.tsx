@@ -23,21 +23,32 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
   const title = getMediaTitle(item, locale)
   const rating = formatRating(item.vote_average, locale)
   const backdrop = getImageUrl(item.backdrop_path, 'original')
+  const backdropPreview = getImageUrl(item.backdrop_path, 'w780')
 
   return (
     <section aria-labelledby="featured-title" className="relative isolate min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
       {backdrop ? (
-        <Image
-          src={backdrop}
-          alt=""
-          fill
-          loading="eager"
-          fetchPriority="high"
-          placeholder={imageSkeletonPlaceholder}
-          quality={90}
-          sizes="100vw"
-          className="-z-30 object-cover object-top"
-        />
+        <>
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 -z-40 hidden scale-105 bg-cover bg-top opacity-80 blur-2xl min-[2560px]:block"
+            style={{ backgroundImage: `url(${backdropPreview})` }}
+          />
+          <picture className="absolute inset-0 -z-30 block">
+            <source media="(min-width: 2560px)" srcSet={backdrop} />
+            <Image
+              src={backdrop}
+              alt=""
+              fill
+              loading="eager"
+              fetchPriority="high"
+              placeholder={imageSkeletonPlaceholder}
+              quality={90}
+              sizes="(min-width: 2560px) 2048px, 100vw"
+              className="object-cover object-top min-[2560px]:!right-auto min-[2560px]:!left-1/2 min-[2560px]:!w-[2048px] min-[2560px]:!-translate-x-1/2 min-[2560px]:[mask-image:linear-gradient(to_right,transparent_0%,black_6%,black_94%,transparent_100%)]"
+            />
+          </picture>
+        </>
       ) : null}
       <div className="absolute inset-0 -z-20 hero-vignette" />
       <div className="hero-bottom-fade absolute inset-0 -z-10" />

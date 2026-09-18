@@ -3,10 +3,55 @@ import 'server-only'
 import { cache } from 'react'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
-import type { MediaItem, MediaType, TmdbListResponse } from '@/types/tmdb'
-import { tmdbFetch, type QueryValue } from '@/lib/tmdb/client'
+import type { MediaImages, MediaItem, MediaType, TmdbListResponse, TmdbImage } from '@/types/tmdb'
+import { CACHE_SECONDS, REQUEST_TIMEOUT_MS, tmdbFetch, type QueryValue } from '@/lib/tmdb/client'
 import { createSectionRequests } from '@/lib/tmdb/sections'
 import { getList, getRegionalMovieList, getDiscoverList } from '@/lib/tmdb/lists'
+
+const ULTRA_WIDE_BACKDROP_WIDTH = 2560
+
+const isLandscapeBackdrop = (image: TmdbImage) => (
+  Boolean(image.file_path?.trim())
+  && image.width > image.height
+  && image.width > 0
+  && image.height > 0
+)
+
+const selectCatalogHeroBackdrop = (
+  currentPath: string | null | undefined,
+  backdrops: TmdbImage[],
+) => {
+  const candidates = backdrops.filter(isLandscapeBackdrop)
+  const current = candidates.find(({ file_path }) => file_path === currentPath)
+  if (current && current.width >= ULTRA_WIDE_BACKDROP_WIDTH) return current.file_path
+
+  const highResolution = candidates
+    .filter(({ width }) => width >= ULTRA_WIDE_BACKDROP_WIDTH)
+    .sort((left, right) => (
+      right.width - left.width
+      || right.height - left.height
+      || right.vote_average - left.vote_average
+    ))[0]
+
+  return highResolution?.file_path || currentPath || null
+}
+
+const resolveCatalogHeroBackdrop = cache(async (item: MediaItem, mediaType: MediaType, locale: Locale) => {
+  try {
+    const images = await tmdbFetch<Pick<MediaImages, 'backdrops'>>(
+      `${mediaType}/${item.id}/images`,
+      { include_image_language: locale === 'ko' ? 'ko,en,null' : 'en,null' },
+      { locale, revalidate: CACHE_SECONDS.reference, timeoutMs: REQUEST_TIMEOUT_MS.artwork },
+    )
+    const backdropPath = selectCatalogHeroBackdrop(
+      item.backdrop_path,
+      Array.isArray(images.backdrops) ? images.backdrops : [],
+    )
+    return backdropPath === item.backdrop_path ? item : { ...item, backdrop_path: backdropPath }
+  } catch {
+    return item
+  }
+})
 
 export const getCatalogFeaturedItem = cache(async (mediaType: MediaType, locale: Locale) => {
   try {
@@ -17,7 +62,8 @@ export const getCatalogFeaturedItem = cache(async (mediaType: MediaType, locale:
       { locale },
     )
     const candidates = response.results.filter((item) => item.backdrop_path).slice(0, 12)
-    return candidates[getDailyRotationIndex(candidates.length)] || null
+    const featured = candidates[getDailyRotationIndex(candidates.length)] || null
+    return featured ? await resolveCatalogHeroBackdrop(featured, mediaType, locale) : null
   } catch {
     return null
   }

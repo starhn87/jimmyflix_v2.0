@@ -41,6 +41,10 @@ globalThis.fetch = async (input, options) => {
   if (path.endsWith('/watch/providers')) return Response.json({ results: {} })
   if (path.endsWith('/combined_credits')) return Response.json({ cast: [item(1), item(2, 'tv')], crew: [] })
   if (path.endsWith('/credits')) return Response.json(credits)
+  if (path.endsWith('/images')) return Response.json({ backdrops: [
+    { file_path: `/backdrop-${id}.jpg`, width: 1280, height: 720, vote_average: 8, iso_639_1: null },
+    { file_path: `/hero-${id}.jpg`, width: 3840, height: 2160, vote_average: 7, iso_639_1: null },
+  ] })
   if (path.endsWith('/videos')) {
     if (id === 997) await new Promise((resolve) => setTimeout(resolve, 2500))
     return Response.json(videos)
