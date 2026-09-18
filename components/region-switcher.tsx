@@ -48,13 +48,10 @@ export function RegionSwitcher({ locale, messages }: { locale: Locale; messages:
         document.cookie = `${regionCookieName}=${nextRegion}; path=/; max-age=${regionCookieMaxAge}; expires=${expires}; samesite=lax; priority=medium${secure}`
         window.dispatchEvent(new Event(regionChangeEvent))
         const url = new URL(window.location.href)
-        const hadProviderFilter = url.searchParams.has('provider')
         url.searchParams.delete('provider')
-        if (hadProviderFilter) {
-          router.replace(`${url.pathname}${url.search}${url.hash}`)
-        } else {
-          router.refresh()
-        }
+        window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+        // Cookie changes made in the browser must invalidate cached page segments.
+        router.refresh()
       }}
       className="grid size-11 shrink-0 place-items-center rounded-full border border-tone/15 bg-tone/5 font-mono text-xs font-bold tracking-wide text-ink outline-none transition-colors hover:bg-tone/10 focus-visible:ring-3 focus-visible:ring-accent/50"
     >

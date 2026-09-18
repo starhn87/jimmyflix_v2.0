@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { LoadingCardImage } from '@/components/loading-card-image'
 import { panelHeading, responsiveCardGrid, centeredItem, EmptyPanel } from '@/components/detail/panel-primitives'
-import { getImageUrl, imageSkeletonPlaceholder } from '@/lib/media'
+import { getImageUrl, getPosterUrl, imageSkeletonPlaceholder } from '@/lib/media'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 import type { Episode, Season, SeasonDetail } from '@/types/tmdb'
@@ -129,7 +129,7 @@ export function SeasonsPanel({
               <li key={season.id} className={centeredItem}>
                 <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface">
                   <Image
-                    src={getImageUrl(season.poster_path, 'w500') || '/images/defaultPoster.png'}
+                    src={getPosterUrl(season.poster_path)}
                     alt={dictionary.common.posterAlt(season.name)}
                     fill
                     placeholder={imageSkeletonPlaceholder}

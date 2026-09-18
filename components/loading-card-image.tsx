@@ -11,6 +11,7 @@ interface LoadingCardImageProps {
   imageClassName: string
   containerClassName: string
   draggable?: boolean
+  unoptimized?: boolean
 }
 
 export function LoadingCardImage({
@@ -20,6 +21,7 @@ export function LoadingCardImage({
   imageClassName,
   containerClassName,
   draggable,
+  unoptimized,
 }: LoadingCardImageProps) {
   const [settled, setSettled] = useState<{ src: string; status: 'loaded' | 'error' } | null>(null)
   const state = settled?.src === src ? settled.status : 'loading'
@@ -50,6 +52,7 @@ export function LoadingCardImage({
         src={src}
         alt={alt}
         draggable={draggable}
+        unoptimized={unoptimized}
         fill
         quality={85}
         sizes={sizes}

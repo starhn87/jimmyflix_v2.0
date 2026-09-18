@@ -2,7 +2,14 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
-    qualities: [75, 85, 90],
+    // One quality and format keep each source/width from creating extra variants.
+    qualities: [85],
+    formats: ['image/avif'],
+    // Cards / portraits / mobile heroes / desktop heroes / retina heroes.
+    // Small logos use their CDN's already-sized files without a transformation.
+    imageSizes: [384],
+    deviceSizes: [768, 1280, 1920, 3840],
+    minimumCacheTTL: 60 * 60 * 24 * 31,
     remotePatterns: [
       {
         protocol: 'https',
@@ -14,12 +21,11 @@ const nextConfig: NextConfig = {
         hostname: 'i.ytimg.com',
         pathname: '/vi/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'flagcdn.com',
-        pathname: '/**',
-      },
     ],
+  },
+  experimental: {
+    // Reuse visited page segments; OTT lists have their own 30-minute cache.
+    staleTimes: { dynamic: 300, static: 300 },
   },
   reactStrictMode: true,
 }

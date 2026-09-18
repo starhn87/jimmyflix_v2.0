@@ -19,6 +19,7 @@ import {
   getMediaYear,
   getPosterUrl,
   imageSkeletonPlaceholder,
+  transparentImage,
 } from '@/lib/media'
 import type { MediaDetail, MediaType } from '@/types/tmdb'
 
@@ -117,17 +118,20 @@ export function DetailView({
       />
       {backdrop ? (
         <div className="absolute inset-x-0 top-0 -z-30 h-px overflow-hidden bg-surface opacity-0 md:aspect-video md:h-auto md:opacity-100">
-          <Image
-            src={backdrop}
-            alt=""
-            fill
-            loading="eager"
-            fetchPriority="high"
-            placeholder={imageSkeletonPlaceholder}
-            quality={90}
-            sizes="(max-width: 767px) 1px, 100vw"
-            className="object-cover object-center opacity-55"
-          />
+          <picture className="absolute inset-0 block">
+            <source media="(max-width: 767px)" srcSet={transparentImage} />
+            <Image
+              src={backdrop}
+              alt=""
+              fill
+              loading="eager"
+              fetchPriority="high"
+              placeholder={imageSkeletonPlaceholder}
+              quality={85}
+              sizes="100vw"
+              className="object-cover object-center opacity-55"
+            />
+          </picture>
           <div className="detail-backdrop-fade absolute inset-0" />
         </div>
       ) : null}
@@ -135,7 +139,7 @@ export function DetailView({
       <div className={DETAIL_LAYOUT}>
         <div className="relative -mx-4 aspect-2/3 w-[calc(100%+2rem)] overflow-hidden border-tone/10 bg-surface shadow-media sm:mx-0 sm:w-full sm:rounded-2xl sm:border-x sm:border-t lg:row-span-3">
           <Image
-            src={getImageUrl(detail.poster_path, 'w780') || getPosterUrl(detail.poster_path)}
+            src={getPosterUrl(detail.poster_path)}
             alt={dictionary.common.posterAlt(title)}
             fill
             loading="eager"

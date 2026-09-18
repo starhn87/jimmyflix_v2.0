@@ -36,7 +36,7 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
             loading="eager"
             fetchPriority="high"
             placeholder={imageSkeletonPlaceholder}
-            quality={90}
+            quality={85}
             sizes="100vw"
             className="object-cover object-top"
           />

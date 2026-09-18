@@ -14,6 +14,8 @@ export const MEDIA_RAIL_SKELETON_LIST_CLASS_NAME = `overflow-hidden ${MEDIA_RAIL
 
 export const MEDIA_RAIL_ITEM_CLASS_NAME = 'w-[42vw] min-w-[136px] max-w-[190px] shrink-0 snap-start sm:w-[27vw] md:w-[20vw] lg:w-[15vw] xl:w-[13vw]'
 
+export const MEDIA_RAIL_IMAGE_SIZES = '(max-width: 639px) min(42vw, 190px), (max-width: 767px) min(27vw, 190px), (max-width: 1023px) min(20vw, 190px), (max-width: 1279px) min(15vw, 190px), min(13vw, 190px)'
+
 // Each rail reserves 28px below its cards, so these margins produce visual
 // card-to-heading gaps of 40px on mobile and 64px on desktop.
 export const CATALOG_RAIL_STACK_CLASS_NAME = 'relative z-10 mt-6 space-y-3 pb-20 sm:-mt-8 lg:space-y-9'

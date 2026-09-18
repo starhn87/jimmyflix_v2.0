@@ -13,7 +13,8 @@ function CompanyCard({ company }: { company: ProductionCompany }) {
     <li className="w-60 shrink-0 snap-start">
       <div className="flex h-24 items-center gap-3 rounded-xl border border-tone/10 bg-tone/3 p-3">
         <LoadingCardImage
-          src={getImageUrl(company.logo_path, 'w300') || '/images/defaultProduction.png'}
+          src={getImageUrl(company.logo_path, 'w185') || '/images/defaultProduction.png'}
+          unoptimized
           alt={company.name}
           sizes="64px"
           imageClassName="object-contain object-center p-2"
@@ -30,6 +31,7 @@ function CountryCard({ country, flagAlt }: { country: ProductionCountry; flagAlt
     <li className="inline-flex min-h-10 items-center gap-2 rounded-full border border-tone/10 bg-tone/3 px-3 py-2">
       <LoadingCardImage
         src={`https://flagcdn.com/w80/${country.iso_3166_1.toLowerCase()}.png`}
+        unoptimized
         alt={flagAlt}
         sizes="24px"
         imageClassName="object-contain object-center"
@@ -75,9 +77,10 @@ function ProviderGroup({
               className="group block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/50"
             >
               <LoadingCardImage
-                src={getImageUrl(provider.logo_path, 'w300') || '/images/defaultProduction.png'}
+                src={getImageUrl(provider.logo_path, 'w185') || '/images/defaultProduction.png'}
+                unoptimized
                 alt={provider.provider_name}
-                sizes="96px"
+                sizes="(max-width: 639px) 64px, 80px"
                 imageClassName="object-cover object-center"
                 containerClassName="relative mx-auto aspect-square w-16 overflow-hidden rounded-2xl border border-tone/10 bg-surface shadow-panel sm:w-20"
               />

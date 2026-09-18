@@ -66,7 +66,7 @@ export function StreamingProviderPicker({
         {providers.map((provider) => {
           const active = provider.provider_id === selectedProviderId
           const href = `${pathname}?provider=${provider.provider_id}#${sectionId}`
-          const logo = getImageUrl(provider.logo_path, 'w185')
+          const logo = getImageUrl(provider.logo_path, 'w92')
           const prefetch = () => {
             if (!active) onPrefetch(provider.provider_id)
           }
@@ -92,7 +92,7 @@ export function StreamingProviderPicker({
                     : 'border-tone/10 bg-tone/4 text-subtle hover:border-accent/25 hover:bg-tone/8 hover:text-ink'
                 }`}
               >
-                {logo ? <Image src={logo} alt="" width={24} height={24} quality={85} className="size-6 rounded-md" /> : null}
+                {logo ? <Image src={logo} alt="" width={24} height={24} unoptimized className="size-6 rounded-md" /> : null}
                 <span>{provider.provider_name}</span>
               </Link>
             </li>

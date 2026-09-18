@@ -18,7 +18,7 @@ export function MediaGrid({ items, mediaType, label, locale }: MediaGridProps) {
     >
       {items.map((item) => (
         <li key={`${getMediaType(item, mediaType)}-${item.id}`} className="min-w-0">
-          <MediaCard item={item} mediaType={mediaType} locale={locale} />
+          <MediaCard item={item} mediaType={mediaType} locale={locale} imageSizes="(max-width: 639px) calc((100vw - 48px) / 2), (max-width: 767px) calc((100vw - 80px) / 3), (max-width: 1023px) calc((100vw - 96px) / 4), (max-width: 1279px) calc((100vw - 144px) / 5), (max-width: 1535px) calc((100vw - 160px) / 6), 204px" />
         </li>
       ))}
     </ul>

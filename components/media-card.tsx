@@ -13,6 +13,7 @@ import {
 import type { MediaItem, MediaType } from '@/types/tmdb'
 import type { Locale } from '@/lib/i18n'
 import { LibraryQuickAction } from '@/components/library-actions'
+import { MEDIA_RAIL_IMAGE_SIZES } from '@/components/media-rail-styles'
 
 const englishOrdinalRules = new Intl.PluralRules('en', { type: 'ordinal' })
 const ordinalSuffixes: Record<string, string> = { one: 'st', two: 'nd', few: 'rd' }
@@ -23,9 +24,10 @@ interface MediaCardProps {
   highPriority?: boolean
   locale: Locale
   rank?: number
+  imageSizes?: string
 }
 
-export function MediaCard({ item, mediaType, highPriority = false, locale, rank }: MediaCardProps) {
+export function MediaCard({ item, mediaType, highPriority = false, locale, rank, imageSizes = MEDIA_RAIL_IMAGE_SIZES }: MediaCardProps) {
   const title = getMediaTitle(item, locale)
   const type = getMediaType(item, mediaType)
   const year = getMediaYear(item, locale)
@@ -51,7 +53,7 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank 
             fetchPriority={highPriority ? 'high' : undefined}
             placeholder={imageSkeletonPlaceholder}
             quality={85}
-            sizes="(max-width: 480px) 42vw, (max-width: 768px) 27vw, (max-width: 1200px) 20vw, 190px"
+            sizes={imageSizes}
             className="object-cover object-center"
           />
           {rank ? (

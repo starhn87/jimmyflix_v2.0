@@ -3,6 +3,7 @@ import { getLocalePath, type Locale } from '@/lib/i18n'
 import type { ImageProps } from 'next/image'
 
 type ImageSize =
+  | 'w92'
   | 'w185'
   | 'w300'
   | 'w342'
@@ -64,11 +65,13 @@ const shimmerSvg = `
 export const imageSkeletonPlaceholder =
   `data:image/svg+xml;charset=utf-8,${encodeURIComponent(shimmerSvg)}` as ImageProps['placeholder']
 
+export const transparentImage = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>')}`
+
 export const getPosterUrl = (path: string | null | undefined) =>
-  getImageUrl(path, 'w500') || '/images/defaultPoster.png'
+  getImageUrl(path, 'w780') || '/images/defaultPoster.png'
 
 export const getProfileUrl = (path: string | null | undefined) =>
-  getImageUrl(path, 'w500') || '/images/defaultPerson.png'
+  getImageUrl(path, 'original') || '/images/defaultPerson.png'
 
 export const formatRating = (rating: number | undefined, locale: Locale = 'en') => {
   if (!Number.isFinite(rating) || Number(rating) <= 0) {

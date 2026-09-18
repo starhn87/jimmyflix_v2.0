@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { PlayIcon } from '@/components/icons'
 import { imageSkeletonPlaceholder } from '@/lib/media'
+import { DETAIL_CONTENT_IMAGE_SIZES } from '@/components/detail-view-styles'
 
 interface VideoEmbedProps {
   videoKey: string
@@ -38,7 +39,7 @@ export function VideoEmbed({ videoKey, frameTitle, playLabel }: VideoEmbedProps)
             fill
             placeholder={imageSkeletonPlaceholder}
             quality={85}
-            sizes="(max-width: 768px) 100vw, 1100px"
+            sizes={DETAIL_CONTENT_IMAGE_SIZES}
             className="object-cover object-center transition duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
           />
           <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-black/15" />

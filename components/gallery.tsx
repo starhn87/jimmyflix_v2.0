@@ -71,7 +71,7 @@ export function Gallery({ images, title, heading, messages }: GalleryProps) {
                 src={getImageUrl(image.file_path, 'w780') || ''}
                 alt={`${title} · ${messages.photo} ${index + 1}`}
                 draggable={false}
-                sizes="(max-width: 639px) 85vw, (max-width: 1023px) 48vw, 440px"
+                sizes="(max-width: 639px) calc((100vw - 32px) * 0.86), (max-width: 1023px) calc(50vw - 32px), (max-width: 1199px) calc(30vw - 72px), (max-width: 1479px) calc(50vw - 312px), 428px"
                 imageClassName="object-cover transition-transform duration-300 group-hover:scale-[1.025] motion-reduce:transform-none"
                 containerClassName="relative aspect-video overflow-hidden rounded-xl border border-tone/10 bg-surface"
               />

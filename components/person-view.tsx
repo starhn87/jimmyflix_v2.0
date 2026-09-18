@@ -5,7 +5,7 @@ import { MediaSection } from '@/components/media-section'
 import { PERSON_LAYOUT_CLASS_NAME, PERSON_PORTRAIT_CLASS_NAME, PERSON_TITLE_CLASS_NAME } from '@/components/person-view-styles'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalePath, type Locale } from '@/lib/i18n'
-import { getImageUrl, getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
+import { getProfileUrl, imageSkeletonPlaceholder } from '@/lib/media'
 import type { MediaItem, PersonCredit, PersonDetail } from '@/types/tmdb'
 
 const departmentLabels: Record<Locale, Record<string, string>> = {
@@ -70,7 +70,7 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
         <div className={PERSON_PORTRAIT_CLASS_NAME}>
           <div className="relative aspect-2/3 overflow-hidden bg-surface shadow-media sm:rounded-2xl sm:border sm:border-tone/10">
             <Image
-              src={getImageUrl(person.profile_path, 'original') || getProfileUrl(null)}
+              src={getProfileUrl(person.profile_path)}
               alt={dictionary.person.profileAlt(person.name)}
               fill
               loading="eager"

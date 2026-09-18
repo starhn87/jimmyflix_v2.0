@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { SearchIcon } from '@/components/icons'
 import { VideoEmbed } from '@/components/video-embed'
 import { getImageUrl, imageSkeletonPlaceholder } from '@/lib/media'
+import { DETAIL_CONTENT_IMAGE_SIZES } from '@/components/detail-view-styles'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 import { getTrailer } from '@/lib/videos'
@@ -30,7 +31,7 @@ export function TrailerPanel({ detail, locale }: { detail: MediaDetail; locale: 
             fill
             placeholder={imageSkeletonPlaceholder}
             quality={85}
-            sizes="(max-width: 768px) 100vw, 1100px"
+            sizes={DETAIL_CONTENT_IMAGE_SIZES}
             className="scale-[1.02] object-cover object-center opacity-35 blur-[1px]"
           />
         ) : null}
