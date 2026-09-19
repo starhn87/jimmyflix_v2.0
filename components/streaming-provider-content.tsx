@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useSyncExternalStore } from 'react'
 import { MediaCard } from '@/components/media-card'
 import { MediaRailTrack } from '@/components/media-rail-track'
 import { MEDIA_RAIL_HEADER_CLASS_NAME, MEDIA_RAIL_TITLE_CLASS_NAME, MEDIA_RAIL_DESCRIPTION_CLASS_NAME } from '@/components/media-rail-styles'
@@ -27,6 +27,21 @@ export interface StreamingMessages {
   providers: Record<number, { title: string; carousel: string; previous: string; next: string }>
 }
 
+const providerChangeEvent = 'jimmyflix:provider-change'
+const subscribeToProvider = (listener: () => void) => {
+  window.addEventListener('popstate', listener)
+  window.addEventListener(providerChangeEvent, listener)
+  return () => {
+    window.removeEventListener('popstate', listener)
+    window.removeEventListener(providerChangeEvent, listener)
+  }
+}
+
+const readRequestedProviderId = () => {
+  const providerId = Number(new URL(window.location.href).searchParams.get('provider'))
+  return Number.isInteger(providerId) && providerId > 0 ? providerId : 0
+}
+
 export function StreamingProviderContent({ initialData, locale, region, basePath, messages }: {
   initialData: StreamingDiscoveryData
   locale: Locale
@@ -34,9 +49,13 @@ export function StreamingProviderContent({ initialData, locale, region, basePath
   basePath: '/' | '/tv'
   messages: StreamingMessages
 }) {
-  const params = useSearchParams()
-  const requestedId = Number(params.get('provider'))
   const { providers, section: initialSection } = initialData
+  const initialProvider = providers.find((item) => item.provider_id === initialData.selectedProviderId) ?? providers[0]
+  const requestedId = useSyncExternalStore(
+    subscribeToProvider,
+    readRequestedProviderId,
+    () => initialProvider.provider_id,
+  )
   const provider = providers.find((item) => item.provider_id === requestedId) ?? providers[0]
   const selectedId = provider.provider_id
   const mediaType = initialSection.mediaType
@@ -47,6 +66,10 @@ export function StreamingProviderContent({ initialData, locale, region, basePath
   const loading = !data && !error
   const labels = messages.providers[selectedId]
   const { title } = labels
+  const structuredSection = data ?? initialSection
+  const structuredTitle = data
+    ? title
+    : (messages.providers[initialData.selectedProviderId]?.title ?? title)
   const prefetch = (id: number) => { void streamingCache.load(keyFor(id)) }
 
   const fallback = loading ? (
@@ -64,7 +87,7 @@ export function StreamingProviderContent({ initialData, locale, region, basePath
   return (
     <div className="streaming-provider-section">
       {data?.partial || (data && error) ? <p role="status" className="mx-4 mb-5 rounded-xl border border-tone/15 bg-tone/5 p-4 text-sm text-subtle sm:mx-8 lg:mx-12">{messages.partial}</p> : null}
-      {data ? <JsonLd data={getItemListJsonLd(data.items, mediaType, title, locale)} /> : null}
+      <JsonLd data={getItemListJsonLd(structuredSection.items, mediaType, structuredTitle, locale)} />
       <section aria-labelledby={`${initialSection.id}-title`}>
         <div className={MEDIA_RAIL_HEADER_CLASS_NAME}>
           <h2 id={`${initialSection.id}-title`} className={MEDIA_RAIL_TITLE_CLASS_NAME}>{title}</h2>
@@ -83,6 +106,7 @@ export function StreamingProviderContent({ initialData, locale, region, basePath
               onSelect={(id, href) => {
                 // Update only this list, while preserving native links and back/forward history.
                 window.history.pushState(null, '', href)
+                window.dispatchEvent(new Event(providerChangeEvent))
                 prefetch(id)
               }}
             />
