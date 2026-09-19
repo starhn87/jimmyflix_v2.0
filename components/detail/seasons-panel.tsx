@@ -33,6 +33,7 @@ function EpisodeImage({ episode, sizes }: { episode: Episode; sizes: string }) {
   return (
     <LoadingCardImage
       src={still}
+      tmdbKind="still"
       alt=""
       sizes={sizes}
       imageClassName="object-cover object-center"
@@ -130,6 +131,7 @@ export function SeasonsPanel({
                 <div className="relative mx-auto aspect-2/3 w-full overflow-hidden rounded-xl border border-tone/8 bg-surface">
                   <MediaImage
                     src={getPosterUrl(season.poster_path)}
+                    tmdbKind="poster"
                     alt={dictionary.common.posterAlt(season.name)}
                     fill
                     placeholder={imageSkeletonPlaceholder}

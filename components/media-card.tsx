@@ -47,6 +47,7 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank,
         <div className="media-card-poster relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media">
           <MediaImage
             src={getPosterUrl(item.poster_path)}
+            tmdbKind="poster"
             alt={locale === 'ko' ? `${title} 포스터` : `${title} poster`}
             fill
             loading={highPriority ? 'eager' : 'lazy'}

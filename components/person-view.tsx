@@ -71,6 +71,7 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
           <div className="relative aspect-2/3 overflow-hidden bg-surface shadow-media sm:rounded-2xl sm:border sm:border-tone/10">
             <MediaImage
               src={getProfileUrl(person.profile_path)}
+              tmdbKind="profile"
               alt={dictionary.person.profileAlt(person.name)}
               fill
               loading="eager"

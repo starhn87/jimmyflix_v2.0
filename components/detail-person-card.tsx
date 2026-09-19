@@ -21,6 +21,7 @@ export function DetailPersonCard({ person, locale, compact = false, onNavigate }
     >
       <LoadingCardImage
         src={getProfileUrl(person.profilePath)}
+        tmdbKind="profile"
         alt={person.name}
         sizes={compact ? '56px' : '(max-width: 639px) 128px, 160px'}
         imageClassName="object-cover object-center transition-transform duration-300 group-hover:scale-[1.035] motion-reduce:transform-none"

@@ -3,6 +3,7 @@
 import { MediaImage } from '@/components/media-image'
 import { useState } from 'react'
 import { imageSkeletonPlaceholder } from '@/lib/media'
+import type { TmdbImageKind } from '@/lib/tmdb-image-loader'
 
 interface LoadingCardImageProps {
   src: string
@@ -11,6 +12,7 @@ interface LoadingCardImageProps {
   imageClassName: string
   containerClassName: string
   draggable?: boolean
+  tmdbKind?: TmdbImageKind
   unoptimized?: boolean
 }
 
@@ -21,6 +23,7 @@ export function LoadingCardImage({
   imageClassName,
   containerClassName,
   draggable,
+  tmdbKind,
   unoptimized,
 }: LoadingCardImageProps) {
   const [settled, setSettled] = useState<{ src: string; status: 'loaded' | 'error' } | null>(null)
@@ -52,6 +55,7 @@ export function LoadingCardImage({
         src={src}
         alt={alt}
         draggable={draggable}
+        tmdbKind={tmdbKind}
         unoptimized={unoptimized}
         fill
         quality={85}

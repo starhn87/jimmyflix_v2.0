@@ -31,6 +31,7 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
           <source media="(min-width: 2560px)" srcSet={backdrop} />
           <MediaImage
             src={backdrop}
+            tmdbKind="backdrop"
             alt=""
             fill
             loading="eager"

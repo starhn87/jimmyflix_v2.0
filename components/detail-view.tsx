@@ -122,6 +122,7 @@ export function DetailView({
             <source media="(max-width: 767px)" srcSet={transparentImage} />
             <MediaImage
               src={backdrop}
+              tmdbKind="backdrop"
               alt=""
               fill
               loading="eager"
@@ -140,6 +141,7 @@ export function DetailView({
         <div className="relative -mx-4 aspect-2/3 w-[calc(100%+2rem)] overflow-hidden border-tone/10 bg-surface shadow-media sm:mx-0 sm:w-full sm:rounded-2xl sm:border-x sm:border-t lg:row-span-3">
           <MediaImage
             src={getPosterUrl(detail.poster_path)}
+            tmdbKind="poster"
             alt={dictionary.common.posterAlt(title)}
             fill
             loading="eager"

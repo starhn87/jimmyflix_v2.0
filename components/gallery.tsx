@@ -68,7 +68,8 @@ export function Gallery({ images, title, heading, messages }: GalleryProps) {
               className="group relative block w-full overflow-hidden rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-accent"
             >
               <LoadingCardImage
-                src={getImageUrl(image.file_path, 'w780') || ''}
+                src={getImageUrl(image.file_path, 'original') || ''}
+                tmdbKind="backdrop"
                 alt={`${title} · ${messages.photo} ${index + 1}`}
                 draggable={false}
                 sizes="(max-width: 639px) calc((100vw - 32px) * 0.86), (max-width: 1023px) calc(50vw - 32px), (max-width: 1199px) calc(30vw - 72px), (max-width: 1479px) calc(50vw - 312px), 428px"

@@ -17,6 +17,7 @@ export function TrailerPanel({ detail, locale }: { detail: MediaDetail; locale: 
   if (!trailer) {
     const artwork = getImageUrl(detail.backdrop_path, 'w1280')
       || getImageUrl(detail.poster_path, 'w780')
+    const artworkKind = detail.backdrop_path ? 'backdrop' : 'poster'
     const searchQuery = locale === 'ko' ? `${title} 예고편` : `${title} official trailer`
 
     return (
@@ -27,6 +28,7 @@ export function TrailerPanel({ detail, locale }: { detail: MediaDetail; locale: 
         {artwork ? (
           <MediaImage
             src={artwork}
+            tmdbKind={artworkKind}
             alt=""
             fill
             placeholder={imageSkeletonPlaceholder}

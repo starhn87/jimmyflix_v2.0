@@ -68,7 +68,7 @@ export async function TrendingPeopleSection({ request, locale, window }: {
         <article key={person.id} className="min-w-0">
           <Link href={getLocalePath(locale, `/people/${person.id}`)} prefetch={false}
             className="media-card group block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/60">
-            <LoadingCardImage src={getProfileUrl(person.profile_path)} alt={dictionary.person.profileAlt(person.name)}
+            <LoadingCardImage src={getProfileUrl(person.profile_path)} tmdbKind="profile" alt={dictionary.person.profileAlt(person.name)}
               sizes="(max-width: 639px) 42vw, 190px" imageClassName="object-cover object-top"
               containerClassName="media-card-poster relative aspect-2/3 overflow-hidden rounded-xl border border-tone/8 bg-surface shadow-media" />
             <h3 className="mt-3 truncate text-[0.92rem] leading-5 font-semibold text-ink group-hover:text-accent-strong">{person.name}</h3>

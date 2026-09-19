@@ -79,6 +79,12 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={geist.variable} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://image.tmdb.org" />
+        <link rel="dns-prefetch" href="https://image.tmdb.org" />
+        <link rel="preconnect" href="https://i.ytimg.com" />
+        <link rel="dns-prefetch" href="https://i.ytimg.com" />
+      </head>
       <body>
         <JsonLd data={websiteJsonLd} />
         <SiteHeader locale={locale} messages={dictionary.header} />
