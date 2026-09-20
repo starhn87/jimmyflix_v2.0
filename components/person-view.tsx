@@ -57,7 +57,7 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
   const born = formatDate(person.birthday, locale)
   const died = formatDate(person.deathday, locale)
   const department = departmentLabels[locale][person.known_for_department] || person.known_for_department
-  const biography = person.biography.replaceAll('**', '')
+  const biography = person.biography?.replaceAll('**', '').trim()
 
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-canvas pb-20">
@@ -94,14 +94,19 @@ export function PersonView({ person, locale }: { person: PersonDetail; locale: L
             </p>
           ) : null}
 
-          <section className="mt-9" aria-labelledby="biography-title">
-            <h2 id="biography-title" className="text-xl font-semibold text-ink sm:text-2xl">
-              {dictionary.person.biography}
-            </h2>
-            <p className="mt-4 max-w-[76ch] whitespace-pre-line text-sm leading-7 text-muted sm:text-base sm:leading-8">
-              {biography || dictionary.person.noBiography}
-            </p>
-          </section>
+          {biography ? (
+            <section className="mt-9" aria-labelledby="biography-title">
+              <h2 id="biography-title" className="text-xl font-semibold text-ink sm:text-2xl">
+                {dictionary.person.biography}
+              </h2>
+              {person.biographyLocale && person.biographyLocale !== locale ? (
+                <p className="mt-2 text-xs text-faint sm:text-sm">{dictionary.person.alternateBiography}</p>
+              ) : null}
+              <p className="mt-4 max-w-[76ch] whitespace-pre-line text-sm leading-7 text-muted sm:text-base sm:leading-8">
+                {biography}
+              </p>
+            </section>
+          ) : null}
 
           <section className="mt-9" aria-labelledby="personal-details-title">
             <h2 id="personal-details-title" className="text-xl font-semibold text-ink sm:text-2xl">

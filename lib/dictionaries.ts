@@ -170,7 +170,7 @@ interface Dictionary {
     loading: string
     profileAlt: (name: string) => string
     biography: string
-    noBiography: string
+    alternateBiography: string
     personalDetails: string
     knownForDepartment: string
     born: string
@@ -441,7 +441,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       loading: 'Loading person details',
       profileAlt: (name) => `${name} profile photo`,
       biography: 'Biography',
-      noBiography: 'No biography is available.',
+      alternateBiography: 'Biography available in Korean',
       personalDetails: 'Personal details',
       knownForDepartment: 'Known for',
       born: 'Born',
@@ -714,7 +714,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       loading: '인물 정보 불러오는 중',
       profileAlt: (name) => `${name} 프로필 사진`,
       biography: '소개',
-      noBiography: '등록된 소개가 없습니다.',
+      alternateBiography: '영문으로 제공되는 소개입니다',
       personalDetails: '인물 정보',
       knownForDepartment: '주요 분야',
       born: '출생',

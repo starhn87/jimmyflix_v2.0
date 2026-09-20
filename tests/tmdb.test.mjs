@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { tmdbFetch, sitemapFetchScope, TmdbNotFoundError, TmdbRequestError } from '../lib/tmdb/client.ts'
-import { getMovieDetail, getRelatedTitles } from '../lib/tmdb/detail.ts'
+import { getMovieDetail, getPersonDetail, getRelatedTitles } from '../lib/tmdb/detail.ts'
 import { getPagedMediaItems } from '../lib/tmdb/lists.ts'
 import { getStreamingDiscovery } from '../lib/tmdb/streaming.ts'
 import { getTrendingPeople, getTrendingRankingRequests, getTrendingRediscovery } from '../lib/tmdb/trending.ts'
@@ -49,6 +49,49 @@ test('Korean detail and poster data do not request or await supplemental English
   assert.equal((await getMovieDetail(2, 'ko')).title, 'Movie 2')
   assert.equal(fetch.mock.callCount(), 1)
   assert.equal(fetch.mock.calls[0].arguments[0].pathname, '/3/movie/2')
+})
+
+test('person biographies prefer the selected language and fall back only when missing', async (t) => {
+  const fetch = t.mock.method(globalThis, 'fetch', async (url) => {
+    const id = Number(url.pathname.split('/').at(-1))
+    const language = url.searchParams.get('language')
+    return Response.json({
+      id,
+      name: language === 'ko-KR' ? `인물 ${id}` : `Person ${id}`,
+      biography: id === 701 && language === 'ko-KR' ? '한국어 소개'
+        : id === 702 && language === 'en-US' ? 'English biography'
+          : id === 703 && language === 'ko-KR' ? '한국어 소개' : '',
+      combined_credits: { cast: [movie(1)], crew: [] },
+    })
+  })
+
+  const localized = await getPersonDetail(701, 'ko')
+  assert.equal(localized.biography, '한국어 소개')
+  assert.equal(localized.biographyLocale, undefined)
+  assert.equal(fetch.mock.callCount(), 1)
+
+  const englishFallback = await getPersonDetail(702, 'ko')
+  assert.equal(englishFallback.name, '인물 702')
+  assert.equal(englishFallback.biography, 'English biography')
+  assert.equal(englishFallback.biographyLocale, 'en')
+  assert.deepEqual(englishFallback.combined_credits.cast, [movie(1)])
+  assert.equal(fetch.mock.calls[2].arguments[0].searchParams.get('append_to_response'), null)
+
+  const koreanFallback = await getPersonDetail(703, 'en')
+  assert.equal(koreanFallback.biography, '한국어 소개')
+  assert.equal(koreanFallback.biographyLocale, 'ko')
+})
+
+test('a failed or empty alternate biography leaves the person detail available', async (t) => {
+  t.mock.method(console, 'warn', () => {})
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    if (url.searchParams.get('language') === 'en-US' && url.pathname.endsWith('/704')) {
+      return new Response('', { status: 503 })
+    }
+    return Response.json({ id: Number(url.pathname.split('/').at(-1)), name: '인물', biography: '' })
+  })
+  assert.equal((await getPersonDetail(704, 'ko')).name, '인물')
+  assert.equal((await getPersonDetail(705, 'ko')).biography, '')
 })
 
 test('recommendation failures never masquerade as an empty successful list', async (t) => {

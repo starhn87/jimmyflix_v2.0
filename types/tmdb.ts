@@ -63,6 +63,7 @@ export interface PersonDetail {
   id: number
   name: string
   biography: string
+  biographyLocale?: 'en' | 'ko'
   birthday: string | null
   deathday: string | null
   place_of_birth: string | null

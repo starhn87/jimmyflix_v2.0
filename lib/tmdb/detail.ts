@@ -83,10 +83,28 @@ export const getWatchProviders = cache(async (
   return response.results[region] || null
 })
 
-export const getPersonDetail = cache((id: number, locale: Locale) =>
-  tmdbFetch<PersonDetail>(
+export const getPersonDetail = cache(async (id: number, locale: Locale) => {
+  const person = await tmdbFetch<PersonDetail>(
     `person/${id}`,
     { append_to_response: 'combined_credits' },
     { locale },
-  ),
-)
+  )
+  if (person.biography?.trim()) return person
+
+  const fallbackLocale: Locale = locale === 'ko' ? 'en' : 'ko'
+  try {
+    // Only request a second language when the selected translation is empty.
+    // Keep the localized name and credits from the first response.
+    const fallback = await tmdbFetch<Pick<PersonDetail, 'biography'>>(
+      `person/${id}`,
+      {},
+      { locale: fallbackLocale, timeoutMs: REQUEST_TIMEOUT_MS.supplemental },
+    )
+    return fallback.biography?.trim()
+      ? { ...person, biography: fallback.biography, biographyLocale: fallbackLocale }
+      : person
+  } catch {
+    // A missing or unavailable translation must not hide the person page.
+    return person
+  }
+})
