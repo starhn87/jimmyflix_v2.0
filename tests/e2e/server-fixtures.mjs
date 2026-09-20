@@ -40,6 +40,10 @@ globalThis.fetch = async (input, options) => {
   if (path.startsWith('watch/providers/')) return Response.json({ results: Object.entries(providerNames).map(([id, provider_name]) => ({ provider_id: Number(id), provider_name, logo_path: '/provider.jpg', display_priority: 1 })) })
   if (path.endsWith('/watch/providers')) return Response.json({ results: {} })
   if (path.endsWith('/combined_credits')) return Response.json({ cast: [item(1), item(2, 'tv')], crew: [] })
+  if (path === 'search/person') return Response.json({ results: [
+    { id: 1000, name: 'Actor 1', profile_path: poster(1000), known_for_department: 'Acting', known_for: [] },
+  ] })
+  if (path === 'search/keyword') return Response.json({ results: [] })
   if (path.endsWith('/credits')) return Response.json(credits)
   if (path.endsWith('/images')) return Response.json({ backdrops: [
     { file_path: `/backdrop-${id}.jpg`, width: 1280, height: 720, vote_average: 8, iso_639_1: null },

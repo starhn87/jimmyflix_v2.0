@@ -5,10 +5,8 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Suspense, ViewTransition } from 'react'
 import { HeaderSearch, HeaderSearchControl } from '@/components/header-search'
-import { LocaleSwitcher } from '@/components/locale-switcher'
-import { MobilePreferences } from '@/components/mobile-preferences'
-import { ThemeToggle } from '@/components/theme-toggle'
-import { RegionSwitcher } from '@/components/region-switcher'
+import { PreferencesMenu } from '@/components/preferences-menu'
+import { ThemePreferenceSync } from '@/components/theme-toggle'
 import { getLocalePath, type HeaderMessages, type Locale } from '@/lib/i18n'
 
 export function SiteHeader({ locale, messages }: { locale: Locale; messages: HeaderMessages }) {
@@ -23,6 +21,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
 
   return (
     <header className="sticky top-0 z-50 border-b border-tone/8 bg-canvas/90 shadow-header backdrop-blur-xl">
+      <ThemePreferenceSync />
       <div className="mx-auto grid min-h-18 max-w-[1600px] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-0 px-4 max-[329px]:gap-y-1 max-[329px]:py-2 sm:gap-x-3 sm:px-6 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_minmax(260px,320px)_auto] lg:px-10">
         <Link
           href={getLocalePath(locale)}
@@ -81,16 +80,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Hea
           <HeaderSearch locale={locale} messages={messages} pathname={routePath} />
         </Suspense>
         <div className="order-4 flex items-center">
-          <MobilePreferences locale={locale} messages={messages} />
-          <div className="hidden items-center gap-2 sm:flex">
-            <RegionSwitcher locale={locale} messages={messages} />
-            <LocaleSwitcher
-              locale={locale}
-              label={messages.switchLanguage}
-              buttonLabel={messages.languageButton}
-            />
-            <ThemeToggle messages={messages} />
-          </div>
+          <PreferencesMenu locale={locale} messages={messages} />
         </div>
       </div>
     </header>

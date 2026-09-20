@@ -53,9 +53,9 @@ export function RegionSwitcher({ locale, messages }: { locale: Locale; messages:
         // Cookie changes made in the browser must invalidate cached page segments.
         router.refresh()
       }}
-      className="grid size-11 shrink-0 place-items-center rounded-full border border-tone/15 bg-tone/5 font-mono text-xs font-bold tracking-wide text-ink outline-none transition-colors hover:bg-tone/10 focus-visible:ring-3 focus-visible:ring-accent/50"
+      className="inline-flex min-h-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-tone/15 bg-tone/5 px-3 text-sm font-semibold whitespace-nowrap text-ink outline-none transition-colors hover:bg-tone/10 focus-visible:ring-3 focus-visible:ring-accent/50"
     >
-      {region}
+      {region === 'KR' ? messages.regionKorea : messages.regionUnitedStates}
     </button>
   )
 }

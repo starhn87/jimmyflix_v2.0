@@ -1,6 +1,7 @@
 import type { Keyword, MediaItem, MediaType, PersonCredits, PersonSearchResult } from '@/types/tmdb'
 
 const MAX_PEOPLE = 3
+const MAX_PERSON_RESULTS = 12
 const MAX_KEYWORDS = 3
 const MAX_RESULTS_PER_TYPE = 60
 export const MAX_SEARCH_LENGTH = 200
@@ -17,7 +18,7 @@ export interface SearchSources {
 export interface CatalogSearchResult {
   movies: MediaItem[]
   tvShows: MediaItem[]
-  people: Array<{ id: number; name: string }>
+  people: Array<Pick<PersonSearchResult, 'id' | 'name' | 'profile_path'>>
   keywords: string[]
   unavailable: string[]
 }
@@ -48,6 +49,15 @@ function selectMatches<T extends { id: number; name: string }>(items: T[], query
   const unique = [...new Map(items.filter((item) => Number.isSafeInteger(item.id) && item.id > 0).map((item) => [item.id, item])).values()]
   const exact = unique.filter((item) => normalizeName(item.name) === normalizeName(query))
   return (exact.length ? exact : unique).slice(0, limit)
+}
+
+function selectPeople(items: PersonSearchResult[], query: string) {
+  const unique = [...new Map(items
+    .filter((person) => !person.adult && Number.isSafeInteger(person.id) && person.id > 0 && person.name?.trim())
+    .map((person) => [person.id, person])).values()]
+  return unique
+    .sort((a, b) => Number(normalizeName(b.name) === normalizeName(query)) - Number(normalizeName(a.name) === normalizeName(query)))
+    .slice(0, MAX_PERSON_RESULTS)
 }
 
 function ranked(items: MediaItem[]) {
@@ -87,18 +97,21 @@ export async function runCatalogSearch(
   const moviesRequest = read(sources.movies(query), labels.movieTitles, [])
   const tvRequest = read(sources.tv(query), labels.tvTitles, [])
   const peopleRequest = read(sources.people(query), labels.people, []).then(async (matches) => {
-    const people = selectMatches(matches.filter((person) => !person.adult), query, MAX_PEOPLE)
-    const groups = await Promise.all(people.map(async (person) => {
+    const people = selectPeople(matches, query)
+    const creditedPeople = selectMatches(people, query, MAX_PEOPLE)
+    const groups = await Promise.all(creditedPeople.map(async (person) => {
       const credits = await read(sources.credits(person.id), labels.creditsFor(person.name), {
         cast: person.known_for || [], crew: [],
       })
-      return { id: person.id, name: person.name, items: [...credits.cast, ...credits.crew] }
+      return [...credits.cast, ...credits.crew]
     }))
     return {
-      people: groups
-        .filter((group) => group.items.some((item) => !item.adult && (item.media_type === 'movie' || item.media_type === 'tv')))
-        .map(({ id, name }) => ({ id, name })),
-      items: groups.flatMap((group) => group.items).filter((item) => item.media_type === 'movie' || item.media_type === 'tv'),
+      people: people.map(({ id, name, profile_path }) => ({
+        id,
+        name,
+        ...(profile_path !== undefined ? { profile_path } : {}),
+      })),
+      items: groups.flat().filter((item) => item.media_type === 'movie' || item.media_type === 'tv'),
     }
   })
   const keywordsRequest = read(sources.keywords(query), labels.topics, []).then(async (matches) => {

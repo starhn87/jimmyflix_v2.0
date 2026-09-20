@@ -34,7 +34,7 @@ export function LocaleSwitcher({ locale, label, buttonLabel }: LocaleSwitcherPro
       onClick={(event) => rememberLocale(event.currentTarget)}
       aria-label={label}
       title={label}
-      className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full border border-tone/15 bg-tone/5 font-mono text-xs font-bold tracking-wide text-ink outline-none transition-colors hover:bg-tone/10 focus-visible:ring-3 focus-visible:ring-accent/50"
+      className="inline-flex min-h-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-tone/15 bg-tone/5 px-3 text-sm font-semibold text-ink outline-none transition-colors hover:bg-tone/10 focus-visible:ring-3 focus-visible:ring-accent/50"
     >
       {buttonLabel}
     </a>

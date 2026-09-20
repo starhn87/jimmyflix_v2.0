@@ -56,6 +56,12 @@ function subscribe(onChange: () => void) {
   }
 }
 
+// Keep system and cross-tab preferences in sync while the settings menu is closed.
+export function ThemePreferenceSync() {
+  useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  return null
+}
+
 export function ThemeToggle({ messages }: { messages: HeaderMessages }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 

@@ -4,6 +4,7 @@ import { Suspense } from 'react'
 import { ErrorState } from '@/components/error-state'
 import { SearchResultsSkeleton } from '@/components/loading-skeletons'
 import { MediaGrid } from '@/components/media-grid'
+import { SearchPersonCard } from '@/components/search-person-card'
 import { getDictionary, type Dictionary } from '@/lib/dictionaries'
 import { getLocalePath, isLocale, type Locale } from '@/lib/i18n'
 import { getFirstSearchParam } from '@/lib/params'
@@ -50,33 +51,30 @@ async function SearchResults({
   dictionary: Dictionary
 }) {
   const { movies, tvShows, people, keywords, unavailable } = await searchCatalog(query, locale)
-  const total = movies.length + tvShows.length
+  const total = movies.length + tvShows.length + people.length
 
   return (
     <div className="mx-auto max-w-[1600px] space-y-10 px-4 sm:px-6 lg:px-10">
       {total > 0 ? (
         <div className="space-y-2 text-sm text-subtle">
           <p>{total === 1 ? dictionary.search.showingOne : dictionary.search.showingMany(total)}</p>
-          {people.length ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <span>{dictionary.search.relatedPeople}:</span>
-              <ul className="flex flex-wrap gap-2">
-                {people.map((person) => (
-                  <li key={person.id}>
-                    <Link
-                      href={getLocalePath(locale, `/people/${person.id}`)}
-                      prefetch={false}
-                      className="inline-flex min-h-8 items-center rounded-full border border-tone/15 bg-tone/5 px-3 text-xs font-medium text-ink outline-none transition hover:border-accent/50 hover:text-accent-strong focus-visible:ring-3 focus-visible:ring-accent/40"
-                    >
-                      {person.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
           {keywords.length ? <p>{dictionary.search.topics}: {keywords.join(' · ')}</p> : null}
         </div>
+      ) : null}
+
+      {people.length > 0 ? (
+        <section aria-labelledby="people-results-title">
+          <h2 id="people-results-title" className="mb-5 text-xl font-semibold text-ink sm:text-2xl">
+            {dictionary.search.people}
+          </h2>
+          <ul aria-label={dictionary.search.personResultsLabel} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {people.map((person) => (
+              <li key={person.id} className="min-w-0">
+                <SearchPersonCard person={person} locale={locale} typeLabel={dictionary.search.people} />
+              </li>
+            ))}
+          </ul>
+        </section>
       ) : null}
 
       {unavailable.length ? (

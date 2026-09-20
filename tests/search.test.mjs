@@ -25,6 +25,21 @@ test('actor credits and topics add titles; repeated roles and direct hits do not
   assert.deepEqual(result.unavailable, [])
 })
 
+test('people appear as results even without credited titles, with exact names first and adult profiles excluded', async () => {
+  const matches = [
+    ...Array.from({ length: 15 }, (_, index) => ({ id: index + 1, name: `Alex ${index}`, profile_path: `/person-${index}.jpg`, known_for: [] })),
+    { id: 30, name: 'Alex', profile_path: '/alex.jpg', known_for: [] },
+    { id: 31, name: 'Alex', adult: true, known_for: [] },
+    { id: 30, name: 'Alex', profile_path: '/alex.jpg', known_for: [] },
+  ]
+  const result = await runCatalogSearch('alex', sources({ people: async () => matches }))
+  assert.equal(result.people.length, 12)
+  assert.deepEqual(result.people[0], { id: 30, name: 'Alex', profile_path: '/alex.jpg' })
+  assert.equal(result.people.some(({ id }) => id === 31), false)
+  assert.deepEqual(result.movies, [])
+  assert.deepEqual(result.tvShows, [])
+})
+
 test('exact person and topic names win over partial matches; adult people and titles stay excluded', async () => {
   const requested = []
   const result = await runCatalogSearch('TIME TRAVEL', sources({

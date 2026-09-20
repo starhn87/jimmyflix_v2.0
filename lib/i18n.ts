@@ -49,6 +49,8 @@ export interface HeaderMessages {
   language: string
   theme: string
   region: string
+  regionKorea: string
+  regionUnitedStates: string
   switchRegionKorea: string
   switchRegionUnitedStates: string
 }

@@ -22,6 +22,8 @@ export interface PersonSearchResult {
   id: number
   name: string
   adult?: boolean
+  profile_path?: string | null
+  known_for_department?: string
   known_for: MediaItem[]
 }
 

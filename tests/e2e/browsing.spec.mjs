@@ -20,17 +20,22 @@ async function tab(page, name) {
   }).toPass({ timeout: 15_000 })
 }
 
-async function preferences(page, isMobile) {
-  if (isMobile) await page.getByRole('button', { name: /^(Settings|설정)$/ }).click()
+async function preferences(page) {
+  await page.getByRole('button', { name: /^(Settings|설정)$/ }).click()
 }
 
-test('system theme is the default, explicit theme and locale survive a return visit', async ({ page, context, isMobile }) => {
+test('system theme is the default, explicit theme and locale survive a return visit', async ({ page, context }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/en')
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   await page.emulateMedia({ colorScheme: 'dark' })
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
-  await preferences(page, isMobile)
+  await preferences(page)
+  const settings = page.getByRole('dialog', { name: 'Settings' })
+  await expect(settings.getByText('Language', { exact: true })).toBeVisible()
+  await expect(settings.getByRole('link', { name: 'Switch to Korean' })).toHaveText('English')
+  await expect(settings.getByText('Watch region', { exact: true })).toBeVisible()
+  await expect(settings.getByRole('button', { name: 'Switch watch region to South Korea' })).toHaveText('United States')
   await page.getByRole('button', { name: 'Dark mode', exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   await page.getByRole('link', { name: 'Switch to Korean', exact: true }).click()
@@ -70,9 +75,9 @@ test('regional streaming tabs include new services and navigate without duplicat
   }
 })
 
-test('watch region is independent from language and updates regional catalogs', async ({ page, context, isMobile }) => {
+test('watch region is independent from language and updates regional catalogs', async ({ page, context }) => {
   await page.goto('/en?provider=2303')
-  await preferences(page, isMobile)
+  await preferences(page)
   await page.getByRole('button', { name: 'Switch watch region to South Korea', exact: true }).click()
 
   await expect.poll(async () => (
@@ -86,6 +91,17 @@ test('watch region is independent from language and updates regional catalogs', 
   await expect(page.getByText('Watch region: South Korea', { exact: true })).toBeVisible()
   await expect(page.getByRole('combobox', { name: 'Streaming service' })
     .getByRole('option', { name: 'Coupang Play', exact: true })).toHaveCount(1)
+})
+
+test('search displays people as profile cards and opens their detail pages', async ({ page }) => {
+  await page.goto('/en/search?q=Actor%201')
+  const people = page.getByRole('list', { name: 'People search results' })
+  const person = people.getByRole('link', { name: 'Actor 1, People' })
+  await expect(person).toBeVisible()
+  await expect(person.locator('img')).toBeVisible()
+  await expect(page.getByText('Showing 41 results')).toBeVisible()
+  await person.click()
+  await expect(page).toHaveURL(/\/en\/people\/1000$/)
 })
 
 test('library actions persist across languages and move titles between statuses', async ({ page }) => {
