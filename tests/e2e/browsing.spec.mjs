@@ -75,10 +75,22 @@ test('regional streaming tabs include new services and navigate without duplicat
   }
 })
 
+test('catalog hero copy follows the selected interface language', async ({ page }) => {
+  await page.goto('/ko')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^영화 \d+$/)
+  await expect(page.locator('section[aria-labelledby="featured-title"]')).toContainText('우정과 발견')
+
+  await page.goto('/en')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Movie \d+$/)
+  await expect(page.locator('section[aria-labelledby="featured-title"]')).toContainText('friendship, discovery')
+})
+
 test('watch region is independent from language and updates regional catalogs', async ({ page, context }) => {
   await page.goto('/en?provider=2303')
   await preferences(page)
   await page.getByRole('button', { name: 'Switch watch region to South Korea', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Switch watch region to United States', exact: true }))
+    .toHaveText('South Korea')
 
   await expect.poll(async () => (
     (await context.cookies()).find(({ name }) => name === 'jimmyflix-region-v1')?.value

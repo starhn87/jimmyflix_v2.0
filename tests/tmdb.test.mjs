@@ -5,9 +5,26 @@ import { getMovieDetail, getPersonDetail, getRelatedTitles } from '../lib/tmdb/d
 import { getPagedMediaItems } from '../lib/tmdb/lists.ts'
 import { getStreamingDiscovery } from '../lib/tmdb/streaming.ts'
 import { getTrendingPeople, getTrendingRankingRequests, getTrendingRediscovery } from '../lib/tmdb/trending.ts'
+import { getLocalizedHeroCandidates, hasLocalizedHeroCopy } from '../lib/hero-selection.ts'
 
 process.env.TMDB_API_KEY = 'test-credential-do-not-log'
 const movie = (id) => ({ id, title: `Movie ${id}`, poster_path: null, vote_average: 7 })
+
+test('hero candidates require title and overview copy in the selected language', () => {
+  const korean = { ...movie(1), title: '한국어 영화', overview: '한국어로 작성된 영화 소개입니다.', backdrop_path: '/ko.jpg' }
+  const tamilTitle = { ...korean, id: 2, title: 'விஸ்வநாத் & சன்ஸ்' }
+  const englishOverview = { ...korean, id: 3, overview: 'An English description.' }
+  const english = { ...movie(4), title: 'English Movie', overview: 'An English description.', backdrop_path: '/en.jpg' }
+
+  assert.equal(hasLocalizedHeroCopy(korean, 'ko'), true)
+  assert.equal(hasLocalizedHeroCopy(tamilTitle, 'ko'), false)
+  assert.equal(hasLocalizedHeroCopy(englishOverview, 'ko'), false)
+  assert.equal(hasLocalizedHeroCopy(english, 'en'), true)
+  assert.deepEqual(getLocalizedHeroCandidates([
+    ...Array.from({ length: 12 }, (_, index) => ({ ...tamilTitle, id: index + 10 })),
+    korean,
+  ], 'ko').map(({ id }) => id), [1])
+})
 
 test('every request has a deadline and fresh sitemap requests do not change catalog caching', async (t) => {
   const fetch = t.mock.method(globalThis, 'fetch', async () => Response.json({ results: [] }))

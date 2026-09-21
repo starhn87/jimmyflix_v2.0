@@ -3,6 +3,7 @@ import 'server-only'
 import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
 import { getDictionary } from '@/lib/dictionaries'
+import { getLocalizedHeroCandidates } from '@/lib/hero-selection'
 import type { Locale } from '@/lib/i18n'
 import { getDefaultRegion, getRegionTimeZone, type Region } from '@/lib/region'
 import type { MediaImages, MediaItem, MediaType, TmdbListResponse, TmdbImage } from '@/types/tmdb'
@@ -67,10 +68,10 @@ const getCachedCatalogFeaturedItem = unstable_cache(async (
     { ...(mediaType === 'movie' ? { region } : {}), page: 1 },
     { locale },
   )
-  const candidates = response.results.filter((item) => item.backdrop_path).slice(0, 12)
+  const candidates = getLocalizedHeroCandidates(response.results, locale)
   const featured = candidates.length > 0 ? candidates[rotationDay % candidates.length] : null
   return featured ? await resolveCatalogHeroBackdrop(featured, mediaType, locale) : null
-}, ['catalog-featured-v1'], { revalidate: CACHE_SECONDS.catalog })
+}, ['catalog-featured-v2'], { revalidate: CACHE_SECONDS.catalog })
 
 export const getCatalogFeaturedItem = cache(async (
   mediaType: MediaType,

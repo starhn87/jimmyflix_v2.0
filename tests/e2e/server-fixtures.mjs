@@ -21,7 +21,21 @@ const detail = (id, kind) => ({
   production_countries: [{ iso_3166_1: 'KR', name: 'South Korea' }],
   seasons: kind === 'tv' ? [{ id: 1, season_number: 1, name: 'Season 1', poster_path: poster(1), episode_count: 12 }] : [],
 })
-const list = (url, kind) => ({ results: Array.from({ length: 20 }, (_, i) => item((Number(url.searchParams.get('page') || 1) - 1) * 20 + i + 1, kind)) })
+const list = (url, kind) => {
+  const korean = url.searchParams.get('language') === 'ko-KR'
+  return {
+    results: Array.from({ length: 20 }, (_, i) => {
+      const entry = item((Number(url.searchParams.get('page') || 1) - 1) * 20 + i + 1, kind)
+      if (!korean) return entry
+      return {
+        ...entry,
+        title: kind === 'movie' ? `영화 ${entry.id}` : undefined,
+        name: kind === 'tv' ? `시리즈 ${entry.id}` : undefined,
+        overview: '우정과 발견, 집으로 돌아가는 여정을 그린 이야기입니다.',
+      }
+    }),
+  }
+}
 const providerNames = {
   8: 'Netflix', 9: 'Prime Video', 15: 'Hulu', 97: 'Watcha', 119: 'Prime Video',
   337: 'Disney+', 350: 'Apple TV', 356: 'Wavve', 386: 'Peacock Premium',

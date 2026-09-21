@@ -4,6 +4,7 @@ import { ErrorState } from '@/components/error-state'
 import { Hero } from '@/components/hero'
 import { MediaSection } from '@/components/media-section'
 import { getDictionary } from '@/lib/dictionaries'
+import { getLocalizedHeroCandidates } from '@/lib/hero-selection'
 import type { Locale } from '@/lib/i18n'
 import type { Region } from '@/lib/region'
 import { getCatalogFeaturedItem, getDailyRotationIndex } from '@/lib/tmdb/catalog'
@@ -35,7 +36,7 @@ export async function CatalogHero({
 
   for (const { request } of requests) {
     const section = await request
-    const candidates = section.items.filter((item) => item.backdrop_path).slice(0, 12)
+    const candidates = getLocalizedHeroCandidates(section.items, locale)
     const featured = candidates[getDailyRotationIndex(candidates.length)]
 
     if (featured) {
