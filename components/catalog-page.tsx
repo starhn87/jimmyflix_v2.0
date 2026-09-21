@@ -50,7 +50,7 @@ export function CatalogPage({ locale, mediaType, requestedProviderId, region }: 
 
   return (
     <main>
-      <Suspense fallback={<HeroSkeleton label={catalog.loadingFeatured} />}>
+      <Suspense key={`${mediaType}:${region}:hero`} fallback={<HeroSkeleton label={catalog.loadingFeatured} />}>
         <CatalogHero
           requests={sections}
           mediaType={mediaType}
@@ -62,15 +62,21 @@ export function CatalogPage({ locale, mediaType, requestedProviderId, region }: 
         />
       </Suspense>
       <div className={CATALOG_RAIL_STACK_CLASS_NAME}>
-        <Suspense fallback={<MediaSectionSkeleton label={getSectionLoadingLabel(leadSection.title, locale)} />}>
+        <Suspense
+          key={`${mediaType}:${region}:${leadSection.id}`}
+          fallback={<MediaSectionSkeleton label={getSectionLoadingLabel(leadSection.title, locale)} />}
+        >
           <AsyncMediaSection request={leadSection.request} locale={locale} />
         </Suspense>
-        <Suspense fallback={<MediaSectionSkeleton label={dictionary.sections.loadingStreaming} withToolbar />}>
+        <Suspense
+          key={`${mediaType}:${region}:streaming`}
+          fallback={<MediaSectionSkeleton label={dictionary.sections.loadingStreaming} withToolbar />}
+        >
           <StreamingProviderSection request={streamingRequest} locale={locale} region={region} basePath={basePath} />
         </Suspense>
         {remainingSections.map((section) => (
           <Suspense
-            key={section.id}
+            key={`${region}:${section.id}`}
             fallback={<MediaSectionSkeleton label={getSectionLoadingLabel(section.title, locale)} />}
           >
             <AsyncMediaSection request={section.request} locale={locale} />

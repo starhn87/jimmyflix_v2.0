@@ -64,6 +64,12 @@ export function RegionSwitcher({ locale, messages }: { locale: Locale; messages:
       }}
       className="inline-flex min-h-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-tone/15 bg-tone/5 px-3 text-sm font-semibold whitespace-nowrap text-ink outline-none transition-colors hover:bg-tone/10 focus-visible:ring-3 focus-visible:ring-accent/50 disabled:cursor-wait disabled:opacity-70"
     >
+      {isPending ? (
+        <span
+          aria-hidden="true"
+          className="mr-2 size-3.5 animate-spin rounded-full border-2 border-current/20 border-t-current motion-reduce:animate-none"
+        />
+      ) : null}
       {region === 'KR' ? messages.regionKorea : messages.regionUnitedStates}
     </button>
   )
