@@ -5,7 +5,14 @@ import { cache } from 'react'
 import { tmdbLanguage, type Locale } from '@/lib/i18n'
 
 export const CACHE_SECONDS = { catalog: 1800, search: 300, trending: 600, reference: 86400 } as const
-export const REQUEST_TIMEOUT_MS = { default: 8000, supplemental: 4000, artwork: 1500, search: 5000 } as const
+export const REQUEST_TIMEOUT_MS = {
+  default: 8000,
+  supplemental: 4000,
+  // The catalog can render the TMDB list backdrop when the optional
+  // ultra-wide artwork lookup is slow. Do not keep the LCP image waiting.
+  heroArtwork: 500,
+  search: 5000,
+} as const
 export const sitemapFetchScope = new AsyncLocalStorage<boolean>()
 export type QueryValue = string | number | boolean | undefined
 export interface TmdbFetchOptions { revalidate?: number; timeoutMs?: number; locale?: Locale }

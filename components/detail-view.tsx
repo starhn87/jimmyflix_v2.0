@@ -126,7 +126,7 @@ export function DetailView({
               alt=""
               fill
               loading="eager"
-              fetchPriority="high"
+              fetchPriority="low"
               placeholder={imageSkeletonPlaceholder}
               quality={85}
               sizes="100vw"
@@ -144,8 +144,7 @@ export function DetailView({
             tmdbKind="poster"
             alt={dictionary.common.posterAlt(title)}
             fill
-            loading="eager"
-            fetchPriority="high"
+            preload
             placeholder={imageSkeletonPlaceholder}
             quality={85}
             sizes="(max-width: 639px) 100vw, (max-width: 1023px) 150px, (max-width: 1279px) 40vw, 480px"

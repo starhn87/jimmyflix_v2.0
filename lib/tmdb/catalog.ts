@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { cache } from 'react'
+import { unstable_cache } from 'next/cache'
 import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 import { getDefaultRegion, getRegionTimeZone, type Region } from '@/lib/region'
@@ -42,7 +43,7 @@ const resolveCatalogHeroBackdrop = cache(async (item: MediaItem, mediaType: Medi
     const images = await tmdbFetch<Pick<MediaImages, 'backdrops'>>(
       `${mediaType}/${item.id}/images`,
       { include_image_language: locale === 'ko' ? 'ko,en,null' : 'en,null' },
-      { locale, revalidate: CACHE_SECONDS.reference, timeoutMs: REQUEST_TIMEOUT_MS.artwork },
+      { locale, revalidate: CACHE_SECONDS.reference, timeoutMs: REQUEST_TIMEOUT_MS.heroArtwork },
     )
     const backdropPath = selectCatalogHeroBackdrop(
       item.backdrop_path,
@@ -54,21 +55,31 @@ const resolveCatalogHeroBackdrop = cache(async (item: MediaItem, mediaType: Medi
   }
 })
 
+const getCachedCatalogFeaturedItem = unstable_cache(async (
+  mediaType: MediaType,
+  locale: Locale,
+  region: Region,
+  rotationDay: number,
+) => {
+  // Share the first catalog fetch; the hero does not need to wait for page two.
+  const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
+    mediaType === 'movie' ? 'movie/now_playing' : 'tv/on_the_air',
+    { ...(mediaType === 'movie' ? { region } : {}), page: 1 },
+    { locale },
+  )
+  const candidates = response.results.filter((item) => item.backdrop_path).slice(0, 12)
+  const featured = candidates.length > 0 ? candidates[rotationDay % candidates.length] : null
+  return featured ? await resolveCatalogHeroBackdrop(featured, mediaType, locale) : null
+}, ['catalog-featured-v1'], { revalidate: CACHE_SECONDS.catalog })
+
 export const getCatalogFeaturedItem = cache(async (
   mediaType: MediaType,
   locale: Locale,
   region: Region = getDefaultRegion(locale),
 ) => {
   try {
-    // Share the first catalog fetch; the hero does not need to wait for page two.
-    const response = await tmdbFetch<TmdbListResponse<MediaItem>>(
-      mediaType === 'movie' ? 'movie/now_playing' : 'tv/on_the_air',
-      { ...(mediaType === 'movie' ? { region } : {}), page: 1 },
-      { locale },
-    )
-    const candidates = response.results.filter((item) => item.backdrop_path).slice(0, 12)
-    const featured = candidates[getDailyRotationIndex(candidates.length)] || null
-    return featured ? await resolveCatalogHeroBackdrop(featured, mediaType, locale) : null
+    const rotationDay = Math.floor(Date.now() / 86_400_000)
+    return await getCachedCatalogFeaturedItem(mediaType, locale, region, rotationDay)
   } catch {
     return null
   }

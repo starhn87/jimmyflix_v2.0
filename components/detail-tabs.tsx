@@ -3,6 +3,7 @@
 import {
   type KeyboardEvent,
   type ReactNode,
+  useDeferredValue,
   useId,
   useRef,
   useState,
@@ -32,9 +33,11 @@ export function DetailTabs({
 }: DetailTabsProps) {
   const instanceId = useId().replaceAll(':', '')
   const [selectedId, setSelectedId] = useState(tabs[0]?.id || '')
+  const renderedId = useDeferredValue(selectedId)
   const { track: scroller, edges, scroll } = useHorizontalScroll<HTMLDivElement>(tabs.length)
   const buttons = useRef<Array<HTMLButtonElement | null>>([])
   const selected = tabs.find((tab) => tab.id === selectedId) || tabs[0]
+  const rendered = tabs.find((tab) => tab.id === renderedId) || selected
   const tabListId = `${instanceId}-tab-list`
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -133,10 +136,11 @@ export function DetailTabs({
         id={`${instanceId}-${selected.id}-panel`}
         role="tabpanel"
         aria-labelledby={`${instanceId}-${selected.id}-tab`}
+        aria-busy={selected.id !== rendered.id}
         tabIndex={0}
         className="min-w-0 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-accent/25"
       >
-        {selected.content}
+        {rendered.content}
       </div>
     </div>
   )

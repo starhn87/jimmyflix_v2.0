@@ -27,21 +27,19 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
   return (
     <section aria-labelledby="featured-title" className="relative isolate min-h-[520px] overflow-hidden sm:min-h-[600px] lg:min-h-[680px]">
       {backdrop ? (
-        <picture className="absolute inset-0 -z-30 block">
-          <source media="(min-width: 2560px)" srcSet={backdrop} />
+        <div className="absolute inset-0 -z-30">
           <MediaImage
             src={backdrop}
             tmdbKind="backdrop"
             alt=""
             fill
-            loading="eager"
-            fetchPriority="high"
+            preload
             placeholder={imageSkeletonPlaceholder}
             quality={85}
             sizes="100vw"
             className="object-cover object-top"
           />
-        </picture>
+        </div>
       ) : null}
       <div className="absolute inset-0 -z-20 hero-vignette" />
       <div className="hero-bottom-fade absolute inset-0 -z-10" />
