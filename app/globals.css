@@ -150,31 +150,23 @@ input {
   contain-intrinsic-size: auto 420px;
 }
 
-.media-card {
-  transition: transform 220ms ease-out;
+.media-card-shell {
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .media-card-poster {
-  transition: border-color 220ms ease-out, box-shadow 220ms ease-out;
-}
-
-.media-card:focus-visible {
-  transform: translateY(-4px);
-}
-
-.media-card:focus-visible .media-card-poster {
-  border-color: color-mix(in srgb, var(--accent) 65%, transparent);
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 16%, transparent);
+  transition: border-color 240ms ease-out, box-shadow 240ms ease-out;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .media-card:hover {
-    transform: translateY(-4px);
+  .media-card-shell:is(:hover, :focus-within) {
+    z-index: 5;
+    transform: translateY(-3px) scale(1.07);
   }
 
-  .media-card:hover .media-card-poster {
-    border-color: color-mix(in srgb, var(--accent) 65%, transparent);
-    box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 16%, transparent);
+  .media-card-shell:is(:hover, :focus-within) .media-card-poster {
+    border-color: color-mix(in srgb, var(--accent) 75%, var(--ink) 25%);
+    box-shadow: 0 18px 40px rgb(0 0 0 / 34%), 0 0 0 2px color-mix(in srgb, var(--accent) 48%, transparent);
   }
 }
 
@@ -221,7 +213,7 @@ input {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .media-card {
+  .media-card-shell {
     transform: none !important;
   }
 

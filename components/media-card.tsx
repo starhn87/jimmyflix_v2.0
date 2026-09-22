@@ -37,7 +37,7 @@ export function MediaCard({ item, mediaType, highPriority = false, locale, rank,
     : (locale === 'ko' ? 'TV 프로그램' : 'TV show')
 
   return (
-    <article className="group/library relative min-w-0">
+    <article className="media-card-shell group/library relative min-w-0">
       <Link
         href={getMediaHref(item, type, locale)}
         prefetch={false}
