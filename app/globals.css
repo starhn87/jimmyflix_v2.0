@@ -151,6 +151,7 @@ input {
 }
 
 .media-card-shell {
+  transform-origin: center top;
   transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -159,9 +160,16 @@ input {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .media-rail-track {
+    margin-top: -32px;
+    margin-bottom: -12px;
+    padding-top: 32px;
+    padding-bottom: 40px;
+  }
+
   .media-card-shell:is(:hover, :focus-within) {
     z-index: 5;
-    transform: translateY(-3px) scale(1.07);
+    transform: translateY(-22px) scale(1.15);
   }
 
   .media-card-shell:is(:hover, :focus-within) .media-card-poster {

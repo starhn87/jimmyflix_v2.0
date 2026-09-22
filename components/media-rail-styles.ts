@@ -6,7 +6,7 @@ export const MEDIA_RAIL_DESCRIPTION_CLASS_NAME = 'mt-1 text-sm text-faint'
 export const STREAMING_PROVIDER_LIST_CLASS_NAME = '-mx-4 flex gap-2 px-4 pb-1 sm:mx-0 sm:px-0'
 
 // Offset the hover clearance so the resting cards and skeletons keep their spacing.
-export const MEDIA_RAIL_TRACK_CLASS_NAME = '-mt-4 flex gap-3 px-4 pt-4 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12'
+export const MEDIA_RAIL_TRACK_CLASS_NAME = 'media-rail-track -mt-4 flex gap-3 px-4 pt-4 pb-7 sm:gap-4 sm:px-8 lg:gap-5 lg:px-12'
 
 export const MEDIA_RAIL_LIST_CLASS_NAME = `no-scrollbar snap-x snap-mandatory scroll-px-4 overflow-x-auto sm:scroll-px-8 lg:scroll-px-12 ${MEDIA_RAIL_TRACK_CLASS_NAME}`
 
