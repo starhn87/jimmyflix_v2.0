@@ -11,6 +11,7 @@ import { getDictionary } from '@/lib/dictionaries'
 import type { Locale } from '@/lib/i18n'
 import type { Region } from '@/lib/region'
 import { getMovieSectionRequests, getTvSectionRequests } from '@/lib/tmdb/catalog'
+import { getCatalogFeaturedItem } from '@/lib/tmdb/catalog-hero'
 import { getStreamingDiscovery } from '@/lib/tmdb/streaming'
 import type { MediaType } from '@/types/tmdb'
 import { createPageMetadata } from '@/lib/seo'
@@ -41,6 +42,7 @@ export function getCatalogMetadata(locale: Locale, mediaType: MediaType): Metada
 export function CatalogPage({ locale, mediaType, requestedProviderId, region }: CatalogPageProps) {
   const dictionary = getDictionary(locale)
   const catalog = mediaType === 'movie' ? dictionary.movies : dictionary.tv
+  const featuredRequest = getCatalogFeaturedItem(mediaType, locale, region)
   const sections = mediaType === 'movie'
     ? getMovieSectionRequests(locale, region)
     : getTvSectionRequests(locale, region)
@@ -52,13 +54,13 @@ export function CatalogPage({ locale, mediaType, requestedProviderId, region }: 
     <main>
       <Suspense key={`${mediaType}:${region}:hero`} fallback={<HeroSkeleton label={catalog.loadingFeatured} />}>
         <CatalogHero
+          featuredRequest={featuredRequest}
           requests={sections}
           mediaType={mediaType}
           eyebrow={catalog.featured}
           heading={catalog.heading}
           errorTitle={catalog.unavailable}
           locale={locale}
-          region={region}
         />
       </Suspense>
       <div className={CATALOG_RAIL_STACK_CLASS_NAME}>

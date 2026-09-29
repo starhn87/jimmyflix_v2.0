@@ -3,35 +3,34 @@ import 'server-only'
 import { ErrorState } from '@/components/error-state'
 import { Hero } from '@/components/hero'
 import { MediaSection } from '@/components/media-section'
+import { getDailyRotationIndex } from '@/lib/catalog-rotation'
 import { getDictionary } from '@/lib/dictionaries'
 import { getLocalizedHeroCandidates } from '@/lib/hero-selection'
 import type { Locale } from '@/lib/i18n'
-import type { Region } from '@/lib/region'
-import { getCatalogFeaturedItem, getDailyRotationIndex } from '@/lib/tmdb/catalog'
 import type { MediaSectionRequest } from '@/lib/tmdb/sections'
-import type { MediaType } from '@/types/tmdb'
+import type { MediaItem, MediaType } from '@/types/tmdb'
 
 interface CatalogHeroProps {
+  featuredRequest: Promise<MediaItem | null>
   requests: MediaSectionRequest[]
   mediaType: MediaType
   eyebrow: string
   heading: string
   errorTitle: string
   locale: Locale
-  region: Region
 }
 
 export async function CatalogHero({
+  featuredRequest,
   requests,
   mediaType,
   eyebrow,
   heading,
   errorTitle,
   locale,
-  region,
 }: CatalogHeroProps) {
   const dictionary = getDictionary(locale)
-  const featured = await getCatalogFeaturedItem(mediaType, locale, region)
+  const featured = await featuredRequest
   if (featured) return <Hero item={featured} mediaType={mediaType} eyebrow={eyebrow} locale={locale} />
 
   for (const { request } of requests) {
