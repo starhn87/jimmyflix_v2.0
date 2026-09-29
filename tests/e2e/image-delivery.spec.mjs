@@ -23,7 +23,9 @@ test('external media loads directly without exposing an unavailable image optimi
   await expectCdnImage(hero)
   await expectCdnImage(card)
   await expect(page.locator('head link[rel="preload"][as="image"]')).toHaveCount(1)
-  await expect.poll(() => hero.evaluate((image) => image.currentSrc)).toContain(isMobile ? '/w1280/' : '/original/')
+  await expect(page.locator('head link[rel="preload"][as="image"]')).toHaveAttribute('fetchpriority', 'high')
+  await expect(hero).toHaveAttribute('fetchpriority', 'high')
+  await expect.poll(() => hero.evaluate((image) => image.currentSrc)).toContain(isMobile ? '/w1280/' : '/w1920/')
   await expect.poll(() => card.evaluate((image) => image.currentSrc)).toContain(isMobile ? '/w780/' : '/w500/')
 
   await page.goto('/en/tv/1')

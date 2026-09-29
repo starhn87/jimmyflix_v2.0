@@ -1,12 +1,17 @@
 import type { ImageLoader } from 'next/image'
 
-export type TmdbImageKind = 'backdrop' | 'poster' | 'profile' | 'still'
+export type TmdbImageKind = 'hero' | 'backdrop' | 'poster' | 'profile' | 'still'
 
 const TMDB_IMAGE_ORIGIN = 'https://image.tmdb.org'
 const TMDB_SIZE_SEGMENT = /\/t\/p\/(?:w\d+|h\d+|original)\//
 
 const selectTmdbSize = (kind: TmdbImageKind, width: number) => {
   switch (kind) {
+    case 'hero':
+      if (width <= 780) return 'w780'
+      if (width <= 1280) return 'w1280'
+      if (width <= 1920) return 'w1920'
+      return 'original'
     case 'backdrop':
       if (width <= 300) return 'w300'
       if (width <= 780) return 'w780'
@@ -50,6 +55,7 @@ const createTmdbLoader = (kind: TmdbImageKind): ImageLoader => ({ src, width }) 
 )
 
 export const tmdbImageLoaders: Record<TmdbImageKind, ImageLoader> = {
+  hero: createTmdbLoader('hero'),
   backdrop: createTmdbLoader('backdrop'),
   poster: createTmdbLoader('poster'),
   profile: createTmdbLoader('profile'),

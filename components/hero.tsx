@@ -30,10 +30,11 @@ export function Hero({ item, mediaType, eyebrow, locale }: HeroProps) {
         <div className="absolute inset-0 -z-30">
           <MediaImage
             src={backdrop}
-            tmdbKind="backdrop"
+            tmdbKind="hero"
             alt=""
             fill
             preload
+            fetchPriority="high"
             placeholder={imageSkeletonPlaceholder}
             quality={85}
             sizes="100vw"

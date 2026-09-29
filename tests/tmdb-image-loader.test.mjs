@@ -11,6 +11,10 @@ test('maps responsive widths to supported TMDB poster sizes', () => {
 })
 
 test('uses larger TMDB sources only for artwork that needs them', () => {
+  assert.equal(getResponsiveTmdbImageUrl(image, 768, 'hero'), 'https://image.tmdb.org/t/p/w780/example.jpg')
+  assert.equal(getResponsiveTmdbImageUrl(image, 1280, 'hero'), 'https://image.tmdb.org/t/p/w1280/example.jpg')
+  assert.equal(getResponsiveTmdbImageUrl(image, 1920, 'hero'), 'https://image.tmdb.org/t/p/w1920/example.jpg')
+  assert.equal(getResponsiveTmdbImageUrl(image, 3840, 'hero'), image)
   assert.equal(getResponsiveTmdbImageUrl(image, 384, 'backdrop'), 'https://image.tmdb.org/t/p/w780/example.jpg')
   assert.equal(getResponsiveTmdbImageUrl(image, 1280, 'backdrop'), 'https://image.tmdb.org/t/p/w1280/example.jpg')
   assert.equal(getResponsiveTmdbImageUrl(image, 1920, 'backdrop'), image)
